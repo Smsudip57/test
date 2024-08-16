@@ -38,7 +38,7 @@ export default function Branding() {
                 <h2 className='text-2xl font-semibold font-sans'>SEO (Search Engine Optimization) </h2>
                 <div className=' font-medium flex flex-col gap-4'>
                   <p>
-                  SEO (Search Engine Optimization) is essential for enhancing your website's visibility in the crowded online marketplace.<br></br><br></br> SEO increases traffic by optimizing your site, enhancing engagement, and building credibility. It’s about more than rankings—it's key for long-term success..
+                  SEO (Search Engine Optimization) is essential for enhancing your website&apos;s visibility in the crowded online marketplace.<br></br><br></br> SEO increases traffic by optimizing your site, enhancing engagement, and building credibility. It’s about more than rankings—it&apos;s key for long-term success..
                   </p>
                     {/* <li>360-Degree Customer View: Centralize all customer interactions and data in one place.</li>
                     <li>Automated Follow-Ups: Never miss a lead with automated follow-up emails and reminders.</li>

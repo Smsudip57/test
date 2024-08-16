@@ -14,7 +14,7 @@ export default function Firewall() {
         <div className=' w-[1280px] mx-auto flex '>
                 <div className='w-[50%] flex flex-col justify-center gap-10 z-30'>
                     <strong className='text-[44px] font-bold leading-[52px] font-sans'>Unlock the Power of Protection with Premier Network Security</strong>
-                    <p className='pr-10 font-medium'>Embark on a journey to digital fortitude with Network Security, the cornerstone of modern business resilience.<br></br><br></br> In an era where cyber threats loom large, Network Security stands as the vanguard, shielding your enterprise’s lifeblood—its data. In today’s fast-paced digital world, safeguarding your business from cyber threats is more crucial than ever.  Network security is not just a tech requirement—it's a cornerstone of your business’s resilience and success.</p>
+                    <p className='pr-10 font-medium'>Embark on a journey to digital fortitude with Network Security, the cornerstone of modern business resilience.<br></br><br></br> In an era where cyber threats loom large, Network Security stands as the vanguard, shielding your enterprise’s lifeblood—its data. In today’s fast-paced digital world, safeguarding your business from cyber threats is more crucial than ever.  Network security is not just a tech requirement—it&apos;s a cornerstone of your business’s resilience and success.</p>
                 </div>
                 <div className='w-[50%] flex justify-center items-center z-30'>
                     <div className='flex justify-center flex-wrap items-center'>

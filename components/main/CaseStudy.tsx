@@ -20,7 +20,7 @@ export default function CaseStudy() {
     <p className="text-[36px] text-center font-lora font-bold leading-[44px] gree-900 lg:mt-2">Work to Inspire</p>
     <div className="lg:w-[781px] mx-auto">
       <p className="text-[20px] font-normal leading-[30px] text-center font-graphik lg:mt-6">
-        Lorem Ipsum&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text.
+        Lorem Ipsum&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&apos;s standard dummy text.
       </p>
     </div>
   </div>
