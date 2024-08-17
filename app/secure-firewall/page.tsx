@@ -32,7 +32,7 @@ export default function Firewall() {
                     <h2 className='text-4xl font-semibold mb-5 font-sans'>CISCO Firewall Solutions</h2>
                     <p className='pr-10 font-medium'>Protect your business with industry-leading Cisco Firewall solutions. Our expert team ensures seamless implementation and top-notch consultancy services, tailored to your unique security needs.<br></br><br></br> Stay ahead of threats and safeguard your data with the best in network security.</p>
                 </div>
-                <div className=' flex flex-col basis-1/3 justify-center items-start gap-8 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                <div className=' flex flex-col basis-1/3 justify-center items-start gap-8 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                 <img src='/cisco-r.jpg' alt='cisco' className='w-full rounded-md'/>
                 <h2 className='text-2xl font-semibold font-sans'>Cisco Secure Firewall 1010</h2>
                 <div className=' font-medium flex flex-col gap-4'>
@@ -43,11 +43,11 @@ export default function Firewall() {
                 <button className=' text-lg font-semibold bg-[#446E6D] text-white rounded-lg py-1 px-5'>Start a chat</button>
                 </div>
                 <div className='basis-1/3 flex flex-col gap-8'>
-                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                 <img src='/cisco-f.jpg' alt='cisco' className='w-full rounded-md'/>
                 <h2 className='text-2xl font-semibold font-sans'>Cisco Firepower 1120</h2>
                 </div>
-                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                      <img src='/cisco-m.jpg' alt='cisco' className='w-full rounded-md'/>
                 <h2 className='text-2xl font-semibold font-sans'>Cisco Meraki MX67</h2>
 

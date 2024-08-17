@@ -32,7 +32,7 @@ export default function Branding() {
                     <h2 className='text-4xl font-semibold mb-5 font-sans'>Crafting Your Digital Gateway: – </h2>
                     <p className='pr-10 font-medium'>Website development isn’t just about building a site; it’s about crafting a portal to possibilities. A website is more than just a web address.<br></br><br></br> It’s a 24/7 ambassador, tirelessly working to showcase your products and services to a global audience. It’s the silent salesman that never sleeps, the brand beacon that shines bright in the crowded online marketplace.</p>
                 </div>
-                <div className=' flex flex-col basis-1/3 justify-center items-start gap-8 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                <div className=' flex flex-col basis-1/3 justify-center items-start gap-8 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                 <img src='/seo2.jpg' alt='cisco' className='w-full rounded-md'/>
 
                 <h2 className='text-2xl font-semibold font-sans'>SEO (Search Engine Optimization) </h2>
@@ -48,11 +48,11 @@ export default function Branding() {
                 <button className=' text-lg font-semibold bg-[#446E6D] text-white rounded-lg py-1 px-5'>Start a chat</button>
                 </div>
                 <div className='basis-1/3 flex flex-col gap-8'>
-                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                 <img src='/ew.jpg' alt='cisco' className='w-full rounded-md'/>
                 <h2 className='text-2xl font-semibold font-sans'>Ecommerce Website</h2>
                 </div>
-                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                      <img src='/rwd.jpg' alt='cisco' className='w-full rounded-md'/>
                 <h2 className='text-2xl font-semibold font-sans'>Real Estate Website</h2>
 

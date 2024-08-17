@@ -32,7 +32,7 @@ export default function Work() {
                 <h2 className='text-4xl font-semibold mb-5 font-sans'>Unlock the full potential of your business with Odoo ERP – </h2>
                 <p className='pr-10 font-medium'>the all-in-one management software that streamlines operations, boosts productivity, and drives growth. Whether you’re looking to implement Odoo from scratch or need expert consultancy to optimize your existing setup, our team of certified professionals is here to guide you every step of the way.<br></br><br></br>Ready to revolutionize your business?<br></br><br></br>Get Started Today!</p>
             </div>
-            <div className=' flex flex-col basis-1/3 justify-center items-start gap-8 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+            <div className=' flex flex-col basis-1/3 justify-center items-start gap-8 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
             {/* <img src='/cisco-r.jpg' alt='cisco' className='w-full rounded-md'/> */}
             {/* <img alt="logo" loading="lazy" width="100" height="36" decoding="async" data-nimg="1" className="w-full h-full object-cover" style={{color:"transparent"}} srcSet="/video_CRM.webm" src="/video_CRM.webm"/> */}
             <video src='/video_CRM.webm' className='border-[1px] border-gray-400' autoPlay loop></video>
@@ -47,11 +47,11 @@ export default function Work() {
             <button className=' text-lg font-semibold bg-[#446E6D] text-white rounded-lg py-1 px-5'>Start a chat</button>
             </div>
             <div className='basis-1/3 flex flex-col gap-8'>
-            <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+            <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
             <img src='/Oracle.jpg' alt='cisco' className='w-full rounded-md'/>
             <h2 className='text-2xl font-semibold font-sans'>Oracle ERP</h2>
             </div>
-            <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+            <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                  <img src='/s-sap-erp.png' alt='cisco' className='w-full rounded-md'/>
             <h2 className='text-2xl font-semibold font-sans'>Sap ERP</h2>
 

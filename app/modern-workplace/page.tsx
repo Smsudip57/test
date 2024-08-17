@@ -32,7 +32,7 @@ export default function Modern() {
                     <h2 className='text-4xl font-semibold mb-5 font-sans'>Transform your business with Microsoft Modern Workplace – </h2>
                     <p className='pr-10 font-medium'>a beacon of innovation, security, and collaboration. It’s more than technology; it’s a commitment to a modernized, efficient, and secure future.</p>
                 </div>
-                <div className=' flex flex-col basis-1/3 justify-center items-start gap-8 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                <div className=' flex flex-col basis-1/3 justify-center items-start gap-8 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                 <img src='/m365.jpg' alt='cisco' className='w-full rounded-md'/>
 
                 <h2 className='text-2xl font-semibold font-sans'>Microsoft 365</h2>
@@ -48,11 +48,11 @@ export default function Modern() {
                 <button className=' text-lg font-semibold bg-[#446E6D] text-white rounded-lg py-1 px-5'>Start a chat</button>
                 </div>
                 <div className='basis-1/3 flex flex-col gap-8'>
-                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                 <img src='/share-m.jpg' alt='cisco' className='w-full rounded-md'/>
                 <h2 className='text-2xl font-semibold font-sans'>Microsoft Sharepoint</h2>
                 </div>
-                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-10 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                      <img src='/pbi.jpg' alt='cisco' className='w-full rounded-md'/>
                 <h2 className='text-2xl font-semibold font-sans'>Power Bl</h2>
 
