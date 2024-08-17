@@ -11,7 +11,7 @@ import React,{useState, useEffect} from "react";
     return (
         <section className="" style={{backgroundColor: "rgba(231,247,246,1)"}} id="services">
 
-          <div className="w-full md:text-xl lg:text-2xl text-[#282828] font-lora mb-10 font-semibold list-none flex  justify-between p-5 uppercase cursor-pointer opacity-50" >
+          <div className="w-full md:text-xl lg:text-2xl text-[#282828] font-lora mb-10 font-extralight list-none flex  justify-between p-5 uppercase cursor-pointer opacity-50" >
             <li className="px-5 py-0 hover:opacity-60" onMouseEnter={() => setActive("w")} onMouseLeave={() => setActive('')}>Workfrom Anywhere</li>
             <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
             <li className="px-5 py-0 hover:opacity-60" onMouseEnter={() => setActive("ex")} onMouseLeave={() => setActive('')}>Expertise</li>
@@ -43,35 +43,35 @@ import React,{useState, useEffect} from "react";
           </div>
         </div>
         <div className="flex flex-col justify-center flex-wrap gap-2 lg:gap-5 sm:flex-row">
-          <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='d'&&active!=='b'?"hidden":"block"}`}>
+          <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='d'&&active!=='b'?"opacity-15":"block"}`}>
               <span>
-                <a href="/branding"><img src="/nextjs.png"  className={`${active==='b'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-2":"bg-[#446E6D]"}   p-1 rounded-md overflow-hidden`}  /></a>
+                <a href="/branding"><img src="/nextjs.png"  className={`${active==='b'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-opacity-15`}  /></a>
               </span>
           </div>
-          <div className={`${active!==''&&active!=='d'&&active!=='m'?"hidden":"block"} sm:basis-1/3  lg:basis-1/4`}>
+          <div className={`${active!==''&&active!=='d'&&active!=='m'?"opacity-15":"block"} sm:basis-1/3  lg:basis-1/4`}>
           <span>
                 {/* <img src="Odoo ERP.jpg"/> */}
-                <a href="/modern-workplace"><img src="/micro.png" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-2":"bg-[#446E6D]"}  p-1 rounded-md overflow-hidden`}/></a>
+                <a href="/modern-workplace"><img src="/micro.png" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-opacity-15`}/></a>
               </span>
           </div>
-          <div className={`${active!==''&&active!=='d'&&active!=='en'?"hidden":"block"} sm:basis-1/3  lg:basis-1/4`}>
+          <div className={`${active!==''&&active!=='d'&&active!=='en'?"opacity-15":"block"} sm:basis-1/3  lg:basis-1/4`}>
           <span>
-          <a href="/endless-support"><img src="/consult.png" className={`${active==='en'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-2":"bg-[#446E6D]"}  p-1 rounded-md overflow-hidden`}/></a>
+          <a href="/endless-support"><img src="/consult.png" className={`${active==='en'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-opacity-15`}/></a>
               </span>
           </div>
-          <div className={`${active!==''&&active!=='d'&&active!=='5'?"hidden":"block"} sm:basis-1/3  lg:basis-1/4`}>
+          <div className={`${active!==''&&active!=='d'&&active!=='5'?"opacity-15":"block"} sm:basis-1/3  lg:basis-1/4`}>
           <span>
-          <a href="/secure-firewall"><img src="/firewall.png" className={`${active==='5'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-2":"bg-[#446E6D]"}  p-1 rounded-md overflow-hidden`}/></a>
+          <a href="/secure-firewall"><img src="/firewall.png" className={`${active==='5'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-opacity-15`}/></a>
               </span>
           </div>
-          <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='d'&&active!=='w'?"hidden":"block"}`} >
+          <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='d'&&active!=='w'?"opacity-15":"block"}`} >
           <span>
-          <a href="/work-from-anywere"><img src="/Odoo ERP.jpg" className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-2":"bg-[#446E6D]"} ${active!==''&&active!=='d'&&active!=='w'?"hidden":"block"} p-1 rounded-md overflow-hidden`}/></a>
+          <a href="/work-from-anywere"><img src="/Odoo ERP.jpg" className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"} ${active!==''&&active!=='d'&&active!=='w'?"opacity-15":"block"} p-1 rounded-md overflow-opacity-15`}/></a>
               </span>
           </div>
-          <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='d'&&active!=='ex'?"hidden":"block"}`}>
+          <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='d'&&active!=='ex'?"opacity-15":"block"}`}>
           <span>
-          <a href="/expertise"><img src="/stacks.png" className={`${active==='ex'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-2":"bg-[#446E6D]"} ${active!==''&&active!=='d'&&active!=='ex'?"hidden":"block"} p-1 rounded-md overflow-hidden`}/></a>
+          <a href="/expertise"><img src="/stacks.png" className={`${active==='ex'?" bg-gradient-to-r  from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"} ${active!==''&&active!=='d'&&active!=='ex'?"opacity-15":"block"} p-1 rounded-md overflow-opacity-15`}/></a>
               </span>
           </div>
         </div>
