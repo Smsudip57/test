@@ -31,12 +31,12 @@ import React,{useState, useEffect} from "react";
             <div className=" mx-auto w-full md:text-xl lg:text-4xl text-[#282828] font-lora mb-16 font-bold list-none flex  justify-center items-center" >
             <p className="upper">
               <span className={`uppercase ${active==="w" ? "text-[#D5E928]" : ""}`}>w</span>
-              <span className={`uppercase ${active==="ex" ? "text-[#D5E928]" : ""}`}>e</span>
-              <span className={`uppercase ${active==="b" ? "text-[#D5E928]" : ""}`} >b</span>
-              <span className={`uppercase ${active==="m" ? "text-[#D5E928]" : ""}`}>m</span>
-              <span className={`uppercase ${active==="en" ? "text-[#D5E928]" : ""}`}>e</span>
+              <span className={`uppercase ${active==="ex" ? "text-[#D5E928]" : ""}`}>E</span>
+              <span className={`uppercase ${active==="b" ? "text-[#D5E928]" : ""}`} >B</span>
+              <span className={`uppercase ${active==="m" ? "text-[#D5E928]" : ""}`}>M</span>
+              <span className={`uppercase ${active==="en" ? "text-[#D5E928]" : ""}`}>E</span>
                <span > </span>
-               <span className={` ${active==="d" ? "text-[#D5E928]" : ""}`}>Digital</span></p>
+               <span className={` ${active==="d" ? "text-[#D5E928]" : ""}`}>DIGITAL</span></p>
             </div>
             
             

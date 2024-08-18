@@ -70,7 +70,7 @@ const Navbar = () => {
         </div>
 
         <div className="">
-        <button className=" lg:flex bg-[#446E6D] rounded-[39px] py-3 px-7 font-semibold text-white text-sm ">Connect<span className="invisible">-</span><span className="hidden lg:block">with Webme</span></button>
+        <button className=" lg:flex bg-[#446E6D] rounded-md py-3 px-7 font-semibold text-white text-sm ">Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
         </div>
       </div>
     </div>
