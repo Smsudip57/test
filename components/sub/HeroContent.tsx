@@ -94,7 +94,7 @@ const HeroContent = () => {
       <img alt="search" loading="lazy" width="25" height="25" decoding="async" data-nimg="1" className="sm:ml-2 xs:w-6 xs:h-6 w-5 h-5" style={{color:"transparent"}} src="/search.svg"/>
       <input placeholder="IT Solutions Galaxy" className="text-[#101513] text-base xs:text-base leading-7 focus:outline-none"/>
     </div>
-    <button className="bg-[#446E6D] font-medium text-white text-base xs:text-xs px-1.5 xs:px-3 md:px-[34px] py-2 md:py-[11.5px] font-graphik rounded-[39px] border-box">Webmedigital</button>
+    <button className="bg-[#446E6D] font-medium text-white text-base xs:text-xs px-1.5 xs:px-3 md:px-[34px] py-2 md:py-[11.5px] font-graphik rounded-[39px] border-box">webmedigital</button>
   </div>
 </div>
 
