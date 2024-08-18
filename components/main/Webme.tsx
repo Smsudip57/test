@@ -11,18 +11,18 @@ import React,{useState, useEffect} from "react";
     return (
         <section className="" style={{backgroundColor: "rgba(231,247,246,1)"}} id="services">
 
-          <div className="w-full md:text-xl lg:text-2xl text-[#282828] font-lora mb-10 font-extralight list-none flex  justify-between p-5 uppercase cursor-pointer opacity-50" >
-            <li className="px-5 py-0 hover:opacity-60 text-nowrap" onMouseEnter={() => setActive("w")} onMouseLeave={() => setActive('')}>Workfrom Anywhere</li>
+          <div className="w-full md:text-xl lg:text-2xl text-[#282828] font-lora mb-10 font-extralight list-none flex  justify-around p-5 box-border uppercase cursor-pointer opacity-50" >
+            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("w")} onMouseLeave={() => setActive('')}>Workfrom Anywhere</li>
             <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
-            <li className="px-5 py-0 hover:opacity-60 text-nowrap" onMouseEnter={() => setActive("ex")} onMouseLeave={() => setActive('')}>Expertise</li>
+            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("ex")} onMouseLeave={() => setActive('')}>Expertise</li>
             <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
-            <li className="px-5 py-0 hover:opacity-60 text-nowrap" onMouseEnter={() => setActive("b")} onMouseLeave={() => setActive('')}> Branding</li>
+            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("b")} onMouseLeave={() => setActive('')}> Branding</li>
             <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
-            <li className="px-5 py-0 hover:opacity-60 text-nowrap" onMouseEnter={() => setActive("m")} onMouseLeave={() => setActive('')}>Modern Workplace</li>
+            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("m")} onMouseLeave={() => setActive('')}>Modern Workplace</li>
             <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
-            <li className="px-5 py-0 hover:opacity-60 text-nowrap" onMouseEnter={() => setActive("en")} onMouseLeave={() => setActive('')}>Endless Support</li>
+            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("en")} onMouseLeave={() => setActive('')}>Endless Support</li>
             <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
-            <li className="px-5 py-0 hover:opacity-60 text-nowrap" onMouseEnter={() => setActive("d")} onMouseLeave={() => setActive('')}>Digital</li>
+            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("d")} onMouseLeave={() => setActive('')}>Digital</li>
             </div>
           <div className="text-center pb-10 md:pb-20 px-4 sm:px-0 lg:px-[48px] z-10">
         <div className="mb-5 sm:mb-10 md:px-20 lg:px-89 px-5 ">
