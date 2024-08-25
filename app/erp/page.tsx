@@ -254,7 +254,7 @@ export default function Work() {
             <div className='w-[50%] flex justify-center items-center z-30'>
                 <div className='flex justify-center flex-wrap items-center'>
                 {
-                    Object.values(products).map((product,index) =>( <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl ' onClick={() => {setdata(product.data); setdetails(product.description)}}><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src={product.image} alt='cisco' className='w-full  hover:opacity-70'/></a></div>))
+                    Object.values(products).map((product,index) =>( <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl ' key={index} onClick={() => {setdata(product.data); setdetails(product.description)}}><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src={product.image} alt='cisco' className='w-full  hover:opacity-70'/></a></div>))
                     }
                 </div>
             </div>
@@ -288,7 +288,7 @@ export default function Work() {
             </div>
             <div className='basis-1/3 flex flex-col gap-8'>
             {others.length > 0 && others.map((item, index) => (
-                    <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px] cursor-pointer hover:opacity-70' key={index} onClick={() => setmain(item.id)}>
+                    <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px] cursor-pointer hover:opacity-70' key={index} onClick={() => setmain(item.id)} >
                     {item.image==="/video_CRM.webm"?<video src='/video_CRM.webm' className='border-[1px] border-gray-400' autoPlay loop></video>:<img src={item.image} alt={item.title} className='w-full rounded-md'/>}
                     <h2 className='text-2xl font-semibold font-sans'>{item.title}</h2>
                 </div>
