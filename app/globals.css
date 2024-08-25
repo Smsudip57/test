@@ -184,3 +184,58 @@ html {
 
 
 
+@keyframes leftslider1 {
+  0%{
+    left: -30%;
+  }
+  100%{
+    left: 0;
+  }
+  
+}
+@keyframes leftslider2 {
+  0%{
+    left: 0;
+  }
+  100%{
+    left: -30%;
+  }
+  
+}
+
+.opani:hover{
+  animation: opani0 0.5s ease-in-out forwards;
+}
+.opani:not(:hover) {
+  animation: opani1 0.5s ease-in-out forwards;
+}
+@keyframes opani0 {
+  0%{
+    opacity: 0.7;
+    width: 70%;
+    background-color: transparent;
+  }
+  100%{
+    opacity: 1;
+    width: 90%;
+    background-color: #e7f7f6a9;
+  }
+  
+}
+@keyframes opani1 {
+  0%{
+    opacity: 1;
+    width: 90%;
+    background-color: #e7f7f6a9;
+  }
+  100%{
+    opacity: 0.7;
+    width: 70%;
+  }
+  finally{
+    background-color: transparent;
+
+  }
+  
+}
+

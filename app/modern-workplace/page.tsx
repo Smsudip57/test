@@ -4,13 +4,13 @@ import StarsCanvas from '@/components/main/StarBackground'
 export default function Modern() {
   return (
     <div className='w-full relative'>
-        <div className='min-h-[70ch] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
+        <div className='min-h-[70vh] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
         <div className='min-h-screen w-full absolute'>
         <StarsCanvas /></div>
         {/* <p className='mt-48'>safdas</p> */}
        <div className='min-h-screen w-full lg:w-[90%] max-w-[1920px] mx-auto '>
             <div className=''>
-            <div className='w-full h-full py-48 '>
+            <div className='w-full h-full py-[19vh]  '>
         <div className=' w-[1280px] mx-auto flex '>
                 <div className='w-[50%] flex flex-col justify-center gap-10 z-30'>
                     <strong className='text-[44px] font-bold leading-[52px] font-sans'>Transform Your Business with Microsoft Modern Workplace</strong>
@@ -18,16 +18,16 @@ export default function Modern() {
                 </div>
                 <div className='w-[50%] flex justify-center items-center z-30'>
                     <div className='flex justify-center flex-wrap items-center'>
-                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><img src='/m365.jpg' alt='cisco' className='w-full'/></div>
-                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><img src='/share-m.jpg' alt='cisco' className='w-full'/></div>
-                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><img src='/pbi.jpg' alt='cisco' className='w-full'/></div>
-                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><img src='/micro-t.jpg' alt='cisco' className='w-full'/></div>
+                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/m365.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
+                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/share-m.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
+                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/pbi.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
+                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/micro-t.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
                     </div>
                 </div>
             </div> 
 
 
-        <div className=' w-[1280px] mx-auto flex mt-28   '>
+        <div className=' w-[1280px] mx-auto flex pt-28   ' id='details'>
                 <div className=' flex flex-col basis-1/3 pt-10 mr-3 gap-10 z-30 '>
                     <h2 className='text-4xl font-semibold mb-5 font-sans'>Transform your business with Microsoft Modern Workplace – </h2>
                     <p className='pr-10 font-medium'>a beacon of innovation, security, and collaboration. It’s more than technology; it’s a commitment to a modernized, efficient, and secure future.</p>
