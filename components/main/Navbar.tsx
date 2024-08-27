@@ -81,7 +81,7 @@ const Navbar = () => {
             <a href="/#pricing" className="cursor-pointer hover:opacity-70">
             Pricing
             </a>
-            <a href="/customer-success-Story" className="cursor-pointer hover:opacity-70">
+            <a href="/customer-success-stories" className="cursor-pointer hover:opacity-70">
             Customer Success Story
             </a>
             <a href="/#store" className="cursor-pointer hover:opacity-70 hidden xl:block">
@@ -91,11 +91,11 @@ const Navbar = () => {
         </div>
 
         <div className="">
-        <button className=" lg:flex bg-[#446E6D] rounded-md py-3 px-7 font-semibold text-white text-sm ">Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
+        <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm ">Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
         </div>
       </div>
     </div>
-    <div className={`w-[30%] min-h-screen fixed z-40 mt-[65px] overflow-hidden bg-white ${animated ?'flex':'hidden'}`} style={{animation:`${animated} 0.5s ease-in-out forwards`  }} onMouseEnter={() => {if(clicked  ){setAnimated('leftslider1');setTimeout(() => {
+    <div className={`w-[30%] min-h-screen fixed z-40 mt-[65px] overflow-hidden bg-white boder-l-[1px] border-[#446E6D] ${animated ?'flex':'hidden'}`} style={{animation:`${animated} 0.5s ease-in-out forwards`  }} onMouseEnter={() => {if(clicked  ){setAnimated('leftslider1');setTimeout(() => {
               setCompleted(true)
             }, 500);}}} onMouseLeave={() => {if(animated && completed ) {setAnimated('leftslider2') ; setCompleted(false);setClicked(false)}}} ref={slider}>
     <div className="w-full h-full pl-[10vw]">

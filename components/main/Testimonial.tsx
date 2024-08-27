@@ -9,7 +9,7 @@ const Testimonial = () => {
     >
         <div className="w-full h-full py-4 bg-[#66A3A6] sm:px-12 lg:py-20 lg:px-[136px]">
   <div className="pt-5 lg:pt-0">
-    <p className="text-[20px] text-white font-graphik font-medium leading-[22px] text-center">TESTIMONIALS</p>
+    <p className="text-[20px] text-white font-graphik font-medium leading-[22px] text-center">CUSTOMER SUCCESS STORIES</p>
     <p className="font-lora text-[36px] text-white font-bold leading-[44px] text-center lg:mt-[15px]">What our client says about us</p>
     <div className="px-4 mt-5 mb-5 md:mb-0 md:px-0 flex flex-col md:flex-row md:justify-center gap-7 lg:gap-[60px] lg:mt-[66px]">
       <div className="flex justify-center md:min-w-[300px] lg:max-w-[394px] lg:max-h-[355px]">
