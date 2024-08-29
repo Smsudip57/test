@@ -12,7 +12,7 @@ const Navbar = () => {
   const industries = [
     "Automotive",
     "Construction",
-    "Facility Management",
+    "Faculty Management",
     "General Maintenance",
     "Healthcare and Pharmaceuticals",
     "Retail",
@@ -107,7 +107,10 @@ const Navbar = () => {
       {
         industries.map((item,i) => (
 
-      <p className=" text-base text-nowrap font-semibold flex items-center text-[#747474] cursor-pointer hover:text-[#265353] pl-4 rounded-md py-3 hover:bg-[#e7f7f68f] justify-start gap-3 box-border opani" key={i}>
+      <p className=" text-base text-nowrap font-semibold flex items-center text-[#747474] cursor-pointer hover:text-[#265353] pl-4 rounded-md py-3 hover:bg-[#e7f7f68f] justify-start gap-3 box-border opani" key={i} onClick={()=>{
+        window.location.href = `/industries/${item.split(' ').join('-').toLowerCase()}`
+        // const url = 
+        }}>
       <AddReactionIcon fontSize="inherit"/>{item}
       </p>))
       }
