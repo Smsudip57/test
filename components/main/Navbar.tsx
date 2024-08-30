@@ -43,7 +43,7 @@ const Navbar = () => {
   
   return (
     <div className="w-full relative">
-    <div className={`w-full h-[65px] fixed top-0 shadow-lg  ${scrolled ? "bg-white shadow-[#8cdcdd]/30":''} backdrop-blur-md z-50`} onMouseLeave={() => {if(animated && completed ) {setAnimated('leftslider2') ; setCompleted(false);setClicked(false)}}}>
+    <div className={`w-full h-[65px] fixed top-0 shadow-lg  ${scrolled ? "bg-white shadow-[#8cdcdd]/30":''} backdrop-blur-md z-50`} onMouseLeave={() => {}}>
       <div className="md:w-[90%] lg:w-[80%] h-full flex flex-row items-center justify-between m-auto">
         <a
           href="/#about-me"
@@ -73,9 +73,9 @@ const Navbar = () => {
             <a href="/customer-success-stories" className="cursor-pointer hover:opacity-70">
             Customer Success Story
             </a>
-            <a  className="cursor-pointer hover:opacity-70 hidden 2xl:block" onClick={() => {setAnimated('leftslider1');setTimeout(() => {
+            <a  className="cursor-pointer hover:opacity-70 hidden 2xl:block" tabIndex={0} onClick={() => {setAnimated('leftslider1');setTimeout(() => {
               setCompleted(true)
-            }, 500);setClicked(true)}}>
+            }, 500);setClicked(true)}} onBlur={()=>{if(animated && completed ) {setAnimated('leftslider2') ; setCompleted(false);setClicked(false)}}} onFocus={()=>console.log(true)}>
             Industries
             </a>
             <a href="/" className="cursor-pointer hover:opacity-70">
