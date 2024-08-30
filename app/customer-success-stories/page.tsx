@@ -3,9 +3,9 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 export default function page() {
   return (
-    <div className='my-16'>
-        <div className='w-[1280px] mx-auto pt-16 flex items-center gap-10'>
-          <div className='basis-1/2 pr-32'>
+    <div className='py-16 '>
+        <div className='w-[1280px] mx-auto pt-16 flex items-center gap-10 '>
+          <div className='basis-1/2 pr-32  z-20'>
           <p className='text-5xl'>
             <strong>WEBME delivers Customer Success.
             </strong>
@@ -14,7 +14,7 @@ export default function page() {
           At WEBME, we are dedicated to driving your success through innovative IT services. Our expertise spans ERP, Modern Workplace solutions, Network Security, Website development, and Digital Technology. WEBME acts as your virtual companion in the digital world, helping you achieve success and transform your operations. Partner with us to experience unparalleled customer success.
           </p>
           </div>
-          <div className="basis-1/2 z-40 rounded-2xl overflow-hidden">
+          <div className="basis-1/2  rounded-2xl overflow-hidden z-20">
             <img alt="logo" loading="lazy" width="100" height="auto" decoding="async" data-nimg="1" className="w-full h-full object-cover" src="/moving-car.gif"/>
           </div>
 

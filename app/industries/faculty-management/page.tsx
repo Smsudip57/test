@@ -14,7 +14,7 @@ export default function FacultyManagement() {
     <div className='w-full h-full pt-[65px]'>
       <div className='w-4/5 mx-auto'>
       <div className='w-[1280px] mx-auto pt-[65px] flex justify-center'>
-        <div className='basis-1/2 flex flex-col justify-center pr-[10%] z-40 gap-8'>
+        <div className='basis-1/2 flex flex-col justify-center pr-[10%] z-20 gap-8'>
         <span className='text-4xl'>
           <strong>
           Transform Your Facility Management with Our IT Solutions Optimize Operations and Enhance Efficiency
@@ -42,7 +42,7 @@ export default function FacultyManagement() {
           <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Automotive-Category-pg-Customer-logo-background.png?w=1024' className='w-full h-full'/>
         </div>
         <div className='flex justify-center mt-[65px]'>
-        <div className='mx-auto text-center w-[1000px]  z-40'>
+        <div className='mx-auto text-center w-[1000px]  z-20'>
           <span className='text-3xl'> 
             <strong>
             Facility Management Companies Thriving with Our IT Services
@@ -61,7 +61,7 @@ Discover how leading facility management companies have transformed their operat
       </div>
       <div className='w-full'>
       <div className='flex justify-center pt-[65px]'>
-        <div className='mx-auto text-center w-[1280px]  z-40'>
+        <div className='mx-auto text-center w-[1280px]  z-20'>
           <div className='w-[1000px] mx-auto'>
           <span className='text-3xl'> 
             <strong>
@@ -121,7 +121,7 @@ Discover how leading facility management companies have transformed their operat
         </div>
         </div>
       </div>
-      <div className='mx-auto text-center w-[1280px] mb-48 z-40'>
+      <div className='mx-auto text-center w-[1280px] mb-48 z-20'>
           <div className='my-16 w-full relative overflow-hidden rounded-2xl shadow-xl border-2 border-gray-200'>
             <div className='absolute top-0 left-0 w-full h-full' style={{zIndex:-1}}>
             <svg width="1280" height="459" viewBox="0 0 1280 459" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -168,7 +168,7 @@ Discover how leading facility management companies have transformed their operat
           <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Automotive-Category-pg-Featured-solution-background-2.png?w=1024' className='w-full h-full'/>
         </div>
         <div className='flex flex-col justify-center mt-[65px]'>
-        <div className='mx-auto text-center w-[1000px]  z-40'>
+        <div className='mx-auto text-center w-[1000px]  z-20'>
           <span className='text-4xl'> 
             <strong>See what Salesforce&apos;s CRM for automotive can do for you. 
             
@@ -179,7 +179,7 @@ Discover how leading facility management companies have transformed their operat
           Get out-of-the-box automotive features and workflows that make it easy to explore new revenue opportunities, advance next-generation vehicle experiences, and innovate with AI and automation – all powered by the #1 automotive CRM.
           </p>
         </div>
-          <div className='w-[1280px] mx-auto mt-12 mb-52 z-40'>
+          <div className='w-[1280px] mx-auto mt-12 mb-52 z-20'>
             <div className=' grid grid-cols-4 gap-10'>
               <div className='bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8'>
                 <span className='text-xl'>
@@ -246,7 +246,7 @@ Discover how leading facility management companies have transformed their operat
       <div className='relative w-full bg-bottom'  >
         
         <div className='flex flex-col justify-center my-[65px]'>
-        <div className='mx-auto text-center w-[1000px]  z-40'>
+        <div className='mx-auto text-center w-[1000px]  z-20'>
           <span className='text-4xl'> 
             <strong>See what Salesforce&apos;s CRM for automotive can do for you. 
             
@@ -254,7 +254,7 @@ Discover how leading facility management companies have transformed their operat
 
           </span>
         </div>
-          <div className='w-[1280px] mx-auto my-16 z-40'>
+          <div className='w-[1280px] mx-auto my-16 z-20'>
             <div className=' grid grid-cols-4 gap-10'>
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
                 <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Trends-in-Automotive.png?resize=1024,576' className='w-full'/>
@@ -338,7 +338,7 @@ Discover how leading facility management companies have transformed their operat
           <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/03/logo-grid-background-min.jpg?w=1024' className='w-full h-full'/>
         </div>
         <div className='flex flex-col justify-center mt-[110px]'>
-        <div className='mx-auto text-center w-[1000px]  z-40'>
+        <div className='mx-auto text-center w-[1000px]  z-20'>
           <span className='text-4xl'> 
             <strong>
               Ready to take the next step with the #1 AI CRM for the automotive industry?
@@ -348,7 +348,7 @@ Discover how leading facility management companies have transformed their operat
           Get out-of-the-box automotive features and workflows that make it easy to explore new revenue opportunities, advance next-generation vehicle experiences, and innovate with AI and automation – all powered by the #1 automotive CRM.
           </p>
         </div>
-          <div className='w-[1280px] mx-auto my-12 z-40'>
+          <div className='w-[1280px] mx-auto my-12 z-20'>
             <div className=' grid grid-cols-3 gap-10 mx-28'>
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
                 <div className='p-8 h-full relative'>
@@ -409,14 +409,14 @@ Discover how leading facility management companies have transformed their operat
       </div>
       <div className='relative  bg-no-repeat bg-cover w-full bg-bottom'  >
         <div className='flex flex-col justify-center mt-[110px]'>
-        <div className='mx-auto text-center w-[1000px]  z-40'>
+        <div className='mx-auto text-center w-[1000px]  z-20'>
           <span className='text-4xl'> 
             <strong>
             Salesforce CRM for Automotive FAQ 
             </strong>
           </span>
         </div>
-          <div className='w-[1000px]  mx-auto mt-12 mb-52 z-40'>
+          <div className='w-[1000px]  mx-auto mt-12 mb-52 z-20'>
             <div className='flex flex-col gap-10 mx-24'>
             <div className={`w-full border-b-2 border-[#446e6d44]`} onClick={() => setf1(prev=>!prev)}>
                 <button className='text-[#446E6D] text-xl w-full flex justify-between items-center mb-6'>
