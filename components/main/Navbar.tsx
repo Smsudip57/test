@@ -67,22 +67,22 @@ const Navbar = () => {
             <a href="/#about-me" className="cursor-pointer hover:opacity-70 hidden 2xl:block">
               ABOUT
             </a>
+            <a href="/#services" className="cursor-pointer hover:opacity-70">
+              Services
+            </a>
+            <a href="/customer-success-stories" className="cursor-pointer hover:opacity-70">
+            Customer Success Story
+            </a>
             <a  className="cursor-pointer hover:opacity-70 hidden 2xl:block" onClick={() => {setAnimated('leftslider1');setTimeout(() => {
               setCompleted(true)
             }, 500);setClicked(true)}}>
             Industries
             </a>
-            <a href="/#services" className="cursor-pointer hover:opacity-70">
-              Services
-            </a>
-            <a href="/#testimonials" className="cursor-pointer hover:opacity-70">
-            Testimonials
+            <a href="/" className="cursor-pointer hover:opacity-70">
+            Products
             </a>
             <a href="/#pricing" className="cursor-pointer hover:opacity-70">
             Pricing
-            </a>
-            <a href="/customer-success-stories" className="cursor-pointer hover:opacity-70">
-            Customer Success Story
             </a>
             <a href="/#store" className="cursor-pointer hover:opacity-70 hidden xl:block">
             Store

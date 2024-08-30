@@ -1,5 +1,4 @@
 import React from 'react'
-import Testimonial from '@/components/main/Testimonial'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 export default function page() {

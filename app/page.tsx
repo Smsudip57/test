@@ -4,7 +4,6 @@ import Skills from "@/components/main/Skills";
 import CaseStudy from "@/components/main/CaseStudy";
 import Webme from "@/components/main/Webme";
 import Infinite from "@/components/main/Infinite";
-import Testimonial from "@/components/main/Testimonial";
 import Pricing from "@/components/main/Pricing";
 import Contact from "@/components/main/Contact";
 import WebParticles from "@/components/main/webParticles";
@@ -24,7 +23,6 @@ export default function Home() {
         </div>
         <CaseStudy />
         <Infinite />
-        <Testimonial /> 
         <div className="z-20 w-full">
         <Projects />
         <Pricing />
