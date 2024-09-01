@@ -39,7 +39,7 @@ export default function FacultyManagement() {
       </div>
       <div className='relative  bg-no-repeat bg-cover w-full bg-bottom'  >
         <div className='absolute top-0 left-0 w-full h-full '>
-          <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Automotive-Category-pg-Customer-logo-background.png?w=1024' className='w-full h-full'/>
+          <img src='/yoyo-bg.png' className='w-full h-full'/>
         </div>
         <div className='flex justify-center mt-[65px]'>
         <div className='mx-auto text-center w-[1000px]  z-20'>

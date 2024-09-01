@@ -9,6 +9,7 @@ const Navbar = () => {
   const [animated, setAnimated] = useState('');
   const [completed, setCompleted] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [option, setoption] = useState('');
   const industries = [
     "Automotive",
     "Construction",
@@ -21,6 +22,15 @@ const Navbar = () => {
     "Agriculture",
     "Interior and Fitout",
     "Real Estate"
+  ];
+  const about = [
+    "About WEBME",
+    "Blog",
+    "Knowledgebase",
+    "Testimonial",
+    "FAQ",
+    "Privary Policy",
+    "Terms & Conditions",
   ];
   const slider = useRef(null);
 
@@ -64,7 +74,9 @@ const Navbar = () => {
 
         <div className="h-full flex items-center justify-between gap-10 uppercase ">
           {/* <div className="flex items-center justify-between w-full h-auto mr-[15px] px-[20px] py-[10px] rounded-full text-black"> */}
-            <a href="/#about-me" className="cursor-pointer hover:opacity-70 hidden 2xl:block">
+          <a  className="cursor-pointer hover:opacity-70 hidden 2xl:block" tabIndex={0} onClick={() => {setAnimated('leftslider1');setTimeout(() => {
+              setCompleted(true)
+            }, 500);setClicked(true);setoption('about')}} onBlur={()=>{if(animated && completed ) {setAnimated('leftslider2') ; setCompleted(false);setClicked(false)}}} onFocus={()=>console.log(true)}>
               ABOUT
             </a>
             <a href="/#services" className="cursor-pointer hover:opacity-70">
@@ -75,7 +87,7 @@ const Navbar = () => {
             </a>
             <a  className="cursor-pointer hover:opacity-70 hidden 2xl:block" tabIndex={0} onClick={() => {setAnimated('leftslider1');setTimeout(() => {
               setCompleted(true)
-            }, 500);setClicked(true)}} onBlur={()=>{if(animated && completed ) {setAnimated('leftslider2') ; setCompleted(false);setClicked(false)}}} onFocus={()=>console.log(true)}>
+            }, 500);setClicked(true);setoption('industries')}} onBlur={()=>{if(animated && completed ) {setAnimated('leftslider2') ; setCompleted(false);setClicked(false)}}} onFocus={()=>console.log(true)}>
             Industries
             </a>
             <a href="/" className="cursor-pointer hover:opacity-70">
@@ -101,11 +113,21 @@ const Navbar = () => {
     <div className="w-full h-full pl-[10vw]">
       <h1 className="mt-16 mb-4">
       <strong className="text-[40px] font-bold leading-[52px] font-mono">
-      Industries
+      {option.toUpperCase()}
       </strong>
       </h1>
-      {
+      { option === "industries" &&
         industries.map((item,i) => (
+
+      <p className=" text-base text-nowrap font-semibold flex items-center text-[#747474] cursor-pointer hover:text-[#265353] pl-4 rounded-md py-3 hover:bg-[#e7f7f68f] justify-start gap-3 box-border opani" key={i} onClick={()=>{
+        window.location.href = `/industries/${item.split(' ').join('-').toLowerCase()}`
+        // const url = 
+        }}>
+      <AddReactionIcon fontSize="inherit"/>{item}
+      </p>))
+      }
+      { option === "about" &&
+        about.map((item,i) => (
 
       <p className=" text-base text-nowrap font-semibold flex items-center text-[#747474] cursor-pointer hover:text-[#265353] pl-4 rounded-md py-3 hover:bg-[#e7f7f68f] justify-start gap-3 box-border opani" key={i} onClick={()=>{
         window.location.href = `/industries/${item.split(' ').join('-').toLowerCase()}`
