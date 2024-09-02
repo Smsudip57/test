@@ -23,7 +23,7 @@ export default function page() {
         <div className='w-[1280px] mx-auto pt-32 gap-10'>
             <p className='text-4xl w-full text-center'>
               <strong>
-              Change the Heading to Customer Success with ERP
+              Customer Success with ERP
               </strong>
             </p>
             <div className=' grid grid-cols-4 gap-10 pt-16'>
@@ -184,7 +184,7 @@ export default function page() {
         <div className='w-[1280px] mx-auto pt-32 gap-10'>
             <p className='text-4xl w-full text-center'>
               <strong>
-              Customer Success with Workfrom Anywhere
+              Customer Success with Website & SEO
               </strong>
             </p>
             <div className=' grid grid-cols-4 gap-10 pt-16'>

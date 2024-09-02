@@ -26,7 +26,7 @@ export default function FacultyManagement() {
         </p>
         <div className='flex gap-5'>
           <button className='bg-[#446E6D] text-white py-2 px-4 flex items-center rounded font-semibold gap-2 cursor-pointer'><span>Try for free <OpenInNewIcon fontSize='inherit'/></span></button>
-          <button className='text-[#446E6D] border-[1px] border-[#446E6D] py-2 px-4 flex items-center rounded font-semibold cursor-pointer gap-2'><span>Contact us <OpenInNewIcon fontSize='inherit'/></span></button>
+          <button className='text-[#446E6D] border-[1px] border-[#446E6D] py-2 px-4 flex items-center rounded font-semibold cursor-pointer gap-2'><span>Explore <OpenInNewIcon fontSize='inherit'/></span></button>
 
         </div>
         </div>
@@ -45,14 +45,23 @@ export default function FacultyManagement() {
         <div className='mx-auto text-center w-[1000px]  z-20'>
           <span className='text-3xl'> 
             <strong>
-            Facility Management Companies Thriving with Our IT Services
-Discover how leading facility management companies have transformed their operations and achieved remarkable success with our tailored IT solutions.
-            
+            Facility Management Companies Thriving with Our IT Services Discover how leading facility management companies in UAE have transformed their operations and achieved remarkable success with our tailored IT solutions.
               </strong>
 
           </span>
-          <div className=' rounded-lg overflow-hidden mt-20 mb-32 '>
-            <img src='/f-c-c-logo.png' className='w-full'/>
+          <div className=' rounded-lg overflow-hidden mt-20 mb-28 flex justify-center gap-10'>
+            <div className='text-center w-[200px]'>
+            <div className='w-[200px] h-[100px] bg-white flex justify-center rounded-lg p-2 shadow-md shadow-gray-500 mb-4'>
+              <img src='/logo_mountain_gate.png' className='h-full'/>
+            </div>
+            <strong className='text-xl uppercase'>Mountain Gate </strong>
+            </div>
+            <div className='text-center'>
+            <div className='w-[200px] h-[100px] bg-white flex justify-center rounded-lg p-2 shadow-md shadow-gray-500 mb-4'>
+              <img src='/green-logo.png' className='h-full'/>
+            </div>
+            <strong className='text-xl'>GREEN TECH </strong>
+            </div>
           </div>
 
         </div>
@@ -74,46 +83,46 @@ Discover how leading facility management companies have transformed their operat
             <div className='w-full min-h-[20vh] bg-[url(https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Retail_Salesforce-for-Retail_Statistics-Card_Card-1_Version-1-1.png?w=800)] bg-cover shadow-lg rounded-2xl overflow-hidden p-14 border-2 border-gray-200 text-base grid gap-2'>
              <span className='text-7xl'>
               <strong>
-                14
+              35%
                 </strong>
               </span>
               <span className='text-2xl'>
                 <strong>
-                Days average implementation time*
+                Increased operational efficiency*
                 </strong>
               </span>
               <span className='mt-5 text-lg'>
-                 Get Fast time to value.
+              Our IT services streamlined their processes, reducing manual tasks and improving overall efficiency by 35%.
               </span>
             </div>
             <div className='w-full min-h-[20vh] bg-[url(https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Retail_Salesforce-for-Retail_Statistics-Card_Card-1_Version-1-1.png?w=800)] bg-cover shadow-lg rounded-2xl overflow-hidden p-14 border-2 border-gray-200 text-base grid gap-2'>
              <span className='text-7xl'>
               <strong>
-                33%
+                20%
                 </strong>
               </span>
               <span className='text-2xl'>
                 <strong>
-                  Faster automation of business processes* 
+                Cost Savings* 
                 </strong>
               </span>
               <span className='mt-5 text-lg'>
-                 Improve operational efficiency
+              By implementing our solutions, the company saw a significant reduction in operational costs, saving them 20% annually.
               </span>
             </div>
             <div className='w-full min-h-[20vh] bg-[url(https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Retail_Salesforce-for-Retail_Statistics-Card_Card-1_Version-1-1.png?w=800)] bg-cover shadow-lg rounded-2xl overflow-hidden p-14 border-2 border-gray-200 text-base grid gap-2'>
              <span className='text-7xl'>
               <strong>
-                21%
+                40%
                 </strong>
               </span>
               <span className='text-2xl'>
                 <strong>
-                decrease in IT costs* 
+                Enhanced Customer Satisfaction* 
                 </strong>
               </span>
               <span className='mt-5 text-lg'>
-                  Reduce costs while driving revenue.
+              With improved service delivery and faster response times, customer satisfaction scores increased by 40%.
               </span>
             </div>
           </div>
@@ -132,26 +141,65 @@ Discover how leading facility management companies have transformed their operat
             </div>
             <div className='w-full flex items-center'>
               <div className=' basis-1/2 h-full px-40 '>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Auto-Customer-stories-1.png?w=738' className='w-full active:border-[5px] active:border-blue-500 rounded-lg overflow-hidden'></img>
+                <img src='/logo_mountain_gate.png' className='w-full active:border-[5px] active:border-blue-500 rounded-lg overflow-hidden'></img>
               </div>
               <div className='basis-1/2'>
-              <div className='py-16 pr-32 text-left' >
+              <div className='py-16 pr-24 text-left' >
                 <div className='h-[32px] mb-5'>
                   <img src="https://a.sfdcstatic.com/shared/images/pbc/icons/quotation-english.svg" alt="backqoute" className='h-full' />
                 </div>
                 <span className='text-3xl'>
                   <strong>
-                Salesforce helps us understand our customers’ needs even better. We know their purchasing history and we can anticipate what the customer is looking for. That’s the power of the technology that we’re working on together. 
+                  The Odoo Application has transformed the way we manage maintenance tasks. The automation has not only saved us time but also improved the accuracy and efficiency of our operations. We are extremely pleased with the results and the support provided throughout the implementation process.
                   </strong>
                 </span>
                 <br></br><br></br>
                 <span className='text-xl'>
                   <strong>
-                  Ola Källenius 
+                  Abhilash Dass 
                   </strong>
                 </span>
-                <p className='mt-2 text-xl'>
-                CEO, Mercedes-Benz
+                <p className='mt-2 text-xl font-extralight'>
+                Admin Manager, Mountain Gate Property Management
+                </p>
+                <button className='mt-10 text-[#446E6D] border-[1px] border-[#446E6D] py-3 px-8 flex items-center rounded font-semibold cursor-pointer gap-2'><span>Read the story <OpenInNewIcon fontSize='inherit'/></span></button>
+
+              </div>
+
+              </div>
+
+            </div>
+          </div>
+          <div className='my-16 w-full relative overflow-hidden rounded-2xl shadow-xl border-2 border-gray-200'>
+            <div className='absolute top-0 left-0 w-full h-full' style={{zIndex:-1}}>
+            <svg width="1280" height="459" viewBox="0 0 1280 459" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2462 -979C2462 -184.814 1812.81 459 1012 459C211.187 459 -438 -184.814 -438 -979C-438 -1773.19 211.187 -2417 1012
+                            -2417C1812.81 -2417 2462 -1773.19 2462 -979Z" fill="rgb(259, 240, 255)"></path>
+                </svg>
+
+            </div>
+            <div className='w-full flex items-center'>
+              <div className=' basis-1/2 h-full px-40 '>
+                <img src='/green-logo.png' className='w-full active:border-[5px] active:border-blue-500 rounded-lg overflow-hidden'></img>
+              </div>
+              <div className='basis-1/2'>
+              <div className='py-16 pr-24 text-left' >
+                <div className='h-[32px] mb-5'>
+                  <img src="https://a.sfdcstatic.com/shared/images/pbc/icons/quotation-english.svg" alt="backqoute" className='h-full' />
+                </div>
+                <span className='text-3xl'>
+                  <strong>
+                  The implementation of Microsoft 365, our new website, and Odoo ERP has transformed our operations. We now have a unified system that enhances our productivity and customer service. The support and expertise provided throughout the process were exceptional.
+                  </strong>
+                </span>
+                <br></br><br></br>
+                <span className='text-xl'>
+                  <strong>
+                  Rajesh Kumar
+                  </strong>
+                </span>
+                <p className='mt-2 text-xl font-extralight'>
+                Managing Director, GREENTECH GENERAL MAINT
                 </p>
                 <button className='mt-10 text-[#446E6D] border-[1px] border-[#446E6D] py-3 px-8 flex items-center rounded font-semibold cursor-pointer gap-2'><span>Read the story <OpenInNewIcon fontSize='inherit'/></span></button>
 
@@ -170,71 +218,71 @@ Discover how leading facility management companies have transformed their operat
         <div className='flex flex-col justify-center mt-[65px]'>
         <div className='mx-auto text-center w-[1000px]  z-20'>
           <span className='text-4xl'> 
-            <strong>See what Salesforce&apos;s CRM for automotive can do for you. 
-            
+            <strong>
+            Discover what WEBME’s IT Services for Facility Management can do for you.
               </strong>
 
           </span>
           <p className='text-lg mt-8'>
-          Get out-of-the-box automotive features and workflows that make it easy to explore new revenue opportunities, advance next-generation vehicle experiences, and innovate with AI and automation – all powered by the #1 automotive CRM.
+          WEBME’s IT Services for Facility Management provide a comprehensive suite of solutions, including Website Development, Microsoft 365 integration, ERP systems, and IT Consultancy. These services are designed to streamline operations, enhance productivity, and ensure seamless communication within your facility management company.
           </p>
         </div>
           <div className='w-[1280px] mx-auto mt-12 mb-52 z-20'>
             <div className=' grid grid-cols-4 gap-10'>
               <div className='bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8'>
-                <span className='text-xl'>
+                <span className='text-xl uppercase'>
                   <strong>
-                  OEMs
+                  Branding
                   </strong>
                 </span>
-                <p className='mt-4 text-sm'>
-                Delight drivers at every touchpoint. Use a 360-degree view of the driver and their vehicle to orchestrate every automotive journey – in the car, online, and at the dealership.   
-                </p>
-                <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
+                <img src="/nextjs.png" className='w-full mt-4 rounded-sm'/>
+                <a href='/branding'>
+                  <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
                 </button>
+                  </a>
 
               </div>
               <div className='bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8'>
-                <span className='text-xl'>
+                <span className='text-xl uppercase'>
                   <strong>
-                  OEMs
+                  Modern Workplace
                   </strong>
                 </span>
-                <p className='mt-4 text-sm'>
-                Delight drivers at every touchpoint. Use a 360-degree view of the driver and their vehicle to orchestrate every automotive journey – in the car, online, and at the dealership.   
-                </p>
+                <img src="/micro.png" className='w-full mt-4 rounded-sm'/>
+                <a href='/modern-workplace'>
                 <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
                 </button>
+                </a>
 
               </div>
               <div className='bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8'>
-                <span className='text-xl'>
+                <span className='text-xl uppercase'>
                   <strong>
-                  OEMs
+                  secure Firewall
                   </strong>
                 </span>
-                <p className='mt-4 text-sm'>
-                Delight drivers at every touchpoint. Use a 360-degree view of the driver and their vehicle to orchestrate every automotive journey – in the car, online, and at the dealership.   
-                </p>
+                <img src="/firewall.png" className='w-full mt-4 rounded-sm'/>
+                <a href='/secure-firewall'>
                 <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
                 </button>
+                </a>
 
               </div>
               <div className='bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8'>
-                <span className='text-xl'>
+                <span className='text-xl uppercase'>
                   <strong>
-                  OEMs
+                  Erp
                   </strong>
                 </span>
-                <p className='mt-4 text-sm'>
-                Delight drivers at every touchpoint. Use a 360-degree view of the driver and their vehicle to orchestrate every automotive journey – in the car, online, and at the dealership.   
-                </p>
+                <img src="/Odoo ERP.jpg" className='w-full mt-4 rounded-sm'/>
+                <a href='/erp'>
                 <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
                 </button>
+                </a>
 
               </div>
             </div>
@@ -248,8 +296,8 @@ Discover how leading facility management companies have transformed their operat
         <div className='flex flex-col justify-center my-[65px]'>
         <div className='mx-auto text-center w-[1000px]  z-20'>
           <span className='text-4xl'> 
-            <strong>See what Salesforce&apos;s CRM for automotive can do for you. 
-            
+            <strong>
+            Stay on top of the newest trend,insights and discussions in the Facility Management sector.
               </strong>
 
           </span>
@@ -341,7 +389,7 @@ Discover how leading facility management companies have transformed their operat
         <div className='mx-auto text-center w-[1000px]  z-20'>
           <span className='text-4xl'> 
             <strong>
-              Ready to take the next step with the #1 AI CRM for the automotive industry?
+            Begin your journey with us today!
             </strong>
           </span>
           <p className='text-lg mt-8'>
