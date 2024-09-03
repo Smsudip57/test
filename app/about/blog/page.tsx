@@ -6,7 +6,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PersonIcon from '@mui/icons-material/Person';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 
-export default function page() {
+export default function Page() {
   const blogData = [
     { 
       type:'Sports News',
