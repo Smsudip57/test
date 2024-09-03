@@ -84,7 +84,7 @@ const HeroContent = () => {
     </div>
     <div className="flex justify-center gap-5 mb-12">
     <a href="branding">
-      <img alt="website" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-4" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="SEO.jpeg"/></a>
+      <img alt="website" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-4" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/nseo.jpg"/></a>
       <a href="branding">
       <img alt="seo" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-5" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/Website Development.jpeg"/></a>
     </div>
