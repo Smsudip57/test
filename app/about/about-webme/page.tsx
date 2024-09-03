@@ -3,7 +3,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 export default function page() {
   return (
-    <div >
+    <div className='min-h-screen'>
         <div className='mx-auto h-[680px] bg-white max-w-[1536px] flex items-center '>
             <div className=' flex gap-6'>
 

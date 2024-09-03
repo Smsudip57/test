@@ -1,6 +1,12 @@
 "use client"
 import React,{useState} from 'react'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import { Pagination, Navigation } from 'swiper/modules';
+
 
 export default function FacultyManagement() {
   const [f1, setf1] = useState(false)
@@ -130,8 +136,21 @@ export default function FacultyManagement() {
         </div>
         </div>
       </div>
-      <div className='mx-auto text-center w-[1280px] mb-48 z-20'>
-          <div className='my-16 w-full relative overflow-hidden rounded-2xl shadow-xl border-2 border-gray-200'>
+      <div className='mx-auto text-center w-[1280px] mb-48 z-20 relative'>
+      <Swiper
+        slidesPerView={1}
+        spaceBetween={100}
+        loop={true}
+        navigation={{
+          nextEl: '.swiper-button-n',
+          prevEl: '.swiper-button-p',
+        }}
+        modules={[Pagination, Navigation]}
+        className="mySwiper"
+      >
+        <SwiperSlide>
+      
+          <div className='mt-16 w-full relative overflow-hidden rounded-2xl shadow-md border-2 border-gray-200'>
             <div className='absolute top-0 left-0 w-full h-full' style={{zIndex:-1}}>
             <svg width="1280" height="459" viewBox="0 0 1280 459" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2462 -979C2462 -184.814 1812.81 459 1012 459C211.187 459 -438 -184.814 -438 -979C-438 -1773.19 211.187 -2417 1012
@@ -170,6 +189,9 @@ export default function FacultyManagement() {
 
             </div>
           </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            
           <div className='my-16 w-full relative overflow-hidden rounded-2xl shadow-xl border-2 border-gray-200'>
             <div className='absolute top-0 left-0 w-full h-full' style={{zIndex:-1}}>
             <svg width="1280" height="459" viewBox="0 0 1280 459" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -210,6 +232,18 @@ export default function FacultyManagement() {
             </div>
           </div>
 
+                            </SwiperSlide>
+                            </Swiper>
+                            <div className="absolute shadow-lg right-0 lg:-right-6 top-[45%] z-[99999999] bg-white w-[52px] h-[52px] rounded-[100%] flex justify-center items-center swiper-button-n cursor-pointer" >
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none">
+        <path fill="#000" fillRule="evenodd" d="M8.25 3.667 15.584 11 8.25 18.333 6.417 16.5l5.5-5.5-5.5-5.5L8.25 3.667Z" clipRule="evenodd"></path>
+      </svg>
+    </div>
+    <div className="absolute shadow-lg left-0 lg:-left-6 top-[45%] z-10 bg-white w-[52px] h-[52px] rounded-[100%] flex justify-center items-center swiper-button-p cursor-pointer" >
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none">
+        <path fill="#000" fillRule="evenodd" d="M13.75 18.333 6.417 11l7.333-7.333L15.583 5.5l-5.5 5.5 5.5 5.5-1.833 1.833Z" clipRule="evenodd"></path>
+      </svg>
+    </div>
         </div>
         <div className='relative  bg-no-repeat bg-cover w-full bg-bottom'  >
         <div className='absolute top-0 left-0 w-full h-full '>
@@ -460,7 +494,7 @@ export default function FacultyManagement() {
         <div className='mx-auto text-center w-[1000px]  z-20'>
           <span className='text-4xl'> 
             <strong>
-            Salesforce CRM for Automotive FAQ 
+            WEBME CRM for Automotive FAQ 
             </strong>
           </span>
         </div>

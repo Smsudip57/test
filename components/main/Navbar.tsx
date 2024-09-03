@@ -27,7 +27,6 @@ const Navbar = () => {
     "About WEBME",
     "Blog",
     "Knowledgebase",
-    "Testimonial",
     "FAQ",
     "Privary Policy",
     "Terms & Conditions",

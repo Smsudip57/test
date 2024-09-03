@@ -26,20 +26,23 @@ export default function page() {
               Customer Success with ERP
               </strong>
             </p>
-            <div className=' grid grid-cols-4 gap-10 pt-16'>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/07/production-resource-card-Wiley-720x405-1.png?w=1280' className='w-full'/>
+            <div className=' grid grid-cols-3 gap-10 pt-16'>
+            
+            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
+                <div className='w-full pt-8 flex justify-center' >
+                <img src='/logo_mountain_gate.png' className='w-[150px] aspect-square'/>
+                </div>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
                 Customer Story
                 </p>
                 <p className='text-xl mt-4'>
                   <strong>
-                  Wiley sees 213% return on investment with Einstein for Service. 
+                  Mountain Gate
                   </strong>
                 </p>
-                <p className='mt-4 mb-14'>
-                Learn how the publisher implemented AI-powered service to cut costs and boost productivity. 
+                <p className='mt-4 mb-14 line-clamp-3'>
+                The Odoo Application has transformed the way we manage maintenance tasks. The automation has not only saved us time but also improved the accuracy and efficiency of our operations. We are extremely pleased with the results and the support provided throughout the implementation process.
                 </p>
                 <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more</span>
@@ -47,19 +50,21 @@ export default function page() {
 
                 </div>
               </div>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/07/production-resource-card-Iron-Mountain-720x405-1-1.png?w=1280' className='w-full'/>
+            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
+              <div className='w-full pt-8 flex justify-center'>
+                 <img src='/green-logo.png' className='w-[150px] aspect-square'/>
+              </div>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
                 Customer Story
                 </p>
                 <p className='text-xl mt-4'>
                   <strong>
-                  Iron Mountain achieves peak productivity with Einstein AI 
+                  Green Tech
                   </strong>
                 </p>
-                <p className='mt-4 mb-14'>
-                Learn how generative AI suggests replies and articles to help agents resolve more cases. 
+                <p className='mt-4 mb-14 line-clamp-3'>
+                The implementation of Microsoft 365, our new website, and Odoo ERP has transformed our operations. We now have a unified system that enhances our productivity and customer service. The support and expertise provided throughout the process were exceptional. 
                 </p>
                 <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more</span>
@@ -67,15 +72,17 @@ export default function page() {
 
                 </div>
               </div>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/07/production-resource-card-BP-720x405-1.png?w=1280' className='w-full'/>
+            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
+              <div className='w-full pt-8 flex justify-center'>
+                 <img src='/cambrige.png' className='w-[150px] aspect-square'/>
+              </div>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
                 Customer Story
                 </p>
                 <p className='text-xl mt-4'>
                   <strong>
-                  bp boosts service agent productivity with Einstein chat summaries. 
+                  Cambridge
                   </strong>
                 </p>
                 <p className='mt-4 mb-14'>
@@ -87,26 +94,7 @@ export default function page() {
 
                 </div>
               </div>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/07/production-resource-card-Simplyhealth-720x405-1.png?w=1280' className='w-full'/>
-                <div className='p-8 h-full relative'>
-                <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
-                Customer Story
-                </p>
-                <p className='text-xl mt-4'>
-                  <strong>
-                  Simplyhealth cuts email response times by up to 90% to transform customer support. 
-                  </strong>
-                </p>
-                <p className='mt-4 mb-14'>
-                Generative AI creates email replies for FAQs to give agents more time for complex work 
-                </p>
-                <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
-                  <span className='font-bold'>Learn more</span>
-                </button>
 
-                </div>
-              </div>
 
           </div>
 
@@ -114,43 +102,26 @@ export default function page() {
         <div className='w-[1280px] mx-auto pt-32 gap-10'>
             <p className='text-4xl w-full text-center'>
               <strong>
-              Customer Success with ModernWorkplace
+              Customer Success with Website & SEO
               </strong>
             </p>
             <div className=' grid grid-cols-3 gap-10 pt-16'>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/08/Aston-Martin-Card.png?w=1280' className='w-full'/>
-                <div className='p-10 h-full relative'>
-                <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
-                Customer Story
-                </p>
-                <p className='text-2xl mt-4'>
-                  <strong>
-                  Aston Martin delivers luxury experiences powered by Data Cloud. 
-                  </strong>
-                </p>
-                <p className='mt-4 mb-14'>
-                Learn how Aston Martin unifies customer data for personalized luxury experiences and a 52% reduction in duplicates.  
-                </p>
-                <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
-                  <span className='font-bold'>Learn more</span>
-                </button>
-
+            
+            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
+                <div className='w-full pt-8 flex justify-center bg-black ' >
+                <img src='/DesignDistrict.png' className='w-[150px] aspect-square'/>
                 </div>
-              </div>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/07/production-resource-card-Air-India-720x405-1.png?w=1280' className='w-full'/>
-                <div className='p-10 h-full relative'>
+                <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
                 Customer Story
                 </p>
                 <p className='text-xl mt-4'>
                   <strong>
-                  Air India delivers effortless, world-class service with Einstein. 
+                  Design District
                   </strong>
                 </p>
-                <p className='mt-4 mb-14'>
-                Learn how the airline connects data to enhance generative AI and improve agent productivity. 
+                <p className='mt-4 mb-14 line-clamp-3'>
+                The Odoo Application has transformed the way we manage maintenance tasks. The automation has not only saved us time but also improved the accuracy and efficiency of our operations. We are extremely pleased with the results and the support provided throughout the implementation process.
                 </p>
                 <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more</span>
@@ -158,19 +129,21 @@ export default function page() {
 
                 </div>
               </div>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/07/production-resource-card-Turtle-Bay-720x405-2.png?w=1280' className='w-full'/>
-                <div className='p-10 h-full relative'>
+            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
+              <div className='w-full pt-8 flex justify-center'>
+                 <img src='/Bernini.webp' className='w-[150px] aspect-square'/>
+              </div>
+                <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
                 Customer Story
                 </p>
                 <p className='text-xl mt-4'>
                   <strong>
-                  Turtle Bay Resort elevates hospitality with AI-driven personalization. 
+                  Bernini
                   </strong>
                 </p>
-                <p className='mt-4 mb-14'>
-                Learn how AI-generated service replies and recommendations increase repeat bookings by 20%. 
+                <p className='mt-4 mb-14 line-clamp-3'>
+                The implementation of Microsoft 365, our new website, and Odoo ERP has transformed our operations. We now have a unified system that enhances our productivity and customer service. The support and expertise provided throughout the process were exceptional. 
                 </p>
                 <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more</span>
@@ -178,29 +151,56 @@ export default function page() {
 
                 </div>
               </div>
+            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
+              <div className='w-full pt-8 flex justify-center bg-black'>
+                 <img src='/emcan.png' className='w-[150px] aspect-square'/>
+              </div>
+                <div className='p-8 h-full relative'>
+                <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
+                Customer Story
+                </p>
+                <p className='text-xl mt-4'>
+                  <strong>
+                  Emcan
+                  </strong>
+                </p>
+                <p className='mt-4 mb-14'>
+                bp agents swap call transcripts for Einstein chat summaries, saving an estimated 2.5-4K hours. 
+                </p>
+                <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
+                  <span className='font-bold'>Learn more</span>
+                </button>
+
+                </div>
+              </div>
+
+
           </div>
 
         </div>
         <div className='w-[1280px] mx-auto pt-32 gap-10'>
             <p className='text-4xl w-full text-center'>
               <strong>
-              Customer Success with Website & SEO
+              Customer Success with WorkFrom Anywhere
               </strong>
             </p>
-            <div className=' grid grid-cols-4 gap-10 pt-16'>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/07/production-resource-card-World-Economic-Forum-720x405-1.png?w=1280' className='w-full'/>
+            <div className=' grid grid-cols-3 gap-10 pt-16'>
+            
+            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
+                <div className='w-full pt-8 flex justify-center' >
+                <img src='/alqoda.png' className='w-[150px] aspect-square'/>
+                </div>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
                 Customer Story
                 </p>
                 <p className='text-xl mt-4'>
                   <strong>
-                  Connected data enables leaders and programs at World Economic Forum. 
+                  Alqodorat
                   </strong>
                 </p>
-                <p className='mt-4 mb-14'>
-                The Forum integrates 64 systems with near zero downtime for improved constituent experiences. 
+                <p className='mt-4 mb-14 line-clamp-3'>
+                The Odoo Application has transformed the way we manage maintenance tasks. The automation has not only saved us time but also improved the accuracy and efficiency of our operations. We are extremely pleased with the results and the support provided throughout the implementation process.
                 </p>
                 <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more</span>
@@ -208,19 +208,21 @@ export default function page() {
 
                 </div>
               </div>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/08/production-resource-card-RBC-720x405-1.png?resize=300,169' className='w-full'/>
+            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
+              <div className='w-full pt-8 flex justify-center'>
+                 <img src='redwave.png' className='w-[150px] aspect-square'/>
+              </div>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
                 Customer Story
                 </p>
                 <p className='text-xl mt-4'>
                   <strong>
-                  RBC Wealth Management wows new clients with onboarding in 24 minutes. I 
+                  Redwave
                   </strong>
                 </p>
-                <p className='mt-4 mb-14'>
-                RBC Wealth Management consolidated 26 systems into one to exceed client and advisor expectations. 
+                <p className='mt-4 mb-14 line-clamp-3'>
+                The implementation of Microsoft 365, our new website, and Odoo ERP has transformed our operations. We now have a unified system that enhances our productivity and customer service. The support and expertise provided throughout the process were exceptional. 
                 </p>
                 <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more</span>
@@ -228,19 +230,21 @@ export default function page() {
 
                 </div>
               </div>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/08/production-resource-card-UberEats-720x405-1.png?resize=300,169' className='w-full'/>
+            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
+              <div className='w-full pt-8 flex justify-center'>
+                 <img src='/Barclays.webp' className='w-[150px] aspect-square'/>
+              </div>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
                 Customer Story
                 </p>
                 <p className='text-xl mt-4'>
                   <strong>
-                  Wrong order? Uber Eats resolves cases faster by automating workflows. 
+                  Barclays
                   </strong>
                 </p>
                 <p className='mt-4 mb-14'>
-                Uber Eats unifies merchant data from order details to payment systems to resolve disputes faster.
+                bp agents swap call transcripts for Einstein chat summaries, saving an estimated 2.5-4K hours. 
                 </p>
                 <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more</span>
@@ -248,30 +252,12 @@ export default function page() {
 
                 </div>
               </div>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/08/production-resource-card-Vonage-720x405-1.png?resize=300,169' className='w-full'/>
-                <div className='p-8 h-full relative'>
-                <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
-                Customer Story
-                </p>
-                <p className='text-xl mt-4'>
-                  <strong>
-                  From 4 days to 4 minutes—how Vonage uses automation to respond faster. 
-                  </strong>
-                </p>
-                <p className='mt-4 mb-14'>
-                See how one telecommunications company achieved massive scale – by simply working smarter. 
-                </p>
-                <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
-                  <span className='font-bold'>Learn more</span>
-                </button>
 
-                </div>
-              </div>
 
           </div>
 
         </div>
+        
     </div>
   )
 }
