@@ -42,7 +42,7 @@ export default function page() {
             <br/>
             6. Disclaimer of Warranty<br/>
             <br/>
-            6.1. We provide consultancy services "as is" and make no warranties, express or implied, regarding the accuracy, reliability, or completeness of the information provided.<br/>
+            6.1. We provide consultancy services &quot;as is&quot; and make no warranties, express or implied, regarding the accuracy, reliability, or completeness of the information provided.<br/>
             <br/>
             7. Limitation of Liability<br/>
             <br/>

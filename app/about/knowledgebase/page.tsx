@@ -7,7 +7,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import { title } from 'process';
 
-export default function page() {
+export default function Page() {
   const blogData = [
     {
         about:'Digital',
