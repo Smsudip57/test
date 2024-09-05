@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { Pagination, Navigation } from 'swiper/modules';
+import { Autoplay,Pagination, Navigation } from 'swiper/modules';
 
 
 export default function FacultyManagement() {
@@ -145,7 +145,11 @@ export default function FacultyManagement() {
           nextEl: '.swiper-button-n',
           prevEl: '.swiper-button-p',
         }}
-        modules={[Pagination, Navigation]}
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false,
+        }}
+        modules={[Autoplay,Pagination, Navigation]}
         className="mySwiper"
       >
         <SwiperSlide>
