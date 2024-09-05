@@ -60,7 +60,7 @@ import React,{useState, useEffect} from "react";
           </div>
           <div className={`${active!==''&&active!=='d'&&active!=='5'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 aspect-[1634/919]`}>
           <span>
-          <a href="/secure-firewall"><img src="/fsn.jpg" className={`${active==='5'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] aspect-[1634/919] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden`}/></a>
+          <a href="/secure-firewall"><img src="/nnetwork.jpg" className={`${active==='5'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[1634/919]`}/></a>
               </span>
           </div>
           <div className={`sm:basis-1/3 aspect-[1634/919] lg:basis-1/4 ${active!==''&&active!=='d'&&active!=='5'?"opacity-15":"block"}`} >
@@ -68,7 +68,7 @@ import React,{useState, useEffect} from "react";
           <a href="/erp"><img src="/nerps.jpg" className={`${active==='5'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[1634/919]`}/></a>
               </span>
           </div>
-          <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='d'&&active!=='ex'?"opacity-15":"block"} aspect-[1634/919]`}>
+          <div className={`sm:basis-1/3 aspect-[1634/919] lg:basis-1/4 ${active!==''&&active!=='d'&&active!=='ex'?"opacity-15":"block"}`}>
           <span>
           <a href="/expertise"><img src="/expt.jpg" className={`${active==='ex'?" bg-gradient-to-r  from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[1634/919]`}/></a>
               </span>

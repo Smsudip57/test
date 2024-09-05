@@ -80,7 +80,7 @@ const HeroContent = () => {
       <a href="work-from-anywere">
       <img alt="erp" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-2" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/erp.jpeg"/></a>
       <a href="secure-firewall">
-      <img alt="network security" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-3" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/nnetwork.jpg"/></a>
+      <img alt="network security" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-3" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/Network Security.jpeg"/></a>
       {/* Network Security.jpeg */}
     </div>
     <div className="flex justify-center gap-5 mb-12">
