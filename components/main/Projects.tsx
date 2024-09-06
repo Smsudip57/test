@@ -7,7 +7,7 @@ const Projects = () => {
       className="flex flex-col items-center justify-center pb-20"
       id="projects"
     >
-     <section className="mt-16 sm:mt-[100px] px-4 sm:px-12 lg:px-[136px]">
+     <section className="  px-4 sm:px-12 lg:px-[136px]">
   <div className="mx-auto mb-10 sm:mb-14 px-4 max-w-2xl text-center">
     <h3 className="text-seagreen-950 mb-4 font-bold text-xl">OUR PROJECTS</h3>
     <h1 className="font-lora text-4xl text-green-900 font-bold mb-6">Explore our Projects</h1>
