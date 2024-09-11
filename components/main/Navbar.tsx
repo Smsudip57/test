@@ -14,12 +14,13 @@ const Navbar = () => {
     "Automotive",
     "Construction",
     "Facility Management",
-    "General Maintenance",
+    "Legal & Administrative",
+    "Mechanical & Engineering",
     "Healthcare and Pharmaceuticals",
     "Retail",
     "Logistics and Transportation",
     "Manufacturing",
-    "Agriculture",
+    "Food & Agriculture",
     "Interior and Fitout",
     "Real Estate"
   ];

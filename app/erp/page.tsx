@@ -69,7 +69,7 @@ export default function Work() {
             ]
         },
         fortinet:{
-            image:'/odoo-erp.jpg',
+            image:'/nerps.jpg',
             description:{
                 title:'Unlock the full potential of your business with Odoo ERP – ',
                 intro:'the all-in-one management software that streamlines operations, boosts productivity, and drives growth. Whether you’re looking to implement Odoo from scratch or need expert consultancy to optimize your existing setup, our team of certified professionals is here to guide you every step of the way.||Ready to revolutionize your business? Get Started Today!',
@@ -235,7 +235,7 @@ export default function Work() {
 
   return (
     <div className='w-full relative'>
-    <div className='min-h-[80vh] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
+    <div className='min-h-[730px] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
     <div className='min-h-screen w-full absolute'>
     <StarsCanvas /></div>
     {/* <p className='mt-48'>safdas</p> */}
@@ -244,7 +244,7 @@ export default function Work() {
         <div className='w-full h-full py-[20vh]  '>
     <div className=' w-[1280px] mx-auto flex '>
             <div className='w-[50%] flex flex-col justify-center gap-10 z-30'>
-                <strong className='text-[44px] font-bold leading-[52px] font-sans'>Transform Your Business with Next-Gen ERP Solutions</strong>
+                <strong className='text-[44px] font-bold leading-[52px] font-sans'>Lead the Digital Era with State-of-the-Art Technology</strong>
                 <p className='pr-10 font-medium'>In the complex world of business management, simplicity is the ultimate sophistication.<br></br><br></br>  ERP software—a game-changer that integrates every aspect of your operations into a single, seamless platform. In the constellation of business tools, ERP software shines as the supernova of operational excellence. It’s not just a system; it’s the nucleus of your enterprise, orchestrating a symphony of streamlined processes and integrated data.</p>
                 <div className='flex gap-6'>
                     <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-sm'>Book Free Consultation</button>

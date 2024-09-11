@@ -18,82 +18,82 @@ export default function Branding() {
     const [main, setmain] = useState(0)
     const [others, setothers] = useState<DataItem[]>([]);
     const products = {
-        cisco:{
-            id:0,
-            image:'/ew.jpg',
-            description:{
-                title:'Ecommerce Website',
-                question:'',
-                intro:'',
-                importance:[
-                    "Mobile-Responsive Design: Ensure a seamless shopping experience across all devices with a design that adapts to any screen size.",
-                    "Personalized Shopping Experience: Use AI to offer personalized product recommendations and tailored content based on user behavior.",
-                    "Voice Search Optimization: Allow customers to search for products using voice commands, enhancing convenience and accessibility.",
-                    "Augmented Reality (AR) Integration: Enable customers to visualize products in their own space with AR, making online shopping more interactive.",
-                    "Social Commerce Integration: Connect your store with social media platforms for easy sharing and direct purchases from social feeds.",
-                    "One-Click Checkout: Simplify the purchasing process with a one-click checkout option, reducing cart abandonment rates.",
-                    "Advanced Product Filtering: Help customers find exactly what they need with detailed filters for size, color, price, and more.",
-                    "Customer Reviews and Ratings: Build trust and credibility with user-generated reviews and ratings for products.",
-                    "Live Chat Support: Provide instant assistance to customers with live chat support, improving customer service and satisfaction.",
-                    "Loyalty Programs and Rewards: Encourage repeat purchases with loyalty programs that offer rewards and discounts.",
-                    "Secure Payment Options: Offer multiple secure payment methods, including digital wallets, to cater to diverse customer preferences.",
-                    "Sustainability Badges: Highlight eco-friendly products with sustainability badges to attract environmentally conscious shoppers."
-                ]
+        // cisco:{
+        //     id:0,
+        //     image:'/ew.jpg',
+        //     description:{
+        //         title:'Ecommerce Website',
+        //         question:'',
+        //         intro:'',
+        //         importance:[
+        //             "Mobile-Responsive Design: Ensure a seamless shopping experience across all devices with a design that adapts to any screen size.",
+        //             "Personalized Shopping Experience: Use AI to offer personalized product recommendations and tailored content based on user behavior.",
+        //             "Voice Search Optimization: Allow customers to search for products using voice commands, enhancing convenience and accessibility.",
+        //             "Augmented Reality (AR) Integration: Enable customers to visualize products in their own space with AR, making online shopping more interactive.",
+        //             "Social Commerce Integration: Connect your store with social media platforms for easy sharing and direct purchases from social feeds.",
+        //             "One-Click Checkout: Simplify the purchasing process with a one-click checkout option, reducing cart abandonment rates.",
+        //             "Advanced Product Filtering: Help customers find exactly what they need with detailed filters for size, color, price, and more.",
+        //             "Customer Reviews and Ratings: Build trust and credibility with user-generated reviews and ratings for products.",
+        //             "Live Chat Support: Provide instant assistance to customers with live chat support, improving customer service and satisfaction.",
+        //             "Loyalty Programs and Rewards: Encourage repeat purchases with loyalty programs that offer rewards and discounts.",
+        //             "Secure Payment Options: Offer multiple secure payment methods, including digital wallets, to cater to diverse customer preferences.",
+        //             "Sustainability Badges: Highlight eco-friendly products with sustainability badges to attract environmentally conscious shoppers."
+        //         ]
                 
-            },
-        },
-        fortinet:{
-            id:1,
-            image:'/seo1.jpg',
-            description:{
-                title:'SEO (Search Engine Optimization)',
-                question:'',
-                intro:'SEO (Search Engine Optimization) is essential for enhancing your website\'s visibility in the crowded online marketplace.||SEO increases traffic by optimizing your site, enhancing engagement, and building credibility. It’s about more than rankings—it\'s key for long-term success.',
-                importance:[
+        //     },
+        // },
+        // fortinet:{
+        //     id:1,
+        //     image:'/seo1.jpg',
+        //     description:{
+        //         title:'SEO (Search Engine Optimization)',
+        //         question:'',
+        //         intro:'SEO (Search Engine Optimization) is essential for enhancing your website\'s visibility in the crowded online marketplace.||SEO increases traffic by optimizing your site, enhancing engagement, and building credibility. It’s about more than rankings—it\'s key for long-term success.',
+        //         importance:[
                     
-                ]
-            },
-        },
+        //         ]
+        //     },
+        // },
         paloalto:{
-            id:2,
-            image:'/rwd.jpg',
+            id:0,
+            image:'/expt.jpg',
             description:{
-                title:'Real Estate Website',
-                intro:'',
+                title:'Mobile App Development',
+                intro:'No data yet',
                 question:'',
                 importance:[
-                    "Virtual Tours: Offer immersive 3D virtual tours of properties, allowing potential buyers to explore homes from the comfort of their own space.",
-                    "Dynamic Maps: Provide interactive maps with detailed neighborhood information, including schools, amenities, and public transport.",
-                    "AI-Powered Search: Utilize AI to deliver personalized property recommendations and enhance search capabilities.",
-                    "Mobile-First Design: Ensure a seamless browsing experience on all devices with a mobile-first design approach.",
-                    "Interactive Property Listings: Engage users with interactive property listings that include high-resolution images, videos, and floor plans.",
-                    "Live Chat Support: Offer instant assistance with live chat support, helping visitors with their queries in real-time.",
-                    "Advanced Filtering Options: Allow users to filter properties based on various criteria such as price, location, size, and amenities.",
-                    "Customer Reviews and Testimonials: Build trust with user-generated reviews and testimonials from satisfied clients.",
-                    "Sustainability Features: Highlight eco-friendly properties with sustainability badges and detailed information on green features.",
-                    "Secure Online Transactions: Provide secure options for online transactions, including digital signatures and payment gateways."
+                    // "Virtual Tours: Offer immersive 3D virtual tours of properties, allowing potential buyers to explore homes from the comfort of their own space.",
+                    // "Dynamic Maps: Provide interactive maps with detailed neighborhood information, including schools, amenities, and public transport.",
+                    // "AI-Powered Search: Utilize AI to deliver personalized property recommendations and enhance search capabilities.",
+                    // "Mobile-First Design: Ensure a seamless browsing experience on all devices with a mobile-first design approach.",
+                    // "Interactive Property Listings: Engage users with interactive property listings that include high-resolution images, videos, and floor plans.",
+                    // "Live Chat Support: Offer instant assistance with live chat support, helping visitors with their queries in real-time.",
+                    // "Advanced Filtering Options: Allow users to filter properties based on various criteria such as price, location, size, and amenities.",
+                    // "Customer Reviews and Testimonials: Build trust with user-generated reviews and testimonials from satisfied clients.",
+                    // "Sustainability Features: Highlight eco-friendly properties with sustainability badges and detailed information on green features.",
+                    // "Secure Online Transactions: Provide secure options for online transactions, including digital signatures and payment gateways."
                 ]
                 
             },
         },
         sophos:{
-            id:3,
-            image:'/wd.jpg',
+            id:1,
+            image:'/nextjs.jpg',
             description:{
-                title:'construction company website',
-                intro:'',
-                question:'Why Choose Sophos Networks?',
+                title:'Website Development',
+                intro:'No data yet',
+                question:'',
                 importance:[
-                    "Interactive Project Portfolios: Showcase your best work with high-quality images, videos, and 3D models that visitors can explore.",
-                    "Virtual Tours: Offer immersive 3D virtual tours of completed projects, allowing potential clients to experience your work firsthand.",
-                    "Dynamic Maps: Provide interactive maps highlighting your project locations and key details about each site.",
-                    "Client Testimonials: Build trust with potential clients by featuring detailed testimonials and case studies from satisfied customers.",
-                    "Sustainability Highlights: Showcase your commitment to green building practices with dedicated sections on sustainability and LEED-certified projects.",
-                    "Live Chat Support: Offer instant assistance to visitors with live chat support, helping them with inquiries in real-time.",
-                    "Detailed Service Pages: Clearly outline your services with detailed descriptions, benefits, and examples of past projects.",
-                    "Mobile-Responsive Design: Ensure a seamless browsing experience on all devices with a mobile-first design approach.",
-                    "Blog and Resources: Provide valuable content through a blog and resource section, sharing industry insights, tips, and company news.",
-                    "Secure Client Portals: Offer clients a secure portal to access project updates, documents, and communication tools."
+                    // "Interactive Project Portfolios: Showcase your best work with high-quality images, videos, and 3D models that visitors can explore.",
+                    // "Virtual Tours: Offer immersive 3D virtual tours of completed projects, allowing potential clients to experience your work firsthand.",
+                    // "Dynamic Maps: Provide interactive maps highlighting your project locations and key details about each site.",
+                    // "Client Testimonials: Build trust with potential clients by featuring detailed testimonials and case studies from satisfied customers.",
+                    // "Sustainability Highlights: Showcase your commitment to green building practices with dedicated sections on sustainability and LEED-certified projects.",
+                    // "Live Chat Support: Offer instant assistance to visitors with live chat support, helping them with inquiries in real-time.",
+                    // "Detailed Service Pages: Clearly outline your services with detailed descriptions, benefits, and examples of past projects.",
+                    // "Mobile-Responsive Design: Ensure a seamless browsing experience on all devices with a mobile-first design approach.",
+                    // "Blog and Resources: Provide valuable content through a blog and resource section, sharing industry insights, tips, and company news.",
+                    // "Secure Client Portals: Offer clients a secure portal to access project updates, documents, and communication tools."
                 ]
                 
             },
@@ -112,7 +112,7 @@ export default function Branding() {
 
   return (
     <div className='w-full relative'>
-        <div className='min-h-[80vh] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
+        <div className='min-h-[780px] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
         <div className='min-h-screen w-full absolute'>
         <StarsCanvas /></div>
         {/* <p className='mt-48'>safdas</p> */}
@@ -121,7 +121,7 @@ export default function Branding() {
             <div className='w-full h-full py-[19vh]  '>
         <div className=' w-[1280px] mx-auto flex '>
                 <div className='w-[50%] flex flex-col justify-center gap-10 z-30'>
-                    <strong className='text-[44px] font-bold leading-[52px] font-sans'>Elevate Your Brand with Exceptional Website Development</strong>
+                    <strong className='text-[40px] font-bold leading-[52px] font-sans'>Elevate Your Brand with Exceptional Website Development, Mobile App Innovation, and SEO Excellence</strong>
                     <p className='pr-10 font-medium'>In today’s digital-first world, your website is the heart of your business.<br></br><br></br> We create stunning, high-performing websites that captivate your audience and drive your business forward. In the bustling bazaar of the digital world, your website is your storefront, your billboard, and your business card rolled into one. It’s the heartbeat of your online presence and the digital handshake that greets every potential customer.</p>
                     <div className='flex gap-6'>
                     <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-sm'>Book Free Consultation</button>
@@ -151,7 +151,11 @@ export default function Branding() {
                 <div className='w-full flex flex-col gap-4 pl-3 text-sm'>
                 {
                         Object.values(products)[main].description.importance.length>0&&Object.values(products)[main].description.importance.map((item, index) => {
-                            return <li key={index} className='box-border'><strong>{item.split(':')[0]}:</strong> {item.split(':')[1]}</li>
+                            return <li key={index} className='box-border'><strong>
+                                {/* {item.split(':')[0]} */}
+                                :</strong> 
+                                {/* {item.split(':')[1]} */}
+                                </li>
                         })
                     }
                 </div></div>

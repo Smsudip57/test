@@ -1,10 +1,11 @@
 import React from 'react'
 import StarsCanvas from '@/components/main/StarBackground'
+import EastIcon from '@mui/icons-material/East';
 
 export default function Modern() {
   return (
     <div className='w-full relative'>
-        <div className='min-h-[70vh] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
+        <div className='min-h-[690px] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
         <div className='min-h-screen w-full absolute'>
         <StarsCanvas /></div>
         {/* <p className='mt-48'>safdas</p> */}
@@ -13,15 +14,19 @@ export default function Modern() {
             <div className='w-full h-full py-[19vh]  '>
         <div className=' w-[1280px] mx-auto flex '>
                 <div className='w-[50%] flex flex-col justify-center gap-10 z-30'>
-                    <strong className='text-[44px] font-bold leading-[52px] font-sans'>Transform Your Business with Microsoft Modern Workplace</strong>
+                    <strong className='text-[40px] font-bold leading-[52px] font-sans'>Enhance Your Business with Modern Solutions – Secure and Flexible Work from Anywhere</strong>
                     <p className='pr-10 font-medium'>In the fast-paced world of modern business, staying ahead means embracing the latest in digital transformation.<br></br><br></br> Enter the Microsoft Modern Workplace—a suite of cutting-edge tools and technologies designed to empower your workforce and revolutionize the way you do business.</p>
+                    <div className='flex gap-6'>
+                    <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-sm'>Book Free Consultation</button>
+                    <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Explore</span> <EastIcon fontSize='inherit '/></button>
+                    </div>
                 </div>
                 <div className='w-[50%] flex justify-center items-center z-30'>
                     <div className='flex justify-center flex-wrap items-center'>
                     <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/m365.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
                     <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/share-m.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
-                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/pbi.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
-                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/micro-t.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
+                    {/* <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/pbi.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
+                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/micro-t.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div> */}
                     </div>
                 </div>
             </div> 
@@ -52,11 +57,11 @@ export default function Modern() {
                 <img src='/share-m.jpg' alt='cisco' className='w-full rounded-md'/>
                 <h2 className='text-2xl font-semibold font-sans'>Microsoft Sharepoint</h2>
                 </div>
-                <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                {/* <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                      <img src='/pbi.jpg' alt='cisco' className='w-full rounded-md'/>
-                <h2 className='text-2xl font-semibold font-sans'>Power Bl</h2>
+                <h2 className='text-2xl font-semibold font-sans'>Power Apps</h2>
 
-                </div>
+                </div> */}
                 </div>
             
             </div> 

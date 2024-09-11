@@ -21,11 +21,11 @@ export default function Home() {
         <div className="bg-[rgba(231,247,246,1)] z-20">
         <Webme />
         </div>
-        <Infinite />
         <CaseStudy />
         <div className="z-20 w-full">
         <Projects />
         <Pricing />
+        <Infinite />
         <Contact />
         </div>
 

@@ -119,104 +119,104 @@ export default function Firewall() {
                 },
             ]
         },
-        paloalto:{
-            image:'/paltoalo.jpg',
-            description:{
-                title:'Elevate Your Security with Palo Alto Networks',
-                intro:'Transform your network security with Palo Alto Networks. ||Known for their cutting-edge technology and innovative solutions, Palo Alto Networks provides comprehensive protection against the most advanced cyber threats. Whether you need implementation or consultancy, our expert team is ready to deliver customized solutions that ensure your network remains secure and resilient.',
-                question:'Why Choose Palo Alto Networks?',
-                importance:[
-                    "Next-Generation Security: Leverage advanced threat prevention and real-time threat intelligence.",
-                    "Comprehensive Protection: Benefit from integrated firewall, intrusion prevention, and URL filtering.",
-                    "Scalable Solutions: Perfect for businesses of all sizes, offering flexibility and growth potential.",
-                    "Expert Support: Our certified professionals provide end-to-end support for all your security needs."
-                ]
-            },
-            data:[
-                {
-                    id:0,
-                    image:'/pa-220.png',
-                    title:'PA-220',
-                    description:[
-                        "Compact and Powerful: Delivers enterprise-grade security in a small form factor, perfect for small offices1.",
-                        "Advanced Threat Prevention: Protects against known and unknown threats with real-time updates from WildFire1.",
-                        "Easy Management: Simplified deployment and management through the intuitive web interface1.",
-                        "Cost-Effective: Provides robust security features at an affordable price, ideal for SMBs."
-                    ]
-                },
-                {
-                    id:1,
-                    image:'/PA820.png',
-                    title:'PA-820',
-                    description:[
-                        "High Performance: Offers up to 940 Mbps firewall throughput, ensuring fast and secure network traffic2.",
-                        "Comprehensive Security: Includes firewall, VPN, and intrusion prevention in a single device2.",
-                        "Scalable Solution: Suitable for growing businesses, offering flexibility and scalability as your network expands2.",
-                        "User-Friendly Interface: Intuitive management through Panorama, ensuring easy monitoring and control2."
-                    ]
-                },
-                {
-                    id:2,
-                    image:'/prisma-Access-logo.png',
-                    title:'Prisma Access',
-                    description:[
-                        "Cloud-Delivered Security: Provides secure access to applications and data from anywhere, ideal for remote work environments3.",
-                        "Zero Trust Network Access: Ensures secure connections with identity-based access controls3.",
-                        "Seamless Integration: Easily integrates with existing IT infrastructure for a unified security approach3.",
-                        "Scalable and Flexible: Perfect for businesses of all sizes, offering flexibility and growth potential3."
-                    ]
-                },
-            ]
-        },
-        sophos:{
-            image:'/sophos.png',
-            description:{
-                title:'Secure Your Business with Sophos Networks',
-                intro:'Empower your network with Sophos Networks’ advanced security solutions. ||Known for their innovative and comprehensive protection, Sophos Networks offers robust security against the most sophisticated cyber threats. Whether you need implementation or consultancy, our expert team is ready to provide customized solutions that ensure your network remains secure and efficient.',
-                question:'Why Choose Sophos Networks?',
-                importance:[
-                    "Next-Gen Security: Benefit from advanced threat protection and real-time threat intelligence.",
-                    "Comprehensive Coverage: Enjoy features like firewall, endpoint protection, and email security.",
-                    "Scalable Solutions: Perfect for businesses of all sizes, offering flexibility and growth potential.",
-                    "Expert Support: Our certified professionals provide end-to-end support for all your security needs."
-                ]
-            },
-            data:[
-                {
-                    id:0,
-                    image:'/xg.jpg',
-                    title:'Sophos XG Firewall',
-                    description:[
-                        "Advanced Threat Protection: Combines deep learning and AI to detect and block the latest threats1.",
-                        "Synchronized Security: Integrates seamlessly with Sophos Central for unified threat management1.",
-                        "Easy Management: Intuitive interface and powerful reporting tools for simplified administration1.",
-                        "High Performance: Delivers robust performance with low latency, ideal for SMB environments1."
-                    ]
-                },
-                {
-                    id:1,
-                    image:'/intercept.jpg',
-                    title:'Sophos Intercept X',
-                    description:[
-                        "Next-Gen Endpoint Protection: Uses deep learning to prevent malware and ransomware attacks.",
-                        "Exploit Prevention: Blocks exploit techniques used by attackers to gain control of systems.",
-                        "Active Adversary Mitigations: Detects and stops active attacks in real-time.",
-                        "Centralized Management: Managed through Sophos Central for streamlined security operations."
-                    ]
-                },
-                {
-                    id:2,
-                    image:'/sophos-central.webp',
-                    title:'Sophos Central',
-                    description:[
-                        "Unified Security Platform: Manages all your Sophos products from a single, cloud-based console.",
-                        "Automated Threat Response: Automatically responds to incidents, reducing the need for manual intervention.",
-                        "Scalable and Flexible: Grows with your business, offering scalable security solutions.",
-                        "Comprehensive Reporting: Provides detailed insights and reports for better decision-making."
-                    ]
-                },
-            ]
-        },
+        // paloalto:{
+        //     image:'/paltoalo.jpg',
+        //     description:{
+        //         title:'Elevate Your Security with Palo Alto Networks',
+        //         intro:'Transform your network security with Palo Alto Networks. ||Known for their cutting-edge technology and innovative solutions, Palo Alto Networks provides comprehensive protection against the most advanced cyber threats. Whether you need implementation or consultancy, our expert team is ready to deliver customized solutions that ensure your network remains secure and resilient.',
+        //         question:'Why Choose Palo Alto Networks?',
+        //         importance:[
+        //             "Next-Generation Security: Leverage advanced threat prevention and real-time threat intelligence.",
+        //             "Comprehensive Protection: Benefit from integrated firewall, intrusion prevention, and URL filtering.",
+        //             "Scalable Solutions: Perfect for businesses of all sizes, offering flexibility and growth potential.",
+        //             "Expert Support: Our certified professionals provide end-to-end support for all your security needs."
+        //         ]
+        //     },
+        //     data:[
+        //         {
+        //             id:0,
+        //             image:'/pa-220.png',
+        //             title:'PA-220',
+        //             description:[
+        //                 "Compact and Powerful: Delivers enterprise-grade security in a small form factor, perfect for small offices1.",
+        //                 "Advanced Threat Prevention: Protects against known and unknown threats with real-time updates from WildFire1.",
+        //                 "Easy Management: Simplified deployment and management through the intuitive web interface1.",
+        //                 "Cost-Effective: Provides robust security features at an affordable price, ideal for SMBs."
+        //             ]
+        //         },
+        //         {
+        //             id:1,
+        //             image:'/PA820.png',
+        //             title:'PA-820',
+        //             description:[
+        //                 "High Performance: Offers up to 940 Mbps firewall throughput, ensuring fast and secure network traffic2.",
+        //                 "Comprehensive Security: Includes firewall, VPN, and intrusion prevention in a single device2.",
+        //                 "Scalable Solution: Suitable for growing businesses, offering flexibility and scalability as your network expands2.",
+        //                 "User-Friendly Interface: Intuitive management through Panorama, ensuring easy monitoring and control2."
+        //             ]
+        //         },
+        //         {
+        //             id:2,
+        //             image:'/prisma-Access-logo.png',
+        //             title:'Prisma Access',
+        //             description:[
+        //                 "Cloud-Delivered Security: Provides secure access to applications and data from anywhere, ideal for remote work environments3.",
+        //                 "Zero Trust Network Access: Ensures secure connections with identity-based access controls3.",
+        //                 "Seamless Integration: Easily integrates with existing IT infrastructure for a unified security approach3.",
+        //                 "Scalable and Flexible: Perfect for businesses of all sizes, offering flexibility and growth potential3."
+        //             ]
+        //         },
+        //     ]
+        // },
+        // sophos:{
+        //     image:'/sophos.png',
+        //     description:{
+        //         title:'Secure Your Business with Sophos Networks',
+        //         intro:'Empower your network with Sophos Networks’ advanced security solutions. ||Known for their innovative and comprehensive protection, Sophos Networks offers robust security against the most sophisticated cyber threats. Whether you need implementation or consultancy, our expert team is ready to provide customized solutions that ensure your network remains secure and efficient.',
+        //         question:'Why Choose Sophos Networks?',
+        //         importance:[
+        //             "Next-Gen Security: Benefit from advanced threat protection and real-time threat intelligence.",
+        //             "Comprehensive Coverage: Enjoy features like firewall, endpoint protection, and email security.",
+        //             "Scalable Solutions: Perfect for businesses of all sizes, offering flexibility and growth potential.",
+        //             "Expert Support: Our certified professionals provide end-to-end support for all your security needs."
+        //         ]
+        //     },
+        //     data:[
+        //         {
+        //             id:0,
+        //             image:'/xg.jpg',
+        //             title:'Sophos XG Firewall',
+        //             description:[
+        //                 "Advanced Threat Protection: Combines deep learning and AI to detect and block the latest threats1.",
+        //                 "Synchronized Security: Integrates seamlessly with Sophos Central for unified threat management1.",
+        //                 "Easy Management: Intuitive interface and powerful reporting tools for simplified administration1.",
+        //                 "High Performance: Delivers robust performance with low latency, ideal for SMB environments1."
+        //             ]
+        //         },
+        //         {
+        //             id:1,
+        //             image:'/intercept.jpg',
+        //             title:'Sophos Intercept X',
+        //             description:[
+        //                 "Next-Gen Endpoint Protection: Uses deep learning to prevent malware and ransomware attacks.",
+        //                 "Exploit Prevention: Blocks exploit techniques used by attackers to gain control of systems.",
+        //                 "Active Adversary Mitigations: Detects and stops active attacks in real-time.",
+        //                 "Centralized Management: Managed through Sophos Central for streamlined security operations."
+        //             ]
+        //         },
+        //         {
+        //             id:2,
+        //             image:'/sophos-central.webp',
+        //             title:'Sophos Central',
+        //             description:[
+        //                 "Unified Security Platform: Manages all your Sophos products from a single, cloud-based console.",
+        //                 "Automated Threat Response: Automatically responds to incidents, reducing the need for manual intervention.",
+        //                 "Scalable and Flexible: Grows with your business, offering scalable security solutions.",
+        //                 "Comprehensive Reporting: Provides detailed insights and reports for better decision-making."
+        //             ]
+        //         },
+        //     ]
+        // },
     }
     const [data, setdata] = useState(products.cisco.data);
     const [details, setdetails] = useState(products.cisco.description);
@@ -233,7 +233,7 @@ export default function Firewall() {
 
   return (
     <div className='w-full relative'>
-        <div className='min-h-[80vh] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
+        <div className='min-h-[750px] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
         <div className='min-h-screen w-full absolute'>
         <StarsCanvas /></div>
         {/* <p className='mt-48'>safdas</p> */}
@@ -242,7 +242,7 @@ export default function Firewall() {
             <div className='w-full h-full py-[19vh]  '>
         <div className=' w-[1280px] mx-auto flex '>
                 <div className='w-[50%] flex flex-col justify-around gap-10 z-30'>
-                    <strong className='text-[44px] font-bold leading-[52px] font-sans'>Unlock the Power of Protection with Premier Network Security</strong>
+                    <strong className='text-[40px] font-bold leading-[52px] font-sans'>Paving the Way for Progress: Implementing Modern Workplace Solutions</strong>
                     <p className='pr-10 font-medium'>Embark on a journey to digital fortitude with Network Security, the cornerstone of modern business resilience.<br></br><br></br> In an era where cyber threats loom large, Network Security stands as the vanguard, shielding your enterprise’s lifeblood—its data. In today’s fast-paced digital world, safeguarding your business from cyber threats is more crucial than ever.  Network security is not just a tech requirement—it&apos;s a cornerstone of your business’s resilience and success.</p>
                     <div className='flex gap-6'>
                     <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-sm'>Book Free Consultation</button>

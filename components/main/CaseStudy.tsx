@@ -15,7 +15,13 @@ export default function CaseStudy() {
 
   return (
     <div className='z-20 w-full flex flex-col' id='case-study'>
-  <div className='mx-auto text-center w-[1280px] mb-48 relative'>
+  <div className='mx-auto text-center w-[1280px] my-40 relative'>
+  
+            <h1 className='text-4xl w-full text-center'>
+              <strong>
+              Discover how businesses are revolutionizing customer success with WEBME.
+              </strong>
+            </h1>
       <Swiper
         slidesPerView={1}
         spaceBetween={100}
@@ -75,7 +81,7 @@ export default function CaseStudy() {
           </SwiperSlide>
           <SwiperSlide>
             
-          <div className='my-16 w-full relative overflow-hidden rounded-2xl shadow-xl border-2 border-gray-200'>
+          <div className='my-16 w-full relative overflow-hidden rounded-2xl shadow-md border-2 border-gray-200'>
             <div className='absolute top-0 left-0 w-full h-full' style={{zIndex:-1}}>
             <svg width="1280" height="459" viewBox="0 0 1280 459" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2462 -979C2462 -184.814 1812.81 459 1012 459C211.187 459 -438 -184.814 -438 -979C-438 -1773.19 211.187 -2417 1012
