@@ -23,8 +23,8 @@ export default function Modern() {
                 </div>
                 <div className='w-[50%] flex justify-center items-center z-30'>
                     <div className='flex justify-center flex-wrap items-center'>
-                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/cctv.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
-                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/iot.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
+                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/m365.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
+                    <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/share-m.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
                     {/* <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/pbi.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div>
                     <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl '><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src='/micro-t.jpg' alt='cisco' className='w-full  hover:opacity-70'/></a></div> */}
                     </div>
@@ -38,14 +38,13 @@ export default function Modern() {
                     <p className='pr-10 font-medium'>a beacon of innovation, security, and collaboration. It’s more than technology; it’s a commitment to a modernized, efficient, and secure future.</p>
                 </div>
                 <div className=' flex flex-col basis-1/3 justify-center items-start gap-8 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
-                <img src='/cctv.jpg' alt='cisco' className='w-full rounded-md'/>
+                <img src='/m365.jpg' alt='cisco' className='w-full rounded-md'/>
 
-                <h2 className='text-2xl font-semibold font-sans'>AI CCTV</h2>
+                <h2 className='text-2xl font-semibold font-sans'>Microsoft 365</h2>
                 <div className=' font-medium flex flex-col gap-4'>
                   <p>
-                  {/* In the digital era, where agility meets innovation, Microsoft Modern Workplace emerges as the cornerstone of business evolution.<br></br><br></br> It’s not just a suite of products; it’s a revolutionary workspace metamorphosis that propels your business into the future. */}
+                  In the digital era, where agility meets innovation, Microsoft Modern Workplace emerges as the cornerstone of business evolution.<br></br><br></br> It’s not just a suite of products; it’s a revolutionary workspace metamorphosis that propels your business into the future.
                   </p>
-                  <p>No data yet</p>
                     {/* <li>360-Degree Customer View: Centralize all customer interactions and data in one place.</li>
                     <li>Automated Follow-Ups: Never miss a lead with automated follow-up emails and reminders.</li>
                     <li>Pipeline Management: Visualize your sales pipeline and track progress with ease.</li>
@@ -55,8 +54,8 @@ export default function Modern() {
                 </div>
                 <div className='basis-1/3 flex flex-col gap-8'>
                 <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
-                <img src='/iot.jpg' alt='cisco' className='w-full rounded-md'/>
-                <h2 className='text-2xl font-semibold font-sans'>IOT</h2>
+                <img src='/share-m.jpg' alt='cisco' className='w-full rounded-md'/>
+                <h2 className='text-2xl font-semibold font-sans'>Microsoft Sharepoint</h2>
                 </div>
                 {/* <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
                      <img src='/pbi.jpg' alt='cisco' className='w-full rounded-md'/>
