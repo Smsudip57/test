@@ -112,11 +112,13 @@ const HeroContent = () => {
       <img alt="network security" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-3" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/supporti.jpg"/></a>
       {/* Network Security.jpeg */}
     </div>
-    <div className="flex justify-center gap-5 mb-12">
+    <div className="flex justify-center gap-2 sm:gap-5 mb-4">
     <a href="/branding">
       <img alt="website" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-4" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/nseo.jpg"/></a>
       <a href="/branding">
       <img alt="seo" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-5" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/Website Development.jpg"/></a>
+      <a href="/erp">
+      <img alt="network security" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-3" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/dimg.jpg"/></a>
     </div>
   </div>
   <div className="rounded-[70px] w-full  mx-auto border-[1.5px] gap-2 xs:gap-4 flex md:gap-5 border-[#0B2B20] p-1 justify-between bg-white border-box">
