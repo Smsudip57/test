@@ -24,7 +24,7 @@ import React,{useState, useEffect} from "react";
             <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
             <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("d")} onMouseLeave={() => setActive('')}>Digital</li>
             </div>
-          <div className="text-center pb-10 md:pb-20 px-4 sm:px-0 lg:px-[48px] z-10">
+          <div className="text-center pb-10 md:pb-24 px-4 sm:px-0 lg:px-[48px] z-10">
         <div className="mb-5 sm:mb-10 md:px-20 lg:px-89 px-5 ">
           <div className="relative cursor-pointer">
             
