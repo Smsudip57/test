@@ -60,12 +60,12 @@ import React,{useState, useEffect} from "react";
           </div>
           <div className={`${active!==''&&active!=='d'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 serviceforce aspect-[1634/919]`}>
           <span>
-          <a href="/secure-firewall"><img src="/nnetwork.jpg" className={`${active==='d'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
+          <a href="/digital"><img src="/nnetwork.jpg" className={`${active==='d'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
               </span>
           </div>
           <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='d'?"opacity-15":"block"} serviceforce aspect-[1634/919]`} >
           <span>
-          <a href="/erp"><img src="/nerps.jpg" className={`${active==='d'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
+          <a href="/digital"><img src="/nerps.jpg" className={`${active==='d'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
               </span>
           </div>
           <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='b'?"opacity-5":"block"} aspect-[1634/919]`}>
