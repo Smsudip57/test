@@ -15,59 +15,59 @@ export default function Work() {
     const [main, setmain] = useState(0)
     const [others, setothers] = useState<DataItem[]>([]);
     const products = {
-        cisco:{
-            image:'/micro-d.jpg',
-            description:{
-                title:'Microsoft 365: Empower Your Modern Workplace',
-                intro:'Unlock the full potential of your business with Microsoft 365. Seamlessly integrate productivity tools, enhance collaboration, and ensure top-notch security—all in one powerful suite. Whether you’re working from the office or remotely, Microsoft 365 keeps your team connected and productive with innovative features like real-time co-authoring, advanced data analytics, and AI-driven insights.||Discover how Microsoft 365 can revolutionize your workplace. Get Started Now',
-                question:'Why Choose Cisco Firewalls?',
-                importance:[
-                    "360-Degree Customer View: Centralize all customer interactions and data in one place.",
-                    "Automated Follow-Ups: Never miss a lead with automated follow-up emails and reminders.",
-                    "Pipeline Management: Visualize your sales pipeline and track progress with ease.",
-                    "Customizable Dashboards: Tailor your dashboard to display the metrics that matter most to your business."
-                ]
-            },
-            data:[
-                {
-                    id:0,
-                    image:'/m-b.jpg',
-                    title:'Dynamics 365 Business Central',
-                    description:[
-                        "All-in-One Solution: Integrates finance, sales, service, and operations into a single, easy-to-use application.",
-                        "Scalable and Flexible: Grows with your business, offering both cloud and on-premise deployment options.",
-                        "Real-Time Insights: Provides real-time data and analytics to support informed decision-making.",
-                        "Enhanced Productivity: Streamlines business processes and automates routine tasks."
-                    ]
+        // cisco:{
+        //     image:'/micro-d.jpg',
+        //     description:{
+        //         title:'Microsoft 365: Empower Your Modern Workplace',
+        //         intro:'Unlock the full potential of your business with Microsoft 365. Seamlessly integrate productivity tools, enhance collaboration, and ensure top-notch security—all in one powerful suite. Whether you’re working from the office or remotely, Microsoft 365 keeps your team connected and productive with innovative features like real-time co-authoring, advanced data analytics, and AI-driven insights.||Discover how Microsoft 365 can revolutionize your workplace. Get Started Now',
+        //         question:'Why Choose Cisco Firewalls?',
+        //         importance:[
+        //             "360-Degree Customer View: Centralize all customer interactions and data in one place.",
+        //             "Automated Follow-Ups: Never miss a lead with automated follow-up emails and reminders.",
+        //             "Pipeline Management: Visualize your sales pipeline and track progress with ease.",
+        //             "Customizable Dashboards: Tailor your dashboard to display the metrics that matter most to your business."
+        //         ]
+        //     },
+        //     data:[
+        //         {
+        //             id:0,
+        //             image:'/m-b.jpg',
+        //             title:'Dynamics 365 Business Central',
+        //             description:[
+        //                 "All-in-One Solution: Integrates finance, sales, service, and operations into a single, easy-to-use application.",
+        //                 "Scalable and Flexible: Grows with your business, offering both cloud and on-premise deployment options.",
+        //                 "Real-Time Insights: Provides real-time data and analytics to support informed decision-making.",
+        //                 "Enhanced Productivity: Streamlines business processes and automates routine tasks."
+        //             ]
                     
-                },
-                {
-                    id:1,
-                    image:'/m-s.jpg',
-                    title:'Dynamics 365 Sales',
-                    description:[
-                        "AI-Driven Insights: Uses AI to provide actionable insights and predictive analytics for better sales outcomes.",
-                        "Customer Engagement: Enhances customer relationships with personalized interactions and advanced relationship insights.",
-                        "Sales Automation: Automates sales processes to increase efficiency and reduce manual work.",
-                        "Mobile Access: Allows sales teams to access critical data and tools on the go."
-                    ]
+        //         },
+        //         {
+        //             id:1,
+        //             image:'/m-s.jpg',
+        //             title:'Dynamics 365 Sales',
+        //             description:[
+        //                 "AI-Driven Insights: Uses AI to provide actionable insights and predictive analytics for better sales outcomes.",
+        //                 "Customer Engagement: Enhances customer relationships with personalized interactions and advanced relationship insights.",
+        //                 "Sales Automation: Automates sales processes to increase efficiency and reduce manual work.",
+        //                 "Mobile Access: Allows sales teams to access critical data and tools on the go."
+        //             ]
                     
-                },
-                {
-                    id:2,
-                    image:'/m-c.jpg',
-                    title:'Dynamics 365 Customer Service',
-                    description:[
-                        "Omni-Channel Engagement: Supports customer interactions across multiple channels, including chat, email, and social media.",
-                        "AI-Powered Assistance: Utilizes AI to provide intelligent recommendations and automate routine service tasks.",
-                        "Unified Customer View: Offers a 360-degree view of customer interactions and history for personalized service.",
-                        "Self-Service Options: Provides customers with self-service portals and knowledge bases for quick issue resolution."
-                    ]
+        //         },
+        //         {
+        //             id:2,
+        //             image:'/m-c.jpg',
+        //             title:'Dynamics 365 Customer Service',
+        //             description:[
+        //                 "Omni-Channel Engagement: Supports customer interactions across multiple channels, including chat, email, and social media.",
+        //                 "AI-Powered Assistance: Utilizes AI to provide intelligent recommendations and automate routine service tasks.",
+        //                 "Unified Customer View: Offers a 360-degree view of customer interactions and history for personalized service.",
+        //                 "Self-Service Options: Provides customers with self-service portals and knowledge bases for quick issue resolution."
+        //             ]
                     
                     
-                },
-            ]
-        },
+        //         },
+        //     ]
+        // },
         fortinet:{
             image:'/nerps.jpg',
             description:{
@@ -121,7 +121,7 @@ export default function Work() {
             ]
         },
         paloalto:{
-            image:'/Oracle.jpg',
+            image:'/nnetwork.jpg',
             description:{
                 title:'Enhance Your Enterprise with Oracle Solutions',
                 intro:'Elevate your business operations with Oracle\'s industry-leading technology.||Oracle\'s robust and scalable solutions are designed to optimize performance, streamline processes, and drive innovation across your organization. Whether you require implementation, consultancy, or ongoing support, our expert team is equipped to deliver tailored solutions that empower your enterprise to thrive in today’s competitive landscape.',
@@ -169,61 +169,61 @@ export default function Work() {
                 },
             ]
         },
-        sophos:{
-            image:'/s-sap-erp.png',
-            description:{
-                title:'Transform Your Business with SAP Solutions',
-                intro:'Unleash the full potential of your enterprise with SAP\'s powerful technology.||SAP\'s integrated solutions are designed to streamline operations, improve efficiency, and drive growth across your organization. Whether you need implementation, consultancy, or continuous support, our expert team is here to deliver customized SAP solutions that align with your business goals and ensure long-term success.',
-                question:'Why Choose Sophos Networks?',
-                importance:[
-                    "Next-Gen Security: Benefit from advanced threat protection and real-time threat intelligence.",
-                    "Comprehensive Coverage: Enjoy features like firewall, endpoint protection, and email security.",
-                    "Scalable Solutions: Perfect for businesses of all sizes, offering flexibility and growth potential.",
-                    "Expert Support: Our certified professionals provide end-to-end support for all your security needs."
-                ]
-            },
-            data:[
-                {
-                    id:0,
-                    image:'/SAP Business One.png',
-                    title:'SAP Business One',
-                    description:[
-                        "Affordable and Comprehensive: A single, affordable solution for managing your entire business, from accounting and financials to inventory and customer relationships.",
-                        "Real-Time Insights: Integrated business intelligence for real-time data access and strategic decision-making.",
-                        "Flexible Deployment: Available on-premise or in the cloud, allowing for quick deployment and scalability.",
-                        "Enhanced Efficiency: Streamlined processes and greater visibility across all departments."
-                    ]
+        // sophos:{
+        //     image:'/s-sap-erp.png',
+        //     description:{
+        //         title:'Transform Your Business with SAP Solutions',
+        //         intro:'Unleash the full potential of your enterprise with SAP\'s powerful technology.||SAP\'s integrated solutions are designed to streamline operations, improve efficiency, and drive growth across your organization. Whether you need implementation, consultancy, or continuous support, our expert team is here to deliver customized SAP solutions that align with your business goals and ensure long-term success.',
+        //         question:'Why Choose Sophos Networks?',
+        //         importance:[
+        //             "Next-Gen Security: Benefit from advanced threat protection and real-time threat intelligence.",
+        //             "Comprehensive Coverage: Enjoy features like firewall, endpoint protection, and email security.",
+        //             "Scalable Solutions: Perfect for businesses of all sizes, offering flexibility and growth potential.",
+        //             "Expert Support: Our certified professionals provide end-to-end support for all your security needs."
+        //         ]
+        //     },
+        //     data:[
+        //         {
+        //             id:0,
+        //             image:'/SAP Business One.png',
+        //             title:'SAP Business One',
+        //             description:[
+        //                 "Affordable and Comprehensive: A single, affordable solution for managing your entire business, from accounting and financials to inventory and customer relationships.",
+        //                 "Real-Time Insights: Integrated business intelligence for real-time data access and strategic decision-making.",
+        //                 "Flexible Deployment: Available on-premise or in the cloud, allowing for quick deployment and scalability.",
+        //                 "Enhanced Efficiency: Streamlined processes and greater visibility across all departments."
+        //             ]
                     
-                },
-                {
-                    id:1,
-                    image:'/SAP S4 Hana Cloud.jpg',
-                    title:'SAP S/4HANA Cloud',
-                    description:[
-                        "Intelligent ERP: Combines AI and machine learning to automate and optimize business processes.",
-                        "Real-Time Analytics: Provides real-time insights and analytics to support data-driven decision-making.",
-                        "Scalability: Easily scalable to grow with your business, supporting new markets, models, and currencies.",
-                        "User-Friendly Interface: Modern, intuitive user interface designed for ease of use and productivity."
-                    ]
+        //         },
+        //         {
+        //             id:1,
+        //             image:'/SAP S4 Hana Cloud.jpg',
+        //             title:'SAP S/4HANA Cloud',
+        //             description:[
+        //                 "Intelligent ERP: Combines AI and machine learning to automate and optimize business processes.",
+        //                 "Real-Time Analytics: Provides real-time insights and analytics to support data-driven decision-making.",
+        //                 "Scalability: Easily scalable to grow with your business, supporting new markets, models, and currencies.",
+        //                 "User-Friendly Interface: Modern, intuitive user interface designed for ease of use and productivity."
+        //             ]
                     
-                },
-                {
-                    id:2,
-                    image:'/SAP_Business_ByDesign-1.jpg',
-                    title:'SAP Business ByDesign',
-                    description:[
-                        "All-in-One Cloud Solution: Comprehensive cloud ERP solution designed specifically for mid-sized businesses.",
-                        "Integrated Suite: Covers financials, human resources, sales, procurement, customer service, and supply chain management.",
-                        "Built-In Analytics: Embedded analytics for real-time business insights and performance tracking.",
-                        "Rapid Implementation: Quick and easy to implement, with minimal disruption to your business."
-                    ]
+        //         },
+        //         {
+        //             id:2,
+        //             image:'/SAP_Business_ByDesign-1.jpg',
+        //             title:'SAP Business ByDesign',
+        //             description:[
+        //                 "All-in-One Cloud Solution: Comprehensive cloud ERP solution designed specifically for mid-sized businesses.",
+        //                 "Integrated Suite: Covers financials, human resources, sales, procurement, customer service, and supply chain management.",
+        //                 "Built-In Analytics: Embedded analytics for real-time business insights and performance tracking.",
+        //                 "Rapid Implementation: Quick and easy to implement, with minimal disruption to your business."
+        //             ]
                     
-                },
-            ]
-        },
+        //         },
+        //     ]
+        // },
     }
-    const [data, setdata] = useState(products.cisco.data);
-    const [details, setdetails] = useState(products.cisco.description);
+    const [data, setdata] = useState(products.fortinet.data);
+    const [details, setdetails] = useState(products.fortinet.description);
     
     
     
@@ -254,7 +254,7 @@ export default function Work() {
             <div className='w-[50%] flex justify-center items-center z-30'>
                 <div className='flex justify-center flex-wrap items-center'>
                 {
-                    Object.values(products).map((product,index) =>( <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl ' key={index} onClick={() => {setdata(product.data); setdetails(product.description)}}><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src={product.image} alt='cisco' className='w-full  hover:opacity-70'/></a></div>))
+                    Object.values(products).map((product,index) =>( <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl ' key={index} onClick={() => {setdata(product.data); setdetails(product.description); if(product.image==="/nnetwork.jpg"){window.location.href = "/secure-firewall";}}}><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src={product.image} alt='cisco' className='w-full  hover:opacity-70'/></a></div>))
                     }
                 </div>
             </div>
