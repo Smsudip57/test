@@ -87,7 +87,7 @@ import React,{useState, useEffect} from "react";
           </div>
           <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='w'?"opacity-5":"block"} aspect-[1634/919]`}>
               <span>
-                <a href="/work-from-anywere"><img src="/share-m.jpg"  className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[1634/919]`}  /></a>
+                <a href="/work-from-anywere"><img src="/micro-t.jpg"  className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[1634/919]`}  /></a>
               </span>
           </div>
         </div>
