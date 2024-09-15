@@ -106,18 +106,18 @@ export default function Work() {
                     ]
                     
                 },
-                {
-                    id:2,
-                    image:'/odooi.jpg',
-                    title:'Odoo Accounting',
-                    description:[
-                        "Real-Time Financial Reporting: Instant access to financial reports and dashboards.",
-                        "Automated Invoicing: Generate and send invoices automatically.",
-                        "Bank Synchronization: Syncs with bank accounts for real-time transaction updates.",
-                        "Multi-Currency Support: Handles transactions in multiple currencies.",
-                        "Tax Management: Comprehensive tax management features for compliance."
-                    ]
-                },
+                // {
+                //     id:2,
+                //     image:'/odooi.jpg',
+                //     title:'Odoo Accounting',
+                //     description:[
+                //         "Real-Time Financial Reporting: Instant access to financial reports and dashboards.",
+                //         "Automated Invoicing: Generate and send invoices automatically.",
+                //         "Bank Synchronization: Syncs with bank accounts for real-time transaction updates.",
+                //         "Multi-Currency Support: Handles transactions in multiple currencies.",
+                //         "Tax Management: Comprehensive tax management features for compliance."
+                //     ]
+                // },
             ]
         },
         paloalto:{
