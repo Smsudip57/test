@@ -253,7 +253,7 @@ export default function Firewall() {
                 </div> */}
                 {
                     data.map((item, index) =>( 
-                        <div className=' flex flex-col basis-1/3 justify-between items-start z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                        <div className=' flex flex-col basis-1/3 justify-between items-start z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]' key={index}>
 
                         {<div className=' flex flex-col  justify-center items-start gap-10 '>
                         <img src={item.image} alt={item.title} className='w-full rounded-md'/>
