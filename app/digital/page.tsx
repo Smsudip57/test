@@ -237,21 +237,44 @@ export default function Firewall() {
             </div> 
 
 
-        <div className=' w-[1280px] mx-auto flex pt-36   ' id='details'>
-                <div className=' flex flex-col basis-1/3 py-10 mr-3 gap-10 z-30 '>
+            <div className=' w-[1280px] mx-auto flex pt-36   ' id='details'>
+                {/* <div className=' flex flex-col basis-1/3 py-10 mr-3 gap-10 z-30 '>
                     <h2 className='text-4xl font-semibold mb-5 font-sans'>{details.title}</h2>
                     <p className='pr-10 '>{details.intro.split("||")[0]}<br></br><br></br>{details.intro.split("||")[1]}</p>
                     <strong>{details.question}</strong>
                     <div className='w-full  flex flex-col gap-4 pl-3 pr-10 text-sm'>
-                    {/* {
+                    {
                         details.importance.map((item, index) => {
                             return <li key={index} className='box-border'><strong>{item.split(':')[0]}:</strong> {item.split(':')[1]}</li>
                         })
-                    } */}
+                    }
                 </div>  
                 
-                </div>
-                <div className=' flex flex-col basis-1/3 justify-between items-start z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+                </div> */}
+                {
+                    data.map((item, index) =>( 
+                        <div className=' flex flex-col basis-1/3 justify-between items-start z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+
+                        {<div className=' flex flex-col  justify-center items-start gap-10 '>
+                        <img src={item.image} alt={item.title} className='w-full rounded-md'/>
+                        <h2 className='text-2xl font-semibold font-sans'>{item.title}</h2>
+                        <div className='w-full flex flex-col gap-4 pr-3 '>
+                        {
+                                item.description.map((item, index) => {
+                                    return <p key={index} className='box-border'>{item.split("||")[0]}<br></br><br></br>{item.split("||")[1]}</p>
+                                })
+                            }
+                        </div></div>}
+                        
+                        <div className='flex justify-center gap-6 my-16'>
+                        <button className=' text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4'>Get it today!</button>
+                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit '/></button>
+                        </div>
+                            
+                        </div>
+                    ))
+                }
+                {/* <div className=' flex flex-col basis-1/3 justify-between items-start z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
 
                 {<div className=' flex flex-col  justify-center items-start gap-10 '>
                 <img src={data[main].image} alt={data[main].title} className='w-full rounded-md'/>
@@ -269,16 +292,16 @@ export default function Firewall() {
                 <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit '/></button>
                 </div>
                     
-                </div>
-                <div className='basis-1/3 flex flex-col gap-8'>
+                </div> */}
+                {/* <div className='basis-1/3 flex flex-col gap-8'> */}
 
-                {others.length > 0 && others.map((item, index) => (
+                {/* {others.length > 0 && others.map((item, index) => (
                     <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px] cursor-pointer hover:opacity-70' key={index} onClick={() => setmain(item.id)}>
                     <img src={item.image} alt={item.title} className='w-full rounded-md'/>
                     <h2 className='text-2xl font-semibold font-sans'>{item.title}</h2>
                 </div>
-                ))}
-                </div>
+                ))} */}
+                {/* </div> */}
             {/* {console.log(others)} */}
                 {/* <div className='w-full flex flex-col gap-4 pl-3 '>
                     {
