@@ -47,7 +47,7 @@ export default function Firewall() {
                 },
                 {
                     id:2,
-                    image:'/hik.jpg',
+                    image:'/bmc.jpg',
                     title:'AI-Enabled Authentication Systems',
                     description:[
                         "AI-enabled authentication systems leverage advanced technologies to enhance security and user experience. Here are some key features with detailed descriptions: || ||Biometric Authentication|| ||Description: Utilizes unique biological traits such as fingerprints, facial recognition, and voice patterns.|| ||Details: These systems capture and store biometric data, which is then used to verify the user’s identity. For example, facial recognition systems use AI algorithms to analyze facial features and match them with stored data.|| ||Benefits: Provides high security and convenience, as biometric traits are difficult to replicate."
@@ -81,17 +81,17 @@ export default function Firewall() {
                 {
                     id:1,
                     image:'/iot.jpg',
-                    title:'Amazon Echo (4th Gen)',
+                    title:'Smart Office Solutions',
                     description:[
-                        "This smart speaker with Alexa integration offers voice control for smart home devices, music streaming, and more. It’s a popular choice for home automation enthusiasts1"
+                        "Integrates IoT devices to create a connected and efficient office environment.|| ||Details: Includes smart lighting, climate control, and security systems. These solutions use sensors and automation to optimize energy usage, enhance security, and improve overall workplace comfort.|| ||Benefits: Reduces operational costs, increases energy efficiency, and provides a comfortable and secure working environment."
                     ]
                 },
                 {
                     id:2,
                     image:'/iot.jpg',
-                    title:'Amazon Smart Plug',
+                    title:'Smart Retail Solutions',
                     description:[
-                        "A simple and effective way to make any appliance smart. It allows users to control their devices via Alexa, offering convenience and energy efficiency1."
+                        "Implements IoT technology to enhance the retail experience.|| ||Details: Includes smart shelves, inventory management systems, and customer behavior analytics. These solutions help retailers manage stock levels, understand customer preferences, and optimize store layouts.|| ||Benefits: Improves inventory accuracy, enhances customer satisfaction, and boosts sales."
                     ]
                 },
                
