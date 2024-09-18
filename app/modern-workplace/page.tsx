@@ -84,6 +84,14 @@ export default function Work() {
             data:[
                 {
                     id:0,
+                    image:'/nerps.jpg',
+                    title:'Unlock the full potential of your business with Odoo ERP –',
+                    description:[
+                        "the all-in-one management software that streamlines operations, boosts productivity, and drives growth. Whether you’re looking to implement Odoo from scratch or need expert consultancy to optimize your existing setup, our team of certified professionals is here to guide you every step of the way.||Ready to revolutionize your business? Get Started Today!"
+                    ]
+                },
+                {
+                    id:1,
                     image:'/video_CRM.webm',
                     title:'Odoo 17 CRM',
                     description:[
@@ -93,8 +101,9 @@ export default function Work() {
                     "Customizable Dashboards: Tailor your dashboard to display the metrics that matter most to your business."
                     ]
                 },
+                
                 {
-                    id:1,
+                    id:2,
                     image:'/odoom.jpg',
                     title:'Odoo Inventory',
                     description:[
@@ -261,41 +270,80 @@ export default function Work() {
         </div> 
 
 
-    <div className=' w-[1280px] mx-auto flex pt-48' id='details'>
-            <div className=' flex flex-col basis-1/3 pt-10 mr-3 gap-10 z-30 '>
-            <h2 className='text-4xl font-semibold mb-5 font-sans'>{details.title}</h2>
-            <p className='pr-10 '>{details.intro.split("||")[0]}<br></br><br></br>{details.intro.split("||")[1]}</p>
-            </div>
-            {/* <video src='/video_CRM.webm' className='border-[1px] border-gray-400' autoPlay loop></video> */}
-            <div className=' flex flex-col basis-1/3 justify-center items-start gap-8 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
-            {/* <img src='/cisco-r.jpg' alt='cisco' className='w-full rounded-md'/> */}
-
-            {<div className=' flex flex-col  justify-center items-start gap-10 '>
-                {data[main].image==="/video_CRM.webm"?<video src='/video_CRM.webm' className='border-[1px] border-gray-400' autoPlay loop></video>:<img src={data[main].image} alt={data[main].title} className='w-full rounded-md'/>}
-                <h2 className='text-2xl font-semibold font-sans'>{data[main].title}</h2>
-                <div className='w-full flex flex-col gap-4 pl-3 text-sm'>
-                {
-                        data[main].description.map((item, index) => {
+        <div className=' w-[1280px] mx-auto flex pt-36   ' id='details'>
+                {/* <div className=' flex flex-col basis-1/3 py-10 mr-3 gap-10 z-30 '>
+                    <h2 className='text-4xl font-semibold mb-5 font-sans'>{details.title}</h2>
+                    <p className='pr-10 '>{details.intro.split("||")[0]}<br></br><br></br>{details.intro.split("||")[1]}</p>
+                    <strong>{details.question}</strong>
+                    <div className='w-full  flex flex-col gap-4 pl-3 pr-10 text-sm'>
+                    {
+                        details.importance.map((item, index) => {
                             return <li key={index} className='box-border'><strong>{item.split(':')[0]}:</strong> {item.split(':')[1]}</li>
                         })
                     }
-                </div></div>
-            }
-            <div className='flex justify-center gap-6 my-16'>
+                </div>  
+                
+                </div> */}
+                {
+                    data.map((item, index) =>( 
+                        <div className=' flex flex-col basis-1/3 justify-between items-start z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]' key={index}>
+
+                        {<div className=' flex flex-col  justify-center items-start gap-10 '>
+                        {item.image==="/video_CRM.webm"?<video src='/video_CRM.webm'></video>:<img src={item.image} alt={item.title} className='w-full rounded-md'/>}
+                        <h2 className='text-2xl font-semibold font-sans'>{item.title}</h2>
+                        <div className='w-full flex flex-col gap-4 pr-3 '>
+                        {
+                                item.description.map((item, index) => {
+                                    return <p key={index} className='box-border'>{item.split("||")[0]}<br></br><br></br>{item.split("||")[1]}</p>
+                                })
+                            }
+                        </div></div>}
+                        
+                        <div className='flex justify-center gap-6 my-16'>
+                        <button className=' text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4'>Get it today!</button>
+                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit '/></button>
+                        </div>
+                            
+                        </div>
+                    ))
+                }
+                {/* <div className=' flex flex-col basis-1/3 justify-between items-start z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]'>
+
+                {<div className=' flex flex-col  justify-center items-start gap-10 '>
+                <img src={data[main].image} alt={data[main].title} className='w-full rounded-md'/>
+                <h2 className='text-2xl font-semibold font-sans'>{data[main].title}</h2>
+                <div className='w-full flex flex-col gap-4 pr-3 '>
+                {
+                        data[main].description.map((item, index) => {
+                            return <p key={index} className='box-border'>{item.split("||")[0]}<br></br><br></br>{item.split("||")[1]}</p>
+                        })
+                    }
+                </div></div>}
+                
+                <div className='flex justify-center gap-6 my-16'>
                 <button className=' text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4'>Get it today!</button>
                 <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit '/></button>
                 </div>
-            </div>
-            <div className='basis-1/3 flex flex-col gap-8'>
-            {others.length > 0 && others.map((item, index) => (
-                    <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px] cursor-pointer hover:opacity-70' key={index} onClick={() => setmain(item.id)} >
-                    {item.image==="/video_CRM.webm"?<video src='/video_CRM.webm' className='border-[1px] border-gray-400' autoPlay loop></video>:<img src={item.image} alt={item.title} className='w-full rounded-md'/>}
+                    
+                </div> */}
+                {/* <div className='basis-1/3 flex flex-col gap-8'> */}
+
+                {/* {others.length > 0 && others.map((item, index) => (
+                    <div className='flex flex-col justify-center gap-10 z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px] cursor-pointer hover:opacity-70' key={index} onClick={() => setmain(item.id)}>
+                    <img src={item.image} alt={item.title} className='w-full rounded-md'/>
                     <h2 className='text-2xl font-semibold font-sans'>{item.title}</h2>
                 </div>
-                ))}
-            </div>
-        
-        </div> 
+                ))} */}
+                {/* </div> */}
+            {/* {console.log(others)} */}
+                {/* <div className='w-full flex flex-col gap-4 pl-3 '>
+                    {
+                        others[1].description.map((item, index) => {
+                            return <li key={index} className='box-border'><strong>{item.split(':')[0]}:</strong> {item.split(':')[1]}</li>
+                        })
+                    }
+                </div> */}
+            </div> 
 
         </div>
     </div>

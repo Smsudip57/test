@@ -34,23 +34,23 @@ export default function Firewall() {
                     image:'/cctv.jpg',
                     title:'AI-Enabaled Surveillance Systems',
                     description:[
-                        "Step into the future of security with AI-enabled Surveillance Systems.|| These advanced systems leverage artificial intelligence to provide unparalleled protection and efficiency. With features like real-time video analytics, facial recognition, and behavior analysis, AI-powered surveillance can detect and respond to potential threats instantly. Whether it’s identifying suspicious activities, tracking objects of interest, or providing detailed insights, these systems ensure comprehensive monitoring and enhanced safety. Experience the next level of security with intelligent, automated, and highly accurate surveillance solutions designed to keep your environment secure 24/7."
+                        "Step into the future of security with AI-enabled Surveillance Systems.|| ||These advanced systems leverage artificial intelligence to provide unparalleled protection and efficiency. With features like real-time video analytics, facial recognition, and behavior analysis, AI-powered surveillance can detect and respond to potential threats instantly. Whether it’s identifying suspicious activities, tracking objects of interest, or providing detailed insights, these systems ensure comprehensive monitoring and enhanced safety. Experience the next level of security with intelligent, automated, and highly accurate surveillance solutions designed to keep your environment secure 24/7."
                     ]
                 },
                 {
                     id:1,
                     image:'/hik.jpg',
-                    title:'Hikvision iDS-2CD7A46G0-IZHS',
+                    title:'AI-Enabled Surveillance CCTV Cameras',
                     description:[
-                        "This 4MP IP bullet camera features an 8-32mm motorized varifocal lens and is IP67 certified, ensuring durability in various weather conditions.|| It boasts up to 100m of night vision, providing clear, high-definition video coverage day and night. The camera is equipped with advanced AI capabilities, including facial recognition and behavior analysis, making it ideal for high-security environments1."
+                        "Hikvision’s Dedicated DeepinView cameras are advanced surveillance solutions equipped with AI-powered deep learning algorithms. Here are some key features:|| || ||AI-Powered Analytics||Dual Sensor Technology||Smart Event Detection||High Image Quality"
                     ]
                 },
                 {
                     id:2,
                     image:'/hik.jpg',
-                    title:'Hikvision DS-2CD7A26G0/P-IZHS',
+                    title:'AI-Enabled Authentication Systems',
                     description:[
-                        "This model offers a 2MP resolution with a 2.8-12mm motorized varifocal lens.|| It includes deep learning algorithms for enhanced video analytics, such as vehicle and human detection, reducing false alarms. The camera also features excellent low-light performance with DarkFighter technology, ensuring clear images even in challenging lighting conditions2."
+                        "AI-enabled authentication systems leverage advanced technologies to enhance security and user experience. Here are some key features with detailed descriptions: || ||Biometric Authentication|| ||Description: Utilizes unique biological traits such as fingerprints, facial recognition, and voice patterns.|| ||Details: These systems capture and store biometric data, which is then used to verify the user’s identity. For example, facial recognition systems use AI algorithms to analyze facial features and match them with stored data.|| ||Benefits: Provides high security and convenience, as biometric traits are difficult to replicate."
                     ]
                 },
             ]
@@ -75,7 +75,7 @@ export default function Firewall() {
                     image:'/iot.jpg',
                     title:' Connect, Automate, and Innovate with IoT Systems',
                     description:[
-                        "Unlock the full potential of your business with our cutting-edge IoT Systems.|| Seamlessly connect devices, automate processes, and gather real-time data to drive smarter decisions and enhance efficiency. From smart homes to industrial automation, our IoT solutions provide unparalleled control and insight, transforming the way you operate. Experience the future of connectivity with intelligent systems that adapt to your needs, optimize performance, and propel your business into the digital age."
+                        "Unlock the full potential of your business with our cutting-edge IoT Systems.|| ||Seamlessly connect devices, automate processes, and gather real-time data to drive smarter decisions and enhance efficiency. From smart homes to industrial automation, our IoT solutions provide unparalleled control and insight, transforming the way you operate. Experience the future of connectivity with intelligent systems that adapt to your needs, optimize performance, and propel your business into the digital age."
                     ]
                 },
                 {
@@ -261,7 +261,7 @@ export default function Firewall() {
                         <div className='w-full flex flex-col gap-4 pr-3 '>
                         {
                                 item.description.map((item, index) => {
-                                    return <p key={index} className='box-border'>{item.split("||")[0]}<br></br><br></br>{item.split("||")[1]}</p>
+                                    return <p key={index} className='box-border'>{item.split("||").map((item, index) => <span key={index}>{item}<br></br></span>)}</p>
                                 })
                             }
                         </div></div>}
