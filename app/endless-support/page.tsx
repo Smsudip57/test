@@ -32,7 +32,7 @@ export default function Firewall() {
                 {
                     id:0,
                     image:'/spt.jpg',
-                    title:'AI-Enabaled Surveillance Systems',
+                    title:'Premier IT Consulting Service',
                     description:[
                         "Step into the future of security with AI-enabled Surveillance Systems.|| ||These advanced systems leverage artificial intelligence to provide unparalleled protection and efficiency. With features like real-time video analytics, facial recognition, and behavior analysis, AI-powered surveillance can detect and respond to potential threats instantly. Whether it’s identifying suspicious activities, tracking objects of interest, or providing detailed insights, these systems ensure comprehensive monitoring and enhanced safety. Experience the next level of security with intelligent, automated, and highly accurate surveillance solutions designed to keep your environment secure 24/7."
                     ]
@@ -73,7 +73,7 @@ export default function Firewall() {
                 {
                     id:0,
                     image:'/cs.jpg',
-                    title:' Connect, Automate, and Innovate with IoT Systems',
+                    title:'Technical Troubleshooting',
                     description:[
                         "Unlock the full potential of your business with our cutting-edge IoT Systems.|| ||Seamlessly connect devices, automate processes, and gather real-time data to drive smarter decisions and enhance efficiency. From smart homes to industrial automation, our IoT solutions provide unparalleled control and insight, transforming the way you operate. Experience the future of connectivity with intelligent systems that adapt to your needs, optimize performance, and propel your business into the digital age."
                     ]
