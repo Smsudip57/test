@@ -80,7 +80,7 @@ export default function Firewall() {
                 },
                 {
                     id:1,
-                    image:'/iot.jpg',
+                    image:'/sop.jpg',
                     title:'Smart Office Solutions',
                     description:[
                         "Integrates IoT devices to create a connected and efficient office environment.|| ||Details: Includes smart lighting, climate control, and security systems. These solutions use sensors and automation to optimize energy usage, enhance security, and improve overall workplace comfort.|| ||Benefits: Reduces operational costs, increases energy efficiency, and provides a comfortable and secure working environment."
@@ -88,7 +88,7 @@ export default function Firewall() {
                 },
                 {
                     id:2,
-                    image:'/iot.jpg',
+                    image:'/rop.jpg',
                     title:'Smart Retail Solutions',
                     description:[
                         "Implements IoT technology to enhance the retail experience.|| ||Details: Includes smart shelves, inventory management systems, and customer behavior analytics. These solutions help retailers manage stock levels, understand customer preferences, and optimize store layouts.|| ||Benefits: Improves inventory accuracy, enhances customer satisfaction, and boosts sales."
