@@ -31,7 +31,7 @@ export default function Firewall() {
             data:[
                 {
                     id:0,
-                    image:'/spt.jpg',
+                    image:'/consult.jpg',
                     title:'Premier IT Consulting Service',
                     description:[
                         "Unlock the full potential of your business with our Premier IT Consulting Service.|| || Our seasoned consultants provide strategic insights and tailored solutions to optimize your IT infrastructure, enhance cybersecurity, and drive innovation. Whether you’re looking to streamline operations or adopt cutting-edge technologies, we offer expert guidance every step of the way."
