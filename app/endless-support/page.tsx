@@ -47,10 +47,10 @@ export default function Firewall() {
                 },
                 {
                     id:2,
-                    image:'/spt.jpg',
-                    title:'Cybersecurity Solutions',
+                    image:'/rms.jpg',
+                    title:'Routine Maintenance',
                     description:[
-                        "Protect your business from cyber threats with our comprehensive Cybersecurity Solutions. Our experts conduct thorough security assessments, implement advanced protection measures, and provide ongoing monitoring to safeguard your data and systems. Stay ahead of potential threats and ensure your business remains secure in an ever-evolving digital landscape."
+                        "Prevent issues before they arise with our Routine Maintenance service.|| We perform regular system checks, updates, and optimizations to ensure your IT infrastructure remains in peak condition. From software updates to hardware inspections, our proactive approach helps maintain system reliability and performance, reducing the risk of unexpected disruptions."
                     ]
                 },
             ]
