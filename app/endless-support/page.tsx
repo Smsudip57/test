@@ -15,7 +15,7 @@ export default function Firewall() {
     const [others, setothers] = useState<DataItem[]>([]);
     const products = {
         cisco:{
-            image:'/spt.jpg',
+            image:'/consult.png',
             description:{
                 title:'Transform your business digitally –',
                 intro:'a beacon of innovation, security, and collaboration. It’s more than technology; it’s a commitment to a modernized, efficient, and secure future.',

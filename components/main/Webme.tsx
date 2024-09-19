@@ -53,9 +53,9 @@ import React,{useState, useEffect} from "react";
                 <a href="/work-from-anywere"><img src="/m365.jpg" className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[1634/919]`}/></a>
               </span>
           </div>
-          <div className={`${active!==''&&active!=='en'?"opacity-5":"block"} sm:basis-1/3 aspect-[1634/919] lg:basis-1/4 `}>
+          <div className={`${active!==''&&active!=='en'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 `}>
           <span>
-          <a href="/endless-support"><img src="/spt.jpg" className={`${active==='en'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[1634/919]`}/></a>
+          <a href="/endless-support"><img src="/consult.png" className={`${active==='en'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[1634/919]`}/></a>
               </span>
           </div>
           <div className={`${active!==''&&active!=='m'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 serviceforce aspect-[1634/919]`}>
