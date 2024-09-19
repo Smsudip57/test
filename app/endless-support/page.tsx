@@ -81,17 +81,17 @@ export default function Firewall() {
                 {
                     id:1,
                     image:'/cs.jpg',
-                    title:'Technical Troubleshooting',
+                    title:'Annual Maintenance Contract (AMC)',
                     description:[
-                        "Our Technical Troubleshooting service ensures that any technical issues you encounter are resolved swiftly and efficiently.|| Whether it’s software glitches, hardware malfunctions, or connectivity problems, our expert technicians are available 24/7 to diagnose and fix issues, minimizing downtime and keeping your operations running smoothly."
+                        "Ensure your IT infrastructure runs smoothly year-round with our comprehensive AMC services.|| We provide regular maintenance, timely updates, and proactive monitoring to prevent issues before they arise. Our AMC packages are designed to minimize downtime, enhance performance, and extend the lifespan of your equipment, giving you peace of mind and allowing you to focus on your core business activities."
                     ]
                 },
                 {
                     id:2,
                     image:'/cs.jpg',
-                    title:'Routine Maintenance',
+                    title:'In-House Engineer Support',
                     description:[
-                        "Prevent issues before they arise with our Routine Maintenance service.|| We perform regular system checks, updates, and optimizations to ensure your IT infrastructure remains in peak condition. From software updates to hardware inspections, our proactive approach helps maintain system reliability and performance, reducing the risk of unexpected disruptions.."
+                        "Experience the convenience and reliability of having dedicated in-house engineers at your service. ||Our skilled professionals are on-site to provide immediate assistance, troubleshoot issues, and implement solutions tailored to your specific needs. With our in-house engineer support, you benefit from quick response times, personalized service, and a deep understanding of your IT environment, ensuring optimal performance and security."
                     ]
                 },
                
