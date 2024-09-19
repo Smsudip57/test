@@ -153,7 +153,7 @@ export default function Work() {
                 },
                 {
                     id:1,
-                    image:'/mfa.jpg',
+                    image:'/nnetwork.jpg',
                     title:'Managed Firewall Services',
                     description:[
                         "Protect your network with our Managed Firewall Services, offering comprehensive firewall management tailored to your business needs.|| Our experts handle everything from initial setup and configuration to ongoing monitoring and maintenance. We ensure your firewall is always up-to-date with the latest security patches and configurations, providing robust protection against unauthorized access and cyber attacks. Enjoy peace of mind knowing your network perimeter is fortified by industry-leading security measures."
