@@ -34,23 +34,23 @@ export default function Firewall() {
                     image:'/spt.jpg',
                     title:'Premier IT Consulting Service',
                     description:[
-                        "Step into the future of security with AI-enabled Surveillance Systems.|| ||These advanced systems leverage artificial intelligence to provide unparalleled protection and efficiency. With features like real-time video analytics, facial recognition, and behavior analysis, AI-powered surveillance can detect and respond to potential threats instantly. Whether it’s identifying suspicious activities, tracking objects of interest, or providing detailed insights, these systems ensure comprehensive monitoring and enhanced safety. Experience the next level of security with intelligent, automated, and highly accurate surveillance solutions designed to keep your environment secure 24/7."
+                        "Unlock the full potential of your business with our Premier IT Consulting Service.|| || Our seasoned consultants provide strategic insights and tailored solutions to optimize your IT infrastructure, enhance cybersecurity, and drive innovation. Whether you’re looking to streamline operations or adopt cutting-edge technologies, we offer expert guidance every step of the way."
                     ]
                 },
                 {
                     id:1,
                     image:'/spt.jpg',
-                    title:'Premier IT Consulting Service',
+                    title:'IT Infrastructure Optimization',
                     description:[
-                        "Unlock the full potential of your business with our Premier IT Consulting Service.|| Our seasoned consultants provide strategic insights and tailored solutions to optimize your IT infrastructure, enhance cybersecurity, and drive innovation. Whether you’re looking to streamline operations or adopt cutting-edge technologies, we offer expert guidance every step of the way."
+                        "Enhance your business efficiency with our IT Infrastructure Optimization services.|| || We assess your current systems, identify bottlenecks, and implement solutions to streamline operations. From network upgrades to server management, we ensure your IT infrastructure is robust, scalable, and aligned with your business goals."
                     ]
                 },
                 {
                     id:2,
                     image:'/spt.jpg',
-                    title:'Support Service',
+                    title:'Cybersecurity Solutions',
                     description:[
-                        "Experience unparalleled support with our dedicated Support Service.|| Our team of skilled technicians is available 24/7 to address any technical issues, perform routine maintenance, and ensure your systems are running smoothly. From troubleshooting to comprehensive system checks, we are committed to providing prompt and effective solutions to keep your business operational and efficient."
+                        "Protect your business from cyber threats with our comprehensive Cybersecurity Solutions. Our experts conduct thorough security assessments, implement advanced protection measures, and provide ongoing monitoring to safeguard your data and systems. Stay ahead of potential threats and ensure your business remains secure in an ever-evolving digital landscape."
                     ]
                 },
             ]
@@ -73,9 +73,9 @@ export default function Firewall() {
                 {
                     id:0,
                     image:'/cs.jpg',
-                    title:'Technical Troubleshooting',
+                    title:'Support Service',
                     description:[
-                        "Unlock the full potential of your business with our cutting-edge IoT Systems.|| ||Seamlessly connect devices, automate processes, and gather real-time data to drive smarter decisions and enhance efficiency. From smart homes to industrial automation, our IoT solutions provide unparalleled control and insight, transforming the way you operate. Experience the future of connectivity with intelligent systems that adapt to your needs, optimize performance, and propel your business into the digital age."
+                        "Experience unparalleled support with our dedicated Support Service.|| || Our team of skilled technicians is available 24/7 to address any technical issues, perform routine maintenance, and ensure your systems are running smoothly. From troubleshooting to comprehensive system checks, we are committed to providing prompt and effective solutions to keep your business operational and efficient."
                     ]
                 },
                 {
