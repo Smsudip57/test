@@ -80,7 +80,7 @@ export default function Firewall() {
                 },
                 {
                     id:1,
-                    image:'/cs.jpg',
+                    image:'/annual-maintenance-contract-500x500.webp',
                     title:'Annual Maintenance Contract (AMC)',
                     description:[
                         "Ensure your IT infrastructure runs smoothly year-round with our comprehensive AMC services.|| We provide regular maintenance, timely updates, and proactive monitoring to prevent issues before they arise. Our AMC packages are designed to minimize downtime, enhance performance, and extend the lifespan of your equipment, giving you peace of mind and allowing you to focus on your core business activities."
@@ -88,7 +88,7 @@ export default function Firewall() {
                 },
                 {
                     id:2,
-                    image:'/cs.jpg',
+                    image:'/ose.jpg',
                     title:'In-House Engineer Support',
                     description:[
                         "Experience the convenience and reliability of having dedicated in-house engineers at your service. ||Our skilled professionals are on-site to provide immediate assistance, troubleshoot issues, and implement solutions tailored to your specific needs. With our in-house engineer support, you benefit from quick response times, personalized service, and a deep understanding of your IT environment, ensuring optimal performance and security."
