@@ -121,7 +121,7 @@ const HeroContent = () => {
       <img alt="website" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-4" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/nseo.jpg"/></a>
       <a href="/branding">
       <img alt="seo" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-5" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/Website Development.jpg"/></a>
-      <a href="/erp">
+      <a href="/digital">
       <img alt="network security" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-3" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/dimg.jpg"/></a>
     </div>
   </div>
