@@ -1,6 +1,7 @@
 "use client"
 import React,{useState, useEffect} from 'react'
 import StarsCanvas from '@/components/main/StarBackground'
+import { useSearchParams } from 'next/navigation';
 import EastIcon from '@mui/icons-material/East';
 interface DataItem {
     id: number;
@@ -13,6 +14,8 @@ interface DataItem {
 export default function Firewall() {
     const [main, setmain] = useState(0)
     const [others, setothers] = useState<DataItem[]>([]);
+    const searchParams = useSearchParams();
+    const search = searchParams.get('search');
     const products = {
         cisco:{
             image:'/cctv.jpg',
@@ -202,6 +205,13 @@ export default function Firewall() {
     
     
     useEffect(() => {
+        if(search==="surveillancesystems"){
+            setdata(Object.values(products)[0].data)
+            setdetails(Object.values(products)[0].description)
+        }else if(search==='iotsystems'){
+            setdata(Object.values(products)[1].data)
+            setdetails(Object.values(products)[1].description)
+        }
         setothers(data.filter((item, index) => index !== main));
     }, [main,data])
     

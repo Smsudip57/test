@@ -44,50 +44,50 @@ import React,{useState, useEffect} from "react";
         <div className="flex flex-col justify-center flex-wrap gap-2 lg:gap-5 sm:flex-row">
           <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='b'?"opacity-5":"block"} `}>
               <span>
-                <a href="/branding"><img src="/nextjs.jpg"  className={`${active==='b'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[1634/919]`}  /></a>
+                <a href="/branding?search=webdev#details"><img src="/nextjs.jpg"  className={`${active==='b'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[1634/919]`}  /></a>
               </span>
           </div>
           <div className={`${active!==''&&active!=='w'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 aspect-[1634/919]`}>
           <span>
                 {/* <img src="Odoo ERP.jpg"/> */}
-                <a href="/work-from-anywere"><img src="/m365.jpg" className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[1634/919]`}/></a>
+                <a href="/work-from-anywere?search=microsolft365#details"><img src="/m365.jpg" className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[1634/919]`}/></a>
               </span>
           </div>
           <div className={`${active!==''&&active!=='en'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 `}>
           <span>
-          <a href="/endless-support"><img src="/consult.png" className={`${active==='en'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[1634/919]`}/></a>
+          <a href="/endless-support#details"><img src="/consult.png" className={`${active==='en'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[1634/919]`}/></a>
               </span>
           </div>
           <div className={`${active!==''&&active!=='m'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 serviceforce aspect-[1634/919]`}>
           <span>
-          <a href="/modern-workplace"><img src="/nnetwork.jpg" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
+          <a href="/modern-workplace?search=networksecurity#details"><img src="/nnetwork.jpg" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
               </span>
           </div>
           <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='m'?"opacity-15":"block"} serviceforce aspect-[1634/919]`} >
           <span>
-          <a href="/modern-workplace"><img src="/newerp.jpg" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500 "}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
+          <a href="/modern-workplace?search=erp#details"><img src="/newerp.jpg" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500 "}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
               </span>
           </div>
           <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='b'?"opacity-5":"block"} aspect-[1634/919]`}>
               <span>
-                <a href="/branding"><img src="/expt.jpg"  className={`${active==='b'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[1634/919]`}  /></a>
+                <a href="/branding?search=appdev#details"><img src="/expt.jpg"  className={`${active==='b'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[1634/919]`}  /></a>
               </span>
           </div>
 
           {/* new */}
           <div className={`${active!==''&&active!=='d'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 aspect-[1634/919]`}>
           <span>
-                <a href="/digital"><img src="/cctv.jpg" className={`${active==='d'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
+                <a href="/digital?search=surveillancesystems#details"><img src="/cctv.jpg" className={`${active==='d'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
               </span>
           </div>
           <div className={`${active!==''&&active!=='d'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 aspect-[1634/919]`}>
           <span>
-                <a href="/digital"><img src="/iot.jpg" className={`${active==='d'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
+                <a href="/digital?search=iotsystems#details"><img src="/iot.jpg" className={`${active==='d'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[1634/919]`}/></a>
               </span>
           </div>
           <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='w'?"opacity-5":"block"} aspect-[1634/919]`}>
               <span>
-                <a href="/work-from-anywere"><img src="/micro-t.jpg"  className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[1634/919]`}  /></a>
+                <a href="/work-from-anywere?search=windowsvirtualdesktop#details"><img src="/micro-t.jpg"  className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[1634/919]`}  /></a>
               </span>
           </div>
         </div>

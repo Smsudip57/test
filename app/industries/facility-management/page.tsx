@@ -157,7 +157,7 @@ export default function FacultyManagement() {
                   Branding
                   </strong>
                 </span>
-                <img src="/nextjs.png" className='w-full mt-4 rounded-sm'/>
+                <img src="/nseo.jpg" className='w-full mt-4 rounded-sm'/>
                 <a href='/branding'>
                   <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
@@ -171,7 +171,7 @@ export default function FacultyManagement() {
                   Modern Workplace
                   </strong>
                 </span>
-                <img src="/micro.png" className='w-full mt-4 rounded-sm'/>
+                <img src="/mwp.jpg" className='w-full mt-4 rounded-sm'/>
                 <a href='/modern-workplace'>
                 <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
@@ -182,11 +182,11 @@ export default function FacultyManagement() {
               <div className='bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8'>
                 <span className='text-xl uppercase'>
                   <strong>
-                  secure Firewall
+                  Digital
                   </strong>
                 </span>
-                <img src="/firewall.png" className='w-full mt-4 rounded-sm'/>
-                <a href='/secure-firewall'>
+                <img src="/dimg.jpg" className='w-full mt-4 rounded-sm'/>
+                <a href='/digital'>
                 <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
                 </button>
@@ -196,11 +196,11 @@ export default function FacultyManagement() {
               <div className='bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8'>
                 <span className='text-xl uppercase'>
                   <strong>
-                  Erp
+                  Endless Support
                   </strong>
                 </span>
-                <img src="/Odoo ERP.jpg" className='w-full mt-4 rounded-sm'/>
-                <a href='/erp'>
+                <img src="/supporti.jpg" className='w-full mt-4 rounded-sm'/>
+                <a href='/endless-support'>
                 <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
                 </button>

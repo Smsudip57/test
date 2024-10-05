@@ -1,5 +1,6 @@
 "use client"
 import React,{useState, useEffect} from 'react'
+import { useSearchParams } from 'next/navigation';
 import StarsCanvas from '@/components/main/StarBackground'
 import EastIcon from '@mui/icons-material/East';
 interface DataItem {
@@ -13,6 +14,8 @@ interface DataItem {
 export default function Firewall() {
     const [main, setmain] = useState(0)
     const [others, setothers] = useState<DataItem[]>([]);
+    const searchParams = useSearchParams();
+    const search = searchParams.get('search');
     const products = {
         cisco:{
             image:'/m365.jpg',
@@ -202,6 +205,13 @@ export default function Firewall() {
     
     
     useEffect(() => {
+        if(search==="mircosolf365"){
+            setdata(Object.values(products)[0].data)
+            setdetails(Object.values(products)[0].description)
+        }else if(search==='windowsvirtualdesktop'){
+            setdata(Object.values(products)[1].data)
+            setdetails(Object.values(products)[1].description)
+        }
         setothers(data.filter((item, index) => index !== main));
     }, [main,data])
     
@@ -211,7 +221,7 @@ export default function Firewall() {
 
   return (
     <div className='w-full relative'>
-        <div className='min-h-[700px] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
+        <div className='min-h-[650px] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni'></div>
         <div className='min-h-screen w-full absolute'>
         <StarsCanvas /></div>
         {/* <p className='mt-48'>safdas</p> */}

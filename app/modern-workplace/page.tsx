@@ -2,6 +2,7 @@
 import React,{useState, useEffect} from 'react'
 import StarsCanvas from '@/components/main/StarBackground'
 import EastIcon from '@mui/icons-material/East';
+import { useSearchParams } from 'next/navigation';
 interface DataItem {
     id: number;
     image: string;
@@ -14,6 +15,8 @@ interface DataItem {
 export default function Work() {
     const [main, setmain] = useState(0)
     const [others, setothers] = useState<DataItem[]>([]);
+    const searchParams = useSearchParams();
+    const search = searchParams.get('search');
     const products = {
         // cisco:{
         //     image:'/micro-d.jpg',
@@ -69,7 +72,7 @@ export default function Work() {
         //     ]
         // },
         fortinet:{
-            image:'/nerps.jpg',
+            image:'/newerp.jpg',
             description:{
                 title:'Unlock the full potential of your business with Odoo ERP – ',
                 intro:'the all-in-one management software that streamlines operations, boosts productivity, and drives growth. Whether you’re looking to implement Odoo from scratch or need expert consultancy to optimize your existing setup, our team of certified professionals is here to guide you every step of the way.||Ready to revolutionize your business? Get Started Today!',
@@ -153,7 +156,7 @@ export default function Work() {
                 },
                 {
                     id:1,
-                    image:'/nnetwork.jpg',
+                    image:'/mfl.jpg',
                     title:'Managed Firewall Services',
                     description:[
                         "Protect your network with our Managed Firewall Services, offering comprehensive firewall management tailored to your business needs.|| Our experts handle everything from initial setup and configuration to ongoing monitoring and maintenance. We ensure your firewall is always up-to-date with the latest security patches and configurations, providing robust protection against unauthorized access and cyber attacks. Enjoy peace of mind knowing your network perimeter is fortified by industry-leading security measures."
@@ -161,7 +164,7 @@ export default function Work() {
                 },
                 {
                     id:2,
-                    image:'/nnetwork.jpg',
+                    image:'/pnv.jpg',
                     title:'Vulnerability Assessment & Penetration Testing',
                     description:[
                         "Ensure your network’s defenses are impenetrable with our Vulnerability Assessment & Penetration Testing services.|| Our experts conduct thorough assessments to identify potential weaknesses in your system, followed by simulated cyber-attacks to test your defenses. This proactive approach helps uncover vulnerabilities before they can be exploited, providing you with detailed reports and actionable recommendations to strengthen your security posture."
@@ -228,6 +231,13 @@ export default function Work() {
     
     
     useEffect(() => {
+        if(search==="erp"){
+            setdata(Object.values(products)[0].data)
+            setdetails(Object.values(products)[0].description)
+        }else if(search==='networksecurity'){
+            setdata(Object.values(products)[1].data)
+            setdetails(Object.values(products)[1].description)
+        }
         setothers(data.filter((item, index) => index !== main));
     }, [main,data])
     
