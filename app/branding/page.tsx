@@ -1,5 +1,5 @@
 "use client"
-import React,{useState, useEffect} from 'react'
+import React,{useState, useEffect } from 'react'
 import StarsCanvas from '@/components/main/StarBackground'
 import EastIcon from '@mui/icons-material/East';
 import { useSearchParams } from 'next/navigation';
@@ -15,8 +15,6 @@ interface DataItem {
 export default function Firewall() {
     const [main, setmain] = useState(0)
     const [others, setothers] = useState<DataItem[]>([]);
-    const searchParams = useSearchParams();
-    const search = searchParams.get('search');
 
     
     const products = {
@@ -198,22 +196,28 @@ export default function Firewall() {
         //                 "Comprehensive Reporting: Provides detailed insights and reports for better decision-making."
         //             ]
         //         },
-        //     ]
+        //     ]np
         // },
     }
     const [data, setdata] = useState(products.cisco.data);
     const [details, setdetails] = useState(products.cisco.description);
     
     
-    
     useEffect(() => {
-        if(search==="webdev"){
-            setdata(Object.values(products)[0].data)
-            setdetails(Object.values(products)[0].description)
-        }else if(search==='appdev'){
-            setdata(Object.values(products)[1].data)
-            setdetails(Object.values(products)[1].description)
+        const val = window.location.href.split("?")[1];
+        const search = val.split("=")[1];
+        if (search.includes('webdev')) {
+            setdata(Object.values(products)[0].data);
+            setdetails(Object.values(products)[0].description);
+        } else if (search.includes('appdev')) {
+            setdata(Object.values(products)[1].data);
+            setdetails(Object.values(products)[1].description);
         }
+    }, []);
+
+
+    useEffect(() => {
+        
         setothers(data.filter((item, index) => index !== main));
     }, [main,data])
     

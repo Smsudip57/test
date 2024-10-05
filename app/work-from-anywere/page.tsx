@@ -14,8 +14,6 @@ interface DataItem {
 export default function Firewall() {
     const [main, setmain] = useState(0)
     const [others, setothers] = useState<DataItem[]>([]);
-    const searchParams = useSearchParams();
-    const search = searchParams.get('search');
     const products = {
         cisco:{
             image:'/m365.jpg',
@@ -202,16 +200,19 @@ export default function Firewall() {
     const [data, setdata] = useState(products.cisco.data);
     const [details, setdetails] = useState(products.cisco.description);
     
-    
+    useEffect(() => {
+        const val = window.location.href.split("?")[1];
+        const search = val.split("=")[1];
+        if (search.includes('mircosolf365')) {
+            setdata(Object.values(products)[0].data);
+            setdetails(Object.values(products)[0].description);
+        } else if (search.includes('windowsvirtualdesktop')) {
+            setdata(Object.values(products)[1].data);
+            setdetails(Object.values(products)[1].description);
+        }
+    }, []);
     
     useEffect(() => {
-        if(search==="mircosolf365"){
-            setdata(Object.values(products)[0].data)
-            setdetails(Object.values(products)[0].description)
-        }else if(search==='windowsvirtualdesktop'){
-            setdata(Object.values(products)[1].data)
-            setdetails(Object.values(products)[1].description)
-        }
         setothers(data.filter((item, index) => index !== main));
     }, [main,data])
     
