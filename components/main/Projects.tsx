@@ -22,24 +22,26 @@ const Projects = () => {
       id="projects"
     >
      <section className="  px-4 sm:px-12 lg:px-[136px]">
-  <div className="mx-auto mb-10 sm:mb-14 px-4 max-w-2xl text-center">
-    <h3 className="text-seagreen-950 mb-4 font-bold text-xl">INDUSTRIES</h3>
-    <h1 className="font-lora text-4xl text-green-900 font-bold mb-6">YOUR INDUSTRY</h1>
-    <p className="text-[#393939] text-xl">Our Expertise: Customized IT Solutions for Every Sector.</p>
+  <div className="mx-auto mb-10 sm:mb-14 px-4 max-w-6xl text-center">
+    {/* <h3 className="text-seagreen-950 mb-4 font-bold text-xl"></h3> */}
+    {/* <h1 className="font-lora text-4xl  font-bold mb-6">INDUSTRIES</h1> */}
+    <p className="text-4xl font-bold text-center mb-4 text-green-900">Your Industry, Our Expertise: Customized IT Solutions for Every Sector.</p>
   </div>
-  <div className="flex flex-col flex-wrap lg:flex-row gap-4 sm:gap-8 justify-center">
-    {
-      industries.map((industry, index) => (
-        <div className={`m-0.5 p-4 sm:p-10 ${((index%3 === 0&&index!==6&&index !==9)||index === 4||index === 7||index === 8||index === 11) ?"bg-[#FFF8BB]":"bg-[#E5EDFD]"} basis-[46%] lg:basis-[47.2%] rounded-xl`} key={index}>
-          {index%2 !== 0 &&  <img alt="project-image" loading="lazy" width="0" height="239" decoding="async" data-nimg="1" className="mb-[24px] w-full rounded-lg h-[239px] object-cover" style={{ color: 'transparent' }} src="/pexels-fauxels-3183153.jpg" />}
-      <h1 className="font-bold text-4xl text-[#0B2B20]  font-lora mb-[22px]">{industry}</h1>
-      <p className="text-[#0B2B20]  mb-[30px]">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the dsdsf standard dummy text. Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-      <button className="bg-[#0B2B20]  px-6 py-3 mb-7 rounded-lg text-white">Try it now</button>
-      {index%2 === 0 &&  <img alt="project-image" loading="lazy" width="0" height="239" decoding="async" data-nimg="1" className="w-full rounded-lg h-[239px] object-cover" style={{ color: 'transparent' }} src="/pexels-fauxels-3183153.jpg" />}
+  <div className="flex flex-col items-center py-0 mx-auto max-w-[1200px]">
+      {/* <h1 className="text-2xl font-bold text-center mb-4">
+        See how companies drive customer success in a whole new way with Einstein 1.
+      </h1> */}
+      <button className="border-[#93a5a4] border-2 text-[#446E6D] font-semibold py-2 px-4 rounded mb-16">
+        See all customer stories
+      </button>
+      <div className="flex flex-wrap gap-4 justify-center items-center place-items-center">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <div key={index} className="basis-1/6 flex justify-center items-center  shadow-lg border rounded-lg p-8">
+            <img src="https://wp.sfdcdigital.com/en-eu/wp-content/uploads/sites/11/2023/08/Swissbit-logo.png?resize=300,85" alt={`Company logo ${index + 1}`} />
+          </div>
+        ))}
+      </div>
     </div>
-      ))
-    }
-  </div>
 </section>
 
     </div>
