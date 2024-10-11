@@ -114,7 +114,7 @@ const Footer = () => {
       <a href="">Instagram</a>
       <a href="">Twitter</a>
       <a href="">Facebook</a>
-      <a href="">Telegram</a>
+      {/* <a href="">Telegram</a> */}
       <a href="">LinkedIn</a>
     </div>
     <div className="font-inter font-normal text-xs">© 2024 WebMe</div>

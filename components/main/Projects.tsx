@@ -31,14 +31,16 @@ const Projects = () => {
       {/* <h1 className="text-2xl font-bold text-center mb-4">
         See how companies drive customer success in a whole new way with Einstein 1.
       </h1> */}
-      <button className="border-[#93a5a4] border-2 text-[#446E6D] font-semibold py-2 px-4 rounded mb-16">
+      {/* <button className="border-[#93a5a4] border-2 text-[#446E6D] font-semibold py-2 px-4 rounded mb-16">
         See all customer stories
-      </button>
+      </button> */}
       <div className="flex flex-wrap gap-4 justify-center items-center place-items-center">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <div key={index} className="basis-1/6 flex justify-center items-center  shadow-lg border rounded-lg p-8">
-            <img src="https://wp.sfdcdigital.com/en-eu/wp-content/uploads/sites/11/2023/08/Swissbit-logo.png?resize=300,85" alt={`Company logo ${index + 1}`} />
+        {industries.map((name, index) => (
+          <a href={`/industries/${name.toLowerCase().split(" ").join('-')}`} className="basis-1/6 flex justify-center items-center  shadow-lg border rounded-lg p-4"  key={index}>
+          <div className="">
+            <img src={`/${name.toLowerCase().split(" ").join('')}.jpg`} alt={`Company logo ${index + 1}`} />
           </div>
+          </a>
         ))}
       </div>
     </div>
