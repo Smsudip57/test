@@ -208,6 +208,9 @@ export default function FacultyManagement() {
 
               </div>
             </div>
+
+
+            
           </div>
 
         </div>
