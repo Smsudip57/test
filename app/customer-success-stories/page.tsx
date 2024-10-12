@@ -267,7 +267,7 @@ export default function page() {
             
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
                 <div className='w-full pt-8 flex justify-center' >
-                <img src='/alqoda.png' className='w-[150px] aspect-square'/>
+                <img src='/wajna.jpg' className='w-[150px] aspect-square'/>
                 </div>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
@@ -289,7 +289,7 @@ export default function page() {
               </div>
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
               <div className='w-full pt-8 flex justify-center'>
-                 <img src='redwave.png' className='w-[150px] aspect-square'/>
+                 <img src='Elemex.webp' className='w-[150px] aspect-square'/>
               </div>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
@@ -346,7 +346,7 @@ export default function page() {
             
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
                 <div className='w-full pt-8 flex justify-center' >
-                <img src='/alqoda.png' className='w-[150px] aspect-square'/>
+                <img src='/ice-logo.webp' className='w-[150px] aspect-square'/>
                 </div>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
@@ -367,8 +367,8 @@ export default function page() {
                 </div>
               </div>
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
-              <div className='w-full pt-8 flex justify-center'>
-                 <img src='redwave.png' className='w-[150px] aspect-square'/>
+              <div className='w-full pt-8 flex justify-center bg-black'>
+                 <img src='/Steeltech.webp' className='w-[150px] aspect-square'/>
               </div>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
@@ -390,7 +390,7 @@ export default function page() {
               </div>
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
               <div className='w-full pt-8 flex justify-center'>
-                 <img src='/Barclays.webp' className='w-[150px] aspect-square'/>
+                 <img src='/taurus.png' className='w-[150px] aspect-square'/>
               </div>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
