@@ -57,7 +57,7 @@ const Footer = () => {
     <div className="hidden sm:flex flex-col gap-5 w-[33%]">
       <h1 className="font-lora font-bold text-2xl">Newsletter</h1>
       <p className="font-graphik font-normal leading-[18px] text-[15px]">
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+      Latest Insights Delivered to You
       </p>
       <div className="gap-[10px] flex">
         <input
@@ -95,7 +95,7 @@ const Footer = () => {
     <div className="flex sm:hidden flex-col gap-5">
       <h1 className="font-lora font-bold text-2xl">Newsletter</h1>
       <p className="font-graphik font-normal leading-[18px] text-[15px]">
-        Get the Latest Insights Delivered to You.
+        
       </p>
       <div className="gap-[10px] flex">
         <input
