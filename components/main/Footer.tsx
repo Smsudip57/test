@@ -29,7 +29,7 @@ const Footer = () => {
         src="/logo_1.svg"
         />
       <p className="font-graphik font-normal leading-5 text-[14px]">
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text.
+      WEBME Information Technology, Your trusted IT Consultancy Provider. With a passion for technology and a commitment to excellence, WEBME is here to guide your business through every step of its IT journey, ensuring seamless operations and transformative growth. WEBME mission is to bridge the gap between businesses and technology.
       </p>
     </div>
     <div className="hidden md:flex items-center sm:justify-center w-[33%]">
@@ -95,7 +95,7 @@ const Footer = () => {
     <div className="flex sm:hidden flex-col gap-5">
       <h1 className="font-lora font-bold text-2xl">Newsletter</h1>
       <p className="font-graphik font-normal leading-[18px] text-[15px]">
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+        Get the Latest Insights Delivered to You.
       </p>
       <div className="gap-[10px] flex">
         <input
