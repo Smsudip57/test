@@ -16,12 +16,14 @@ export default function CaseStudy() {
   return (
     <div className='z-20 w-full flex flex-col' id='case-study'>
   <div className='mx-auto text-center w-[1280px] my-40 relative'>
-  
-            <h1 className='text-4xl w-full text-center'>
+
+  <h1 className="font-lora text-4xl text-green-900 font-bold mb-6 uppercase">Customer Success Story</h1>
+  <p className="text-[#393939] text-xl">Discover how businesses are revolutionizing customer success with WEBME.</p>
+            {/* <h1 className='text-4xl w-full text-center'>
               <strong>
-              Discover how businesses are revolutionizing customer success with WEBME.
+              
               </strong>
-            </h1>
+            </h1> */}
       <Swiper
         slidesPerView={1}
         spaceBetween={100}

@@ -2,6 +2,9 @@
 import React,{useState, useEffect } from 'react'
 import StarsCanvas from '@/components/main/StarBackground'
 import EastIcon from '@mui/icons-material/East';
+import Projects from '@/components/main/Projects';
+import Industies from '@/components/main/Industies';
+import CaseStudy from '@/components/main/CaseStudy';
 import { useSearchParams } from 'next/navigation';
 
 interface DataItem {
@@ -205,7 +208,7 @@ export default function Firewall() {
     
     useEffect(() => {
         const val = window.location.href.split("?")[1];
-        const search = val.split("=")[1];
+        const search = val? val.split("=")[1]:"";
         if (search.includes('webdev')) {
             setdata(Object.values(products)[0].data);
             setdetails(Object.values(products)[0].description);
@@ -327,6 +330,9 @@ export default function Firewall() {
                     }
                 </div> */}
             </div> 
+            <Projects/>
+            <Industies/>
+            <CaseStudy/>
 
             </div>
         </div>

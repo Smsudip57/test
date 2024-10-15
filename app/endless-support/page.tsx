@@ -2,6 +2,9 @@
 import React,{useState, useEffect} from 'react'
 import StarsCanvas from '@/components/main/StarBackground'
 import EastIcon from '@mui/icons-material/East';
+import Projects from '@/components/main/Projects';
+import Industies from '@/components/main/Industies';
+import CaseStudy from '@/components/main/CaseStudy';
 interface DataItem {
     id: number;
     image: string;
@@ -312,7 +315,9 @@ export default function Firewall() {
                     }
                 </div> */}
             </div> 
-
+            <Projects/>
+            <Industies/>
+            <CaseStudy/>
             </div>
         </div>
 

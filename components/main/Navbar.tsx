@@ -82,6 +82,9 @@ const Navbar = () => {
             <a href="/#services" className="cursor-pointer hover:opacity-70">
               Services
             </a>
+            <a href="/" className="cursor-pointer hover:opacity-70">
+            Products
+            </a>
             <a href="/customer-success-stories" className="cursor-pointer hover:opacity-70">
             Customer Success Story
             </a>
@@ -90,8 +93,8 @@ const Navbar = () => {
             }, 500);setClicked(true);setoption('industries')}} onBlur={()=>{if(animated && completed ) {setAnimated('leftslider2') ; setCompleted(false);setClicked(false)}}} onFocus={()=>console.log(true)}>
             Industries
             </a>
-            <a href="/" className="cursor-pointer hover:opacity-70">
-            Products
+            <a href="/#projects" className="cursor-pointer hover:opacity-70">
+            Projects
             </a>
             <a href="/#pricing" className="cursor-pointer hover:opacity-70">
             Pricing
