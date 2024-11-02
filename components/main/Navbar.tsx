@@ -52,9 +52,9 @@ const Navbar = () => {
 
   
   return (
-    <div className="w-full relative">
+    <div className="w-full relative xl:block ">
     <div className={`w-full h-[65px] fixed top-0 shadow-lg  ${scrolled ? "bg-white shadow-[#8cdcdd]/30":''} backdrop-blur-md z-50`} onMouseLeave={() => {}}>
-      <div className="md:w-[90%] lg:w-[80%] h-full flex flex-row items-center justify-between m-auto">
+      <div className="m-w-[90%] lg:w-[80%] h-full flex flex-row items-center justify-between m-auto">
         <a
           href="/#about-me"
           className="h-auto w-auto flex flex-row items-center"
@@ -74,7 +74,7 @@ const Navbar = () => {
 
         <div className="h-full flex items-center justify-between gap-10 uppercase ">
           {/* <div className="flex items-center justify-between w-full h-auto mr-[15px] px-[20px] py-[10px] rounded-full text-black"> */}
-          <a  className="cursor-pointer hover:opacity-70 hidden 2xl:block" tabIndex={0} onClick={() => {setAnimated('leftslider1');setTimeout(() => {
+          <a  className="cursor-pointer hover:opacity-70 " tabIndex={0} onClick={() => {setAnimated('leftslider1');setTimeout(() => {
               setCompleted(true)
             }, 500);setClicked(true);setoption('about')}} onBlur={()=>{if(animated && completed ) {setAnimated('leftslider2') ; setCompleted(false);setClicked(false)}}} >
               ABOUT
@@ -82,7 +82,7 @@ const Navbar = () => {
             <a href="/#services" className="cursor-pointer hover:opacity-70">
               Services
             </a>
-            <a href="/customer-success-stories" className="cursor-pointer hover:opacity-70">
+            <a href="/customer-success-stories" className="cursor-pointer hover:opacity-70 hidden lg:block">
             Customer Success Story
             </a>
             <a  className="cursor-pointer hover:opacity-70 hidden 2xl:block" tabIndex={0} onClick={() => {setAnimated('leftslider1');setTimeout(() => {
@@ -90,10 +90,10 @@ const Navbar = () => {
             }, 500);setClicked(true);setoption('industries')}} onBlur={()=>{if(animated && completed ) {setAnimated('leftslider2') ; setCompleted(false);setClicked(false)}}} onFocus={()=>console.log(true)}>
             Industries
             </a>
-            <a href="/" className="cursor-pointer hover:opacity-70">
+            <a href="/" className="cursor-pointer hover:opacity-70  hidden lg:block">
             Products
             </a>
-            <a href="/#pricing" className="cursor-pointer hover:opacity-70">
+            <a href="/#pricing" className="cursor-pointer hover:opacity-70  hidden lg:block">
             Pricing
             </a>
             <a href="/#store" className="cursor-pointer hover:opacity-70 hidden xl:block">

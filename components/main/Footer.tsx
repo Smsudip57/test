@@ -1,22 +1,12 @@
 import React from "react";
-import {
-  RxDiscordLogo,
-  RxGithubLogo,
-  RxInstagramLogo,
-  RxTwitterLogo,
-  RxLinkedinLogo,
-} from "react-icons/rx";
-
-import { FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <div className="bg-[#393939] text-white px-4 sm:px-12 lg:px-24 pt-12 ">
-
-    <div className="lg:w-[80%] max-w-[1536px] mx-auto">
+    <div className="bg-[#393939] text-white px-4 sm:px-12 lg:px-24 pt-12 flex relative z-50">
+    <div className="w-[90%] lg:w-[80%] max-w-[1536px] mx-auto">
          {/* className="bg-[#393939] text-white px-4 sm:px-12 lg:px-24 pt-12" */}
-  <div className="flex justify-between gap-10 md:gap-5 xl:gap-20 pb-4 sm:pb-12 pr-6 sm:pr-0">
-    <div className="gap-5 flex flex-col w-[33%]">
+  <div className="flex flex-col sm:flex-row justify-between gap-10 md:gap-5 xl:gap-20 pb-4 sm:pb-12 pr-6 sm:pr-0">
+    <div className="gap-5 flex flex-col lg:w-[33%]">
       <img
         alt="WebMe"
         loading="lazy"
@@ -54,7 +44,7 @@ const Footer = () => {
         </div>
       </div>
     </div>
-    <div className="hidden sm:flex flex-col gap-5 w-[33%]">
+    <div className="hidden sm:flex flex-col gap-5 lg:w-[33%]">
       <h1 className="font-lora font-bold text-2xl">Newsletter</h1>
       <p className="font-graphik font-normal leading-[18px] text-[15px]">
         Lorem Ipsum is simply dummy text of the printing and typesetting industry.
@@ -70,7 +60,7 @@ const Footer = () => {
         </button>
       </div>
     </div>
-    <div className="flex md:hidden items-center">
+    {/* <div className="flex md:hidden items-center">
       <div className="flex flex-col gap-5">
         <h2 className="font-inter text-[14px] leading-4 font-semibold uppercase">Company</h2>
         <div className="flex flex-col gap-4">
@@ -91,7 +81,7 @@ const Footer = () => {
           </a>
         </div>
       </div>
-    </div>
+    </div> */}
     <div className="flex sm:hidden flex-col gap-5">
       <h1 className="font-lora font-bold text-2xl">Newsletter</h1>
       <p className="font-graphik font-normal leading-[18px] text-[15px]">

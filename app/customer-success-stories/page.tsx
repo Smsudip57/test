@@ -4,29 +4,29 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 export default function page() {
   return (
     <div className='py-16 '>
-        <div className='w-[1280px] mx-auto pt-16 flex items-center gap-10 '>
-          <div className='basis-1/2 pr-32  z-20'>
-          <p className='text-5xl'>
+        <div className='w-[90%] xl:w-[1280px] flex-col xl:flex-row mx-auto pt-16 flex items-center gap-10 '>
+          <div className='basis-1/2 xl:pr-32 xl:order-1 order-2 z-20'>
+          <p className='text-4xl xl:text-5xl'>
             <strong>WEBME delivers Customer Success.
             </strong>
             </p>
-          <p className='mt-10 text-xl'>
+          <p className='mt-10 xl:text-xl'>
           At WEBME, we are dedicated to driving your success through innovative IT services. Our expertise spans ERP, Modern Workplace solutions, Network Security, Website development, and Digital Technology. WEBME acts as your virtual companion in the digital world, helping you achieve success and transform your operations. Partner with us to experience unparalleled customer success.
           </p>
           </div>
-          <div className="basis-1/2  rounded-2xl overflow-hidden z-20">
-            <img alt="logo" loading="lazy" width="100" height="auto" decoding="async" data-nimg="1" className="w-full h-full object-cover" src="/moving-car.gif"/>
+          <div className="basis-1/2  rounded-2xl overflow-hidden z-20 xl:order-2 order-1">
+            <img alt="logo" loading="lazy" width="100" height="auto" decoding="async" data-nimg="1" className="w-full max-h-[350px] h-full object-cover" src="/moving-car.gif"/>
           </div>
 
 
         </div>
-        <div className='w-[1280px] mx-auto pt-32 gap-10'>
-            <p className='text-4xl w-full text-center'>
+        <div className='w-[90%] xl:w-[1280px] mx-auto pt-32 gap-10'>
+            <p className='text-2xl xl:text-4xl w-full text-center'>
               <strong>
               Customer Success With Digital
               </strong>
             </p>
-            <div className=' grid grid-cols-3 gap-10 pt-16'>
+            <div className='grid xl:grid-cols-3 gap-10 pt-16'>
             
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
                 <div className='w-full pt-8 flex justify-center' >
@@ -99,13 +99,13 @@ export default function page() {
           </div>
 
         </div>
-        <div className='w-[1280px] mx-auto pt-32 gap-10'>
-            <p className='text-4xl w-full text-center'>
+        <div className='w-[90%] xl:w-[1280px] mx-auto pt-20 xl:pt-32 gap-10'>
+            <p className='text-2xl xl:text-4xl w-full text-center'>
               <strong>
               Customer Success With Branding
               </strong>
             </p>
-            <div className=' grid grid-cols-3 gap-10 pt-16'>
+            <div className='grid xl:grid-cols-3 gap-10 pt-16'>
             
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
                 <div className='w-full pt-8 flex justify-center bg-black ' >
@@ -178,13 +178,13 @@ export default function page() {
           </div>
 
         </div>
-        <div className='w-[1280px] mx-auto pt-32 gap-10'>
-            <p className='text-4xl w-full text-center'>
+        <div className='w-[90%] xl:w-[1280px] mx-auto pt-20 xl:pt-32 gap-10'>
+            <p className='text-2xl xl:text-4xl w-full text-center'>
               <strong>
               Customer Success with WorkFrom Anywhere
               </strong>
             </p>
-            <div className=' grid grid-cols-3 gap-10 pt-16'>
+            <div className='grid xl:grid-cols-3 gap-10 pt-16'>
             
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
                 <div className='w-full pt-8 flex justify-center' >
@@ -257,13 +257,13 @@ export default function page() {
           </div>
 
         </div>
-        <div className='w-[1280px] mx-auto pt-32 gap-10'>
-            <p className='text-4xl w-full text-center'>
+        <div className='w-[90%] xl:w-[1280px] mx-auto pt-20 xl:pt-32 gap-10'>
+            <p className='text-2xl xl:text-4xl w-full text-center'>
               <strong>
               Customer Success with Modern Workplace
               </strong>
             </p>
-            <div className=' grid grid-cols-3 gap-10 pt-16'>
+            <div className='grid xl:grid-cols-3 gap-10 pt-16'>
             
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
                 <div className='w-full pt-8 flex justify-center' >
@@ -336,13 +336,13 @@ export default function page() {
           </div>
 
         </div>
-        <div className='w-[1280px] mx-auto pt-32 gap-10'>
-            <p className='text-4xl w-full text-center'>
+        <div className='w-[90%] xl:w-[1280px] mx-auto pt-20 xl:pt-32 gap-10'>
+            <p className='text-2xl xl:text-4xl w-full text-center'>
               <strong>
               Customer Success with Endless Support
               </strong>
             </p>
-            <div className=' grid grid-cols-3 gap-10 pt-16'>
+            <div className='grid xl:grid-cols-3 gap-10 pt-16'>
             
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col border-[1px] border-gray-300'>
                 <div className='w-full pt-8 flex justify-center' >
