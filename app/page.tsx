@@ -18,7 +18,7 @@ export default function Home() {
           <Hero />
         </div>
       </div>
-      <div className="flex flex-col gap-20 lg:w-[90%] w-full  max-w-[1920px] mx-auto overflow-hidden ">
+      <div className="flex flex-col gap-20 w-[95%] lg:w-[90%]   max-w-[1920px] mx-auto overflow-hidden ">
         <div className="bg-[rgba(231,247,246,1)] z-20">
         <Webme />
         </div>
