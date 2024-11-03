@@ -144,7 +144,7 @@ const Navbar = () => {
             Store
             </a>
             <div>
-      <button onClick={handleOpen} className="lg:hidden text-[#446E6D]"><span className="font-semibold">SEE MORE</span> <KeyboardArrowDownIcon fontSize="inherit"/></button>
+      <button onClick={handleOpen} className="lg:hidden text-[#446E6D]"><span className="font-semibold">HOME</span> <KeyboardArrowDownIcon fontSize="inherit"/></button>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -152,7 +152,7 @@ const Navbar = () => {
       >
         
         <MenuItem>
-          <span  onClick={handleOpen2}>About</span>
+          <span  onClick={handleOpen2} className="w-full">About <KeyboardArrowDownIcon fontSize="inherit"/></span>
           <Menu
             anchorEl={anchorE2}
             open={Boolean(anchorE2)}
@@ -171,7 +171,7 @@ const Navbar = () => {
         <MenuItem><a href="/customer-success-stories">Customer Success Story</a></MenuItem>
         
         <MenuItem>
-          <span  onClick={handleOpen3}>Industries</span>
+          <span  onClick={handleOpen3} className="w-full">Industries <KeyboardArrowDownIcon fontSize="inherit"/></span>
           <Menu
             anchorEl={anchorE3}
             open={Boolean(anchorE3)}
