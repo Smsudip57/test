@@ -8,8 +8,8 @@ const Contact = () => {
     <div className="p-3 sm:p-8 gap-5 flex flex-col">
       <h2 className="font-graphik text-[20px] leading-[34px] font-semibold text-[#00CAB7]">Custom</h2>
       <div className="flex flex-col gap-2">
-        <h1 className="font-lora text-4xl leading-[34px] text-[#282828] font-bold">Contact us</h1>
-        <p className="font-graphik text-sm font-normal text-darkblack-700">Lorem insput inputdfdghsabu xoinsauc</p>
+        <h1 className="font-lora text-4xl leading-[34px] text-[#282828] font-bold">Connect WEBME</h1>
+        <p className="font-graphik text-sm font-normal text-darkblack-700">Subscribe for Exclusive Updates</p>
       </div>
       <button className="border border-[#00CAB7] rounded-md px-[22px] py-[13px] text-base font-semibold text-[#00CAB7]">Get started</button>
     </div>

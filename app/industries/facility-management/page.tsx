@@ -2,6 +2,58 @@
 import React,{useState} from 'react'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CaseStudy from '@/components/main/CaseStudy';
+const service = [
+  {
+    Name:"Branding",
+    image:"/nextjs.jpg",
+    url:"/branding?search=webdev#details",
+  },
+  {
+    Name:"Branding",
+    image:"/expt.jpg",
+    url:"/branding?search=appdev#details",
+  },
+  {
+    Name:"Workfrom Anywhere",
+    image:"/m365.jpg",
+    url:"work-from-anywere?search=microsolft365#details",
+  },
+  {
+    Name:"Workfrom Anywhere",
+    image:"/micro-t.jpg",
+    url:"/work-from-anywere?search=windowsvirtualdesktop#details",
+  },
+  {
+    Name:"Modern Workplace",
+    image:"/newerp.jpg",
+    url:"/modern-workplace?search=erp#details",
+  },
+  {
+    Name:"Modern Workplace",
+    image:"/nnetwork.jpg",
+    url:"/modern-workplace?search=networksecurity#details",
+  },
+  {
+    Name:"Digital",
+    image:"/cctv.jpg",
+    url:"/digital?search=surveillancesystems#details",
+  },
+  {
+    Name:"Digital",
+    image:"/iot.jpg",
+    url:"/digital?search=iotsystems#details",
+  },
+  {
+    Name:"Endless Support",
+    image:"/consult.png",
+    url:"/endless-support#details",
+  },
+  {
+    Name:"Endless Support",
+    image:"/cs.jpg",
+    url:"/endless-support#details",
+  },
+]
 
 
 export default function FacultyManagement() {
@@ -149,65 +201,27 @@ export default function FacultyManagement() {
           WEBME’s IT Services for Facility Management provide a comprehensive suite of solutions, including Website Development, Microsoft 365 integration, ERP systems, and IT Consultancy. These services are designed to streamline operations, enhance productivity, and ensure seamless communication within your facility management company.
           </p>
         </div>
-          <div className='w-[1280px] mx-auto mt-12 mb-52 z-20'>
-            <div className=' grid grid-cols-4 gap-10'>
-              <div className='bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8'>
+          <div className=' carousel-container w-[1280px] mx-auto mt-12 mb-52 z-20  overflow-hidden'>
+            <div className='carousel-track flex gap-10 overflow-x-auto' style={{animation: 'slide2 60s linear infinite', width:'max-content' }}>
+            {
+              service.map((item,index)=>(
+                <div className={` relative max-w-[281px] bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8 cursor-pointer ${index===0?'ml-10':''}`} key={index}>
                 <span className='text-xl uppercase'>
                   <strong>
-                  Branding
+                  {item.Name}
                   </strong>
                 </span>
-                <img src="/nseo.jpg" className='w-full mt-4 rounded-sm'/>
-                <a href='/branding'>
-                  <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
+                <img src={item.image} className='w-full mt-8 rounded-sm mb-10'/>
+                <a href={item.url}>
+                  <button className='mt-10 bottom-0 mb-8 absolute text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
                   <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
                 </button>
                   </a>
 
               </div>
-              <div className='bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8'>
-                <span className='text-xl uppercase'>
-                  <strong>
-                  Modern Workplace
-                  </strong>
-                </span>
-                <img src="/mwp.jpg" className='w-full mt-4 rounded-sm'/>
-                <a href='/modern-workplace'>
-                <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
-                  <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
-                </button>
-                </a>
-
+              ))
+            }
               </div>
-              <div className='bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8'>
-                <span className='text-xl uppercase'>
-                  <strong>
-                  Digital
-                  </strong>
-                </span>
-                <img src="/dimg.jpg" className='w-full mt-4 rounded-sm'/>
-                <a href='/digital'>
-                <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
-                  <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
-                </button>
-                </a>
-
-              </div>
-              <div className='bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8'>
-                <span className='text-xl uppercase'>
-                  <strong>
-                  Endless Support
-                  </strong>
-                </span>
-                <img src="/supporti.jpg" className='w-full mt-4 rounded-sm'/>
-                <a href='/endless-support'>
-                <button className='mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
-                  <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
-                </button>
-                </a>
-
-              </div>
-            </div>
 
 
             

@@ -239,6 +239,13 @@ html {
   
 }
 
+@keyframes slide2 {
+  to {
+    transform: translateX(-100%);
+  }
+   
+}
+
 /* .serviceforce{
   aspect-ratio: 1634/919!important;
   height: 182.92px;

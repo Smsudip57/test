@@ -1,4 +1,5 @@
 import Hero from "@/components/main/Hero";
+import Industies from "@/components/main/Industies";
 import Projects from "@/components/main/Projects";
 import Skills from "@/components/main/Skills";
 import CaseStudy from "@/components/main/CaseStudy";
@@ -23,6 +24,7 @@ export default function Home() {
         </div>
         <CaseStudy />
         <div className="z-20 w-full">
+        <Industies />
         <Projects />
         <Pricing />
         <Infinite />

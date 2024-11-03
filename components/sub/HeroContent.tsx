@@ -112,7 +112,7 @@ const HeroContent = () => {
       <a href="/work-from-anywere">
       <img alt="erp" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-2" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/workfromi.jpg"/></a>
       {/* <a href="/secure-firewall"> */}
-      <a href="/">
+      <a href="/endless-support">
       <img alt="network security" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="rounded-full cursor-pointer moving-item-3" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/supporti.jpg"/></a>
       {/* Network Security.jpeg */}
     </div>
