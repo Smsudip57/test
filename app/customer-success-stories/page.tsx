@@ -4,7 +4,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 export default function page() {
   return (
     <div className='py-16 '>
-        <div className='w-[90%] xl:w-[1280px] flex-col xl:flex-row mx-auto pt-16 flex items-center gap-10 '>
+        <div className='w-[90%] xl:w-[1280px] flex-col xl:flex-row mx-auto pt-8 lg:pt-16 flex items-center gap-10 '>
           <div className='basis-1/2 xl:pr-32 xl:order-1 order-2 z-20'>
           <p className='text-4xl xl:text-5xl'>
             <strong>WEBME delivers Customer Success.

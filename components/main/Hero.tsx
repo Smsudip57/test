@@ -4,7 +4,7 @@ import WebParticles from "./webParticles";
 
 const Hero = () => {
   return (
-    <div className="relative flex flex-col h-full w-full lg:mb-48" id="about-me">
+    <div className="relative flex flex-col h-full w-full pt-32 lg:pt-0 lg:mb-48" id="about-me">
       <WebParticles />
       {/* <video
         autoPlay
