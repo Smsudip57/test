@@ -5,8 +5,8 @@ const Pricing = () => {
     
      <div className="mt-5 md:my-10 lg:my-[110px] px-4 sm:px-12 lg:px-[136px] z-20" id="pricing">
   <div className="font-lora text-[36px] text-center">
-  <h1 className="font-lora text-4xl text-green-900 font-bold mb-6 uppercase">Pricing</h1>
-  <p className="text-xl text-center mb-4 ">Flexible IT Services with Transparent Pricing</p>
+  <h1 className="font-lora text-2xl lg:text-4xl text-green-900 font-bold mb-6 uppercase">Pricing</h1>
+  <p className="text-base lg:text-xl text-center mb-12 lg:mb-4 ">Flexible IT Services with Transparent Pricing</p>
   </div>
   <div className="flex flex-col gap-5 md:grid md:grid-cols-2 md:gap-11 lg:flex lg:flex-row lg:justify-center lg:items-center mt-3 md:mt-10 lg:mt-16">
     <div className="relative w-auto lg:w-[257px]">

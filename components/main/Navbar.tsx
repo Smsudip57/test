@@ -144,7 +144,7 @@ const Navbar = () => {
             Store
             </a>
             <div>
-      <button onClick={handleOpen} className="lg:hidden">More <KeyboardArrowDownIcon fontSize="inherit"/></button>
+      <button onClick={handleOpen} className="lg:hidden text-[#446E6D]"><span className="font-semibold">SEE MORE</span> <KeyboardArrowDownIcon fontSize="inherit"/></button>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}

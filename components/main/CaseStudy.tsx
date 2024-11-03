@@ -17,7 +17,7 @@ export default function CaseStudy() {
     <div className='z-20 w-full flex flex-col' id='case-study'>
   <div className='mx-auto text-center w-full lg:w-[1280px] my-20 lg:my-40 relative'>
 
-  <h1 className="font-lora text-xl lg:text-4xl text-green-900 font-bold mb-6 uppercase">Customer Success Story</h1>
+  <h1 className="font-lora text-2xl lg:text-4xl text-green-900 font-bold mb-6 uppercase">Customer Success Story</h1>
   <p className="text-[#393939] text-base lg:text-xl">Discover how businesses are revolutionizing customer success with WEBME.</p>
             {/* <h1 className='text-4xl w-full text-center'>
               <strong>

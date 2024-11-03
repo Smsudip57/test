@@ -28,7 +28,7 @@ import React,{useState, useEffect} from "react";
         <div className="mb-5 sm:mb-10 md:px-20 lg:px-89 px-5 ">
           <div className="relative cursor-pointer">
             
-            <div className=" mx-auto w-full text-2xl md:text-xl lg:text-4xl text-[#282828] font-lora my-8 lg:my-0 lg:mb-16 font-bold list-none flex  justify-center items-center" >
+            <div className=" mx-auto w-full text-2xl md:text-xl lg:text-4xl text-[#446E6D] font-lora my-8 lg:my-0 lg:mb-16 font-bold list-none flex  justify-center items-center" >
             <p className="upper">
               <span className={`uppercase ${active==="w" ? "text-[#D5E928]" : ""}`}>w</span>
               <span className={`uppercase ${active==="ex" ? "text-[#D5E928]" : ""}`}>E</span>

@@ -8,8 +8,7 @@ import {
   slideInFromRight,
   slideInFromTop,
 } from "@/utils/motion";
-import { SparklesIcon } from "@heroicons/react/24/solid";
-import Image from "next/image";
+import SearchIcon from '@mui/icons-material/Search';
 
 const HeroContent = () => {
   const [imageStyle, setImageStyle] = useState<number>(0);
@@ -130,7 +129,7 @@ const HeroContent = () => {
       <img alt="search" loading="lazy" width="25" height="25" decoding="async" data-nimg="1" className="sm:ml-2 xs:w-6 xs:h-6 w-5 h-5" style={{color:"transparent"}} src="/search.svg"/>
       <input placeholder={place} className="text-[#101513] text-base xs:text-base leading-7 focus:outline-none"/>
     </div>
-    <button className="bg-[#446E6D] font-medium text-white text-base xs:text-xs px-1.5 xs:px-3 md:px-[34px] py-2 md:py-[11.5px] font-graphik rounded-[39px] border-box">webmedigital</button>
+    <button className="bg-[#446E6D] font-medium text-white text-lg sm:text-base px-1.5 xs:px-3 md:px-[34px] py-2 md:py-[11.5px] font-graphik rounded-[39px] border-box"><span className="hidden sm:block">webmedigital</span><span className="sm:hidden aspect-square p-2"><SearchIcon fontSize="inherit"/></span></button>
   </div>
 </div>
 
