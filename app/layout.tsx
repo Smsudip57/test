@@ -8,8 +8,8 @@ import Footer from "@/components/main/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Space Portfolio",
-  description: "This is my portfolio",
+  title: "webmedigital",
+  description: "WEBME Information Technology, Your trusted IT Consultancy Provider. With a passion for technology and a commitment to excellence, WEBME is here to guide your business through every step of its IT journey, ensuring seamless operations and transformative growth.",
 };
 
 export default function RootLayout({
