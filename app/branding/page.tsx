@@ -243,7 +243,7 @@ export default function Firewall() {
                     <p className='pr-10 font-medium'>Discover the power of exceptional branding with our top-tier website and mobile app development services.<br></br><br></br> We craft visually stunning websites and user-friendly mobile apps that not only represent your brand but also engage and delight your audience. Transform your digital presence and make a lasting impression.</p>
                     <div className='flex gap-6'>
                     <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-sm'>Book Free Consultation</button>
-                    <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Explore</span> <EastIcon fontSize='inherit '/></button>
+                    <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Explore</span> <EastIcon fontSize="inherit"/></button>
                     </div>
                 </div>
                 <div className='xl:w-[50%] flex justify-center items-center z-30 order-1 xl:order-2'>
@@ -287,7 +287,7 @@ export default function Firewall() {
                         
                         <div className='flex justify-center gap-6 my-16'>
                         <button className=' text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4'>Get it today!</button>
-                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit '/></button>
+                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize="inherit"/></button>
                         </div>
                             
                         </div>
