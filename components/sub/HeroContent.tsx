@@ -72,7 +72,7 @@ const HeroContent = () => {
         >
           <div className="z-99999 gap-7 mt-5 flex flex-col w-full"><p className="font-roboto font-bold leading-[60px] lg:leading-[84px] lg:text-[70px] text-[42px]" style={{fontFamily: "Roboto, sans-serif"}}><a className="bg-gradient-to-r from-[#00FFF3] to-[#FFE500] text-transparent inline-block bg-clip-text" href="/">WEBME,</a><span className="block text-black mt-4 pt-0.5">Your <span className="bg-[#282828] text-[#95E0D9] inline-block px-1.5">Co-Pilot</span> In The IT Journey</span></p></div>
           <div className="mt-6 ml-2">
-          <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-sm gap-3 items-center font-normal flex'>Let&#39;s Start<EastIcon fontSize='inherit '/></button>
+          <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-sm gap-3 items-center font-normal flex'>Let&#39;s Start<EastIcon fontSize='inherit'/></button>
           </div>
         </motion.div>
 

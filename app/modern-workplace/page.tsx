@@ -158,7 +158,7 @@ export default function Work() {
                 <p className='pr-10 font-medium'>In the complex world of business management, simplicity is the ultimate sophistication.<br></br><br></br>  Elevate your business with our top-tier Network Security and ERP Software services. Shield your digital assets with our advanced network security solutions, featuring state-of-the-art firewall management, real-time intrusion detection, and comprehensive vulnerability assessments. Simultaneously, revolutionize your operations with our ERP software, seamlessly integrating finance, HR, and supply chain into one powerful system. Experience unparalleled efficiency, enhanced decision-making, and robust growth with our tailored solutions designed for businesses of all sizes.</p>
                 <div className='flex gap-6'>
                     <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-sm'>Book Free Consultation</button>
-                    <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Explore</span> <EastIcon fontSize='inherit '/></button>
+                    <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Explore</span> <EastIcon fontSize='inherit'/></button>
                     </div>
             </div>
             <div className='xl:w-[50%] flex justify-center items-center z-30 order-1 xl:order-2'>
@@ -202,7 +202,7 @@ export default function Work() {
                         
                         <div className='flex justify-center gap-6 my-16'>
                         <button className=' text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4'>Get it today!</button>
-                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit '/></button>
+                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit'/></button>
                         </div>
                             
                         </div>
@@ -223,7 +223,7 @@ export default function Work() {
                 
                 <div className='flex justify-center gap-6 my-16'>
                 <button className=' text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4'>Get it today!</button>
-                <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit '/></button>
+                <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit'/></button>
                 </div>
                     
                 </div> */}
