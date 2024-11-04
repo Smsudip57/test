@@ -65,17 +65,17 @@ export default function FacultyManagement() {
 
 
   return (
-    <div className='w-full h-full pt-[65px]'>
-      <div className='w-4/5 mx-auto'>
-      <div className='w-[1280px] mx-auto pt-[65px] flex justify-center'>
-        <div className='basis-1/2 flex flex-col justify-center pr-[10%] z-20 gap-8'>
-        <span className='text-4xl'>
+    <div className='w-full h-full pt-[65px] relative z-20'>
+      <div className='w-full lg:w-4/5 mx-auto'>
+      <div className='w-[90%] lg:w-[80%] xl:w-[1280px] mx-auto pt-8 lg:pt-[65px] flex flex-col lg:flex-row justify-center gap-8 lg:gap-0'>
+        <div className='basis-1/2 flex flex-col justify-center lg:pr-[10%] z-20 gap-8 order-2 lg:order-1'>
+        <span className='text-2xl lg:text-4xl '>
           <strong>
           Transform Your Facility Management with Our IT Solutions Optimize Operations and Enhance Efficiency
 
             </strong>
         </span>
-        <p className='text-lg'>
+        <p className='text-base lg:text-lg'>
         In the dynamic world of facility management, staying ahead means embracing technology that streamlines operations and enhances efficiency. Our services provide tailored solutions to help facility management companies optimize their processes, reduce costs, and improve service delivery.
         </p>
         <div className='flex gap-5'>
@@ -84,7 +84,7 @@ export default function FacultyManagement() {
 
         </div>
         </div>
-        <div className='basis-1/2 p-28 '>
+        <div className='basis-1/2 px-10 lg:px-0 lg:p-28 order-1 lg:order-2'>
         <img className='w-full rounded overflow-hidden' src='/f-m-t.jpg'/>
         
         </div>
@@ -95,26 +95,26 @@ export default function FacultyManagement() {
         <div className='absolute top-0 left-0 w-full h-full '>
           <img src='/yoyo-bg.png' className='w-full h-full'/>
         </div>
-        <div className='flex justify-center mt-[65px]'>
-        <div className='mx-auto text-center w-[1000px]  z-20'>
-          <span className='text-3xl'> 
+        <div className='flex justify-center mt-[65px] w-full'>
+        <div className='mx-auto text-center  w-[90%] sm:w-[1000px]  z-20 py-16 lg:p-0'>
+          <span className='text-2xl lg:text-3xl text-[#446E6D]'> 
             <strong>
-            Facility Management Companies Thriving with Our IT Services Discover how leading facility management companies in UAE have transformed their operations and achieved remarkable success with our tailored IT solutions.
+            Facility Management Companies Thriving with Our IT Services <span className='hidden lg:block'>Discover how leading facility management companies in UAE have transformed their operations and achieved remarkable success with our tailored IT solutions.</span>
               </strong>
 
           </span>
-          <div className=' rounded-lg overflow-hidden mt-20 mb-28 flex justify-center gap-10'>
-            <div className='text-center w-[200px]'>
-            <div className='w-[200px] h-[100px] bg-white flex justify-center rounded-lg p-2 shadow-md shadow-gray-500 mb-4'>
+          <div className=' rounded-lg overflow-hidden mt-28 lg:mt-20 mb-10 lg:mb-28 flex justify-center gap-6 lg:gap-10'>
+            <div className='text-center w-[160px]'>
+            <div className='w-[160px] h-[80px] lg:w-[200px] lg:h-[100px] bg-white flex justify-center rounded-lg p-2 shadow-md shadow-gray-500 mb-4'>
               <img src='/logo_mountain_gate.png' className='h-full'/>
             </div>
-            <strong className='text-xl uppercase'>Mountain Gate </strong>
+            <strong className=' text-lg lg:text-xl uppercase'>Mountain Gate </strong>
             </div>
             <div className='text-center'>
-            <div className='w-[200px] h-[100px] bg-white flex justify-center rounded-lg p-2 shadow-md shadow-gray-500 mb-4'>
+            <div className='w-[160px] h-[80px] lg:w-[200px] lg:h-[100px] bg-white flex justify-center rounded-lg p-2 shadow-md shadow-gray-500 mb-4'>
               <img src='/green-logo.png' className='h-full'/>
             </div>
-            <strong className='text-xl'>GREEN TECH </strong>
+            <strong className='text-lg lg:text-xl'>GREEN TECH </strong>
             </div>
           </div>
 
@@ -124,16 +124,16 @@ export default function FacultyManagement() {
       </div>
       <div className='w-full'>
       <div className='flex justify-center pt-[65px]'>
-        <div className='mx-auto text-center w-[1280px]  z-20'>
-          <div className='w-[1000px] mx-auto'>
-          <span className='text-3xl'> 
+        <div className='mx-auto text-center w-[90%] lg:w-4/5 xl:w-[1280px]  z-20'>
+          <div className='w-full xl:w-[1000px] mx-auto'>
+          <span className='text-2xl lg:text-3xl text-[#446E6D]'> 
             <strong>
             Facility Management Companies Achieve Outstanding Results with WEBME
               </strong>
 
           </span>
           </div>
-          <div className='my-20 grid grid-cols-3 gap-9'>
+          <div className='my-20 grid lg:grid-cols-3 gap-6 lg:gap-9'>
             <div className='w-full min-h-[20vh] bg-[url(https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Retail_Salesforce-for-Retail_Statistics-Card_Card-1_Version-1-1.png?w=800)] bg-cover shadow-lg rounded-2xl overflow-hidden p-14 border-2 border-gray-200 text-base grid gap-2'>
              <span className='text-7xl'>
               <strong>
@@ -184,24 +184,26 @@ export default function FacultyManagement() {
         </div>
         </div>
       </div>
+      <div className='w-[90%] mx-auto lg:w-full'>
       <CaseStudy/>
+      </div>
         <div className='relative  bg-no-repeat bg-cover w-full bg-bottom'  >
-        <div className='absolute top-0 left-0 w-full h-full '>
+        <div className='absolute top-0 left-0 w-full h-full hidden xl:block'>
           <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Automotive-Category-pg-Featured-solution-background-2.png?w=1024' className='w-full h-full'/>
         </div>
-        <div className='flex flex-col justify-center mt-[65px]'>
-        <div className='mx-auto text-center w-[1000px]  z-20'>
-          <span className='text-4xl'> 
+        <div className='flex flex-col justify-center mt-[65px] w-[90%] mx-auto lg:w-full'>
+        <div className='mx-auto text-center w-full lg:w-[1000px]  z-20'>
+          <span className='text-2xl lg:text-4xl text-[#446E6D]'> 
             <strong>
             Discover what WEBME’s IT Services for Facility Management can do for you.
               </strong>
 
           </span>
-          <p className='text-lg mt-8'>
+          <p className='text-base lg:text-lg mt-8'>
           WEBME’s IT Services for Facility Management provide a comprehensive suite of solutions, including Website Development, Microsoft 365 integration, ERP systems, and IT Consultancy. These services are designed to streamline operations, enhance productivity, and ensure seamless communication within your facility management company.
           </p>
         </div>
-          <div className=' carousel-container w-[1280px] mx-auto mt-12 mb-52 z-20  overflow-hidden'>
+          <div className=' carousel-container w-full xl:w-[1280px] mx-auto mt-12 mb-28 sm:mb-52 z-20  overflow-hidden'>
             <div className='carousel-track flex gap-10 overflow-x-auto' style={{animation: 'slide2 60s linear infinite', width:'max-content' }}>
             {
               service.map((item,index)=>(
@@ -232,17 +234,17 @@ export default function FacultyManagement() {
       </div>
       <div className='relative w-full bg-bottom'  >
         
-        <div className='flex flex-col justify-center my-[65px]'>
-        <div className='mx-auto text-center w-[1000px]  z-20'>
-          <span className='text-4xl'> 
+        <div className='flex flex-col justify-center mt24 lgmt-0 my-[65px] w-[90%] mx-auto lg:w-full'>
+        <div className='mx-auto text-center w-full lg:w-[1000px]  z-20'>
+          <span className='text-2xl lg:text-4xl text-[#446E6D]'> 
             <strong>
             Stay on top of the newest trend,insights and discussions in the Facility Management sector.
               </strong>
 
           </span>
         </div>
-          <div className='w-[1280px] mx-auto my-16 z-20'>
-            <div className=' grid grid-cols-4 gap-10'>
+          <div className='w-full xl:w-[1280px] mx-auto my-16 z-20'>
+            <div className=' grid lg:grid-cols-4 gap-6 lg:gap-10'>
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
                 <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Trends-in-Automotive.png?resize=1024,576' className='w-full'/>
                 <div className='p-8 h-full relative'>
@@ -320,23 +322,23 @@ export default function FacultyManagement() {
 
         </div>
       </div>
-      <div className='relative  bg-no-repeat bg-cover w-full bg-bottom'  >
-        <div className='absolute top-0 left-0 w-full h-full '>
+      <div className='relative  bg-no-repeat bg-cover w-[90%] mx-auto xl:w-full bg-bottom'  >
+        <div className='absolute top-0 left-0 w-full h-full hidden xl:block'>
           <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/03/logo-grid-background-min.jpg?w=1024' className='w-full h-full'/>
         </div>
         <div className='flex flex-col justify-center mt-[110px]'>
-        <div className='mx-auto text-center w-[1000px]  z-20'>
-          <span className='text-4xl'> 
+        <div className='mx-auto text-center w-full lg:w-[1000px]  z-20'>
+          <span className='text-2xl lg:text-4xl text-[#446E6D]'> 
             <strong>
             Begin your journey with us today!
             </strong>
           </span>
-          <p className='text-lg mt-8'>
+          <p className='text-base lg:text-lg mt-8'>
           Get out-of-the-box automotive features and workflows that make it easy to explore new revenue opportunities, advance next-generation vehicle experiences, and innovate with AI and automation – all powered by the #1 automotive CRM.
           </p>
         </div>
-          <div className='w-[1280px] mx-auto my-12 z-20'>
-            <div className=' grid grid-cols-3 gap-10 mx-28'>
+          <div className='w-full xl:w-[1280px] mx-auto my-12 z-20'>
+            <div className=' grid xl:grid-cols-3 gap-10 xl:mx-28'>
             <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
                 <div className='p-8 h-full relative'>
                   <img src='https://www.salesforce.com/content/dam/web/global/svg-icons/screen.svg' className='text-sm bg-[#6a949221] p-3 rounded-full w-max'/>
@@ -396,18 +398,18 @@ export default function FacultyManagement() {
       </div>
       <div className='relative  bg-no-repeat bg-cover w-full bg-bottom'  >
         <div className='flex flex-col justify-center mt-[110px]'>
-        <div className='mx-auto text-center w-[1000px]  z-20'>
-          <span className='text-4xl'> 
+        <div className='mx-auto text-center w-[90%] lg:w-[1000px]  z-20'>
+          <span className='text-2xl lg:text-4xl'> 
             <strong>
             WEBME CRM for Automotive FAQ 
             </strong>
           </span>
         </div>
-          <div className='w-[1000px]  mx-auto mt-12 mb-52 z-20'>
-            <div className='flex flex-col gap-10 mx-24'>
+          <div className='w-[90%] lg:w-[1000px]  mx-auto mt-12 mb-52 z-20'>
+            <div className='flex flex-col gap-10 lg:mx-24'>
             <div className={`w-full border-b-2 border-[#446e6d44]`} onClick={() => setf1(prev=>!prev)}>
-                <button className='text-[#446E6D] text-xl w-full flex justify-between items-center mb-6'>
-                  <strong className='bg-white flex w-full'>
+                <button className='text-[#446E6D] text-lg lg:text-xl w-full flex justify-between items-center mb-6'>
+                  <strong className='bg-white flex w-full text-left'>
                 What is a CRM for the automotive industry?
                   </strong>
                   <span className='text-3xl p-[5px] rounded-full overflow-hidden bg-[#446e6d21]'>
@@ -420,8 +422,8 @@ export default function FacultyManagement() {
                 </p>
               </div>
               <div className={`w-full border-b-2 border-[#446e6d44]`} onClick={() => setf2(prev=>!prev)}>
-                <button className='text-[#446E6D] text-xl w-full flex justify-between items-center mb-6'>
-                  <strong className='bg-white flex w-full'>
+                <button className='text-[#446E6D] text-lg lg:text-xl w-full flex justify-between items-center mb-6'>
+                  <strong className='bg-white flex w-full  text-left'>
                   How do I choose the best automotive CRM for my business?
                   </strong>
                   <span className='text-3xl p-[5px] rounded-full overflow-hidden bg-[#446e6d21]'>
@@ -434,8 +436,8 @@ export default function FacultyManagement() {
                 </p>
               </div>
               <div className={`w-full border-b-2 border-[#446e6d44]`} onClick={() => setf3(prev=>!prev)}>
-                <button className='text-[#446E6D] text-xl w-full flex justify-between items-center mb-6'>
-                  <strong className='bg-white flex w-full'>
+                <button className='text-[#446E6D] text-lg lg:text-xl w-full flex justify-between items-center mb-6'>
+                  <strong className='bg-white flex w-full text-left'>
                   What are the benefits of using a CRM for automotive?
                   </strong>
                   <span className='text-3xl p-[5px] rounded-full overflow-hidden bg-[#446e6d21]'>
@@ -448,8 +450,8 @@ export default function FacultyManagement() {
                 </p>
               </div>
               <div className={`w-full border-b-2 border-[#446e6d44]`} onClick={() => setf4(prev=>!prev)}>
-                <button className='text-[#446E6D] text-xl w-full flex justify-between items-center mb-6'>
-                  <strong className='bg-white flex w-full'>
+                <button className='text-[#446E6D] text-lg lg:text-xl w-full flex justify-between items-center mb-6'>
+                  <strong className='bg-white flex w-full text-left'>
                   Does my business need an automotive CRM?
                   </strong>
                   <span className='text-3xl p-[5px] rounded-full overflow-hidden bg-[#446e6d21]'>

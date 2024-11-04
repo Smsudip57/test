@@ -125,12 +125,12 @@ export default function CaseStudy() {
 
                             </SwiperSlide>
                             </Swiper>
-                            <div className="absolute shadow-lg right-[-10px] lg:-right-6 top-[55%] lg:top-[45%] z-[99999999] bg-white w-[52px] h-[52px] rounded-[100%] flex justify-center items-center swiper-button-n cursor-pointer" >
+                            <div className="absolute shadow-lg right-[-10px] lg:-right-6 top-[55%] lg:top-[50%] z-[99999999] bg-white w-[52px] h-[52px] rounded-[100%] flex justify-center items-center swiper-button-n cursor-pointer" >
       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none">
         <path fill="#000" fillRule="evenodd" d="M8.25 3.667 15.584 11 8.25 18.333 6.417 16.5l5.5-5.5-5.5-5.5L8.25 3.667Z" clipRule="evenodd"></path>
       </svg>
     </div>
-    <div className="absolute shadow-lg left-[-10px] lg:-left-6 top-[55%] lg:top-[45%] z-10 bg-white w-[52px] h-[52px] rounded-[100%] flex justify-center items-center swiper-button-p cursor-pointer" >
+    <div className="absolute shadow-lg left-[-10px] lg:-left-6 top-[55%] lg:top-[50%] z-10 bg-white w-[52px] h-[52px] rounded-[100%] flex justify-center items-center swiper-button-p cursor-pointer" >
       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none">
         <path fill="#000" fillRule="evenodd" d="M13.75 18.333 6.417 11l7.333-7.333L15.583 5.5l-5.5 5.5 5.5 5.5-1.833 1.833Z" clipRule="evenodd"></path>
       </svg>

@@ -243,17 +243,17 @@ export default function Firewall() {
        <div className='min-h-screen w-full lg:w-[90%] max-w-[1920px] mx-auto '>
             <div className=''>
             <div className='w-full h-full py-[19vh]  '>
-        <div className=' w-[1280px] mx-auto flex '>
-                <div className='w-[50%] flex flex-col justify-around gap-10 z-30'>
-                    <strong className='text-[40px] font-bold leading-[52px] font-sans'>Paving the Way for Progress: Implementing Modern Workplace Solutions</strong>
+        <div className=' w-[90%] xl:w-[1280px] mx-auto flex flex-col xl:flex-row '>
+                <div className='xl:w-[50%] flex flex-col justify-around gap-10 z-30 order-2 xl:order-1'>
+                    <strong className='text-2xl xl:text-[40px] font-bold xl:leading-[52px] font-sans'>Paving the Way for Progress: Implementing Modern Workplace Solutions</strong>
                     <p className='pr-10 font-medium'>Embark on a journey to digital fortitude with Network Security, the cornerstone of modern business resilience.<br></br><br></br> In an era where cyber threats loom large, Network Security stands as the vanguard, shielding your enterprise’s lifeblood—its data. In today’s fast-paced digital world, safeguarding your business from cyber threats is more crucial than ever.  Network security is not just a tech requirement—it&apos;s a cornerstone of your business’s resilience and success.</p>
                     <div className='flex gap-6'>
                     <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-sm'>Book Free Consultation</button>
                     <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Explore</span> <EastIcon fontSize='inherit '/></button>
                     </div>
                 </div>
-                <div className='w-[50%] flex justify-center items-center z-30'>
-                    <div className='flex justify-center flex-wrap items-center'>
+                <div className='xl:w-[50%] flex justify-center items-center z-30 order-1 xl:order-2'>
+                    <div className='flex justify-center mb-12 xl:flex-wrap items-center'>
                     {
                     Object.values(products).map((product,index) =>( <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl ' key={index} onClick={() => {setdata(product.data); setdetails(product.description)}}><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src={product.image} alt='cisco' className='w-full  hover:opacity-70'/></a></div>))
                     }
@@ -262,7 +262,7 @@ export default function Firewall() {
             </div> 
 
 
-        <div className=' w-[1280px] mx-auto flex pt-36   ' id='details'>
+        <div className=' w-[90%] xl:w-[1280px] mx-auto flex flex-col xl:flex-row pt-36 gap-6    ' id='details'>
                 <div className=' flex flex-col basis-1/3 py-10 mr-3 gap-10 z-30 '>
                     <h2 className='text-4xl font-semibold mb-5 font-sans'>{details.title}</h2>
                     <p className='pr-10 '>{details.intro.split("||")[0]}<br></br><br></br>{details.intro.split("||")[1]}</p>
@@ -315,7 +315,9 @@ export default function Firewall() {
             </div> 
             <Projects/>
             <Industies/>
-            <CaseStudy/>
+            <div className='w-[90%] xl:w-full mx-auto'>
+                <CaseStudy/>
+            </div>
             </div>
         </div>
 

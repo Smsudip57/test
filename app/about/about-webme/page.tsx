@@ -3,11 +3,11 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 export default function page() {
   return (
-    <div className='min-h-screen'>
-        <div className='mx-auto h-[680px] bg-white max-w-[1536px] flex items-center '>
-            <div className=' flex gap-6'>
+    <div className='min-h-screen  pt-20 xl:pt-0'>
+        <div className='mx-auto mb-20 lg:mb-0 lg:h-[680px] bg-white max-w-[1536px] flex  items-center '>
+            <div className=' flex flex-col lg:flex-row gap-6'>
 
-            <div className='basis-1/2 z-10 relative'>
+            <div className='lg:basis-1/2 z-10 relative'>
             <div className='top-0 bg-white p-2 absolute right-0  mr-[60px] z-20'>
                 <div className='w-full h-[366px] relative'>
             <img src='/img-20230815-wa00021692086402.webp' className='h-[366px]'/>
@@ -18,11 +18,11 @@ export default function page() {
                 </div>
             </div>
             <div className='absolute h-[366px] w-1/2 left-0 top-0 bg-[#446E6D] z-10 bg-opacity-80'></div>
-            <img src='/portrait-woman-customer-service-worker1688325158.webp' className='h-[366px]'/>
+            <img src='/portrait-woman-customer-service-worker1688325158.webp' className='h-[366px] invisible xl:visible'/>
             <img src='/07.webp' className='absolute right-0 top-0 pr-[20px]'/>
             </div>
-            <div className='basis-1/2 z-20'>
-            <div className='mt-10 flex flex-col pr-28'>
+            <div className='lg:basis-1/2 z-20 w-[90%] mx-auto lg:w-full'>
+            <div className='mt-16 lg:mt-10 flex flex-col lg:pr-28'>
                 <span className='text-[#446E6D] mb-2'>About</span>
                 <span className='text-5xl mb-7'>WEBME</span>
                 <span className='text-gray-500'>

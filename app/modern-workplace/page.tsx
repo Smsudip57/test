@@ -152,17 +152,17 @@ export default function Work() {
    <div className='min-h-screen w-full lg:w-[90%] max-w-[1920px] mx-auto '>
         <div className=''>
         <div className='w-full h-full py-[20vh]  '>
-    <div className=' w-[1280px] mx-auto flex '>
-            <div className='w-[50%] flex flex-col justify-center gap-10 z-30'>
-                <strong className='text-[44px] font-bold leading-[52px] font-sans'>Lead the Digital Era with State-of-the-Art Technology</strong>
+    <div className=' w-[90%] xl:w-[1280px] mx-auto flex flex-col xl:flex-row '>
+            <div className='xl:w-[50%] flex flex-col justify-center gap-10 z-30 order-2 xl:order-1'>
+                <strong className='text-2xl xl:text-[44px] font-bold xl:leading-[52px] font-sans'>Lead the Digital Era with State-of-the-Art Technology</strong>
                 <p className='pr-10 font-medium'>In the complex world of business management, simplicity is the ultimate sophistication.<br></br><br></br>  Elevate your business with our top-tier Network Security and ERP Software services. Shield your digital assets with our advanced network security solutions, featuring state-of-the-art firewall management, real-time intrusion detection, and comprehensive vulnerability assessments. Simultaneously, revolutionize your operations with our ERP software, seamlessly integrating finance, HR, and supply chain into one powerful system. Experience unparalleled efficiency, enhanced decision-making, and robust growth with our tailored solutions designed for businesses of all sizes.</p>
                 <div className='flex gap-6'>
                     <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-sm'>Book Free Consultation</button>
                     <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Explore</span> <EastIcon fontSize='inherit '/></button>
                     </div>
             </div>
-            <div className='w-[50%] flex justify-center items-center z-30'>
-                <div className='flex justify-center flex-wrap items-center'>
+            <div className='xl:w-[50%] flex justify-center items-center z-30 order-1 xl:order-2'>
+                <div className='flex justify-center mb-12 xl:flex-wrap items-center'>
                 {
                     Object.values(products).map((product,index) =>( <div className='text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md  text-3xl ' key={index} onClick={() => {setdata(product.data); setdetails(product.description)}}><a href='#details' className='cursor-pointer hover:mix-blend-plus-darker'><img src={product.image} alt='cisco' className='w-full  hover:opacity-70'/></a></div>))
                     }
@@ -171,7 +171,7 @@ export default function Work() {
         </div> 
 
 
-        <div className=' w-[1280px] mx-auto flex pt-36   ' id='details'>
+        <div className=' w-[90%] xl:w-[1280px] mx-auto flex flex-col xl:flex-row pt-36 gap-6    ' id='details'>
                 {/* <div className=' flex flex-col basis-1/3 py-10 mr-3 gap-10 z-30 '>
                     <h2 className='text-4xl font-semibold mb-5 font-sans'>{details.title}</h2>
                     <p className='pr-10 '>{details.intro.split("||")[0]}<br></br><br></br>{details.intro.split("||")[1]}</p>
@@ -247,7 +247,9 @@ export default function Work() {
             </div> 
             <Projects/>
             <Industies/>
-            <CaseStudy/>
+            <div className='w-[90%] xl:w-full mx-auto'>
+                <CaseStudy/>
+            </div>
 
         </div>
     </div>
