@@ -65,7 +65,7 @@ export default function FacultyManagement() {
 
 
   return (
-    <div className='w-full h-full pt-[65px] relative z-20'>
+    <div className='w-full h-full pt-[65px] lg:pt-0 relative z-20'>
       <div className='w-full lg:w-4/5 mx-auto'>
       <div className='w-[90%] lg:w-[80%] xl:w-[1280px] mx-auto pt-8 lg:pt-[65px] flex flex-col lg:flex-row justify-center gap-8 lg:gap-0'>
         <div className='basis-1/2 flex flex-col justify-center lg:pr-[10%] z-20 gap-8 order-2 lg:order-1'>
@@ -84,7 +84,7 @@ export default function FacultyManagement() {
 
         </div>
         </div>
-        <div className='basis-1/2 px-10 lg:px-0 lg:p-28 order-1 lg:order-2'>
+        <div className='basis-1/2 px-10 lg:p-28 order-1 lg:order-2'>
         <img className='w-full rounded overflow-hidden' src='/f-m-t.jpg'/>
         
         </div>
