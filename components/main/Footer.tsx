@@ -1,6 +1,27 @@
-import React from "react";
+"use client"
+import React,{useState, useEffect,useRef, useContext} from "react";
 
 const Footer = () => {
+
+  const [isAdminPath, setIsAdminPath] = useState(false);
+  const [loaded, setloaded] = useState(false)
+
+  useEffect(() => {
+    if (window.location.pathname.includes("secret-location/admin")||!window) {
+      setIsAdminPath(true);
+    }
+    setloaded(true)
+  }, []);
+
+  if (isAdminPath) {
+    return null;
+  }
+
+  if(!loaded){
+    return null;
+  }
+
+
   return (
     <div className="bg-[#393939] text-white px-4 sm:px-12 lg:px-24 pt-12 flex relative z-50">
     <div className="w-[90%] lg:w-[80%] max-w-[1536px] mx-auto">

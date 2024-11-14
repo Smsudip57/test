@@ -4,12 +4,15 @@ import "./globals.css";
 import StarsCanvas from "@/components/main/StarBackground";
 import Navbar from "@/components/main/Navbar";
 import Footer from "@/components/main/Footer";
+import { MyContextProvider } from "@/context/context";
 
 const inter = Inter({ subsets: ["latin"] });
 
+
 export const metadata: Metadata = {
   title: "webmedigital",
-  description: "WEBME Information Technology, Your trusted IT Consultancy Provider. With a passion for technology and a commitment to excellence, WEBME is here to guide your business through every step of its IT journey, ensuring seamless operations and transformative growth.",
+  description:
+    "WEBME Information Technology, Your trusted IT Consultancy Provider. With a passion for technology and a commitment to excellence, WEBME is here to guide your business through every step of its IT journey, ensuring seamless operations and transformative growth.",
 };
 
 export default function RootLayout({
@@ -20,12 +23,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className}  overflow-y-scroll overflow-x-hidden`}
+        className={`${inter.className} overflow-y-scroll overflow-x-hidden`}
       >
-        <StarsCanvas />
-        <Navbar />
-        {children}
-        <Footer />
+        <MyContextProvider>
+          <StarsCanvas />
+          <Navbar />
+          {children}
+          <Footer />
+        </MyContextProvider>
       </body>
     </html>
   );

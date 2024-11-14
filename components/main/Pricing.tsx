@@ -18,7 +18,7 @@ const Pricing = () => {
         <div className="px-[25px] pt-[25px] pb-[35px] bg-[#F6F6F6] rounded-br-xl rounded-bl-xl">
           <p className="font-lora font-bold text-[34px] leading-[34px] text-[#282828]">Free</p>
           <p className="font-graphik font-normal text-[14px] leading-5 text-[#393939] mt-2">Perfect for new ventures or individuals, our free plan gets you up and running</p>
-          <button className="w-full rounded-md font-graphik font-semibold text-[16px] leading-[17.5px] py-[13px] mt-5 border-[1px]" style={{ borderColor: '#393939' }}>Sign Up Now</button>
+          <button className="w-full rounded-md font-graphik font-semibold text-[16px] leading-[17.5px] py-[13px] mt-5 border-[1px]" style={{ borderColor: '#393939' }}>Join Now</button>
           <div className="flex flex-col justify-start gap-[14px] mt-[21px]">
             <div className="flex justify-start items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
@@ -64,7 +64,7 @@ const Pricing = () => {
         <div className="px-[25px] pt-[25px] pb-[35px] bg-[#F6F6F6] rounded-br-xl rounded-bl-xl">
           <p className="font-lora font-bold text-[34px] leading-[34px] text-[#282828]"><span className="text-xl font-normal">AED</span> 250</p>
           <p className="font-graphik font-normal text-[14px] leading-5 text-[#393939] mt-2">Ideal for growing businesses and professionals.</p>
-          <button className="w-full rounded-md font-graphik font-semibold text-[16px] leading-[17.5px] py-[13px] mt-5 border-[1px] bg-professional-gradient" style={{ borderColor: '#EAD200', color: '#393939' }}>Join the Professional Tier</button>
+          <button className="w-full rounded-md font-graphik font-semibold text-[16px] leading-[17.5px] py-[13px] mt-5 border-[1px] bg-professional-gradient" style={{ borderColor: '#EAD200', color: '#393939' }}>Join Now</button>
           <div className="flex flex-col justify-start gap-[14px] mt-[21px]">
             <div className="flex justify-start items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
@@ -109,7 +109,7 @@ const Pricing = () => {
         <div className="px-[25px] pt-[25px] pb-[35px] bg-[#F6F6F6] rounded-br-xl rounded-bl-xl">
           <p className="font-lora font-bold text-[34px] leading-[34px] text-[#282828]"><span className="text-xl font-normal">AED</span> 450</p>
           <p className="font-graphik font-normal text-[14px] leading-5 text-[#393939] mt-2">Designed for established businesses ready to expand.</p>
-          <button className="w-full rounded-md font-graphik font-semibold text-[16px] leading-[17.5px] py-[13px] mt-5 border-[1px]" style={{ borderColor: '#FF009B', color: '#FF009B' }}>Choose Business Plan</button>
+          <button className="w-full rounded-md font-graphik font-semibold text-[16px] leading-[17.5px] py-[13px] mt-5 border-[1px]" style={{ borderColor: '#FF009B', color: '#FF009B' }}>Join Now</button>
           <div className="flex flex-col justify-start gap-[14px] mt-[21px]">
             <div className="flex justify-start items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
@@ -155,7 +155,7 @@ const Pricing = () => {
         <div className="px-[25px] pt-[25px] pb-[35px] bg-[#F6F6F6] rounded-br-xl rounded-bl-xl">
           <p className="font-lora font-bold text-[34px] leading-[34px] text-[#282828]"><span className="text-xl font-normal">AED</span> 1200</p>
           <p className="font-graphik font-normal text-[14px] leading-5 text-[#393939] mt-2">Comprehensive solutions for large organizations.</p>
-          <button className="w-full rounded-md font-graphik font-semibold text-[16px] leading-[17.5px] py-[13px] mt-5 border-[1px]" style={{ borderColor: '#FF6C00', color: '#FF6C00' }}>Request a Demo</button>
+          <button className="w-full rounded-md font-graphik font-semibold text-[16px] leading-[17.5px] py-[13px] mt-5 border-[1px]" style={{ borderColor: '#FF6C00', color: '#FF6C00' }}>Join Now</button>
           <div className="flex flex-col justify-start gap-[14px] mt-[21px]">
             <div className="flex justify-start items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
@@ -196,7 +196,7 @@ const Pricing = () => {
       <div className="w-full rounded-xl border-[1px]" style={{ borderColor: '#FF6C00' }}>
         <div className="text-[#393939] px-[26px] pt-[26px] pb-[20px] cursor-pointer">
           <p className="font-lora text-[20px] leading-[34px] font-semibold" style={{ color: '#FF6C00' }}>Custom</p>
-          <p className="font-graphik font-medium text-[16px] leading-5">Tailored to You</p>
+          <p className="font-graphik font-medium text-[16px] leading-5">Join Now</p>
         </div>
         <div className="px-[25px] pt-[25px] pb-[35px] bg-[#F6F6F6] rounded-br-xl rounded-bl-xl">
           <p className="font-lora font-bold text-[34px] leading-[34px] text-[#282828]">Custom</p>

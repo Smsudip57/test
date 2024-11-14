@@ -1,7 +1,8 @@
 "use client"
 import { Socials } from "@/constants";
 import Image from "next/image";
-import React,{useState, useEffect,useRef} from "react";
+import React,{useState, useEffect,useRef, useContext} from "react";
+import { MyContext } from "@/context/context";
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -48,6 +49,9 @@ const Navbar = () => {
   const slider = useRef(null);
   const [anchorE2, setAnchorE2] = React.useState(null);
   const [anchorE3, setAnchorE3] = React.useState(null);
+  const [isAdminPath, setIsAdminPath] = useState(false);
+  const [loaded, setloaded] = useState(false)
+
 
   const handleOpen = (event:any) => {
     setAnchorEl(event.currentTarget);
@@ -92,8 +96,22 @@ const Navbar = () => {
   const handleClose3 = () => {
     setAnchorE3(null);
   };
+  
+  useEffect(() => {
+    // This code runs only on the client
+    if (window.location.pathname.includes("secret-location/admin")||!window) {
+      setIsAdminPath(true);
+    }
+    setloaded(true)
+  }, []);
 
-
+  // Avoid rendering content if it's an admin path
+  if (isAdminPath) {
+    return null;
+  }
+  if (!loaded) {
+    return null;
+  }
   
   return (
     <div className="w-full relative xl:block ">

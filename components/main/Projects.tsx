@@ -10,8 +10,8 @@ const Projects = () => {
      <section className="mt-16 sm:mt-[100px] px-4 sm:px-12 lg:px-[136px]">
   <div className="mx-auto mb-10 sm:mb-14 px-4 max-w-2xl text-center">
     {/* <h3 className="text-seagreen-950 mb-4 font-bold text-xl">OUR PROJECTS</h3> */}
-    <h1 className="font-lora text-2xl lg:text-2xl lg:text-4xl text-green-900 font-bold mb-6">OUR PROJECTS</h1>
-    <p className="text-[#393939] text-base lg:text-xl">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the indusdf standard dummy text.</p>
+    <h1 className="font-lora text-2xl lg:text-4xl text-green-900 font-bold mb-6">OUR PROJECTS</h1>
+    <p className="text-[#393939] text-base lg:text-xl">Innovative Solutions Brought to Life</p>
   </div>
   <div className="flex flex-col flex-wrap lg:flex-row gap-4 sm:gap-8 justify-center">
     <div className="m-0.5 p-4 sm:p-10 bg-[#FFF8BB] basis-[46%] lg:basis-[47.2%] rounded-xl">
