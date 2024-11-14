@@ -47,7 +47,7 @@ const AddProductRAMS = () => {
     productRam: "",
   });
 
-  const history = useNavigate();
+  // const router = useRouter();
   const input = useRef();
   const context = useContext(MyContext);
 

@@ -17,7 +17,7 @@ import Pagination from "@mui/material/Pagination";
 import { MyContext } from "@/context/context";
 
 import Rating from "@mui/material/Rating";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 import { emphasize, styled } from "@mui/material/styles";
 import Breadcrumbs from "@mui/material/Breadcrumbs";

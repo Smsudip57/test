@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import { FaCloudUploadAlt } from "react-icons/fa";
 import CircularProgress from '@mui/material/CircularProgress';
 import { deleteData, editData, fetchDataFromApi, postData } from '@/utils/api';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { FaPencilAlt } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
@@ -44,7 +44,7 @@ const AddProductWeight = () => {
         productWeight: '',
     });
 
-    const history = useNavigate();
+    const router = useRouter();
     const input = useRef();
     const context = useContext(MyContext);
 

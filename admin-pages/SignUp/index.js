@@ -8,7 +8,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import Button from '@mui/material/Button';
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { FaUserCircle } from "react-icons/fa";
 import { IoShieldCheckmarkSharp } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -20,7 +20,7 @@ import googleIcon from '@/public/mysql.png';
 import { IoMdHome } from "react-icons/io";
 import { postData } from '@/utils/api';
 
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { initializeApp } from "firebase/app";
@@ -46,7 +46,7 @@ const SignUp = () => {
         isAdmin: true
     })
 
-    const history = useNavigate();
+    const router = useRouter();
 
     const context = useContext(MyContext);
 
@@ -138,7 +138,7 @@ const SignUp = () => {
                    
                     setTimeout(() => {
                         setIsLoading(true);
-                        history("/login");
+                        router.push("/login");
                     }, 2000);
                 }
 
@@ -204,7 +204,7 @@ const SignUp = () => {
           
                     setTimeout(() => {
                         context.setIsLogin(true);
-                        history("/dashboard");
+                        router.push("/dashboard");
                     }, 2000);
                   } else {
                     context.setAlertBox({

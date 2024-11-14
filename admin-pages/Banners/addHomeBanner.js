@@ -1,19 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import HomeIcon from "@mui/icons-material/Home";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { emphasize, styled } from "@mui/material/styles";
 import Chip from "@mui/material/Chip";
-import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
+import { useContext, useEffect, useState } from "react";
+import { FaCloudUploadAlt } from "react-icons/fa";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import CircularProgress from "@mui/material/CircularProgress";
-import { IoCloseSharp } from "react-icons/io5";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
-import { MyContext } from "@/context/context";
-import { useRouter } from "next/navigation";
 import {
   deleteData,
   deleteImages,
@@ -22,8 +17,17 @@ import {
   postData,
   uploadImage,
 } from "@/utils/api";
+import { useRouter } from "next/navigation";
+import { FaRegImages } from "react-icons/fa";
+import { MyContext } from "@/context/context";
 
-// Breadcrumb Component
+import CircularProgress from "@mui/material/CircularProgress";
+import { IoCloseSharp } from "react-icons/io5";
+
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+
+//breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
     theme.palette.mode === "light"
@@ -55,20 +59,23 @@ const AddBanner = () => {
     subCatId: null,
     subCatName: null,
   });
+
   const [previews, setPreviews] = useState([]);
-  const [categoryVal, setCategoryVal] = useState(null);
-  const [subCatVal, setSubCatVal] = useState(null);
+  const [categoryVal, setcategoryVal] = useState('');
+  const [subCatVal, setSubCatVal] = useState('');
   const [subCatData, setSubCatData] = useState([]);
 
   const formdata = new FormData();
+
   const router = useRouter();
+
   const context = useContext(MyContext);
 
   useEffect(() => {
     fetchDataFromApi("/api/imageUpload").then((res) => {
-      res?.forEach((item) => {
-        item?.images?.forEach((img) => {
-          deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then(() => {
+      res?.map((item) => {
+        item?.images?.map((img) => {
+          deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then((res) => {
             deleteData("/api/imageUpload/deleteAllImages");
           });
         });
@@ -76,134 +83,345 @@ const AddBanner = () => {
     });
   }, []);
 
-  useEffect(() => {
-    const subCatArr = [];
-    context.catData?.categoryList?.forEach((cat) => {
-      if (cat?.children?.length) {
-        subCatArr.push(...cat.children);
-      }
+  useEffect(()=>{
+    const subCatArr=[];
+
+    context.catData?.categoryList?.length !== 0 && context.catData?.categoryList?.map((cat, index) => {
+            if(cat?.children.length!==0){
+                cat?.children?.map((subCat)=>{
+                    subCatArr.push(subCat);
+                })
+            }
     });
+
     setSubCatData(subCatArr);
-  }, [context.catData]);
+},[context.catData])
+
+
+  let img_arr = [];
+  let uniqueArray = [];
+  let selectedImages = [];
 
   const onChangeFile = async (e, apiEndPoint) => {
-    const files = e.target.files;
-    setUploading(true);
+    try {
+      const files = e.target.files;
 
-    for (let i = 0; i < files.length; i++) {
-      if (
-        files[i] &&
-        ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
-          files[i].type
-        )
-      ) {
-        formdata.append("images", files[i]);
-      } else {
-        context.setAlertBox({
-          open: true,
-          error: true,
-          msg: "Please select a valid JPG or PNG image file.",
-        });
-        setUploading(false);
-        return;
+      console.log(files);
+      setUploading(true);
+
+      //const fd = new FormData();
+      for (var i = 0; i < files.length; i++) {
+        // Validate file type
+        if (
+          files[i] &&
+          (files[i].type === "image/jpeg" ||
+            files[i].type === "image/jpg" ||
+            files[i].type === "image/png" ||
+            files[i].type === "image/webp")
+        ) {
+          const file = files[i];
+          selectedImages.push(file);
+          formdata.append(`images`, file);
+        } else {
+          context.setAlertBox({
+            open: true,
+            error: true,
+            msg: "Please select a valid JPG or PNG image file.",
+          });
+
+          return false;
+        }
       }
+
+      formFields.images = selectedImages;
+    } catch (error) {
+      console.log(error);
     }
 
-    await uploadImage(apiEndPoint, formdata);
-    fetchDataFromApi("/api/imageUpload").then((response) => {
-      const newPreviews = response?.flatMap((item) => item.images) || [];
-      setPreviews((prev) => [...prev, ...newPreviews]);
-      setUploading(false);
-      context.setAlertBox({
-        open: true,
-        error: false,
-        msg: "Images Uploaded!",
+    uploadImage(apiEndPoint, formdata).then((res) => {
+      console.log(selectedImages);
+      fetchDataFromApi("/api/imageUpload").then((response) => {
+        if (
+          response !== undefined &&
+          response !== null &&
+          response !== "" &&
+          response.length !== 0
+        ) {
+          response.length !== 0 &&
+            response.map((item) => {
+              item?.images.length !== 0 &&
+                item?.images?.map((img) => {
+                  img_arr.push(img);
+                  //console.log(img)
+                });
+            });
+
+          uniqueArray = img_arr.filter(
+            (item, index) => img_arr.indexOf(item) === index
+          );
+
+          const appendedArray = [...previews, ...uniqueArray];
+
+          setPreviews(appendedArray);
+          setTimeout(() => {
+            setUploading(false);
+            img_arr = [];
+            context.setAlertBox({
+              open: true,
+              error: false,
+              msg: "Images Uploaded!",
+            });
+          }, 200);
+        }
       });
     });
   };
 
   const removeImg = async (index, imgUrl) => {
-    await deleteImages(`/api/homeBanner/deleteImage?img=${imgUrl}`);
-    setPreviews((prev) => prev.filter((_, i) => i !== index));
-    context.setAlertBox({ open: true, error: false, msg: "Image Deleted!" });
+    const imgIndex = previews.indexOf(imgUrl);
+
+    deleteImages(`/api/homeBanner/deleteImage?img=${imgUrl}`).then((res) => {
+      context.setAlertBox({
+        open: true,
+        error: false,
+        msg: "Image Deleted!",
+      });
+    });
+
+    if (imgIndex > -1) {
+      // only splice array when item is found
+      previews.splice(index, 1); // 2nd parameter means remove one item only
+    }
   };
 
   const handleChangeCategory = (event) => {
-    setCategoryVal(event.target.value);
-    setFormFields({ ...formFields, catId: event.target.value });
+    setcategoryVal(event.target.value);
+    setFormFields(() => ({
+      ...formFields,
+      category: event.target.value,
+    }));
   };
+
+  const selectCat = (cat, id) => {
+    formFields.catName = cat;
+    formFields.catId = id;
+  };
+
+  const selectSubCat=(subCat, id)=>{
+    setFormFields(() => ({
+        ...formFields,
+        subCat: subCat,
+        subCatName: subCat,
+        subCatId:id
+    }))
+
+}
 
   const handleChangeSubCategory = (event) => {
     setSubCatVal(event.target.value);
-    setFormFields({ ...formFields, subCatId: event.target.value });
-  };
+};
 
-  const addHomeBanner = async (e) => {
+  const addHomeBanner = (e) => {
     e.preventDefault();
-    if (!previews.length) {
+
+    const appendedArray = [...previews, ...uniqueArray];
+
+    img_arr = [];
+
+    formdata.append("images", appendedArray);
+
+    formFields.images = appendedArray;
+
+    if (previews.length !== 0) {
+      setIsLoading(true);
+
+
+        console.log(formFields)
+
+      postData(`/api/banners/create`, formFields).then((res) => {
+        // console.log(res);
+        setIsLoading(false);
+        context.fetchCategory();
+
+        deleteData("/api/imageUpload/deleteAllImages");
+
+        router.push("/banners");
+      });
+    } else {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please upload images.",
+        msg: "Please fill all the details",
       });
-      return;
+      return false;
     }
-
-    setIsLoading(true);
-    await postData("/api/banners/create", { ...formFields, images: previews });
-    setIsLoading(false);
-    context.fetchCategory();
-    deleteData("/api/imageUpload/deleteAllImages");
-    router.push("/secret-location/admin/banners");
   };
 
   return (
-    <div className="right-content w-100">
-      <form onSubmit={addHomeBanner}>
-        <div className="row">
-          <div className="col-md-6">
-            <Select value={categoryVal} onChange={handleChangeCategory}>
-              {context.catData?.categoryList?.map((cat) => (
-                <MenuItem key={cat._id} value={cat._id}>
-                  {cat.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </div>
-          <div className="col-md-6">
-            <Select value={subCatVal} onChange={handleChangeSubCategory}>
-              {subCatData?.map((subCat) => (
-                <MenuItem key={subCat._id} value={subCat._id}>
-                  {subCat.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </div>
+    <>
+      <div className="right-content w-100">
+        <div className="card shadow border-0 w-100 flex-row p-4 mt-2">
+          <h5 className="mb-0">Add Home Banner</h5>
+          <Breadcrumbs aria-label="breadcrumb" className="ml-auto breadcrumbs_">
+            <StyledBreadcrumb
+              component="a"
+              href="#"
+              label="Dashboard"
+              icon={<HomeIcon fontSize="small" />}
+            />
+
+            <StyledBreadcrumb
+              component="a"
+              label="Home Banners"
+              href="#"
+              deleteIcon={<ExpandMoreIcon />}
+            />
+            <StyledBreadcrumb
+              label="Add Home Banner"
+              deleteIcon={<ExpandMoreIcon />}
+            />
+          </Breadcrumbs>
         </div>
 
-        <div className="imgUploadBox">
-          {previews.map((img, index) => (
-            <div key={index} className="uploadBox">
-              <span onClick={() => removeImg(index, img)}>
-                <IoCloseSharp />
-              </span>
-              <LazyLoadImage src={img} effect="blur" />
+        <form className="form" onSubmit={addHomeBanner}>
+          <div className="row">
+            <div className="col-sm-9">
+              <div className="card p-4 mt-0">
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <h6>CATEGORY</h6>
+                      <Select
+                        value={categoryVal}
+                        onChange={handleChangeCategory}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        className="w-100"
+                      >
+                        <MenuItem value="">
+                          <em value={null}>None</em>
+                        </MenuItem>
+                        {context.catData?.categoryList?.length !== 0 &&
+                          context.catData?.categoryList?.map((cat, index) => {
+                            return (
+                              <MenuItem
+                                className="text-capitalize"
+                                value={cat._id}
+                                key={index}
+                                onClick={() => selectCat(cat.name, cat._id)}
+                              >
+                                {cat.name}
+                              </MenuItem>
+                            );
+                          })}
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <h6>SUB CATEGORY</h6>
+                      <Select
+                        value={subCatVal}
+                        onChange={handleChangeSubCategory}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        className="w-100"
+                      >
+                        <MenuItem value="">
+                          <em value={null}>None</em>
+                        </MenuItem>
+                        {subCatData?.length !== 0 &&
+                          subCatData?.map((subCat, index) => {
+                            return (
+                              <MenuItem
+                                className="text-capitalize"
+                                value={subCat._id}
+                                key={index}
+                                onClick={() =>
+                                  selectSubCat(subCat.name, subCat._id)
+                                }
+                              >
+                                {subCat.name}
+                              </MenuItem>
+                            );
+                          })}
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="imagesUploadSec">
+                  <h5 className="mb-4">Media And Published</h5>
+
+                  <div className="imgUploadBox d-flex align-items-center">
+                    {previews?.length !== 0 &&
+                      previews?.map((img, index) => {
+                        return (
+                          <div className="uploadBox" key={index}>
+                            <span
+                              className="remove"
+                              onClick={() => removeImg(index, img)}
+                            >
+                              <IoCloseSharp />
+                            </span>
+                            <div className="box">
+                              <LazyLoadImage
+                                alt={"image"}
+                                effect="blur"
+                                className="w-100"
+                                src={img}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                    <div className="uploadBox">
+                      {uploading === true ? (
+                        <div className="progressBar text-center d-flex align-items-center justify-content-center flex-column">
+                          <CircularProgress />
+                          <span>Uploading...</span>
+                        </div>
+                      ) : (
+                        <>
+                          <input
+                            type="file"
+                            multiple
+                            onChange={(e) =>
+                              onChangeFile(e, "/api/banners/upload")
+                            }
+                            name="images"
+                          />
+                          <div className="info">
+                            <FaRegImages />
+                            <h5>image upload</h5>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <br />
+
+                  <Button
+                    type="submit"
+                    className="btn-blue btn-lg btn-big w-100"
+                  >
+                    <FaCloudUploadAlt /> &nbsp;{" "}
+                    {isLoading === true ? (
+                      <CircularProgress color="inherit" className="loader" />
+                    ) : (
+                      "PUBLISH AND VIEW"
+                    )}{" "}
+                  </Button>
+                </div>
+              </div>
             </div>
-          ))}
-
-          <input
-            type="file"
-            multiple
-            onChange={(e) => onChangeFile(e, "/api/banners/upload")}
-          />
-        </div>
-
-        <Button type="submit" className="btn-blue">
-          <FaCloudUploadAlt />
-          {isLoading ? <CircularProgress /> : "PUBLISH AND VIEW"}
-        </Button>
-      </form>
-    </div>
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 

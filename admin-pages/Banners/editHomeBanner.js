@@ -70,7 +70,7 @@ const EditBanner = () => {
 
   const formdata = new FormData();
 
-  const history = useNavigate();
+  const router = useRouter();
 
   const context = useContext(MyContext);
 
@@ -258,7 +258,7 @@ const EditBanner = () => {
 
         deleteData("/api/imageUpload/deleteAllImages");
 
-        history("/banners");
+        router.push("/banners");
       });
     } else {
       context.setAlertBox({

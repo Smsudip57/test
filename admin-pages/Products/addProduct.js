@@ -14,7 +14,7 @@ import { deleteData, deleteImages, fetchDataFromApi, postData, uploadImage } fro
 import { MyContext } from '@/context/context';
 import CircularProgress from '@mui/material/CircularProgress';
 import { FaRegImages } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { IoCloseSharp } from "react-icons/io5";
 import OutlinedInput from '@mui/material/OutlinedInput';
 
@@ -86,7 +86,7 @@ const ProductUpload = () => {
 
     const [isDisable, setIsDisable] = useState(true);
 
-    const history = useNavigate();
+    const router = useRouter();
 
     const [formFields, setFormFields] = useState({
         name: '',
@@ -528,7 +528,7 @@ const ProductUpload = () => {
             setIsLoading(false);
             deleteData("/api/imageUpload/deleteAllImages");
 
-            history('/products');
+            router.push('/products');
 
 
         })

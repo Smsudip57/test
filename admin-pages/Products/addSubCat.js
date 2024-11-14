@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import { FaCloudUploadAlt } from "react-icons/fa";
 import CircularProgress from '@mui/material/CircularProgress';
 import { postData } from '@/utils/api';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 //breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -47,7 +47,7 @@ const AddSubCat = () => {
         subCat: '',
     });
 
-    const history = useNavigate();
+    const router = useRouter();
     const context = useContext(MyContext);
 
     useEffect(()=>{
@@ -101,7 +101,7 @@ const AddSubCat = () => {
             setIsLoading(false);
             context.fetchCategory();
          
-            history('/subCategory');
+            router.push('/subCategory');
         });
 
     }

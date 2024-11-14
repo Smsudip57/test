@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import { FaCloudUploadAlt } from "react-icons/fa";
 import CircularProgress from '@mui/material/CircularProgress';
 import { editData, fetchDataFromApi, postData } from '@/utils/api';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { Link, useParams } from "react-router-dom";
 
 //breadcrumb code
@@ -47,7 +47,7 @@ const EditSubCat = () => {
         subCat: '',
     });
 
-    const history = useNavigate();
+    const router = useRouter();
     const context = useContext(MyContext);
 
     let { id } = useParams();
@@ -112,7 +112,7 @@ const EditSubCat = () => {
             setIsLoading(false);
             context.fetchCategory();
             context.fetchSubCategory();
-            history('/subCategory');
+            router.push('/subCategory');
         });
 
     }

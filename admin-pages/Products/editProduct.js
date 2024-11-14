@@ -14,7 +14,7 @@ import { deleteData, deleteImages, editData, fetchDataFromApi, postData, uploadI
 import { MyContext } from '@/context/context';
 import CircularProgress from '@mui/material/CircularProgress';
 import { FaRegImages } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { IoCloseSharp } from "react-icons/io5";
 
 import { Link, useParams } from "react-router-dom";
@@ -89,7 +89,7 @@ const EditUpload = () => {
 
     let { id } = useParams();
 
-    const history = useNavigate();
+    const router = useRouter();
 
     const [formFields, setFormFields] = useState({
         name: '',
@@ -574,7 +574,7 @@ const EditUpload = () => {
             setIsLoading(false);
             deleteData("/api/imageUpload/deleteAllImages");
 
-            history('/products');
+            router.push('/products');
 
 
         })

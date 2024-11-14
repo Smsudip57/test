@@ -6,7 +6,7 @@ import { FaCartArrowDown } from "react-icons/fa6";
 import { MdMessage } from "react-icons/md";
 import { FaBell } from "react-icons/fa6";
 import { IoIosSettings } from "react-icons/io";
-import { Link } from 'react-router-dom';
+import Link from "next/link";
 import { useContext, useState } from 'react';
 import { IoMdLogOut } from "react-icons/io";
 import { MyContext } from '../../App';
