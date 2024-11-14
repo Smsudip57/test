@@ -14,7 +14,7 @@ import { fetchDataFromApi } from "@/utils/api";
 
 import axios from "axios";
 
-export default function dashboardpage() {
+export default function Dashboardpage() {
     const [isToggleSidebar, setIsToggleSidebar] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isHideSidebarAndHeader, setisHideSidebarAndHeader] = useState(false);

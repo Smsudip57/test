@@ -35,7 +35,7 @@ import axios from "axios";
 // import AddBanner from "@/admin-pages/Banners/addHomeBanner";
 // import EditBanner from "@/admin-pages/Banners/editHomeBanner";
 
-export default function dashboardpage() {
+export default function Dashboardpage() {
   const [isToggleSidebar, setIsToggleSidebar] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isHideSidebarAndHeader, setisHideSidebarAndHeader] = useState(false);

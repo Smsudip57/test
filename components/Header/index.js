@@ -24,7 +24,7 @@ const Header = () => {
 
   const context = useContext(MyContext);
   const [isClient, setIsClient] = useState(false); 
-  const router = isClient ? useRouter() : null;
+  const router = useRouter();
 
   const handleOpenMyAccDrop = (event) => {
     setAnchorEl(event.currentTarget);
@@ -70,7 +70,7 @@ const Header = () => {
       window.addEventListener("resize", handleResize);
       return () => window.removeEventListener("resize", handleResize);
     }
-  }, []);
+  }, [context]);
 
   // if (context) {
   //   return <div>{console.log(context)}</div>; // Show loading state if context is not yet available
