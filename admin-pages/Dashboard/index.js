@@ -316,12 +316,12 @@ const Dashboard = () => {
                                                 <td>
                                                     <div className="actions d-flex align-items-center">
 
-                                                        <Link to={`/product/details/${item.id}`}>
+                                                        <Link href={`/product/details/${item.id}`}>
                                                             <Button className="secondary" color="secondary"><FaEye /></Button>
                                                         </Link>
 
 
-                                                        <Link to={`/product/edit/${item.id}`}>
+                                                        <Link href={`/product/edit/${item.id}`}>
                                                             <Button className="success" color="success"><FaPencilAlt /></Button>
                                                         </Link>
 

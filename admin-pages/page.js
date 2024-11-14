@@ -245,7 +245,7 @@ function App() {
                 element={<SubCatList />}
               />
               <Route
-                path="/secret-location/admin/subCategory/add"
+                path="/secret-location/admin/category/subCategory/add"
                 exact={true}
                 element={<SubCatAdd />}
               />

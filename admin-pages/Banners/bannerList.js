@@ -100,7 +100,7 @@ const BannersList = () => {
               />
             </Breadcrumbs>
 
-            <Link to="/banners/add">
+            <Link href="/banners/add">
               <Button className="btn-blue  ml-3 pl-3 pr-3">
                 Add Home Banner
               </Button>
@@ -146,7 +146,7 @@ const BannersList = () => {
 
                         <td>
                           <div className="actions d-flex align-items-center">
-                            <Link to={`/banners/edit/${item.id}`}>
+                            <Link href={`/banners/edit/${item.id}`}>
                               {" "}
                               <Button className="success" color="success">
                                 <FaPencilAlt />

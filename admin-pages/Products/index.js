@@ -185,7 +185,7 @@ const Products = () => {
               />
             </Breadcrumbs>
 
-            <Link to="/product/upload">
+            <Link href="/product/upload">
               <Button className="btn-blue  ml-3 pl-3 pr-3">Add Product</Button>
             </Link>
           </div>
@@ -370,13 +370,13 @@ const Products = () => {
 
                         <td>
                           <div className="actions d-flex align-items-center">
-                            <Link to={`/product/details/${item.id}`}>
+                            <Link href={`/product/details/${item.id}`}>
                               <Button className="secondary" color="secondary">
                                 <FaEye />
                               </Button>
                             </Link>
 
-                            <Link to={`/product/edit/${item.id}`}>
+                            <Link href={`/product/edit/${item.id}`}>
                               <Button className="success" color="success">
                                 <FaPencilAlt />
                               </Button>

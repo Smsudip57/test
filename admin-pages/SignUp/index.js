@@ -256,7 +256,7 @@ const SignUp = () => {
                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</p>
 
                         <div className='w-100 mt-4'>
-                            <Link to={'/'}> <Button className="btn-blue btn-lg btn-big"><IoMdHome /> Go To Home</Button></Link>
+                            <Link href={'/'}> <Button className="btn-blue btn-lg btn-big"><IoMdHome /> Go To Home</Button></Link>
                         </div>
 
                     </div>
@@ -344,7 +344,7 @@ const SignUp = () => {
 
                                 <span className='text-center d-block mt-3'>
                                     Don't have an account?
-                                    <Link to={'/login'} className='link color ml-2'>Sign In</Link>
+                                    <Link href={'/login'} className='link color ml-2'>Sign In</Link>
                                 </span>
 
                             </div>

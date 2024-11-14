@@ -8,7 +8,7 @@ import { useContext, useEffect, useState } from 'react';
 import { FaCloudUploadAlt } from "react-icons/fa";
 import Button from '@mui/material/Button';
 import { deleteData, deleteImages, editData, fetchDataFromApi, postData, uploadImage } from '@/utils/api';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { FaRegImages } from "react-icons/fa";
 import { MyContext } from '@/context/context';
 
@@ -60,7 +60,7 @@ const AddSubCat = () => {
 
     const formdata = new FormData();
 
-    const history = useNavigate();
+    const router = useRouter();
 
     const context = useContext(MyContext);
 
@@ -109,7 +109,7 @@ const AddSubCat = () => {
 
                 deleteData("/api/imageUpload/deleteAllImages");
 
-                history('/subCategory');
+                router.push('/secret-location/admin/category/subCategory');
             });
 
         }

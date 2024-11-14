@@ -154,7 +154,7 @@ const AddBanner = () => {
     setIsLoading(false);
     context.fetchCategory();
     deleteData("/api/imageUpload/deleteAllImages");
-    router.push("/banners");
+    router.push("/secret-location/admin/banners");
   };
 
   return (

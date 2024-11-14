@@ -53,7 +53,7 @@ const Sidebar = () => {
 
         setTimeout(() => {
             // if(router)
-            // router.push("/secret-location/admin/secret-location/admin/dashboard/login");
+            router.push("/secret-location/admin/secret-location/admin/dashboard/login");
         }, 2000);
     };
 
@@ -120,12 +120,12 @@ const Sidebar = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/secret-location/admin/subCategory" >
+                                    <Link href="/secret-location/admin/category/subCategory" >
                                         Sub Category List
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/secret-location/admin/subCategory/add" >
+                                    <Link href="/secret-location/admin/category/subCategory/add" >
                                         Add a sub category
                                     </Link>
                                 </li>
