@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";  // Use Next.js Image component for better optimization
+import Image from "next/image";  
 import Button from "@mui/material/Button";
 import { MdMenuOpen, MdOutlineMenu, MdOutlineLightMode, MdNightlightRound } from "react-icons/md";
 import { FaRegBell } from "react-icons/fa";
@@ -12,7 +12,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Logout from "@mui/icons-material/Logout";
 import Divider from "@mui/material/Divider";
-import { MyContext } from "@/context/context"; // Adjust the context path accordingly
+import { MyContext } from "@/context/context"; 
 import UserAvatarImgComponent from "../userAvatarImg";
 import { useRouter } from "next/navigation";
 

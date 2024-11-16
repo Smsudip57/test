@@ -39,7 +39,7 @@ const Sidebar = () => {
             setIsLogin(true);
         } else {
             // if(router)
-            // router.push("/secret-location/admin/secret-location/admin/dashboard/login");
+            router.push("/secret-location/admin/login");
         }
     }, []);
 
@@ -52,8 +52,7 @@ const Sidebar = () => {
         });
 
         setTimeout(() => {
-            // if(router)
-            router.push("/secret-location/admin/secret-location/admin/dashboard/login");
+            router.push("/secret-location/admin/login");
         }, 2000);
     };
 
