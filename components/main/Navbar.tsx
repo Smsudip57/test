@@ -130,7 +130,7 @@ const Navbar = () => {
             />
 
           <span className="font-bold ml-[10px] md:block text-[#4E6D6D]">
-            WEBME
+            {/* WEBME */}
           </span>
         </a>
 
