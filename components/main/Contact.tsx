@@ -9,7 +9,7 @@ import CallIcon from '@mui/icons-material/Call';
 
 const Contact = () => {
   const router = useRouter();
-
+  
   const handlemail = () => {
     router.push("mailto:webme@webmedigital.com");
   }
