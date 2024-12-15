@@ -104,7 +104,7 @@ export default function FacultyManagement() {
 
           </span>
           <div className=' rounded-lg overflow-hidden mt-28 lg:mt-20 mb-10 lg:mb-28 flex justify-center gap-6 lg:gap-10'>
-            <div className='text-center w-[160px]'>
+            <div className='text-center '>
             <div className='w-[160px] h-[80px] lg:w-[200px] lg:h-[100px] bg-white flex justify-center rounded-lg p-2 shadow-md shadow-gray-500 mb-4'>
               <img src='/logo_mountain_gate.png' className='h-full'/>
             </div>
