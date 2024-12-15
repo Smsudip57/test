@@ -33,28 +33,28 @@ export default function AdminPage({params}) {
       case 'networksecurity':
         return <Networksecurity />;
       case 'customuser':
-        return <Createcustomuser />;
+        // return <Createcustomuser />;
     }
   }else if(slug[0] === 'projects'){
     switch (slug[1]) {
       case '':
-        return <Publishnews />;
+        // return <Publishnews />;
       case 'publishnews':
-        return <Publishnews />;
+        // return <Publishnews />;
       case 'publishevents':
-        return <Publishevents />;
+        // return <Publishevents />;
       case 'events-participants':
-        return <Publishnews />;
+        // return <Publishnews />;
       case 'draft-newsletters':
-        return <DraftNewsletterList />;
+        // return <DraftNewsletterList />;
       case 'members':
-        return <Members />;
+        // return <Members />;
       case 'registered-events':
-        return <Publishnews />;
+        // return <Publishnews />;
       case 'customuser':
-        return <Createcustomuser />;
+        // return <Createcustomuser />;
       default:
-        return <Publishnews />; 
+        // return <Publishnews />; 
     }
   }
     

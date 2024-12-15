@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
-export default function page() {
+export default function Page() {
     const [f1, setf1] = useState(false)
     const [f2, setf2] = useState(false)
     const [f3, setf3] = useState(false)
