@@ -7,6 +7,20 @@ export default function Page() {
     const [f2, setf2] = useState(false)
     const [f3, setf3] = useState(false)
     const [f4, setf4] = useState(false)
+
+
+    const [f5, setf5] = useState(true)
+    const [f6, setf6] = useState(false)
+    const [f7, setf7] = useState(false)
+    const [f8, setf8] = useState(true)
+    const [f9, setf9] = useState(false)
+    const [f10, setf10] = useState(false)
+    const [f11, setf11] = useState(true)
+    const [f12, setf12] = useState(false)
+    const [f13, setf13] = useState(false)
+
+
+
   return (
     <div className='min-h-screen min-w-screen text-center relative  font-sans'>
         <div className='flex min-h-screen'> 
@@ -31,11 +45,49 @@ In the bustling bazaar of the digital world, your website is your storefront, yo
             <div className='basis-1/2 w-full h-full pt-[10%] '>
             <img src='/ew.jpg' width={100} className='w-full '/>
             </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start  text-start'>
+            <div className='basis-1/2 bg- h-full pt-16 items-start  text-start'>
               <h1 className='text-5xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
-              <p className='text-xl font-sans mt-16'>Unlock the potential of your online store with our dynamic ecommerce website solutions.
-
-We design and develop user-friendly, visually appealing platforms that drive sales and enhance customer experience. From seamless navigation to secure payment gateways, our ecommerce websites are built to convert visitors into loyal customers.</p>
+              <div className='text-xl font-sans mt-12 border-l-2 border-[#446E6D]  flex flex-col gap-8'>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f5 ? '446E6D' : 'fff'}]`} onClick={() => 
+                            setf5(prev => {
+                              if (!prev) {
+                                setf6(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f5 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f6 ? '446E6D' : 'fff'}]`} onClick={() => 
+                            setf6(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f6 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f7 ? '446E6D' : 'fff'}]`} onClick={() => 
+                            setf7(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf6(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f7 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -47,14 +99,52 @@ We design and develop user-friendly, visually appealing platforms that drive sal
             </div>
             <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start text-start'>
               <h1 className='text-5xl font-semibold text-[#446E6D]'>Business Website</h1>
-              <p className='text-xl font-sans mt-16'>Elevate your business with a professional website that showcases your brand’s strengths.
-
-Our business websites are designed to impress, with sleek designs, intuitive navigation, and powerful functionality. Whether you’re a startup or an established company, we create digital experiences that resonate with your audience and drive growth.</p>
+              <div className='text-xl font-sans mt-12 border-l-2 border-[#446E6D]  flex flex-col gap-8'>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f8 ? '446E6D' : 'fff'}]`} onClick={() => 
+                            setf8(prev => {
+                              if (!prev) {
+                                setf9(false);
+                                setf10(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f8 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f9 ? '446E6D' : 'fff'}]`} onClick={() => 
+                            setf9(prev => {
+                              if (!prev) {
+                                setf8(false);
+                                setf10(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f9 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f10 ? '446E6D' : 'fff'}]`} onClick={() => 
+                            setf10(prev => {
+                              if (!prev) {
+                                setf8(false);
+                                setf9(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f10 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+              </div>
             </div>
 
           </div>
         </div>
-        <div className=''>
+        {/* <div className=''>
           <div className='w-4/5 mx-auto flex justify-between gap-[15%]'>
             <div className='basis-1/2 w-full h-full pt-[10%]'>
             <img src='https://cdn.pixabay.com/photo/2013/07/12/19/16/spiral-154465_640.png' width={100} className='w-full '/>
@@ -65,7 +155,7 @@ Our business websites are designed to impress, with sleek designs, intuitive nav
             </div>
 
           </div>
-        </div>
+        </div> */}
         <div className='mt-24 w-4/5 mx-auto flex gap-5'>
           <div className='basis-1/2 '>
           <div className='mt-16 w-full relative overflow-hidden rounded-2xl shadow-md border-2 border-gray-200'>
