@@ -48,7 +48,7 @@ In the bustling bazaar of the digital world, your website is your storefront, yo
             <div className='basis-1/2 bg- h-full pt-16 items-start  text-start'>
               <h1 className='text-5xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
               <div className='text-xl font-sans mt-12 border-l-2 border-[#446E6D]  flex flex-col gap-8'>
-                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f5 ? '446E6D' : 'fff'}]`} onClick={() => 
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f5 ? '446E6D' : 'ffff'}]`} onClick={() => 
                             setf5(prev => {
                               if (!prev) {
                                 setf6(false);
@@ -61,7 +61,7 @@ In the bustling bazaar of the digital world, your website is your storefront, yo
                   <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
                   <p className={`text-lg font-sans mt-4 text-stone-700 ${f5 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
                 </div>
-                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f6 ? '446E6D' : 'fff'}]`} onClick={() => 
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f6 ? '446E6D' : 'ffff'}]`} onClick={() => 
                             setf6(prev => {
                               if (!prev) {
                                 setf5(false);
@@ -74,7 +74,7 @@ In the bustling bazaar of the digital world, your website is your storefront, yo
                   <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
                   <p className={`text-lg font-sans mt-4 text-stone-700 ${f6 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
                 </div>
-                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f7 ? '446E6D' : 'fff'}]`} onClick={() => 
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f7 ? '446E6D' : 'ffff'}]`} onClick={() => 
                             setf7(prev => {
                               if (!prev) {
                                 setf5(false);
@@ -100,7 +100,7 @@ In the bustling bazaar of the digital world, your website is your storefront, yo
             <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start text-start'>
               <h1 className='text-5xl font-semibold text-[#446E6D]'>Business Website</h1>
               <div className='text-xl font-sans mt-12 border-l-2 border-[#446E6D]  flex flex-col gap-8'>
-                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f8 ? '446E6D' : 'fff'}]`} onClick={() => 
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f8 ? '446E6D' : 'ffff'}]`} onClick={() => 
                             setf8(prev => {
                               if (!prev) {
                                 setf9(false);
@@ -113,7 +113,7 @@ In the bustling bazaar of the digital world, your website is your storefront, yo
                   <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
                   <p className={`text-lg font-sans mt-4 text-stone-700 ${f8 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
                 </div>
-                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f9 ? '446E6D' : 'fff'}]`} onClick={() => 
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f9 ? '446E6D' : 'ffff'}]`} onClick={() => 
                             setf9(prev => {
                               if (!prev) {
                                 setf8(false);
@@ -126,7 +126,7 @@ In the bustling bazaar of the digital world, your website is your storefront, yo
                   <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
                   <p className={`text-lg font-sans mt-4 text-stone-700 ${f9 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
                 </div>
-                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f10 ? '446E6D' : 'fff'}]`} onClick={() => 
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f10 ? '446E6D' : 'ffff'}]`} onClick={() => 
                             setf10(prev => {
                               if (!prev) {
                                 setf8(false);
