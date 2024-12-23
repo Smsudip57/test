@@ -38,12 +38,15 @@ const Projects = () => {
       </p>
       <button className="bg-[#0B2B20]  px-6 py-3 rounded-lg text-white">Know More</button>
     </div>
-    {/* <div className="m-0.5 p-4 sm:p-10 bg-[#FFE8D7] basis-[46%] lg:basis-[47.2%] rounded-xl">
-      <h1 className="font-bold text-2xl lg:text-4xl text-[#0B2B20]  font-lora mb-[22px]">Lorem Ipsum is simply dummy text</h1>
-      <p className="text-[#0B2B20]  mb-[30px]">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the dsdsf standard dummy text. Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+    <div className="m-0.5 p-4 sm:p-10 bg-[#FFE8D7] basis-[46%] lg:basis-[47.2%] rounded-xl">
+      <h1 className="font-bold text-2xl lg:text-4xl text-[#0B2B20]  font-lora mb-[22px]">Transforming Efficiency: AL SAHRA Recruitement Services IT Revolution with WEBME
+      </h1>
+      <p className="text-[#0B2B20]  mb-[30px]">
+AL SAHRA Recruitment Services, a prominent player in the recruitment and staffing industry, needed a robust and scalable IT infrastructure to support their expanding operations. They sought a comprehensive IT consultancy service to enhance their cloud capabilities, improve communication systems, and ensure top-notch security.
+</p>
       <button className="bg-[#0B2B20]  px-6 py-3 mb-7 rounded-lg text-white">Know More</button>
-      <img alt="project-image" loading="lazy" width="0" height="239" decoding="async" data-nimg="1" className="w-full rounded-lg h-[239px] object-cover" style={{ color: 'transparent' }} src="/pexels-fauxels-3183153.jpg" />
-    </div> */}
+      <img alt="project-image" loading="lazy" width="0" height="239" decoding="async" data-nimg="1" className="w-full rounded-lg h-[239px] object-cover" style={{ color: 'transparent' }} src="/p4.jpg" />
+    </div>
   </div>
 </section>
 

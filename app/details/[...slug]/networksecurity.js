@@ -7,6 +7,15 @@ export default function Page() {
     const [f2, setf2] = useState(false)
     const [f3, setf3] = useState(false)
     const [f4, setf4] = useState(false)
+    const [f5, setf5] = useState(true)
+    const [f6, setf6] = useState(false)
+    const [f7, setf7] = useState(false)
+    const [f8, setf8] = useState(true)
+    const [f9, setf9] = useState(false)
+    const [f10, setf10] = useState(false)
+    const [f11, setf11] = useState(true)
+    const [f12, setf12] = useState(false)
+    const [f13, setf13] = useState(false)
   return (
     <div className='min-h-screen min-w-screen text-center relative  font-sans'>
         <div className='flex min-h-screen'> 
@@ -31,13 +40,50 @@ From advanced firewall management to real-time intrusion detection and thorough 
             <div className='basis-1/2 w-full h-full pt-[10%] '>
             <img src='/ew.jpg' width={100} className='w-full '/>
             </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start  text-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>Managed Firewall Services</h1>
-              <p className='text-xl font-sans mt-16'>Protect your network with our Managed Firewall Services, offering comprehensive firewall management tailored to your business needs.
-
-Our experts handle everything from initial setup and configuration to ongoing monitoring and maintenance. We ensure your firewall is always up-to-date with the latest security patches and configurations, providing robust protection against unauthorized access and cyber attacks. Enjoy peace of mind knowing your network perimeter is fortified by industry-leading security measures.</p>
+            <div className='basis-1/2 bg- h-full pt-16 items-start  text-start'>
+              <h1 className='text-5xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+              <div className='text-xl font-sans mt-12 border-l-2 border-[#446E6D]  flex flex-col gap-8'>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f5 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf5(prev => {
+                              if (!prev) {
+                                setf6(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f5 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f6 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf6(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f6 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f7 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf7(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf6(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f7 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+              </div>
             </div>
-
           </div>
         </div>
         <div className='my-24'>
@@ -45,23 +91,49 @@ Our experts handle everything from initial setup and configuration to ongoing mo
             <div className='basis-1/2 w-full h-full pt-[10%] order-2 '>
             <img src='/pnv.jpg' width={100} className='w-full '/>
             </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start text-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>Vulnerability Assessment & Penetration Testing</h1>
-              <p className='text-xl font-sans mt-16'>Ensure your network’s defenses are impenetrable with our Vulnerability Assessment & Penetration Testing services.
-
-Our experts conduct thorough assessments to identify potential weaknesses in your system, followed by simulated cyber-attacks to test your defenses. This proactive approach helps uncover vulnerabilities before they can be exploited, providing you with detailed reports and actionable recommendations to strengthen your security posture.</p>
-            </div>
-
-          </div>
-        </div>
-        <div className=''>
-          <div className='w-4/5 mx-auto flex justify-between gap-[15%]'>
-            <div className='basis-1/2 w-full h-full pt-[10%]'>
-            <img src='https://cdn.pixabay.com/photo/2013/07/12/19/16/spiral-154465_640.png' width={100} className='w-full '/>
-            </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>Hi there</h1>
-              <p className='text-xl font-sans mt-16'>decription</p>
+            <div className='basis-1/2 bg- h-full pt-16 items-start  text-start'>
+              <h1 className='text-5xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+              <div className='text-xl font-sans mt-12 border-l-2 border-[#446E6D]  flex flex-col gap-8'>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f5 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf5(prev => {
+                              if (!prev) {
+                                setf6(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f5 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f6 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf6(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f6 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f7 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf7(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf6(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f7 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+              </div>
             </div>
 
           </div>

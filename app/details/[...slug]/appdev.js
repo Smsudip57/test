@@ -7,6 +7,15 @@ export default function Page() {
     const [f2, setf2] = useState(false)
     const [f3, setf3] = useState(false)
     const [f4, setf4] = useState(false)
+    const [f5, setf5] = useState(true)
+        const [f6, setf6] = useState(false)
+        const [f7, setf7] = useState(false)
+        const [f8, setf8] = useState(true)
+        const [f9, setf9] = useState(false)
+        const [f10, setf10] = useState(false)
+        const [f11, setf11] = useState(true)
+        const [f12, setf12] = useState(false)
+        const [f13, setf13] = useState(false)
   return (
     <div className='min-h-screen min-w-screen text-center relative  font-sans'>
         <div className='flex min-h-screen'> 
@@ -14,7 +23,7 @@ export default function Page() {
              <h1 className='text-6xl font-semibold text-[#446E6D]'>Mobile App Development</h1>
              <p className='text-xl font-sans'>
 
-We specialize in creating intuitive, high-performance mobile applications that deliver seamless user experiences across all devices. Our team of expert developers and designers work closely with you to understand your unique needs and bring your vision to life. From concept to launch, we ensure every detail is meticulously crafted to engage your audience and drive results. Whether you need a robust enterprise solution or a sleek consumer app, we provide innovative, scalable, and secure mobile applications that set you apart in the competitive digital landscape.</p>
+We specialize in creating intuitive, high-performance mobile applications that deliver seamless user experiences across all devices. Our team of expert developers and designers work closely with you to understand your unique needs and bring your vision to life. From concept to launch, we ensure every detail is meticulously crafted to engage your audience and drive results. </p>
              <div className='flex font-sans gap-5'>
                 <button className='py-2 px-5 bg-[#446E6D] rounded-sm text-white'>Watch Demo</button>
                 <button className='py-2 px-5 text-[#446E6D] border-[#446E6D] border-2 rounded-sm bg-white'>Try for free</button>
@@ -31,11 +40,49 @@ We specialize in creating intuitive, high-performance mobile applications that d
             <div className='basis-1/2 w-full h-full pt-[10%] '>
             <img src='/bapp.jpg' width={100} className='w-full '/>
             </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start text-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>Business Apps</h1>
-              <p className='text-xl font-sans  mt-16'>Empower your business with our state-of-the-art mobile app development services.
-
-We specialize in creating bespoke business applications that streamline operations, enhance productivity, and drive growth. Our expert team collaborates with you to understand your unique business needs and crafts tailored solutions that integrate seamlessly with your existing systems. </p>
+            <div className='basis-1/2 bg- h-full pt-16 items-start  text-start'>
+              <h1 className='text-5xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+              <div className='text-xl font-sans mt-12 border-l-2 border-[#446E6D]  flex flex-col gap-8'>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f5 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf5(prev => {
+                              if (!prev) {
+                                setf6(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f5 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f6 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf6(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f6 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f7 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf7(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf6(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f7 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -45,16 +92,54 @@ We specialize in creating bespoke business applications that streamline operatio
             <div className='basis-1/2 w-full h-full pt-[10%] order-2'>
             <img src='/capp.jpg' width={100} className='w-full '/>
             </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start text-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>Consumer Apps</h1>
-              <p className='text-xl font-sans mt-16'>Revolutionize the way consumers interact with your brand through our cutting-edge mobile app development services.
-
-We specialize in creating engaging, user-friendly consumer applications that captivate and retain your audience. Our team of skilled developers and designers work closely with you to understand your target market and deliver personalized solutions that meet their needs. From e-commerce and social networking to health and entertainment, we build high-performance, secure, and scalable mobile apps that provide seamless experiences across all devices. Elevate your brand’s digital presence and connect with your customers like never before with our innovative consumer mobile app solutions.</p>
+            <div className='basis-1/2 bg- h-full pt-16 items-start  text-start'>
+              <h1 className='text-5xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+              <div className='text-xl font-sans mt-12 border-l-2 border-[#446E6D]  flex flex-col gap-8'>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f5 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf5(prev => {
+                              if (!prev) {
+                                setf6(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f5 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f6 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf6(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f6 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f7 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf7(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf6(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f7 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+              </div>
             </div>
 
           </div>
         </div>
-        <div className=''>
+        {/* <div className=''>
           <div className='w-4/5 mx-auto flex justify-between gap-[15%]'>
             <div className='basis-1/2 w-full h-full pt-[10%]'>
             <img src='https://cdn.pixabay.com/photo/2013/07/12/19/16/spiral-154465_640.png' width={100} className='w-full '/>
@@ -65,7 +150,7 @@ We specialize in creating engaging, user-friendly consumer applications that cap
             </div>
 
           </div>
-        </div>
+        </div> */}
         <div className='mt-24 w-4/5 mx-auto flex gap-5'>
           <div className='basis-1/2 '>
           <div className='mt-16 w-full relative overflow-hidden rounded-2xl shadow-md border-2 border-gray-200'>

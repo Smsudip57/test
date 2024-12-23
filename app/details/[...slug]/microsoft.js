@@ -7,6 +7,15 @@ export default function Page() {
     const [f2, setf2] = useState(false)
     const [f3, setf3] = useState(false)
     const [f4, setf4] = useState(false)
+    const [f5, setf5] = useState(true)
+    const [f6, setf6] = useState(false)
+    const [f7, setf7] = useState(false)
+    const [f8, setf8] = useState(true)
+    const [f9, setf9] = useState(false)
+    const [f10, setf10] = useState(false)
+    const [f11, setf11] = useState(true)
+    const [f12, setf12] = useState(false)
+    const [f13, setf13] = useState(false)
   return (
     <div className='min-h-screen min-w-screen text-center relative  font-sans'>
         <div className='flex min-h-screen'> 
@@ -31,11 +40,49 @@ Seamlessly integrate powerful productivity tools like Word, Excel, and PowerPoin
             <div className='basis-1/2 w-full h-full pt-[10%] '>
             <img src='/pbi.jpg' width={100} className='w-full '/>
             </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start  text-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>Power Apps</h1>
-              <p className='text-xl font-sans mt-16'>Unleash your creativity and transform your business with Power Apps!
-
-This powerful platform allows you to build custom applications effortlessly, enabling you to streamline processes, boost productivity, and drive innovation—all without writing a single line of code. Whether you’re automating workflows, creating data-driven apps, or enhancing user experiences, Power Apps empowers you to turn your ideas into reality quickly and efficiently.</p>
+            <div className='basis-1/2 bg- h-full pt-16 items-start  text-start'>
+              <h1 className='text-5xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+              <div className='text-xl font-sans mt-12 border-l-2 border-[#446E6D]  flex flex-col gap-8'>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f5 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf5(prev => {
+                              if (!prev) {
+                                setf6(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f5 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f6 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf6(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f6 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f7 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf7(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf6(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f7 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -45,27 +92,55 @@ This powerful platform allows you to build custom applications effortlessly, ena
             <div className='basis-1/2 w-full h-full pt-[10%] order-2 '>
             <img src='/share-m.jpg' width={100} className='w-full '/>
             </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start text-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>Microsoft SharePoint</h1>
-              <p className='text-xl font-sans mt-16'>Empower your team with Microsoft SharePoint!
-
-This robust platform facilitates seamless collaboration, content sharing, and management across your organization. With SharePoint, you can create dynamic intranet sites, manage documents, and ensure everyone stays connected and productive from anywhere. Enhance your team’s efficiency with powerful tools for communication, project management, and data integration, all within a secure and user-friendly environment.</p>
+            <div className='basis-1/2 bg- h-full pt-16 items-start  text-start'>
+              <h1 className='text-5xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+              <div className='text-xl font-sans mt-12 border-l-2 border-[#446E6D]  flex flex-col gap-8'>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f5 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf5(prev => {
+                              if (!prev) {
+                                setf6(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f5 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f6 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf6(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf7(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f6 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f7 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf7(prev => {
+                              if (!prev) {
+                                setf5(false);
+                                setf6(false);
+                              }
+                              return true;
+                            })
+                          }
+                          >
+                  <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f7 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                </div>
+              </div>
             </div>
 
           </div>
         </div>
-        <div className=''>
-          <div className='w-4/5 mx-auto flex justify-between gap-[15%]'>
-            <div className='basis-1/2 w-full h-full pt-[10%]'>
-            <img src='https://cdn.pixabay.com/photo/2013/07/12/19/16/spiral-154465_640.png' width={100} className='w-full '/>
-            </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>Hi there</h1>
-              <p className='text-xl font-sans mt-16'>decription</p>
-            </div>
-
-          </div>
-        </div>
+        
+        {/* </div> */}
         <div className='mt-24 w-4/5 mx-auto flex gap-5'>
           <div className='basis-1/2 '>
           <div className='mt-16 w-full relative overflow-hidden rounded-2xl shadow-md border-2 border-gray-200'>
