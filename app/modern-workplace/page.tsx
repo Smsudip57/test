@@ -5,11 +5,15 @@ import EastIcon from '@mui/icons-material/East';
 import Projects from '@/components/main/Projects';
 import Industies from '@/components/main/Industies';
 import CaseStudy from '@/components/main/CaseStudy';
+import Link from 'next/link';
+
+
 interface DataItem {
     id: number;
     image: string;
     title: string;
     description: string[];
+    link: string;
 }
 
 
@@ -40,7 +44,8 @@ export default function Work() {
                     title:'Unlock the full potential of your business with Odoo ERP –',
                     description:[
                         "the all-in-one management software that streamlines operations, boosts productivity, and drives growth. Whether you’re looking to implement Odoo from scratch or need expert consultancy to optimize your existing setup, our team of certified professionals is here to guide you every step of the way.||Ready to revolutionize your business? Get Started Today!"
-                    ]
+                    ],
+                    link: '/erp'
                 },
                 {
                     id:1,
@@ -51,7 +56,8 @@ export default function Work() {
                     "Automated Follow-Ups: Never miss a lead with automated follow-up emails and reminders.",
                     "Pipeline Management: Visualize your sales pipeline and track progress with ease.",
                     "Customizable Dashboards: Tailor your dashboard to display the metrics that matter most to your business."
-                    ]
+                    ],
+                    link: '/erp'
                 },
                 
                 {
@@ -64,7 +70,8 @@ export default function Work() {
                         "Automated Replenishment: Automatically triggers reordering based on stock levels.",
                         "Multi-Warehouse Management: Manage multiple warehouses with ease.",
                         "Advanced Reporting: Detailed reports on inventory performance and stock movements."
-                    ]
+                    ],
+                    link: '/erp'
                     
                 },
                 // {
@@ -101,7 +108,8 @@ export default function Work() {
                     title:'Fortify Your Digital Fortress with Our Network Security Solutions',
                     description:[
                         "Stay one step ahead of cyber threats with our cutting-edge network security services. ||From advanced firewall management to real-time intrusion detection and thorough vulnerability assessments, we ensure your digital assets are impenetrable. Protect your business with our robust, proactive security measures and enjoy peace of mind knowing your network is secure."
-                    ]
+                    ],
+                    link: '/networksecurity'
                 },
                 {
                     id:1,
@@ -109,7 +117,8 @@ export default function Work() {
                     title:'Managed Firewall Services',
                     description:[
                         "Protect your network with our Managed Firewall Services, offering comprehensive firewall management tailored to your business needs.|| Our experts handle everything from initial setup and configuration to ongoing monitoring and maintenance. We ensure your firewall is always up-to-date with the latest security patches and configurations, providing robust protection against unauthorized access and cyber attacks. Enjoy peace of mind knowing your network perimeter is fortified by industry-leading security measures."
-                    ]
+                    ],
+                    link: '/networksecurity'
                 },
                 {
                     id:2,
@@ -117,7 +126,8 @@ export default function Work() {
                     title:'Vulnerability Assessment & Penetration Testing',
                     description:[
                         "Ensure your network’s defenses are impenetrable with our Vulnerability Assessment & Penetration Testing services.|| Our experts conduct thorough assessments to identify potential weaknesses in your system, followed by simulated cyber-attacks to test your defenses. This proactive approach helps uncover vulnerabilities before they can be exploited, providing you with detailed reports and actionable recommendations to strengthen your security posture."
-                    ]
+                    ],
+                    link: '/networksecurity'
                 },
             ]
         },
@@ -202,7 +212,7 @@ export default function Work() {
                         
                         <div className='flex justify-center gap-6 my-16'>
                         <button className=' text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4'>Get it today!</button>
-                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit'/></button>
+                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><Link href={`/details/products${item.link}`} className='d-flex align-items-center'><span className='mr-1'>Discover</span> <EastIcon fontSize="inherit"/></Link></button>
                         </div>
                             
                         </div>
@@ -223,7 +233,7 @@ export default function Work() {
                 
                 <div className='flex justify-center gap-6 my-16'>
                 <button className=' text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4'>Get it today!</button>
-                <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit'/></button>
+                <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><Link href={`/details/products${item.link}`} className='d-flex align-items-center'><span className='mr-1'>Discover</span> <EastIcon fontSize="inherit"/></Link></button>
                 </div>
                     
                 </div> */}

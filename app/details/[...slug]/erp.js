@@ -92,57 +92,49 @@ Ready to revolutionize your business? Get Started Today!</p>
             <div className='basis-1/2 w-full h-full pt-[10%] order-2 '>
             <img src='/odoom.jpg' width={100} className='w-full '/>
             </div>
-            <div className='basis-1/2 bg- h-full pt-16 items-start  text-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
+            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start text-start'>
+              <h1 className='text-5xl font-semibold text-[#446E6D]'>Business Website</h1>
               <div className='text-xl font-sans mt-12 border-l-2 border-[#446E6D]  flex flex-col gap-8'>
-                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f5 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
-                            setf5(prev => {
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f8 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf8(prev => {
                               if (!prev) {
-                                setf6(false);
-                                setf7(false);
+                                setf9(false);
+                                setf10(false);
                               }
                               return true;
                             })
                           }
                           >
                   <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
-                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f5 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f8 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
                 </div>
-                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f6 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
-                            setf6(prev => {
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f9 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf9(prev => {
                               if (!prev) {
-                                setf5(false);
-                                setf7(false);
+                                setf8(false);
+                                setf10(false);
                               }
                               return true;
                             })
                           }
                           >
                   <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
-                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f6 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f9 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
                 </div>
-                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f7 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
-                            setf7(prev => {
+                <div className={`w-full border-l-4 pl-6 cursor-pointer border-[#${f10 ? '446E6D' : 'FFFFFF'}]`} onClick={() => 
+                            setf10(prev => {
                               if (!prev) {
-                                setf5(false);
-                                setf6(false);
+                                setf8(false);
+                                setf9(false);
                               }
                               return true;
                             })
                           }
                           >
                   <h1 className='text-2xl font-semibold text-[#446E6D]'>E-commerce Website</h1>
-                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f7 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
+                  <p className={`text-lg font-sans mt-4 text-stone-700 ${f10 ? 'block' : 'hidden'}`}>Elevate your e-commerce business with a professional website that showcases your brand’s strengths.</p>
                 </div>
               </div>
-            </div>
-
-          </div>
-        </div>
-        <div className=''>
-          <div className='w-4/5 mx-auto flex justify-between gap-[15%]'>
-            <div className='basis-1/2 w-full h-full pt-[10%]'>
-            <img src='https://cdn.pixabay.com/photo/2013/07/12/19/16/spiral-154465_640.png' width={100} className='w-full '/>
             </div>
 
           </div>

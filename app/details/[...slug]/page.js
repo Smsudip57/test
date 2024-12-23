@@ -7,6 +7,10 @@ import Microsoft365 from './microsoft';
 import Windows from './windows';
 import Erp from './erp';
 import Networksecurity from './networksecurity';
+import Itconsulting from './itconsulting';
+import Supportservice from './supportservice';
+import Iot from './iot';
+import Survailanence from './surveillancesystems';
 
 export default function AdminPage({params}) {
   const router = useRouter();
@@ -32,8 +36,14 @@ export default function AdminPage({params}) {
         return <Erp />;
       case 'networksecurity':
         return <Networksecurity />;
-      case 'customuser':
-        // return <Createcustomuser />;
+      case 'itconsulting':
+        return <Itconsulting />;
+      case 'surveillancesystems':
+        return < Survailanence/>;
+      case 'iot':
+        return <Iot />;
+      case 'supportservice':
+        return < Supportservice/>;
     }
   }else if(slug[0] === 'projects'){
     switch (slug[1]) {

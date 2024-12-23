@@ -6,12 +6,14 @@ import Projects from '@/components/main/Projects';
 import Industies from '@/components/main/Industies';
 import CaseStudy from '@/components/main/CaseStudy';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 interface DataItem {
     id: number;
     image: string;
     title: string;
     description: string[];
+    link: string;
 }
 
 
@@ -42,7 +44,8 @@ export default function Firewall() {
                     title:'Website Development',
                     description:[
                         "We create stunning, high-performing websites that captivate your audience and drive your business forward.|| In the bustling bazaar of the digital world, your website is your storefront, your billboard, and your business card rolled into one. It’s the heartbeat of your online presence and the digital handshake that greets every potential customer."
-                    ]
+                    ],
+                    link:'/webdev'
                 },
                 {
                     id:1,
@@ -50,7 +53,8 @@ export default function Firewall() {
                     title:'E-commerce Website',
                     description:[
                         "Unlock the potential of your online store with our dynamic ecommerce website solutions.|| We design and develop user-friendly, visually appealing platforms that drive sales and enhance customer experience. From seamless navigation to secure payment gateways, our ecommerce websites are built to convert visitors into loyal customers."
-                    ]
+                    ],
+                    link:'/webdev'
                 },
                 {
                     id:2,
@@ -58,9 +62,11 @@ export default function Firewall() {
                     title:'Business Website',
                     description:[
                         "Elevate your business with a professional website that showcases your brand’s strengths.|| Our business websites are designed to impress, with sleek designs, intuitive navigation, and powerful functionality. Whether you’re a startup or an established company, we create digital experiences that resonate with your audience and drive growth."
-                    ]
+                    ],
+                    link:'/webdev'
                 },
-            ]
+            ],
+            
         },
         fortinet:{
             image:'/expt.jpg',
@@ -83,7 +89,9 @@ export default function Firewall() {
                     title:'Mobile App Development',
                     description:[
                         "Transform your business with our cutting-edge mobile app development services. ||We specialize in creating intuitive, high-performance mobile applications that deliver seamless user experiences across all devices. Our team of expert developers and designers work closely with you to understand your unique needs and bring your vision to life. From concept to launch, we ensure every detail is meticulously crafted to engage your audience and drive results. Whether you need a robust enterprise solution or a sleek consumer app, we provide innovative, scalable, and secure mobile applications that set you apart in the competitive digital landscape.”"
-                    ]
+                    ],
+                    link:'/appdev'
+                    
                 },
                 {
                     id:1,
@@ -91,7 +99,8 @@ export default function Firewall() {
                     title:'Business Apps',
                     description: [
                        "Empower your business with our state-of-the-art mobile app development services.|| We specialize in creating bespoke business applications that streamline operations, enhance productivity, and drive growth. Our expert team collaborates with you to understand your unique business needs and crafts tailored solutions that integrate seamlessly with your existing systems. From project management and communication tools to finance and analytics apps, we deliver high-performance, secure, and scalable mobile applications that transform the way you do business. Experience the future of business efficiency with our innovative mobile app solutions.”"
-                    ]
+                    ],
+                    link:'/appdev'
                 },
                 {
                     id:2,
@@ -99,10 +108,12 @@ export default function Firewall() {
                     title:'Consumer Apps',
                     description:[
                         "Revolutionize the way consumers interact with your brand through our cutting-edge mobile app development services.|| We specialize in creating engaging, user-friendly consumer applications that captivate and retain your audience. Our team of skilled developers and designers work closely with you to understand your target market and deliver personalized solutions that meet their needs. From e-commerce and social networking to health and entertainment, we build high-performance, secure, and scalable mobile apps that provide seamless experiences across all devices. Elevate your brand’s digital presence and connect with your customers like never before with our innovative consumer mobile app solutions."
-                    ]
+                    ],
+                    link:'/appdev'
                 },
-            ]
+            ],
         },
+        
         // paloalto:{
         //     image:'/paltoalo.jpg',
         //     description:{
@@ -287,9 +298,8 @@ export default function Firewall() {
                         
                         <div className='flex justify-center gap-6 my-16'>
                         <button className=' text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4'>Get it today!</button>
-                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize="inherit"/></button>
+                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><Link href={`/details/products${item.link}`} className='d-flex align-items-center'><span className='mr-1'>Discover</span> <EastIcon fontSize="inherit"/></Link></button>
                         </div>
-                            
                         </div>
                     ))
                 }

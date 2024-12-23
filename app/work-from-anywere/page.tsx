@@ -6,11 +6,15 @@ import EastIcon from '@mui/icons-material/East';
 import Projects from '@/components/main/Projects';
 import Industies from '@/components/main/Industies';
 import CaseStudy from '@/components/main/CaseStudy';
+import Link from 'next/link';
+
+
 interface DataItem {
     id: number;
     image: string;
     title: string;
     description: string[];
+    link?: string;
 }
 
 
@@ -39,7 +43,8 @@ export default function Firewall() {
                     title:'Microsoft 365',
                     description:[
                         "Unlock the full potential of your business with Microsoft 365.|| Seamlessly integrate powerful productivity tools like Word, Excel, and PowerPoint with advanced cloud services and robust security features. Collaborate in real-time, streamline workflows, and stay connected from anywhere with Microsoft Teams and SharePoint. Empower your team to achieve more with the ultimate suite of tools designed for modern business needs."
-                    ]
+                    ],
+                    link:'/microsoft'
                 },
                 {
                     id:1,
@@ -47,7 +52,8 @@ export default function Firewall() {
                     title:'Power Apps',
                     description:[
                         "Unleash your creativity and transform your business with Power Apps!|| This powerful platform allows you to build custom applications effortlessly, enabling you to streamline processes, boost productivity, and drive innovation—all without writing a single line of code. Whether you’re automating workflows, creating data-driven apps, or enhancing user experiences, Power Apps empowers you to turn your ideas into reality quickly and efficiently."
-                    ]
+                    ],
+                    link:'/microsoft'
                 },
                 {
                     id:2,
@@ -55,7 +61,8 @@ export default function Firewall() {
                     title:'Microsoft SharePoint',
                     description:[
                         "Empower your team with Microsoft SharePoint!|| This robust platform facilitates seamless collaboration, content sharing, and management across your organization. With SharePoint, you can create dynamic intranet sites, manage documents, and ensure everyone stays connected and productive from anywhere. Enhance your team’s efficiency with powerful tools for communication, project management, and data integration, all within a secure and user-friendly environment."
-                    ]
+                    ],
+                    link:'/microsoft'
                 },
             ]
         },
@@ -80,7 +87,8 @@ export default function Firewall() {
                     title:'Windows Virtual Desktop',
                     description:[
                         "Unlock the full potential of remote work with Windows Virtual Desktop. Seamlessly access your desktop and applications from any device, anywhere in the world. Experience unparalleled security, scalability, and productivity with a cloud-based solution designed to keep your business agile and efficient. Transform the way you work with Windows Virtual Desktop – where your office is wherever you are."
-                    ]
+                    ],
+                    link:'/windows'
                 },
                 {
                     id:1,
@@ -88,7 +96,8 @@ export default function Firewall() {
                     title:'Azure Virtual Desktop',
                     description:[
                         "Azure Virtual Desktop (formerly known as Windows Virtual Desktop) is a comprehensive desktop and application virtualization service hosted on Azure. It allows users to access virtualized Windows 11 and Windows 10 desktops and applications from anywhere, providing a secure and scalable solution. Key features include multi-session capabilities, cost optimization, and integration with Microsoft 365 Apps for enterprise."
-                    ]
+                    ],
+                    link:'/windows'
                 },
                 {
                     id:2,
@@ -96,7 +105,8 @@ export default function Firewall() {
                     title:'Windows 365',
                     description:[
                         "Windows 365 is a cloud-based service that delivers a personalized Windows experience from the cloud to any device. It simplifies the deployment and management of virtual desktops, offering a secure and consistent user experience. Windows 365 is designed to support hybrid work environments, enabling employees to access their desktop and applications from anywhere with ease."
-                    ]
+                    ],
+                    link:'/windows'
                 },
                
             ]
@@ -282,7 +292,7 @@ export default function Firewall() {
                         
                         <div className='flex justify-center gap-6 my-16'>
                         <button className=' text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4'>Get it today!</button>
-                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit'/></button>
+                        <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><Link href={`/details/products${item.link}`} className='d-flex align-items-center'><span className='mr-1'>Discover</span> <EastIcon fontSize="inherit"/></Link></button>
                         </div>
                             
                         </div>
@@ -303,7 +313,7 @@ export default function Firewall() {
                 
                 <div className='flex justify-center gap-6 my-16'>
                 <button className=' text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4'>Get it today!</button>
-                <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><span className='mr-1'>Discover</span> <EastIcon fontSize='inherit'/></button>
+                <button className='align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base'><Link href={`/details/products${item.link}`} className='d-flex align-items-center'><span className='mr-1'>Discover</span> <EastIcon fontSize="inherit"/></Link></button>
                 </div>
                     
                 </div> */}
