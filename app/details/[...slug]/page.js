@@ -12,6 +12,11 @@ import Supportservice from './supportservice';
 import Iot from './iot';
 import Survailanence from './surveillancesystems';
 
+import P1 from './p1';
+import P2 from './p2';
+import P3 from './p3';
+import P4 from './p4';
+
 export default function AdminPage({params}) {
   const router = useRouter();
   const slug = params.slug
@@ -47,8 +52,14 @@ export default function AdminPage({params}) {
     }
   }else if(slug[0] === 'projects'){
     switch (slug[1]) {
-      case '':
-        // return <Publishnews />;
+      case 'project-1':
+        return <P1 />;
+      case 'project-2':
+        return <P2 />;
+      case 'project-3':
+        return <P3 />;
+      case 'project-4':
+        return <P4 />;
       case 'publishnews':
         // return <Publishnews />;
       case 'publishevents':
