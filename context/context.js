@@ -92,7 +92,7 @@ export const MyContextProvider = ({ children }) => {
   useEffect(() => {
     setWindowWidth(window.innerWidth);
     setProgress(20);
-    fetchCategory();
+    // fetchCategory();
   }, []);
 
   const fetchCategory = () => {

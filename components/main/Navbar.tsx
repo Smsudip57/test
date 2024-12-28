@@ -217,11 +217,11 @@ const Navbar = () => {
         </div>
       </div>
     </div>
-    <div className={`w-[30%] min-h-screen fixed z-40 mt-[65px] overflow-hidden overflow-y-auto bg-white boder-l-[1px] border-[#446E6D] ${animated ?'flex':'hidden'}`} style={{animation:`${animated} 0.5s ease-in-out forwards`  }} onMouseEnter={() => {if(clicked  ){setAnimated('leftslider1');setTimeout(() => {
+    <div className={`w-[30%] max-w-[455px] min-h-screen max-h-screen fixed z-40 mt-[65px] overflow-y-auto bg-white boder-l-[1px] border-[#446E6D] ${animated ?'flex':'hidden'}`} style={{animation:`${animated} 0.5s ease-in-out forwards`}} onMouseEnter={() => {if(clicked  ){setAnimated('leftslider1');setTimeout(() => {
               setCompleted(true)
             }, 500);}}} onMouseLeave={() => {if(animated && completed ) {setAnimated('leftslider2') ; setCompleted(false);setClicked(false)}}} ref={slider}>
-    <div className="w-full h-auto pl-[10vw] overflow-auto pb-48">
-      <h1 className="mt-16 mb-4">
+    <div className="w-full pl-[5vw] overflow-auto pb-48">
+      <h1 className="mt-12 mb-4">
       <strong className="text-[40px] font-bold leading-[52px] font-mono">
       {option.toUpperCase()}
       </strong>
