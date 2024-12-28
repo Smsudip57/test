@@ -17,7 +17,9 @@ export default function Adminnav({user}) {
                 <li className='grid cursor-pointer'>
                  <h1 className='text-[#446E6D] text-xl font-bold'>
                   {user && user.name && `Welcome, ${user.name}!`}
+                  <Link href='/secret-location/admin/login'>
                   {!user && 'Please log in!'}
+                  </Link>
                     </h1>
                 </li>
                 <li title='Logout' className='cursor-pointer'>
