@@ -43,14 +43,14 @@ export default async function Page({params}) {
     // notFound();
   }
 
-  const slug = params.slug;
+  const slug = await params.slug;
 
 
   const renderContent = () => {
     if (!slug) {
         return (
           <div className='p-6 pt-24 h-[200vh]'>
-          <h1 className='text-2xl font-bold'>Welcome, {user.name}!</h1>
+          {user && <h1 className='text-2xl font-bold'>Welcome, {user.name}!</h1>}
           <p className='mt-4'>You are now logged in.</p>
         </div>
         )
