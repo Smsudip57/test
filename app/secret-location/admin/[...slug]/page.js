@@ -36,11 +36,11 @@ export default async function Page({params}) {
     user = response?.data?.user;
   } catch (error) {
     console.log(error.response?.data?.error);
-    // notFound();
+    notFound();
   }
 
   if (!user) {
-    // notFound();
+    notFound();
   }
 
   const slug = await params.slug;
