@@ -40,7 +40,7 @@ export default async function Page({params}) {
   }
 
   if (!user) {
-    notFound();
+    // notFound();
   }
 
   const slug = params.slug;
