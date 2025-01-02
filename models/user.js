@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+import Service from './service';
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -45,8 +46,13 @@ const userSchema = new mongoose.Schema({
     transactionId: {
       type: String,
     }
+  },
+  boughtServices: [
+    {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Service'
   }
-
+ ],
 });
 
 

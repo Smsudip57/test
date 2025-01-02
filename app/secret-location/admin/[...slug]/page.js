@@ -36,7 +36,7 @@ export default async function Page({params}) {
     
     
     if (!userCookie && !login?.data?.loginOn) {
-      notFound(); 
+      // notFound(); 
     }
 
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getuserinfo`, {
@@ -48,11 +48,11 @@ export default async function Page({params}) {
     user = response?.data?.user;
   } catch (error) {
     console.log(error.response?.data?.error);
-    if(!login?.data?.loginOn){notFound();}
+    // if(!login?.data?.loginOn){notFound();}
   }
 
   if (!user && !login?.data?.loginOn) {
-    notFound();
+    // notFound();
   }
 
   const slug = await params.slug;
