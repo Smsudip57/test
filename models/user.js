@@ -1,39 +1,56 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema(
-  {
+const userSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address.']
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 6
+  },
+  role: {
+    type: String,
+    enum: ['vendor','user', 'admin', 'freelancer'],
+    default: 'user'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  profile: {
     name: {
       type: String,
-      required: [true, 'Name is required'],
-      trim: true,
+      trim: true
     },
-    email: {
+    bio: {
       type: String,
-      required: [true, 'Email is required'],
-      unique: [true, 'Email already exists'],
-      lowercase: true,
-      trim: true,
-      match: [
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        'Please enter a valid email address',
-      ],
+      maxlength: 300
     },
-    password: {
+    avatarUrl: {
       type: String,
-      required: [true, 'Password is required'],
-      minlength: [6, 'Password must be at least 6 characters long'],
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+      default: 'https://default-avatar-url.com'
     }
   },
-  {
-    timestamps: true, 
+  payment:{
+    status: {
+      type: String,
+      enum: ['paid', 'unpaid'],
+      default: 'unpaid'
+    },
+    transactionId: {
+      type: String,
+    }
   }
-);
+
+});
+
 
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-export default User;
+module.exports = User;

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import Head from 'next/head';
 
 export default function CreateProject() {
   const [formValues, setFormValues] = useState({
@@ -133,9 +134,9 @@ export default function CreateProject() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <>
-        <title>Create Project</title>
-      </>
+      <Head>
+        <title>Create New Project</title>
+      </Head>
 
       <h1 className="text-2xl font-bold mb-4">Create New Project</h1>
 

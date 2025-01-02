@@ -152,7 +152,7 @@ export default function CreateProduct() {
             value={formValues.detail}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 p-3 border whitespace-pre-wrap border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -233,7 +233,7 @@ export default function CreateProduct() {
             value={formValues.subHeading1edtails}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 p-3 border whitespace-pre-wrap border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -257,7 +257,7 @@ export default function CreateProduct() {
             value={formValues.subHeading2edtails}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 p-3 border whitespace-pre-wrap border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -281,7 +281,7 @@ export default function CreateProduct() {
             value={formValues.subHeading3edtails}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 p-3 border whitespace-pre-wrap border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 

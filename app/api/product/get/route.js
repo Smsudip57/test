@@ -22,16 +22,7 @@ const isAuthenticated = async (cookie) => {
 export async function GET(req) {
   try {
     // Step 1: Get the user's authentication token from cookies
-    const cookie = req.cookies.get('user')?.value; // Replace 'user' with your actual cookie name if needed
-
-    // Step 2: Check if the user is authenticated
-    const isUserAuthenticated = await isAuthenticated(cookie); // Await isAuthenticated function
-    if (!isUserAuthenticated) {
-      return new Response(
-        JSON.stringify({ success: false, message: 'Unauthorized' }),
-        { status: 401 }
-      );
-    }
+    
 
     // Step 3: Connect to the database
     await dbConnect();

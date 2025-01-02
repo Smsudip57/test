@@ -24,7 +24,9 @@ export async function POST(req) {
     const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid email or password.' },
+        { 
+          success: false,
+          message: 'Invalid email or password.' },
         { status: 401 }
       );
     }
@@ -59,7 +61,7 @@ export async function POST(req) {
 
     response.cookies.set('user', token, {
       httpOnly: true, // Prevents client-side JS access
-      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      secure: true, // Use secure cookies in production
       sameSite: 'strict', // Protects against CSRF
       path: '/', // Cookie available to all routes
     });

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/connect/dbconnect'; // Import the database connection
-import Service from '@/models/service'; // Import your Service model
-import User from '@/models/user'; // Import your User model
+import Setting from '@/models/setting'; // Import your Setting model
 import jwt from 'jsonwebtoken'; // Import the JWT library
 export const GET = async (req) => {
   try {
@@ -9,12 +8,15 @@ export const GET = async (req) => {
     await dbConnect();
 
     // Fetch all services
-    const services = await Service.find({});
+    const setting = await Setting.find({});
+    // const value = false;
+    const value = setting[0].loginOn ? true : false;
+    
 
     // Respond with the services
     return NextResponse.json({
       success: true,
-      services,
+      loginOn: value,
     });
   } catch (error) {
     console.error('Error fetching services:', error);

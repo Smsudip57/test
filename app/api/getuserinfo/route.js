@@ -42,14 +42,9 @@ export async function GET(req) {
 
     return NextResponse.json(
       {
+        success: true,
         message: 'User retrieved successfully.',
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
-        },
+        user: user,
       },
       { status: 200 }
     );

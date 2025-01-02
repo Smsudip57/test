@@ -36,7 +36,7 @@ const Projects = () => {
       </button> */}
       <div className="flex flex-wrap gap-4 justify-center items-center place-items-center">
         {industries.map((name, index) => (
-          <a href={`/industries/${name.toLowerCase().split(" ").join('-')}`} className="basis-[45%] lg:basis-[14.28%] flex justify-center items-center  shadow-lg border rounded-lg p-4"  key={index}>
+          <a href={`/industries/${name.toLowerCase().split(" ").join(' ')}`} className="basis-[45%] lg:basis-[14.28%] flex justify-center items-center  shadow-lg border rounded-lg p-4"  key={index}>
           <div className="">
             <img src={`/${name.toLowerCase().split(" ").join('')}.jpg`} alt={`Company logo ${index + 1}`} />
           </div>

@@ -8,13 +8,10 @@ import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import EditIcon from '@mui/icons-material/Edit';
-import Divider from '@mui/material/Divider';
-import ArchiveIcon from '@mui/icons-material/Archive';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-// import { Menu, MenuItem } from '@material-ui/core';
+import Link from 'next/link';
+import { useRouter, usePathname  } from "next/navigation";
+
 
 
 
@@ -51,6 +48,9 @@ const Navbar = () => {
   const [anchorE3, setAnchorE3] = React.useState(null);
   const [isAdminPath, setIsAdminPath] = useState(false);
   const [loaded, setloaded] = useState(false)
+  const context = useContext(MyContext);
+  const router = useRouter();
+  const pathname = usePathname();
 
 
   const handleOpen = (event:any) => {
@@ -99,7 +99,11 @@ const Navbar = () => {
   
   useEffect(() => {
     // This code runs only on the client
-    if (window.location.pathname.includes("secret-location/admin")||!window) {
+    if (pathname.includes("secret-location/admin")
+      ||!window
+      ||pathname.includes("login")
+      ||pathname.includes("register")
+      ||pathname.includes("forgot-password")) {
       setIsAdminPath(true);
     }
     setloaded(true)
@@ -158,7 +162,7 @@ const Navbar = () => {
             <a href="/#pricing" className="cursor-pointer hover:opacity-70  hidden lg:block">
             Pricing
             </a>
-            <a href="/#store" className="cursor-pointer hover:opacity-70 hidden xl:block">
+            <a href="https://store.webmedigital.com" className="cursor-pointer hover:opacity-70 hidden xl:block">
             Store
             </a>
             <div>
@@ -213,7 +217,7 @@ const Navbar = () => {
         </div>
 
         <div className="">
-        <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm ">Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
+        {!context.user && <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm " onClick={()=>{ router.push('/login');window.location.reload()}}>Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>}
         </div>
       </div>
     </div>
@@ -230,7 +234,7 @@ const Navbar = () => {
         industries.map((item,i) => (
 
       <p className=" text-base text-nowrap font-semibold flex items-center text-[#747474] cursor-pointer hover:text-[#265353] pl-4 rounded-md py-3 hover:bg-[#e7f7f68f] justify-start gap-3 box-border opani" key={i} onClick={()=>{
-        window.location.href = `/industries/${item.split(' ').join('-').toLowerCase()}`
+        window.location.href = `/industries/${item.split(' ').join(' ').toLowerCase()}`
         }}>
       <AddReactionIcon fontSize="inherit"/>{item}
       </p>))

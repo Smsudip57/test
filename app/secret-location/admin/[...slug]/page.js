@@ -17,13 +17,25 @@ import DeleteProject from './deleteproject';
 
 export default async function Page({params}) {
   let user = null;
+  let login
+
 
   try {
     const cookieHeader = cookies(); 
     const userCookie = cookieHeader.get('user')?.value; 
+    
+    try {
+      login = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/setting/checkLogin`, {
+      headers: {
+        Cookie: `user=${userCookie}`, 
+      },
 
-
-    if (!userCookie) {
+    });
+    } catch (error) {
+    }
+    
+    
+    if (!userCookie && !login?.data?.loginOn) {
       notFound(); 
     }
 
@@ -36,10 +48,10 @@ export default async function Page({params}) {
     user = response?.data?.user;
   } catch (error) {
     console.log(error.response?.data?.error);
-    notFound();
+    if(!login?.data?.loginOn){notFound();}
   }
 
-  if (!user) {
+  if (!user && !login?.data?.loginOn) {
     notFound();
   }
 
@@ -97,7 +109,7 @@ export default async function Page({params}) {
 
   return (
     <div className='relative'>
-      <Adminnav user={user}/>
+      <Adminnav user={user} login={login?.data?.loginOn}/>
       <div className='w-full relative flex'>
         <Navbar />
         <div className='p-6 pt-24 w-full'>

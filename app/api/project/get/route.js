@@ -9,34 +9,6 @@ export async function GET(req) {
     // Connect to the database
     await dbConnect();
 
-    // Verify the user's authentication from the cookie
-    const cookie = req.cookies.get('user')?.value; // Get the cookie value
-    if (!cookie) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    let decoded;
-    try {
-      decoded = jwt.verify(cookie, process.env.JWT_SECRET); // Verify the token
-    } catch (error) {
-      return NextResponse.json(
-        { success: false, message: 'Invalid or expired token' },
-        { status: 403 }
-      );
-    }
-
-    // Fetch user data from the database (optional step for checking user)
-    const user = await User.findById(decoded.userId).select('-password'); // Exclude password field
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 404 }
-      );
-    }
-
     // Fetch all projects from the database
     const projects = await Project.find();
 

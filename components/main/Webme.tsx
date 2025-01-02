@@ -50,22 +50,22 @@ import React,{useState, useEffect} from "react";
           <div className={`${active!==''&&active!=='w'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 aspect-[16/9]`}>
           <span>
                 {/* <img src="Odoo ERP.jpg"/> */}
-                <a href="/work-from-anywere?search=microsolft365#details"><img src="/m365.jpg" className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[16/9]`}/></a>
+                <a href="/workfrom anywhere?search=microsolft365#details"><img src="/m365.jpg" className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[16/9]`}/></a>
               </span>
           </div>
           <div className={`${active!==''&&active!=='en'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 `}>
           <span>
-          <a href="/endless-support#details"><img src="/consult.png" className={`${active==='en'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[16/9]`}/></a>
+          <a href="/endless support#details"><img src="/consult.png" className={`${active==='en'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[16/9]`}/></a>
               </span>
           </div>
           <div className={`${active!==''&&active!=='m'?"opacity-5":"block"} sm:basis-1/3  lg:basis-1/4 serviceforce aspect-[16/9]`}>
           <span>
-          <a href="/modern-workplace?search=networksecurity#details"><img src="/nnetwork.jpg" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[16/9]`}/></a>
+          <a href="/modern workplace?search=networksecurity#details"><img src="/nnetwork.jpg" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[16/9]`}/></a>
               </span>
           </div>
           <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='m'?"opacity-15":"block"} serviceforce aspect-[16/9]`} >
           <span>
-          <a href="/modern-workplace?search=erp#details"><img src="/newerp.jpg" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500 "}  p-1 rounded-md overflow-hidden serviceforce aspect-[16/9]`}/></a>
+          <a href="/modern workplace?search=erp#details"><img src="/newerp.jpg" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500 "}  p-1 rounded-md overflow-hidden serviceforce aspect-[16/9]`}/></a>
               </span>
           </div>
           <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='b'?"opacity-5":"block"} aspect-[16/9]`}>
@@ -87,7 +87,7 @@ import React,{useState, useEffect} from "react";
           </div>
           <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='w'?"opacity-5":"block"} aspect-[16/9]`}>
               <span>
-                <a href="/work-from-anywere?search=windowsvirtualdesktop#details"><img src="/micro-t.jpg"  className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[16/9]`}  /></a>
+                <a href="/workfrom anywhere?search=windowsvirtualdesktop#details"><img src="/micro-t.jpg"  className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[16/9]`}  /></a>
               </span>
           </div>
         </div>

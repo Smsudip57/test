@@ -1,153 +1,240 @@
-'use client'
-import React, { useState } from 'react'
+"use client"
+import React,{useState} from 'react'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import CaseStudy from '@/components/main/CaseStudy';
+const service = [
+  {
+    Name:"Branding",
+    image:"/nextjs.jpg",
+    url:"/branding?search=webdev#details",
+  },
+  {
+    Name:"Branding",
+    image:"/expt.jpg",
+    url:"/branding?search=appdev#details",
+  },
+  {
+    Name:"Workfrom Anywhere",
+    image:"/m365.jpg",
+    url:"work-from-anywere?search=microsolft365#details",
+  },
+  {
+    Name:"Workfrom Anywhere",
+    image:"/micro-t.jpg",
+    url:"/work-from-anywere?search=windowsvirtualdesktop#details",
+  },
+  {
+    Name:"Modern Workplace",
+    image:"/newerp.jpg",
+    url:"/modern-workplace?search=erp#details",
+  },
+  {
+    Name:"Modern Workplace",
+    image:"/nnetwork.jpg",
+    url:"/modern-workplace?search=networksecurity#details",
+  },
+  {
+    Name:"Digital",
+    image:"/cctv.jpg",
+    url:"/digital?search=surveillancesystems#details",
+  },
+  {
+    Name:"Digital",
+    image:"/iot.jpg",
+    url:"/digital?search=iotsystems#details",
+  },
+  {
+    Name:"Endless Support",
+    image:"/consult.png",
+    url:"/endless-support#details",
+  },
+  {
+    Name:"Endless Support",
+    image:"/cs.jpg",
+    url:"/endless-support#details",
+  },
+]
 
-export default function Page() {
-    const [f1, setf1] = useState(false)
-    const [f2, setf2] = useState(false)
-    const [f3, setf3] = useState(false)
-    const [f4, setf4] = useState(false)
+
+export default function FacultyManagement() {
+  const [f1, setf1] = useState(false)
+  const [f2, setf2] = useState(false)
+  const [f3, setf3] = useState(false)
+  const [f4, setf4] = useState(false)
+
+
+
   return (
-    <div className='min-h-screen min-w-screen text-center relative  font-sans'>
-        <div className='flex min-h-screen'> 
-            <div className='basis-1/2 min-h-full  pt-16 flex flex-col justify-center items-start px-[10%] gap-10'>
-             <h1 className='text-6xl font-semibold text-[#446E6D]'>Hi there</h1>
-             <p className='text-xl font-sans'>decription</p>
-             <div className='flex font-sans gap-5'>
-                <button className='py-2 px-5 bg-[#446E6D] rounded-sm text-white'>Watch Demo</button>
-                <button className='py-2 px-5 text-[#446E6D] border-[#446E6D] border-2 rounded-sm bg-white'>Try for free</button>
-             </div>
-            </div>
-            <div className='basis-1/2 min-h-full  pt-16 flex flex-col '>
-            <div className='pt-[10%]'>
-            <img src='/p1.jpg'/>
-            </div>
-            </div>
-        </div>
-        <div className=''>
-          <div className='w-4/5 mx-auto flex justify-between gap-[15%]'>
-            <div className='basis-1/2 w-full h-full pt-[10%] '>
-            <img src='https://cdn.pixabay.com/photo/2013/07/12/19/16/spiral-154465_640.png' width={100} className='w-full '/>
-            </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>Hi there</h1>
-              <p className='text-xl font-sans'>decription</p>
-            </div>
+    <div className='w-full h-full pt-[65px] lg:pt-0 relative z-20'>
+      <div className='w-full lg:w-4/5 mx-auto'>
+      <div className='w-[90%] lg:w-[80%] xl:w-[1280px] mx-auto pt-8 lg:pt-[65px] flex flex-col lg:flex-row justify-center gap-8 lg:gap-0'>
+        <div className='basis-1/2 flex flex-col justify-center lg:pr-[10%] z-20 gap-8 order-2 lg:order-1'>
+        <span className='text-2xl lg:text-4xl '>
+          <strong>
+          Transform Your Facility Management with Our IT Solutions Optimize Operations and Enhance Efficiency
 
-          </div>
-        </div>
-        <div className='my-24'>
-          <div className='w-4/5 mx-auto flex justify-between gap-[15%]'>
-            <div className='basis-1/2 w-full h-full pt-[10%] order-2'>
-            <img src='https://cdn.pixabay.com/photo/2013/07/12/19/16/spiral-154465_640.png' width={100} className='w-full '/>
-            </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>Hi there</h1>
-              <p className='text-xl font-sans'>decription</p>
-            </div>
-
-          </div>
-        </div>
-        <div className=''>
-          <div className='w-4/5 mx-auto flex justify-between gap-[15%]'>
-            <div className='basis-1/2 w-full h-full pt-[10%]'>
-            <img src='https://cdn.pixabay.com/photo/2013/07/12/19/16/spiral-154465_640.png' width={100} className='w-full '/>
-            </div>
-            <div className='basis-1/2 bg- h-full pt-16 flex flex-col gap-5 items-start'>
-              <h1 className='text-5xl font-semibold text-[#446E6D]'>Hi there</h1>
-              <p className='text-xl font-sans'>decription</p>
-            </div>
-
-          </div>
-        </div>
-        <div className='mt-24 w-4/5 mx-auto flex gap-5'>
-          <div className='basis-1/2 '>
-          <div className='mt-16 w-full relative overflow-hidden rounded-2xl shadow-md border-2 border-gray-200'>
-            <div className='absolute top-0 left-0 w-full h-full' style={{zIndex:-1}}>
-            <svg width="1280" height="459" viewBox="0 0 1280 459" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2462 -979C2462 -184.814 1812.81 459 1012 459C211.187 459 -438 -184.814 -438 -979C-438 -1773.19 211.187 -2417 1012
-                            -2417C1812.81 -2417 2462 -1773.19 2462 -979Z" fill="rgb(259, 240, 255)"></path>
-                </svg>
-
-            </div>
-            <div className='w-full flex flex-col h-max items-start'>
-              <div className=' basis-1/2 min-h-full w-full pt-16  px-28 lg:px-44 '>
-                <img src='/logo_mountain_gate.png' className='w-full active:border-[5px] active:border-blue-500 rounded-full overflow-hidden'></img>
-              </div>
-              <div className='basis-1/2'>
-              <div className='px-10 pb-16 lg:py-16 lg:pr-24 text-left' >
-                <div className='h-[16px] lg:h-[32px] mb-5'>
-                  <img src="https://a.sfdcstatic.com/shared/images/pbc/icons/quotation-english.svg" alt="backqoute" className='h-full' />
-                </div>
-                <span className='text-xl lg:text-3xl'>
-                  <strong>
-                  The Odoo Application has transformed the way we manage maintenance tasks. The automation has not only saved us time but also improved the accuracy and efficiency of our operations.
-                  </strong>
-                </span>
-                <br></br><br></br>
-                <span className='text-xl'>
-                  <strong>
-                  Abhilash Dass 
-                  </strong>
-                </span>
-                <p className='mt-2 text-lg lg:text-xl font-extralight'>
-                Admin Manager, Mountain Gate Property Management
-                </p>
-                <button className=' mt-10 text-[#446E6D] border-[1px] border-[#446E6D] py-2 lg:py-3 lg:px-8 px-4 flex items-center rounded font-semibold cursor-pointer gap-2 text-sm lg:text-base'><span>Read the story <OpenInNewIcon fontSize='inherit'/></span></button>
-
-              </div>
-
-              </div>
-
-            </div>
-          </div>
-          </div>
-          <div className='basis-1/2 h-full'>
-          <div className='mt-16 w-full h-full flex flex-col ` relative overflow-hidden rounded-2xl shadow-md border-2 border-gray-200'>
-            <div className='absolute top-0 left-0 w-full h-full' style={{zIndex:-1}}>
-            <svg width="1280" height="459" viewBox="0 0 1280 459" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2462 -979C2462 -184.814 1812.81 459 1012 459C211.187 459 -438 -184.814 -438 -979C-438 -1773.19 211.187 -2417 1012
-                            -2417C1812.81 -2417 2462 -1773.19 2462 -979Z" fill="rgb(259, 240, 255)"></path>
-                </svg>
-
-            </div>
-            <div className='w-full flex flex-col items-center'>
-              <div className=' basis-1/2 h-full w-full pt-16 px-28 lg:px-40 '>
-                <img src='/green-logo.png' className='w-full active:border-[5px] active:border-blue-500 rounded-lg overflow-hidden'></img>
-              </div>
-              <div className='basis-1/2'>
-              <div className='px-10 pb-16 lg:py-16 lg:pr-24 text-left' >
-                <div className='h-[16px] lg:h-[32px] mb-5'>
-                  <img src="https://a.sfdcstatic.com/shared/images/pbc/icons/quotation-english.svg" alt="backqoute" className='h-full' />
-                </div>
-                <span className='text-xl lg:text-3xl'>
-                  <strong>
-                  The implementation of Microsoft 365, our new website, and Odoo ERP has transformed our operations. We now have a unified system that enhances our productivity and customer service. The support and expertise provided throughout the process were exceptional.
-                  </strong>
-                </span>
-                <br></br><br></br>
-                <span className='text-xl'>
-                  <strong>
-                  Rajesh Kumar
-                  </strong>
-                </span>
-                <p className='mt-2 text-lg lg:text-xl font-extralight'>
-                Managing Director, GREENTECH GENERAL MAINT
-                </p>
-                <button className=' mt-10 text-[#446E6D] border-[1px] border-[#446E6D] py-2 lg:py-3 lg:px-8 px-4 flex items-center rounded font-semibold cursor-pointer gap-2 text-sm lg:text-base'><span>Read the story <OpenInNewIcon fontSize='inherit'/></span></button>
-
-              </div>
-
-              </div>
-
-            </div>
-          </div>
-          </div>
+            </strong>
+        </span>
+        <p className='text-base lg:text-lg'>
+        In the dynamic world of facility management, staying ahead means embracing technology that streamlines operations and enhances efficiency. Our services provide tailored solutions to help facility management companies optimize their processes, reduce costs, and improve service delivery.
+        </p>
+        <div className='flex gap-5'>
+          <button className='bg-[#446E6D] text-white py-2 px-4 flex items-center rounded font-semibold gap-2 cursor-pointer'><span>Try for free <OpenInNewIcon fontSize='inherit'/></span></button>
+          <button className='text-[#446E6D] border-[1px] border-[#446E6D] py-2 px-4 flex items-center rounded font-semibold cursor-pointer gap-2'><span>Explore <OpenInNewIcon fontSize='inherit'/></span></button>
 
         </div>
-        <div className='relative w-full bg-bottom'  >
+        </div>
+        <div className='basis-1/2 px-10 lg:p-28 order-1 lg:order-2'>
+        <img className='w-full rounded overflow-hidden' src='/f-m-t.jpg'/>
         
-        <div className='flex flex-col justify-center lgmt-0 my-[65px] w-[90%] mx-auto lg:w-full pt-28 '>
+        </div>
+      </div>
+
+      </div>
+      <div className='relative  bg-no-repeat bg-cover w-full bg-bottom'  >
+        <div className='absolute top-0 left-0 w-full h-full '>
+          <img src='/yoyo-bg.png' className='w-full h-full'/>
+        </div>
+        <div className='flex justify-center mt-[65px] w-full'>
+        <div className='mx-auto text-center  w-[90%] sm:w-[1000px]  z-20 py-16 lg:p-0'>
+          <span className='text-2xl lg:text-3xl text-[#446E6D]'> 
+            <strong>
+            Facility Management Companies Thriving with Our IT Services <span className='hidden lg:block'>Discover how leading facility management companies in UAE have transformed their operations and achieved remarkable success with our tailored IT solutions.</span>
+              </strong>
+
+          </span>
+          <div className=' rounded-lg overflow-hidden mt-28 lg:mt-20 mb-10 lg:mb-28 flex justify-center gap-6 lg:gap-10'>
+            <div className='text-center '>
+            <div className='w-[160px] h-[80px] lg:w-[200px] lg:h-[100px] bg-white flex justify-center rounded-lg p-2 shadow-md shadow-gray-500 mb-4'>
+              <img src='/logo_mountain_gate.png' className='h-full'/>
+            </div>
+            <strong className=' text-lg lg:text-xl uppercase'>Mountain Gate </strong>
+            </div>
+            <div className='text-center'>
+            <div className='w-[160px] h-[80px] lg:w-[200px] lg:h-[100px] bg-white flex justify-center rounded-lg p-2 shadow-md shadow-gray-500 mb-4'>
+              <img src='/green-logo.png' className='h-full'/>
+            </div>
+            <strong className='text-lg lg:text-xl'>GREEN TECH </strong>
+            </div>
+          </div>
+
+        </div>
+        </div>
+
+      </div>
+      <div className='w-full'>
+      <div className='flex justify-center pt-[65px]'>
+        <div className='mx-auto text-center w-[90%] lg:w-4/5 xl:w-[1280px]  z-20'>
+          <div className='w-full xl:w-[1000px] mx-auto'>
+          <span className='text-2xl lg:text-3xl text-[#446E6D]'> 
+            <strong>
+            Facility Management Companies Achieve Outstanding Results with WEBME
+              </strong>
+
+          </span>
+          </div>
+          <div className='my-20 grid lg:grid-cols-3 gap-6 lg:gap-9'>
+            <div className='w-full min-h-[20vh] bg-[url(https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Retail_Salesforce-for-Retail_Statistics-Card_Card-1_Version-1-1.png?w=800)] bg-cover shadow-lg rounded-2xl overflow-hidden p-14 border-2 border-gray-200 text-base grid gap-2'>
+             <span className='text-7xl'>
+              <strong>
+              35%
+                </strong>
+              </span>
+              <span className='text-2xl'>
+                <strong>
+                Increased operational efficiency*
+                </strong>
+              </span>
+              <span className='mt-5 text-lg'>
+              Our IT services streamlined their processes, reducing manual tasks and improving overall efficiency by 35%.
+              </span>
+            </div>
+            <div className='w-full min-h-[20vh] bg-[url(https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Retail_Salesforce-for-Retail_Statistics-Card_Card-1_Version-1-1.png?w=800)] bg-cover shadow-lg rounded-2xl overflow-hidden p-14 border-2 border-gray-200 text-base grid gap-2'>
+             <span className='text-7xl'>
+              <strong>
+                20%
+                </strong>
+              </span>
+              <span className='text-2xl'>
+                <strong>
+                Cost Savings* 
+                </strong>
+              </span>
+              <span className='mt-5 text-lg'>
+              By implementing our solutions, the company saw a significant reduction in operational costs, saving them 20% annually.
+              </span>
+            </div>
+            <div className='w-full min-h-[20vh] bg-[url(https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Retail_Salesforce-for-Retail_Statistics-Card_Card-1_Version-1-1.png?w=800)] bg-cover shadow-lg rounded-2xl overflow-hidden p-14 border-2 border-gray-200 text-base grid gap-2'>
+             <span className='text-7xl'>
+              <strong>
+                40%
+                </strong>
+              </span>
+              <span className='text-2xl'>
+                <strong>
+                Enhanced Customer Satisfaction* 
+                </strong>
+              </span>
+              <span className='mt-5 text-lg'>
+              With improved service delivery and faster response times, customer satisfaction scores increased by 40%.
+              </span>
+            </div>
+          </div>
+
+        </div>
+        </div>
+      </div>
+      <div className='w-[90%] mx-auto lg:w-full'>
+      <CaseStudy/>
+      </div>
+        <div className='relative  bg-no-repeat bg-cover w-full bg-bottom'  >
+        <div className='absolute top-0 left-0 w-full h-full hidden xl:block'>
+          <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Automotive-Category-pg-Featured-solution-background-2.png?w=1024' className='w-full h-full'/>
+        </div>
+        <div className='flex flex-col justify-center mt-[65px] w-[90%] mx-auto lg:w-full'>
+        <div className='mx-auto text-center w-full lg:w-[1000px]  z-20'>
+          <span className='text-2xl lg:text-4xl text-[#446E6D]'> 
+            <strong>
+            Discover what WEBME’s IT Services for Facility Management can do for you.
+              </strong>
+
+          </span>
+          <p className='text-base lg:text-lg mt-8'>
+          WEBME’s IT Services for Facility Management provide a comprehensive suite of solutions, including Website Development, Microsoft 365 integration, ERP systems, and IT Consultancy. These services are designed to streamline operations, enhance productivity, and ensure seamless communication within your facility management company.
+          </p>
+        </div>
+          <div className=' carousel-container w-full xl:w-[1280px] mx-auto mt-12 mb-28 sm:mb-52 z-20  overflow-hidden'>
+            <div className='carousel-track flex gap-10 overflow-x-auto' style={{animation: 'slide2 60s linear infinite', width:'max-content' }}>
+            {
+              service.map((item,index)=>(
+                <div className={` relative max-w-[281px] bg-white border-t-8 border-[#446E6D] rounded-xl shadow-lg p-8 cursor-pointer ${index===0?'ml-10':''}`} key={index}>
+                <span className='text-xl uppercase'>
+                  <strong>
+                  {item.Name}
+                  </strong>
+                </span>
+                <img src={item.image} className='w-full mt-8 rounded-sm mb-10'/>
+                <a href={item.url}>
+                  <button className='mt-10 bottom-0 mb-8 absolute text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
+                  <span className='font-bold'>Learn more <OpenInNewIcon fontSize='inherit'/></span>
+                </button>
+                  </a>
+
+              </div>
+              ))
+            }
+              </div>
+
+
+            
+          </div>
+
+        </div>
+
+      </div>
+      <div className='relative w-full bg-bottom'  >
+        
+        <div className='flex flex-col justify-center mt24 lgmt-0 my-[65px] w-[90%] mx-auto lg:w-full'>
         <div className='mx-auto text-center w-full lg:w-[1000px]  z-20'>
           <span className='text-2xl lg:text-4xl text-[#446E6D]'> 
             <strong>
@@ -382,6 +469,8 @@ export default function Page() {
         </div>
 
       </div>
+
+
     </div>
   )
 }

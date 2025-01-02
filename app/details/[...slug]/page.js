@@ -1,6 +1,5 @@
-'use client';
-import React, { useEffect, useState, useContext  } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
+import axios from 'axios';
 import Webdev from './webdev';
 import Appdev from './appdev';
 import Microsoft365 from './microsoft';
@@ -16,9 +15,19 @@ import P1 from './p1';
 import P2 from './p2';
 import P3 from './p3';
 import P4 from './p4';
+import Project from './project';
+import { notFound } from 'next/navigation';
 
-export default function AdminPage({params}) {
-  const router = useRouter();
+export default async function AdminPage({params}) {
+  let project;
+  try {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/project/get`);
+  if (response.data.success) {
+    project = response.data.data;
+  }
+  } catch (e) {
+    
+  }
   const slug = params.slug
 
   const renderContent = () => {
@@ -26,6 +35,16 @@ export default function AdminPage({params}) {
         <p>Loading...</p>; 
         context.customToast({success:false, message:'Something went wrong'});
     }
+
+  const checkProject = (name) => {
+    const Name = decodeURIComponent(name);
+    if (project && project.length > 0) {
+    const Project = project.find((project) => project.Title === Name);
+      return Project;
+    }else{
+      return false;
+    }
+  }
         
   if(slug[0] === 'products'){
     switch (slug[1]) {
@@ -51,31 +70,11 @@ export default function AdminPage({params}) {
         return < Supportservice/>;
     }
   }else if(slug[0] === 'projects'){
-    switch (slug[1]) {
-      case 'project-1':
-        return <P1 />;
-      case 'project-2':
-        return <P2 />;
-      case 'project-3':
-        return <P3 />;
-      case 'project-4':
-        return <P4 />;
-      case 'publishnews':
-        // return <Publishnews />;
-      case 'publishevents':
-        // return <Publishevents />;
-      case 'events-participants':
-        // return <Publishnews />;
-      case 'draft-newsletters':
-        // return <DraftNewsletterList />;
-      case 'members':
-        // return <Members />;
-      case 'registered-events':
-        // return <Publishnews />;
-      case 'customuser':
-        // return <Createcustomuser />;
-      default:
-        // return <Publishnews />; 
+    if(checkProject(slug[1])){
+      const project = checkProject(slug[1]);
+      return <Project project={project} />;
+    }else{
+        return notFound(); 
     }
   }
     
