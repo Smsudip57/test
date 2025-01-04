@@ -1,21 +1,24 @@
 "use client"
 import React,{useState, useEffect,useRef, useContext} from "react";
+import {useRouter, usePathname} from "next/navigation"
+import path from "path";
 
 const Footer = () => {
+  const pathname = usePathname();
 
   const [isAdminPath, setIsAdminPath] = useState(false);
   const [loaded, setloaded] = useState(false)
 
   useEffect(() => {
-    if (window.location.pathname.includes("/admin")
+    if (pathname.includes("/admin")
       ||!window
-      ||window.location.pathname.includes("signin")
-      ||window.location.pathname.includes("signup")
-      ||window.location.pathname.includes("forgot-password")) {
+      ||pathname.includes("signin")
+      ||pathname.includes("signup")
+      ||pathname.includes("forgot-password")) {
       setIsAdminPath(true);
     }
     setloaded(true)
-  }, []);
+  }, [pathname]);
 
   if (isAdminPath) {
     return null;
