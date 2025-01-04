@@ -114,12 +114,16 @@ const Navbar = () => {
   }
 
   // Avoid rendering content if it's an admin path
-  if (context.adminnav) {
+  if (context.adminnav || pathname.includes('/admin') ||
+  pathname.includes('/signin') ||
+  pathname.includes('/signup') ||
+  pathname.includes('/forgot-password')
+  ) {
     return null;
   }
-  if (!loaded) {
-    return null;
-  }
+  // if (!loaded) {
+  //   return null;
+  // }
   
   return (
     <div className="w-full relative xl:block ">

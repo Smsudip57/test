@@ -2,27 +2,23 @@
 import React,{useState, useEffect,useRef, useContext} from "react";
 import {useRouter, usePathname} from "next/navigation"
 import path from "path";
+import { MyContext } from "@/context/context";
 
 const Footer = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const context = React.useContext(MyContext);
 
   // const [isAdminPath, setIsAdminPath] = useState(false);
   const [loaded, setloaded] = useState(false)
 
-  const isAdminPath =
-    pathname.includes('/admin') ||
-    pathname.includes('/signin') ||
-    pathname.includes('/signup') ||
-    pathname.includes('/forgot-password');
-
-  if (isAdminPath) {
+  if (context.adminnav || pathname.includes('/admin') ||
+  pathname.includes('/signin') ||
+  pathname.includes('/signup') ||
+  pathname.includes('/forgot-password')
+  ) {
     return null;
   }
-
-  if(!loaded){
-    return null;
-  }
-
 
   return (
     <div className="bg-[#393939] text-white px-4 sm:px-12 lg:px-24 pt-12 flex relative z-30">
