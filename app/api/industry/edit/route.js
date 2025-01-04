@@ -1,4 +1,4 @@
-import dbConnect from '@/connect/dbConnect';
+import dbConnect from '@/connect/dbconnect';
 import Industry from '@/models/industry';
 import User from '@/models/user';
 import jwt from 'jsonwebtoken';

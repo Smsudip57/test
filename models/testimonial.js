@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import Service from './service';
-import Industry from './industries';
 
 const testimonialSchema = new mongoose.Schema(
   {
