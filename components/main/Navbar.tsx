@@ -67,11 +67,7 @@ const Navbar = () => {
     setAnchorE3(event.currentTarget);
   };
 
-  const isAdminPath =
-    pathname.includes('/admin') ||
-    pathname.includes('/signin') ||
-    pathname.includes('/signup') ||
-    pathname.includes('/forgot-password');
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -118,7 +114,7 @@ const Navbar = () => {
   }
 
   // Avoid rendering content if it's an admin path
-  if (isAdminPath) {
+  if (context.adminnav) {
     return null;
   }
   if (!loaded) {

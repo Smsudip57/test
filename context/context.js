@@ -3,7 +3,7 @@
 import React, { createContext, useState, useEffect,useRef, } from "react";
 import axios from "axios";
 import { toast } from 'react-toastify';
-import { useRouter,notFound } from "next/navigation";
+import { useRouter,notFound, usePathname } from "next/navigation";
 import CircularProgress from '@mui/material/CircularProgress';
 
 
@@ -14,9 +14,10 @@ export const ThemeProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [login, setLogin] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [adminnav , setAdminnav] = useState(false);
   const fetchedOnce = useRef(false); 
   const router = useRouter();
+  const pathname = usePathname();
 
 
   const customToast = (value) => {
@@ -72,11 +73,22 @@ export const ThemeProvider = ({ children }) => {
       customToast({success:false, message:'Please log in.'});
     }
   },[user])
+
+  useEffect(() => {
+    if(pathname.includes('/admin') ||
+    pathname.includes('/signin') ||
+    pathname.includes('/signup') ||
+    pathname.includes('/forgot-password')){
+      setAdminnav(true);
+    }else{
+      setAdminnav(false);
+    }
+  },[pathname])
   
   // progress && <CircularProgressWithLabel value={progress} />
 
   return (
-    <MyContext.Provider value={{ user, setUser,login,setLogin, loading, error, customToast }}>
+    <MyContext.Provider value={{ user, setUser,login,setLogin, loading, error, customToast,adminnav }}>
       {children}
     </MyContext.Provider>
   );
