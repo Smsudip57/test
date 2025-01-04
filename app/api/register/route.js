@@ -50,18 +50,13 @@ export async function POST(req) {
 
     // Create JWT
     const token = jwt.sign({ userId: newUser._id }, JWT_SECRET);
-
+    newUser.password = undefined; // Remove password from user object
     // Set the JWT as a cookie
     const response = NextResponse.json(
       {
         success: true,
         message: 'Registration successful.',
-        user: {
-          id: newUser._id,
-          name: newUser.profile.name,
-          email: newUser.email,
-          role: newUser.role,
-        },
+        user: newUser,
       },
       { status: 201 }
     );

@@ -11,15 +11,10 @@ export default function Signup() {
   const [name, setName] = useState('');
   const [role, setRole] = useState('user'); // Default role
   const [error, setError] = useState('');
-  const { customToast } = useContext(MyContext);
+  const { customToast, setUser } = useContext(MyContext);
   const router = useRouter();
-  const context = useContext(MyContext);
 
-  useEffect(() => {
-    if (context.user) {
-      router.replace('/dashboard');
-    }
-  }, [context.user, router]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,11 +32,17 @@ export default function Signup() {
       // Send a POST request with email, name, password, and role
       const response = await axios.post('/api/register', { email, name, password, role });
 
-      if (response.data.success) {
+      if (response.data.user) {
+        // If user data is returned, set it to the context state
+        setUser(response.data.user);
         customToast(response.data);
-        router.push('/dashboard'); // Redirect to dashboard after successful signup
+        if(response?.data?.user?.role === 'admin'){router.push('/admin');}
+        else if(response?.data?.user?.role === 'user'){
+          router.push('/customer');
+          window.location.reload();
+        }
       } else {
-        setError(response.data.message || 'Signup failed');
+        customToast({success:false, message:'Something went wrong'});
       }
     } catch (err) {
       customToast(err.response?.data || { success: false, message: 'An error occurred' });

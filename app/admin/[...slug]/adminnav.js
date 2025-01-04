@@ -4,10 +4,14 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import axios from 'axios';
 import Link from 'next/link';
 import { set } from 'mongoose';
+import {useRouter} from 'next/navigation';
+import { MyContext } from '@/context/context';
 
 export default function Adminnav({user, login}) {
   const [isOn, setIsOn] = useState(false);
   const [isLoading,setisLoading] = useState(false)
+  const context = React.useContext(MyContext);
+  const router = useRouter();
 
   React.useEffect(()=>{
     setIsOn(login);
@@ -29,6 +33,21 @@ export default function Adminnav({user, login}) {
       setisLoading(false);
     }
     };
+
+    const handleLogout = async() => {
+      try {
+        const response = await axios.get('/api/user/logout');
+        if(response?.data?.success){
+          context?.setUser(null);
+          context?.customToast(response?.data);
+          router.replace('/');
+          window.location.reload();
+        }
+      } catch (error) {
+        context?.customToast({success:false, message:'Something went wrong'})
+      }  
+    }
+  
 
 
   return (
@@ -68,8 +87,8 @@ export default function Adminnav({user, login}) {
                     </h1>
                 </li>
                 
-                <li title='Logout' className='cursor-pointer'>
-                <Link href='/logout'><LogoutIcon className="text-[#446E6D]"/></Link>
+                <li title='Logout' className='cursor-pointer' onClick={handleLogout}>
+                <LogoutIcon className="text-[#446E6D]"/>
                 </li>
             </ul>
             </nav>

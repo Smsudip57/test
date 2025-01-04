@@ -11,9 +11,10 @@ import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Link from 'next/link';
 import { useRouter, usePathname  } from "next/navigation";
-import { CircleUser,Crown,LogOut  } from 'lucide-react';
+import { CircleUser,Crown,LogOut,User   } from 'lucide-react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css'
+import axios from "axios";
 
 
 
@@ -111,6 +112,18 @@ const Navbar = () => {
     }
     setloaded(true)
   }, []);
+
+  const handleLogout = async() => {
+    try {
+      const response = await axios.get('/api/user/logout');
+      if(response?.data?.success){
+        context?.setUser(null);
+        context?.customToast(response?.data);
+      }
+    } catch (error) {
+      context?.customToast({success:false, message:'Something went wrong'})
+    }  
+  }
 
   // Avoid rendering content if it's an admin path
   if (isAdminPath) {
@@ -219,21 +232,25 @@ const Navbar = () => {
           {/* </div> */}
         </div>
 
-        <div className="w-auto cursor-pointer text-left relative" onClick={()=>setprofileopen(!profileopen)} onBlur={()=>setprofileopen(false)} >
+        <div className="w-auto cursor-pointer text-left relative" 
+        onClick={()=>setprofileopen(!profileopen)}
+        onAbort={()=>setprofileopen(false)} 
+        onBlur={()=>setprofileopen(false)} 
+        >
         {context.user && !context.loading ?<div>
           <p className="flex gap-2 font-bold items-center text-[#446E6D]">
             <CircleUser size={20}/> {context?.user?.name?.split(" ")[0]}
             </p>
-        </div>: !context.loading&& <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm " onClick={()=>{ router.push('/login');window.location.reload()}}>Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
+        </div>: !context.loading&& <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm " onClick={()=>{ router.push('/signin');window.location.reload()}}>Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
         }
         {
-          context.loading && <h1 className="w-24">
+          context.loading && <h1 className="w-20">
             <SkeletonTheme baseColor="transparent" highlightColor="#E7F7F6">
                 <Skeleton count={1} className="ladding-6"/>
             </SkeletonTheme>
           </h1>
         }
-        {profileopen && <div className="absolute top-[200%] right-0 p-4 w-content bg-white rounded-lg overflow-hidden text-gray-600 flex flex-col gap-4">
+        {profileopen && context?.user && context?.user?.role && <div className="absolute top-[200%] right-0 p-4 w-content bg-white rounded-lg overflow-hidden text-gray-600 flex flex-col gap-4">
           {
             context.user && !context.loading && context.user?.role==='admin' &&
               // <Link href="/admin">
@@ -242,7 +259,15 @@ const Navbar = () => {
               </p>
               // </Link>
           }
-          <p className="text-nowrap flex gap-3"><LogOut/> logout</p>
+          {
+            context.user && !context.loading && context.user?.role==='user' &&
+              // <Link href="/admin">
+            <p className="text-nowrap flex gap-3" onClick={()=>{router.push('/customer');window.location.reload()}}>
+              <User /> Customer Dashboard
+              </p>
+              // </Link>
+          }
+          <p className="text-nowrap flex gap-3" onClick={()=>handleLogout()}><LogOut/> logout</p>
 
         </div>}
         </div>

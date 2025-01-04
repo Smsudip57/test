@@ -14,12 +14,12 @@ export default function Example() {
   const context = useContext(MyContext);
 
 
-  useEffect(() => {
-      console.log(context.user);
-    if (context.user) {
-      router.replace('/dashboard');
-    }
-  }, [context.user, router]);
+  // useEffect(() => {
+  //     console.log(context.user);
+  //   if (context.user) {
+  //     router.replace('/dashboard');
+  //   }
+  // }, [context.user, router]);
 
 
   const handleSubmit = async (e) => {
@@ -42,9 +42,13 @@ export default function Example() {
         // If user data is returned, set it to the context state
         setUser(response.data.user);
         customToast(response.data);
-        router.push('/dashboard');
+        if(response?.data?.user?.role === 'admin'){router.push('/admin');}
+        else if(response?.data?.user?.role === 'user'){
+          router.push('/customer');
+          window.location.reload();
+        }
       } else {
-        setError('Login failed');
+        customToast({success:false, message:'Something went wrong'});
       }
     } catch (err) {
         customToast(err.response.data);

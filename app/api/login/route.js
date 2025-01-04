@@ -40,6 +40,8 @@ export async function POST(req) {
       );
     }
 
+    user.password = undefined; // Remove password from user object
+
 
     // Create JWT
     const token = jwt.sign({ userId: user._id }, JWT_SECRET);
@@ -50,12 +52,7 @@ export async function POST(req) {
       {
         success: true,
         message: 'Login successful.',
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          createdAt: user.createdAt,
-        },
+        user: user,
       },
       { status: 200 }
     );

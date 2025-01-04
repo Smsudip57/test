@@ -86,7 +86,7 @@ export default async function Page({params}) {
     }
   
     // If no match, render 404
-    // notFound();
+    notFound();
   };
   
 
