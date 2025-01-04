@@ -14,7 +14,6 @@ export const ThemeProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [login, setLogin] = useState(false);
-  const [adminnav , setAdminnav] = useState(false);
   const fetchedOnce = useRef(false); 
   const router = useRouter();
   const pathname = usePathname();
@@ -74,21 +73,12 @@ export const ThemeProvider = ({ children }) => {
     }
   },[user])
 
-  useEffect(() => {
-    if(pathname.includes('/admin') ||
-    pathname.includes('/signin') ||
-    pathname.includes('/signup') ||
-    pathname.includes('/forgot-password')){
-      setAdminnav(true);
-    }else{
-      setAdminnav(false);
-    }
-  },[])
+
   
   // progress && <CircularProgressWithLabel value={progress} />
 
   return (
-    <MyContext.Provider value={{ user, setUser,login,setLogin, loading, error, customToast,adminnav,setAdminnav }}>
+    <MyContext.Provider value={{ user, setUser,login,setLogin, loading, error, customToast }}>
       {children}
     </MyContext.Provider>
   );

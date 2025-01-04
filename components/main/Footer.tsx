@@ -12,7 +12,7 @@ const Footer = () => {
   // const [isAdminPath, setIsAdminPath] = useState(false);
   const [loaded, setloaded] = useState(false)
 
-  if (context.adminnav || pathname.includes('/admin') ||
+  if ( pathname.includes('/admin') ||
   pathname.includes('/signin') ||
   pathname.includes('/signup') ||
   pathname.includes('/forgot-password')
