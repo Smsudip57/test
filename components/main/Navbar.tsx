@@ -67,10 +67,12 @@ const Navbar = () => {
     setAnchorE3(event.currentTarget);
   };
 
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
-
+  if(pathname.includes('/admin') ||
+    pathname.includes('/signin') ||
+    pathname.includes('/signup') ||
+    pathname.includes('/forgot-password')){
+    setIsAdminPath(true);
+    }
   useEffect(() => {
     const handleScroll = () => {
       if(window.scrollY>65){
@@ -101,17 +103,7 @@ const Navbar = () => {
     setAnchorE3(null);
   };
   
-  useEffect(() => {
-    // This code runs only on the client
-    if (pathname.includes("/admin")
-      ||!window
-      ||pathname.includes("signin")
-      ||pathname.includes("signup")
-      ||pathname.includes("forgot-password")) {
-      setIsAdminPath(true);
-    }
-    setloaded(true)
-  }, [pathname]);
+  
 
   const handleLogout = async() => {
     try {

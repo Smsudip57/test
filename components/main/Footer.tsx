@@ -9,16 +9,12 @@ const Footer = () => {
   const [isAdminPath, setIsAdminPath] = useState(false);
   const [loaded, setloaded] = useState(false)
 
-  useEffect(() => {
-    if (pathname.includes("/admin")
-      ||!window
-      ||pathname.includes("signin")
-      ||pathname.includes("signup")
-      ||pathname.includes("forgot-password")) {
+  if(pathname.includes('/admin') ||
+      pathname.includes('/signin') ||
+      pathname.includes('/signup') ||
+      pathname.includes('/forgot-password')){
       setIsAdminPath(true);
-    }
-    setloaded(true)
-  }, [pathname]);
+      }
 
   if (isAdminPath) {
     return null;
