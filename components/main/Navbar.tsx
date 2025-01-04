@@ -114,7 +114,7 @@ const Navbar = () => {
   }
 
   // Avoid rendering content if it's an admin path
-  if (context.adminnav || pathname.includes('/admin') ||
+  if (pathname.includes('/admin') ||
   pathname.includes('/signin') ||
   pathname.includes('/signup') ||
   pathname.includes('/forgot-password')
