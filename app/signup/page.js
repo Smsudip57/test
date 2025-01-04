@@ -11,9 +11,22 @@ export default function Signup() {
   const [name, setName] = useState('');
   const [role, setRole] = useState('user'); // Default role
   const [error, setError] = useState('');
-  const { customToast, setUser } = useContext(MyContext);
+  const { customToast, setUser, user } = useContext(MyContext);
   const router = useRouter();
 
+
+  useEffect(() => {
+    if (user) {
+      if(user?.role === 'admin'){router.push('/admin'); window.location.reload();}
+        else if(user?.role === 'user'){
+          router.push('/customer');
+          window.location.reload();
+        }else {
+          router.push('/');
+          window.location.reload();
+        }
+    }
+  }, [user, router]);
 
 
   const handleSubmit = async (e) => {

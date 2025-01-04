@@ -41,7 +41,6 @@ export default function Adminnav({user, login}) {
           context?.setUser(null);
           context?.customToast(response?.data);
           router.replace('/');
-          window.location.reload();
         }
       } catch (error) {
         context?.customToast({success:false, message:'Something went wrong'})

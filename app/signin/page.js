@@ -14,18 +14,23 @@ export default function Example() {
   const context = useContext(MyContext);
 
 
-  // useEffect(() => {
-  //     console.log(context.user);
-  //   if (context.user) {
-  //     router.replace('/dashboard');
-  //   }
-  // }, [context.user, router]);
+  useEffect(() => {
+    if (context?.user) {
+      if(context?.user?.role === 'admin'){router.push('/admin'); window.location.reload();}
+        else if(context?.user?.role === 'user'){
+          router.push('/customer');
+          window.location.reload();
+        }else {
+          router.push('/');
+          window.location.reload();
+        }
+    }
+  }, [context?.user, router]);
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate input before submission (you can add further validation logic here)
     if (!email || !password) {
       customToast({success:false, message:'Email and password are required.'});
       return;
