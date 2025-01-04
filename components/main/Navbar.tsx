@@ -111,7 +111,7 @@ const Navbar = () => {
       setIsAdminPath(true);
     }
     setloaded(true)
-  }, []);
+  }, [pathname]);
 
   const handleLogout = async() => {
     try {
