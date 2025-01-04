@@ -243,7 +243,7 @@ const Navbar = () => {
           {
             context.user && !context.loading && context.user?.role==='admin' &&
               // <Link href="/admin">
-            <p className="text-nowrap flex gap-3" onClick={()=>{router.push('/admin');window.location.reload()}}>
+            <p className="text-nowrap flex gap-3" onClick={()=>{router.push('/admin');context?.setAdminnav(true)}}>
               <Crown/> Admin Dashboard
               </p>
               // </Link>

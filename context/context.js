@@ -83,12 +83,12 @@ export const ThemeProvider = ({ children }) => {
     }else{
       setAdminnav(false);
     }
-  },[pathname])
+  },[])
   
   // progress && <CircularProgressWithLabel value={progress} />
 
   return (
-    <MyContext.Provider value={{ user, setUser,login,setLogin, loading, error, customToast,adminnav }}>
+    <MyContext.Provider value={{ user, setUser,login,setLogin, loading, error, customToast,adminnav,setAdminnav }}>
       {children}
     </MyContext.Provider>
   );
