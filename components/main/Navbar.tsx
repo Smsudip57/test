@@ -49,7 +49,7 @@ const Navbar = () => {
   const slider = useRef(null);
   const [anchorE2, setAnchorE2] = React.useState(null);
   const [anchorE3, setAnchorE3] = React.useState(null);
-  const [isAdminPath, setIsAdminPath] = useState(false);
+  // const [isAdminPath, setIsAdminPath] = useState(false);
   const [loaded, setloaded] = useState(false)
   const [profileopen, setprofileopen] = useState(false)
   const context = useContext(MyContext);
@@ -67,12 +67,12 @@ const Navbar = () => {
     setAnchorE3(event.currentTarget);
   };
 
-  if(pathname.includes('/admin') ||
+  const isAdminPath =
+    pathname.includes('/admin') ||
     pathname.includes('/signin') ||
     pathname.includes('/signup') ||
-    pathname.includes('/forgot-password')){
-    setIsAdminPath(true);
-    }
+    pathname.includes('/forgot-password');
+
   useEffect(() => {
     const handleScroll = () => {
       if(window.scrollY>65){

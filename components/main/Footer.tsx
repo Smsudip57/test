@@ -6,15 +6,14 @@ import path from "path";
 const Footer = () => {
   const pathname = usePathname();
 
-  const [isAdminPath, setIsAdminPath] = useState(false);
+  // const [isAdminPath, setIsAdminPath] = useState(false);
   const [loaded, setloaded] = useState(false)
 
-  if(pathname.includes('/admin') ||
-      pathname.includes('/signin') ||
-      pathname.includes('/signup') ||
-      pathname.includes('/forgot-password')){
-      setIsAdminPath(true);
-      }
+  const isAdminPath =
+    pathname.includes('/admin') ||
+    pathname.includes('/signin') ||
+    pathname.includes('/signup') ||
+    pathname.includes('/forgot-password');
 
   if (isAdminPath) {
     return null;
