@@ -236,11 +236,11 @@ const Navbar = () => {
         {profileopen && <div className="absolute top-[200%] right-0 p-4 w-content bg-white rounded-lg overflow-hidden text-gray-600 flex flex-col gap-4">
           {
             context.user && !context.loading && context.user?.role==='admin' &&
-              <Link href="/admin">
-            <p className="text-nowrap flex gap-3" onClick={()=>{window.location.reload()}}>
+              // <Link href="/admin">
+            <p className="text-nowrap flex gap-3" onClick={()=>{router.push('/admin');window.location.reload()}}>
               <Crown/> Admin Dashboard
               </p>
-              </Link>
+              // </Link>
           }
           <p className="text-nowrap flex gap-3"><LogOut/> logout</p>
 
