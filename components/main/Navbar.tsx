@@ -233,7 +233,7 @@ const Navbar = () => {
           <p className="flex gap-2 font-bold items-center text-[#446E6D]">
             <CircleUser size={20}/> {context?.user?.name?.split(" ")[0]}
             </p>
-        </div>: !context.loading&& <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm " onClick={()=>{ router.push('/signin');window.location.reload()}}>Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
+        </div>: !context.loading&& <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm " onClick={()=>{ router.push('/signin');}}>Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
         }
         {
           context.loading && <h1 className="w-20">
@@ -255,7 +255,7 @@ const Navbar = () => {
           {
             context.user && !context.loading && context.user?.role==='user' &&
               // <Link href="/admin">
-            <p className="text-nowrap flex gap-3" onClick={()=>{router.push('/customer');window.location.reload()}}>
+            <p className="text-nowrap flex gap-3" onClick={()=>{router.push('/customer');}}>
               <User /> Customer Dashboard
               </p>
               // </Link>

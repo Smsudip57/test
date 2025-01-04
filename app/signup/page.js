@@ -17,13 +17,13 @@ export default function Signup() {
 
   useEffect(() => {
     if (user) {
-      if(user?.role === 'admin'){router.push('/admin'); window.location.reload();}
+      if(user?.role === 'admin'){router.push('/admin'); ;}
         else if(user?.role === 'user'){
           router.push('/customer');
-          window.location.reload();
+          ;
         }else {
           router.push('/');
-          window.location.reload();
+          ;
         }
     }
   }, [user, router]);
@@ -49,10 +49,10 @@ export default function Signup() {
         // If user data is returned, set it to the context state
         setUser(response.data.user);
         customToast(response.data);
-        if(response?.data?.user?.role === 'admin'){router.push('/admin');window.location.reload();}
+        if(response?.data?.user?.role === 'admin'){router.push('/admin');;}
         else if(response?.data?.user?.role === 'user'){
           router.push('/customer');
-          window.location.reload();
+          ;
         }
       } else {
         customToast({success:false, message:'Something went wrong'});
