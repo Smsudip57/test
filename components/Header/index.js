@@ -57,7 +57,7 @@ const Header = () => {
     });
 
     setTimeout(() => {
-      router.push("/secret-location/admin/dashboard/login");
+      router.push("/admin/dashboard/login");
     }, 2000);
   };
 
@@ -144,7 +144,7 @@ const Header = () => {
             </div>
 
             {context.isLogin !== true ? (
-              <Link href="/secret-location/admin/login" >
+              <Link href="/admin/login" >
                 <Button className="btn-blue btn-lg btn-round">Sign In</Button>
               </Link>
             ) : (

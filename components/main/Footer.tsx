@@ -7,10 +7,10 @@ const Footer = () => {
   const [loaded, setloaded] = useState(false)
 
   useEffect(() => {
-    if (window.location.pathname.includes("secret-location/admin")
+    if (window.location.pathname.includes("/admin")
       ||!window
-      ||window.location.pathname.includes("login")
-      ||window.location.pathname.includes("register")
+      ||window.location.pathname.includes("signin")
+      ||window.location.pathname.includes("signup")
       ||window.location.pathname.includes("forgot-password")) {
       setIsAdminPath(true);
     }

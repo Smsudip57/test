@@ -25,7 +25,7 @@ export async function PUT(req) {
     }
 
     const user = await User.findById(decoded.userId).select('-password');
-    if (!user) {
+    if (!user || user.role !== 'admin') {
       return new Response(
         JSON.stringify({ success: false, message: 'Unauthorized' }),
         { status: 401 }

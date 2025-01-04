@@ -1,21 +1,33 @@
 'use client';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import { MyContext } from '@/context/context';  // Import UserContext
+import { useRouter } from 'next/navigation';
 
 export default function Example() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { setUser, customToast } = useContext(MyContext); // Get setUser function from context
+  const { setUser, customToast } = useContext(MyContext); 
+  const router = useRouter();
+  const context = useContext(MyContext);
+
+
+  useEffect(() => {
+      console.log(context.user);
+    if (context.user) {
+      router.replace('/dashboard');
+    }
+  }, [context.user, router]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validate input before submission (you can add further validation logic here)
     if (!email || !password) {
-      setError('Email and password are required');
+      customToast({success:false, message:'Email and password are required.'});
       return;
     }
 
@@ -29,8 +41,8 @@ export default function Example() {
       if (response.data.user) {
         // If user data is returned, set it to the context state
         setUser(response.data.user);
-        // Optionally, handle other logic (e.g., redirect or success message)
-        console.log('Logged in successfully:', response.data.user);
+        customToast(response.data);
+        router.push('/dashboard');
       } else {
         setError('Login failed');
       }
@@ -114,7 +126,7 @@ export default function Example() {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{' '}
-            <Link href="/" className='font-semibold text-[#446E6D] hover:text-[#345251]'>Sign up</Link>
+            <Link href="/signup" className='font-semibold text-[#446E6D] hover:text-[#345251]'>Sign up</Link>
           </p>
         </div>
       </div>

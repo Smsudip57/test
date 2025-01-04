@@ -3,8 +3,9 @@
 import React, { createContext, useState, useEffect,useRef, } from "react";
 import axios from "axios";
 import { toast } from 'react-toastify';
-import { useRouter } from "next/navigation";
+import { useRouter,notFound } from "next/navigation";
 import CircularProgress from '@mui/material/CircularProgress';
+
 
 export const MyContext = createContext(); 
 
@@ -38,9 +39,8 @@ export const ThemeProvider = ({ children }) => {
           withCredentials: true,
         },
       );
-
         if (response.data.success) {
-          setUser(response.data.data); 
+          setUser(response.data.user); 
         } else {
           setUser(null); 
           if(window.location.href.includes("dashboard")){
@@ -65,6 +65,13 @@ export const ThemeProvider = ({ children }) => {
     fetchUserData();
   }
   }, [])
+
+  useEffect(() => {
+     if((!user || user?.role !== 'admin') && window.location.href.includes("/customer")){
+      router.push("/signin");
+      customToast({success:false, message:'Please log in.'});
+    }
+  },[user])
   
   // progress && <CircularProgressWithLabel value={progress} />
 

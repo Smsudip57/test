@@ -128,7 +128,7 @@ const handleSubmit = async (e) => {
     if (response.data.success) {
       setSuccess('Project updated successfully!');
       setTimeout(() => {
-        router.push('/secret-location/admin/projects/edit');
+        router.push('/admin/projects/edit');
       }, 5000);
     } else {
       setError('Error updating project');

@@ -11,7 +11,9 @@ import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Link from 'next/link';
 import { useRouter, usePathname  } from "next/navigation";
-
+import { CircleUser,Crown,LogOut  } from 'lucide-react';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css'
 
 
 
@@ -48,6 +50,7 @@ const Navbar = () => {
   const [anchorE3, setAnchorE3] = React.useState(null);
   const [isAdminPath, setIsAdminPath] = useState(false);
   const [loaded, setloaded] = useState(false)
+  const [profileopen, setprofileopen] = useState(false)
   const context = useContext(MyContext);
   const router = useRouter();
   const pathname = usePathname();
@@ -99,10 +102,10 @@ const Navbar = () => {
   
   useEffect(() => {
     // This code runs only on the client
-    if (pathname.includes("secret-location/admin")
+    if (pathname.includes("/admin")
       ||!window
-      ||pathname.includes("login")
-      ||pathname.includes("register")
+      ||pathname.includes("signin")
+      ||pathname.includes("signup")
       ||pathname.includes("forgot-password")) {
       setIsAdminPath(true);
     }
@@ -216,8 +219,32 @@ const Navbar = () => {
           {/* </div> */}
         </div>
 
-        <div className="">
-        {!context.user && <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm " onClick={()=>{ router.push('/login');window.location.reload()}}>Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>}
+        <div className="w-auto cursor-pointer text-left relative" onClick={()=>setprofileopen(!profileopen)} onBlur={()=>setprofileopen(false)} >
+        {context.user && !context.loading ?<div>
+          <p className="flex gap-2 font-bold items-center text-[#446E6D]">
+            <CircleUser size={20}/> {context?.user?.name?.split(" ")[0]}
+            </p>
+        </div>: !context.loading&& <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm " onClick={()=>{ router.push('/login');window.location.reload()}}>Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
+        }
+        {
+          context.loading && <h1 className="w-24">
+            <SkeletonTheme baseColor="transparent" highlightColor="#E7F7F6">
+                <Skeleton count={1} className="ladding-6"/>
+            </SkeletonTheme>
+          </h1>
+        }
+        {profileopen && <div className="absolute top-[200%] right-0 p-4 w-content bg-white rounded-lg overflow-hidden text-gray-600 flex flex-col gap-4">
+          {
+            context.user && !context.loading && context.user?.role==='admin' &&
+              <Link href="/admin">
+            <p className="text-nowrap flex gap-3" onClick={()=>{window.location.reload()}}>
+              <Crown/> Admin Dashboard
+              </p>
+              </Link>
+          }
+          <p className="text-nowrap flex gap-3"><LogOut/> logout</p>
+
+        </div>}
         </div>
       </div>
     </div>

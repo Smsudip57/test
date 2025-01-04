@@ -1,5 +1,5 @@
 import dbConnect from '@/connect/dbconnect';
-import Product from '@/models/product';
+import Industry from '@/models/industry';
 import User from '@/models/user';
 import jwt from 'jsonwebtoken';
 import path from 'path';
@@ -41,23 +41,19 @@ export async function POST(req) {
   try {
     const formData = await req.formData(); // Parse the FormData sent from the client
     const Title = formData.get('Title');
+    const Heading = formData.get('Heading'); // New Heading field
     const detail = formData.get('detail');
-    const category = formData.get('category');
+    const Efficiency = formData.get('Efficiency') || 0;
+    const costSaving = formData.get('costSaving') || 0;
+    const customerSatisfaction = formData.get('customerSatisfaction') || 0;
     const image = formData.get('image'); // Image file
-    const subHeading1 = formData.get('subHeading1');
-    const subHeading1edtails = formData.get('subHeading1edtails');
-    const subHeading2 = formData.get('subHeading2');
-    const subHeading2edtails = formData.get('subHeading2edtails');
-    const subHeading3 = formData.get('subHeading3');
-    const subHeading3edtails = formData.get('subHeading3edtails');
-    console.log("FormData Received:");
-console.log({ Title, detail, category, image, subHeading1, subHeading1edtails, subHeading2, subHeading2edtails, subHeading3, subHeading3edtails });
 
+    console.log('FormData Received:', { Title, Heading, detail, Efficiency, costSaving, customerSatisfaction, image });
 
     // Validate input
-    if (!Title || !detail || !category || !image || !subHeading1 || !subHeading1edtails || !subHeading2 || !subHeading2edtails || !subHeading3 || !subHeading3edtails) {
+    if (!Title || !Heading || !detail || !image) {
       return NextResponse.json(
-        { success: false, message: 'All fields are required.' },
+        { success: false, message: 'Title, Heading, detail, and image are required.' },
         { status: 400 }
       );
     }
@@ -71,28 +67,25 @@ console.log({ Title, detail, category, image, subHeading1, subHeading1edtails, s
 
     const imageUrl = `/${filename}`; // Public access path for the image
 
-    // Create new product
-    const newProduct = new Product({
+    // Create new industry
+    const newIndustry = new Industry({
       Title,
+      Heading,
       detail,
-      category,
+      Efficiency: Number(Efficiency),
+      costSaving: Number(costSaving),
+      customerSatisfaction: Number(customerSatisfaction),
       image: imageUrl,
-      subHeading1,
-      subHeading1edtails,
-      subHeading2,
-      subHeading2edtails,
-      subHeading3,
-      subHeading3edtails,
     });
 
-    await newProduct.save();
+    await newIndustry.save();
 
     return NextResponse.json(
-      { success: true, message: 'Product created successfully.' },
+      { success: true, message: 'Industry created successfully.', industry: newIndustry },
       { status: 201 }
     );
   } catch (error) {
-    console.error('Error creating product:', error);
+    console.error('Error creating industry:', error);
     return NextResponse.json(
       { success: false, message: 'Something went wrong. Please try again.' },
       { status: 500 }

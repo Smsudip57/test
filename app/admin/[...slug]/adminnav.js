@@ -42,7 +42,7 @@ export default function Adminnav({user, login}) {
         </div>
             <nav>
             <ul className='flex space-x-16'>
-           {user && <li className='flex items-center gap-5'>
+           {/* {user && <li className='flex items-center gap-5'>
               <h1 className='text-[#446E6D] text-balg font-bold'>{isOn ? 'Is' : 'Not'} visible to strangers</h1>
                 <div
                   onClick={handleToggle}
@@ -58,11 +58,11 @@ export default function Adminnav({user, login}) {
                  {isLoading && <div className="animate-spin border-4 border-t-4 border-transparent border-t-[#446E6D] border-b-[#446E6D] rounded-full  aspect-square"></div>}
                 </div>
                 </div>
-                </li>}
+                </li>} */}
                 <li className='grid cursor-pointer'>
                  <h1 className='text-[#446E6D] text-xl font-bold'>
                   {user && user.name && `Welcome, ${user.name}!`}
-                  <Link href='/secret-location/admin/login'>
+                  <Link href='/admin/login'>
                   {!user && 'Please log in!'}
                   </Link>
                     </h1>

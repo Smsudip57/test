@@ -33,7 +33,7 @@ export async function POST(req) {
 
     // Verify user exists
     const user = await User.findById(userId).select('-password');
-    if (!user) {
+    if (!user || user.role !== 'admin') {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
         { status: 404 }

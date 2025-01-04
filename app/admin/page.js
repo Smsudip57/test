@@ -7,7 +7,7 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/secret-location/admin/home');
+    router.replace('/admin/home');
   });
 
   return null; 

@@ -48,6 +48,7 @@ export async function POST(req) {
     // Set the JWT as a cookie
     const response = NextResponse.json(
       {
+        success: true,
         message: 'Login successful.',
         user: {
           id: user._id,

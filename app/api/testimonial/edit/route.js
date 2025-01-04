@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import dbConnect from '@/connect/dbconnect';  // Ensure this is the correct path to your dbConnect file
-import Service from '@/models/service';
-import User from '@/models/user';
+import Testimonial from '@/models/testimonial'; // Testimonial model
+import User from '@/models/user'; // User model
 import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
 
@@ -62,40 +62,44 @@ export async function POST(req) {
 
   try {
     const formData = await req.formData(); // Parse the FormData sent from the client
-    const serviceId = formData.get('serviceId');
-    const Title = formData.get('Title');
-    const deltail = formData.get('deltail');
-    const category = formData.get('category');
+    const testimonialId = formData.get('testimonialId'); // Testimonial ID to update
+    const TestimonialText = formData.get('Testimonial');
+    const postedBy = formData.get('postedBy');
+    const role = formData.get('role');
+    const relatedService = formData.get('relatedService');
+    const relatedIndustry = formData.get('relatedIndustry');
     const image = formData.get('image'); // This is a file, if provided
 
     // Validate input
-    if (!serviceId || !Title || !deltail || !category) {
+    if (!testimonialId) {
       return NextResponse.json(
-        { success: false, message: 'All fields are required.' },
+        { success: false, message: 'All fields except image are required.' },
         { status: 400 }
       );
     }
 
-    // Find the service
-    const service = await Service.findById(serviceId);
-    if (!service) {
+    // Find the testimonial
+    const testimonial = await Testimonial.findById(testimonialId);
+    if (!testimonial) {
       return NextResponse.json(
-        { success: false, message: 'Service not found.' },
+        { success: false, message: 'Testimonial not found.' },
         { status: 404 }
       );
     }
 
-    // Update the service fields
-    service.Title = Title;
-    service.deltail = deltail;
-    service.category = category;
+    // Update the testimonial fields
+    testimonial.Testimonial = TestimonialText || testimonial.Testimonial;
+    testimonial.postedBy = postedBy || testimonial.postedBy;
+    testimonial.role = role || testimonial.role;
+    testimonial.relatedService = relatedService || testimonial.relatedService;
+    testimonial.relatedIndustry = relatedIndustry || testimonial.relatedIndustry;
 
     // Handle image upload if provided
     if (image) {
       // Check if there's an existing image to delete
-      if (service.image) {
+      if (testimonial.image) {
         // Assuming the image URL points to a file in the /public folder
-        const imagePath = path.join(process.cwd(), 'public', service.image);
+        const imagePath = path.join(process.cwd(), 'public', testimonial.image);
         try {
           if (fs.existsSync(imagePath)) {
             // Remove the old image
@@ -108,17 +112,17 @@ export async function POST(req) {
 
       // Save the new image and get the URL
       const imageUrl = await saveImage(image);
-      service.image = imageUrl;  // Update the service image URL
+      testimonial.image = imageUrl;  // Update the testimonial image URL
     }
 
-    await service.save();
+    await testimonial.save();
 
     return NextResponse.json(
-      { success: true, message: 'Service updated successfully.' },
+      { success: true, message: 'Testimonial updated successfully.' },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error updating service:', error);
+    console.error('Error updating testimonial:', error);
     return NextResponse.json(
       { success: false, message: 'Something went wrong. Please try again.' },
       { status: 500 }

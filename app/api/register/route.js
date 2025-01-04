@@ -4,57 +4,80 @@ import jwt from 'jsonwebtoken';
 import User from '@/models/user';
 import dbConnect from '@/connect/dbconnect';
 
-const JWT_SECRET = process.env.JWT_SECRET; 
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export async function POST(req) {
   await dbConnect();
 
   try {
-    const { name, email, password } = await req.json();
+    const { email, password, name, role } = await req.json();
 
-
-    if (!name || !email || !password) {
+    // Validate input
+    if (!email || !password || !name) {
       return NextResponse.json(
-        { error: 'Name, email, and password are required.' },
+        { success: false, message: 'Email, password, and name are required.' },
         { status: 400 }
       );
     }
 
+    // Check if the email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
-        { error: 'A user with this email already exists.' },
-        { status: 400 }
+        { success: false, message: 'Email is already registered.' },
+        { status: 409 }
       );
     }
 
+    // Restrict unauthorized admin creation
+    if (role === 'admin') {
+      return NextResponse.json(
+        { success: false, message: 'Not allowed.' },
+        { status: 403 }
+      );
+    }
+
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create a new user
     const newUser = await User.create({
-      name,
       email,
       password: hashedPassword,
+      role: role || 'user', // Default to 'user' if role is not provided
+      profile: { name },
     });
 
+    // Create JWT
     const token = jwt.sign({ userId: newUser._id }, JWT_SECRET);
 
+    // Set the JWT as a cookie
     const response = NextResponse.json(
-      { message: 'User registered successfully.' },
+      {
+        success: true,
+        message: 'Registration successful.',
+        user: {
+          id: newUser._id,
+          name: newUser.profile.name,
+          email: newUser.email,
+          role: newUser.role,
+        },
+      },
       { status: 201 }
     );
 
     response.cookies.set('user', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', 
-      sameSite: 'strict', 
-      path: '/',
+      httpOnly: true, // Prevents client-side JS access
+      secure: true, // Use secure cookies in production
+      sameSite: 'strict', // Protects against CSRF
+      path: '/', // Cookie available to all routes
     });
 
     return response;
   } catch (error) {
-    console.error('Error registering user:', error);
+    console.error('Error during registration:', error);
     return NextResponse.json(
-      { error: 'An error occurred while registering the user.' },
+      { success: false, message: 'An error occurred during registration.' },
       { status: 500 }
     );
   }

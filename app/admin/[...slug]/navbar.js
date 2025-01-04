@@ -10,7 +10,7 @@ export default function Navbar() {
   const routes = [
     {
       name: 'Services',
-      basePath: '/secret-location/admin/services',
+      basePath: '/admin/services',
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
@@ -19,7 +19,7 @@ export default function Navbar() {
     },
     {
       name: 'Products',
-      basePath: '/secret-location/admin/products',
+      basePath: '/admin/products',
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
@@ -28,13 +28,32 @@ export default function Navbar() {
     },
     {
       name: 'Projects',
-      basePath: '/secret-location/admin/projects',
+      basePath: '/admin/projects',
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
         { name: 'Delete', path: 'delete' },
       ],
     },
+    {
+      name: 'Testimonials',
+      basePath: '/admin/testimonials',
+      buttons: [
+        { name: 'Create', path: 'create' },
+        // { name: 'Edit', path: 'edit' },
+        { name: 'Delete', path: 'delete' },
+      ],
+    },
+    {
+      name: 'Industries',
+      basePath: '/admin/industries',
+      buttons: [
+        { name: 'Create', path: 'create' },
+        { name: 'Edit', path: 'edit' },
+        { name: 'Delete', path: 'delete' },
+      ],
+    },
+    // Add more routes as needed
   ];
 
   // Automatically set the dropdown state based on the current route

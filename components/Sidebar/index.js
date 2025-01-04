@@ -39,7 +39,7 @@ const Sidebar = () => {
             setIsLogin(true);
         } else {
             // if(router)
-            router.push("/secret-location/admin/login");
+            router.push("/admin/login");
         }
     }, []);
 
@@ -52,7 +52,7 @@ const Sidebar = () => {
         });
 
         setTimeout(() => {
-            router.push("/secret-location/admin/login");
+            router.push("/admin/login");
         }, 2000);
     };
 
@@ -67,8 +67,8 @@ const Sidebar = () => {
             <div className="sidebar">
                 <ul>
                     <li>
-                        <Link href="/secret-location/admin/" >
-                            <Button className={`w-100 ${getActiveClass("/secret-location/admin/")}`} onClick={() => {
+                        <Link href="/admin/" >
+                            <Button className={`w-100 ${getActiveClass("/admin/")}`} onClick={() => {
                                 isOpenSubmenu(0);
                                 context.setIsOpenNav(false);
                             }}>
@@ -87,12 +87,12 @@ const Sidebar = () => {
                         <div className={`submenuWrapper ${activeTab === 1 && isToggleSubmenu ? 'colapse' : 'colapsed'}`}>
                             <ul className='submenu'>
                                 <li>
-                                    <Link href="/secret-location/admin/homeBannerSlide/add" >
+                                    <Link href="/admin/homeBannerSlide/add" >
                                         Add Home Banner Slide
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/secret-location/admin/homeBannerSlide/list" >
+                                    <Link href="/admin/homeBannerSlide/list" >
                                         Home Slides List
                                     </Link>
                                 </li>
@@ -109,22 +109,22 @@ const Sidebar = () => {
                         <div className={`submenuWrapper ${activeTab === 2 && isToggleSubmenu ? 'colapse' : 'colapsed'}`}>
                             <ul className='submenu'>
                                 <li>
-                                    <Link href="/secret-location/admin/category" >
+                                    <Link href="/admin/category" >
                                         Category List
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/secret-location/admin/category/add" >
+                                    <Link href="/admin/category/add" >
                                         Add a category
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/secret-location/admin/category/subCategory" >
+                                    <Link href="/admin/category/subCategory" >
                                         Sub Category List
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/secret-location/admin/category/subCategory/add" >
+                                    <Link href="/admin/category/subCategory/add" >
                                         Add a sub category
                                     </Link>
                                 </li>
@@ -141,27 +141,27 @@ const Sidebar = () => {
                         <div className={`submenuWrapper ${activeTab === 3 && isToggleSubmenu ? 'colapse' : 'colapsed'}`}>
                             <ul className='submenu'>
                                 <li>
-                                    <Link href="/secret-location/admin/products" >
+                                    <Link href="/admin/products" >
                                         Product List
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/secret-location/admin/product/upload" >
+                                    <Link href="/admin/product/upload" >
                                         Product Upload
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/secret-location/admin/productRAMS/add" >
+                                    <Link href="/admin/productRAMS/add" >
                                         Add Product RAMS
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/secret-location/admin/productWEIGHT/add" >
+                                    <Link href="/admin/productWEIGHT/add" >
                                         Add Product WEIGHT
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/secret-location/admin/productSIZE/add" >
+                                    <Link href="/admin/productSIZE/add" >
                                         Add Product SIZE
                                     </Link>
                                 </li>
@@ -170,8 +170,8 @@ const Sidebar = () => {
                     </li>
 
                     <li>
-                        <Link href="/secret-location/admin/orders" >
-                            <Button className={`w-100 ${getActiveClass("/secret-location/admin/orders")}`} onClick={() => {
+                        <Link href="/admin/orders" >
+                            <Button className={`w-100 ${getActiveClass("/admin/orders")}`} onClick={() => {
                                 isOpenSubmenu(4);
                                 context.setIsOpenNav(false);
                             }}>
@@ -190,12 +190,12 @@ const Sidebar = () => {
                         <div className={`submenuWrapper ${activeTab === 5 && isToggleSubmenu ? 'colapse' : 'colapsed'}`}>
                             <ul className='submenu'>
                                 <li>
-                                    <Link href="/secret-location/admin/banners" >
+                                    <Link href="/admin/banners" >
                                         Banners List
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/secret-location/admin/banners/add" >
+                                    <Link href="/admin/banners/add" >
                                         Banner Upload
                                     </Link>
                                 </li>

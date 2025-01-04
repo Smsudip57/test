@@ -34,7 +34,7 @@ export default function LoginForm() {
       }
 
       // Login successful, redirect to a protected page
-      router.replace('/secret-location/admin/home'); // Adjust the redirect path as needed
+      router.replace('/admin/home'); // Adjust the redirect path as needed
     } catch (err) {
       console.error('Login error:', err);
       setError('Something went wrong. Please try again.');

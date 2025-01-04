@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema({
     ref: 'Service'
   }
  ],
+ isActive: {
+   type: Boolean,
+   default: false
+ }
 });
 
 

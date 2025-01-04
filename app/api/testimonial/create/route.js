@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs';
 import jwt from 'jsonwebtoken';
-import Service from '@/models/service'; 
+import Testimonial from '@/models/testimonial'; // Assume you have a Testimonial model
 import dbConnect from '@/connect/dbconnect'; 
 import User from '@/models/user';
 
@@ -19,16 +19,17 @@ export const POST = async (req) => {
 
     // Parse the incoming form data
     const formData = await req.formData();
-    const Title = formData.get('Title');
-    const detail = formData.get('detail');
-    const moreDetail = formData.get('moreDetail');
-    const category = formData.get('category');
+    const TestimonialText = formData.get('Testimonial');
+    const postedBy = formData.get('postedBy');
+    const role = formData.get('role');
+    const relatedService = formData.get('relatedService');
+    const relatedIndustry = formData.get('relatedIndustry');
     const file = formData.get('image'); // Image file
 
     // Validate required fields
-    if (!Title || !detail || !moreDetail || !category || !file) {
+    if (!TestimonialText || !postedBy || !role || !file) {
       return NextResponse.json(
-        { success: false, message: 'All fields are required' },
+        { success: false, message: 'Testimonial, PostedBy, Role, and Image are required' },
         { status: 400 }
       );
     }
@@ -54,7 +55,7 @@ export const POST = async (req) => {
 
     const { userId } = decoded;
 
-    const user = await User.findById(userId).select('-password'); 
+    const user = await User.findById(userId).select('-password');
     if (!user || user.role !== 'admin') {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
@@ -71,26 +72,27 @@ export const POST = async (req) => {
 
     const imageUrl = `/${filename}`; // Public access path for the image
 
-    // Save the service data to MongoDB
-    const newService = new Service({
-      Title,
-      deltail: detail,
-      moreDetail,
-      category,
+    // Save the testimonial data to MongoDB
+    const newTestimonial = new Testimonial({
+      Testimonial: TestimonialText,
+      postedBy,
+      role,
+      relatedService,
+      relatedIndustry,
       image: imageUrl,
     });
 
-    await newService.save();
+    await newTestimonial.save();
 
-    console.log( newService);
+    console.log(newTestimonial);
 
     return NextResponse.json({
       success: true,
-      message: 'Service created successfully',
-      service: newService,
+      message: 'Testimonial created successfully',
+      testimonial: newTestimonial,
     });
   } catch (error) {
-    console.error('Error creating service:', error);
+    console.error('Error creating testimonial:', error);
     return NextResponse.json(
       { success: false, message: error.message },
       { status: 500 }

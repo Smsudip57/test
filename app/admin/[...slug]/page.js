@@ -13,6 +13,13 @@ import DeleteProduct from './deleteproduct';
 import CreateProject from './createproject';
 import EditProject from './editproject';
 import DeleteProject from './deleteproject';
+import CreateIndustry from './createindustry';
+import EditIndustry from './editindustry';
+import DeleteIndustry from './deleteindustry';
+import CreateTestimonial from './createtestimonial';
+import EditTestimonial from './edittestimonial';
+
+
 
 
 export default async function Page({params}) {
@@ -35,8 +42,8 @@ export default async function Page({params}) {
     }
     
     
-    if (!userCookie && !login?.data?.loginOn) {
-      // notFound(); 
+    if (!userCookie) {
+      notFound(); 
     }
 
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getuserinfo`, {
@@ -48,11 +55,11 @@ export default async function Page({params}) {
     user = response?.data?.user;
   } catch (error) {
     console.log(error.response?.data?.error);
-    // if(!login?.data?.loginOn){notFound();}
+    if(!login?.data?.loginOn){notFound();}
   }
 
-  if (!user && !login?.data?.loginOn) {
-    // notFound();
+  if (!user || user?.role !== 'admin') {
+    notFound();
   }
 
   const slug = await params.slug;
@@ -92,6 +99,24 @@ export default async function Page({params}) {
           return <DeleteProject/>
         }else if(slug[1] === 'edit') {
           return <EditProject />
+        }
+      case 'industries':
+        if(slug[1] === 'create') {
+          return <CreateIndustry />
+        }else if(slug[1] === 'delete') {
+          return <DeleteIndustry/>
+        }else if(slug[1] === 'edit') {
+          return <EditIndustry />
+        }
+      case 'testimonials':
+        if(slug[1] === 'create') {
+          return <CreateTestimonial />
+        }
+        // else if(slug[1] === 'delete') {
+          // return <DeleteIndustry/>
+        // }
+        else if(slug[1] === 'edit') {
+          return <EditTestimonial />
         }
       case 'login':
         return <Login />
