@@ -16,15 +16,23 @@ import P2 from './p2';
 import P3 from './p3';
 import P4 from './p4';
 import Project from './project';
+import ServicePage from './servicePage';
 import { notFound } from 'next/navigation';
 
 export default async function AdminPage({params}) {
   let project;
+  let services;
+  let products;
   try {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/project/get`);
   if (response.data.success) {
     project = response.data.data;
   }
+    const responseto = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/service/getservice`);
+    const productResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/product/get`);
+
+    services  = responseto?.data?.services;
+    products = productResponse?.data?.products;
   } catch (e) {
     
   }
@@ -45,29 +53,25 @@ export default async function AdminPage({params}) {
       return false;
     }
   }
+
+
+  const checkService = (name) => {
+    const Name = decodeURIComponent(name);
+    if (services && services.length > 0 && Name && products && products.length > 0) {
+      const Service = services.find((service) => service.Title === Name);
+      const Product = products.filter((product) => product.category === Service._id);
+      return {Service, Product};
+    }else{
+      return false;
+    }
+  }
         
   if(slug[0] === 'products'){
-    switch (slug[1]) {
-      case 'webdev':
-        return <Webdev />;
-      case 'appdev':
-        return <Appdev />;
-      case 'microsoft':
-        return <Microsoft365 />;
-      case 'windows':
-        return <Windows />;
-      case 'erp':
-        return <Erp />;
-      case 'networksecurity':
-        return <Networksecurity />;
-      case 'itconsulting':
-        return <Itconsulting />;
-      case 'surveillancesystems':
-        return < Survailanence/>;
-      case 'iot':
-        return <Iot />;
-      case 'supportservice':
-        return < Supportservice/>;
+    if(checkService(slug[1])){
+      const serviceWithProduct = checkService(slug[1]);
+      return <ServicePage details={serviceWithProduct} />;
+    }else{
+        return notFound(); 
     }
   }else if(slug[0] === 'projects'){
     if(checkProject(slug[1])){

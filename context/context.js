@@ -43,7 +43,7 @@ export const ThemeProvider = ({ children }) => {
           setUser(response.data.user); 
         } else {
           setUser(null); 
-          if(window.location.href.includes("dashboard")){
+          if(window.location.href.includes("/customer")){
             router.push("/login");
             customToast({success:false, message:'Please log in.'});
           }
