@@ -117,7 +117,8 @@ const Navbar = () => {
   if (pathname.includes('/admin') ||
   pathname.includes('/signin') ||
   pathname.includes('/signup') ||
-  pathname.includes('/forgot-password')
+  pathname.includes('/forgot-password') ||
+  pathname.includes('/customer') 
   ) {
     return null;
   }
@@ -231,7 +232,7 @@ const Navbar = () => {
         >
         {context.user && !context.loading ?<div>
           <p className="flex gap-2 font-bold items-center text-[#446E6D]">
-            <CircleUser size={20}/> {context?.user?.name?.split(" ")[0]}
+            <CircleUser size={20}/> {context?.user?.name?.split(" ")[0] || context?.user?.profile?.name?.split(" ")[0]}
             </p>
         </div>: !context.loading&& <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm " onClick={()=>{ router.push('/signin');}}>Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
         }
@@ -247,7 +248,7 @@ const Navbar = () => {
           {
             context.user && !context.loading && context.user?.role==='admin' &&
               // <Link href="/admin">
-            <p className="text-nowrap flex gap-3" onClick={()=>{router.push('/admin');context?.setAdminnav(true)}}>
+            <p className="text-nowrap flex gap-3" onClick={()=>{router.push('/admin')}}>
               <Crown/> Admin Dashboard
               </p>
               // </Link>

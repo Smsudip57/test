@@ -39,11 +39,12 @@ export const ThemeProvider = ({ children }) => {
           withCredentials: true,
         },
       );
-        if (response.data.success) {
+      console.log(response.data);
+        if (response.data) {
           setUser(response.data.user); 
         } else {
           setUser(null); 
-          if(window.location.href.includes("/customer")){
+          if(pathname.includes("/customer")){
             router.push("/login");
             customToast({success:false, message:'Please log in.'});
           }
@@ -66,12 +67,7 @@ export const ThemeProvider = ({ children }) => {
   }
   }, [])
 
-  useEffect(() => {
-     if((!user || user?.role !== 'admin') && window.location.href.includes("/customer")){
-      router.push("/signin");
-      customToast({success:false, message:'Please log in.'});
-    }
-  },[user])
+ 
 
 
   

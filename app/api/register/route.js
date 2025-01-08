@@ -42,6 +42,7 @@ export async function POST(req) {
 
     // Create a new user
     const newUser = await User.create({
+      name,
       email,
       password: hashedPassword,
       role: role || 'user', // Default to 'user' if role is not provided

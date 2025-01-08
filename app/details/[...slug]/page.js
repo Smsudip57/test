@@ -1,20 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import Webdev from './webdev';
-import Appdev from './appdev';
-import Microsoft365 from './microsoft';
-import Windows from './windows';
-import Erp from './erp';
-import Networksecurity from './networksecurity';
-import Itconsulting from './itconsulting';
-import Supportservice from './supportservice';
-import Iot from './iot';
-import Survailanence from './surveillancesystems';
-
-import P1 from './p1';
-import P2 from './p2';
-import P3 from './p3';
-import P4 from './p4';
 import Project from './project';
 import ServicePage from './servicePage';
 import { notFound } from 'next/navigation';

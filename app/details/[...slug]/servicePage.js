@@ -23,10 +23,10 @@ export default function Page({ details }) {
     <div className="min-h-screen min-w-screen text-center relative font-sans">
     <title>{details?.Service?.Title ? `Webmedigital - ${details?.Service?.Title}` : 'Webmedigital - Projects'}</title>
       <Head>
-        <meta name="description" content={details?.Service?.detail || 'Explore this amazing details?.Service with a detailed showcase.'} />
+        <meta name="description" content={details?.Service?.moreDetail || 'Explore this amazing details?.Service with a detailed showcase.'} />
         <meta name="robots" content="index, follow" />
         <meta property="og:title" content={details?.Service?.Title || 'Project Showcase'} />
-        <meta property="og:description" content={details?.Service?.detail || 'Explore this amazing details?.Service with a detailed showcase.'} />
+        <meta property="og:description" content={details?.Service?.moreDetail || 'Explore this amazing details?.Service with a detailed showcase.'} />
         <meta property="og:image" content={details?.Service?.image || '/default-image.jpg'} />
         {/* <meta property="og:url" content={window.location.href} /> */}
       </Head>
@@ -34,7 +34,7 @@ export default function Page({ details }) {
       <header className="flex min-h-screen">
         <section className="basis-1/2 min-h-full pt-16 flex flex-col justify-center items-start text-start px-[10%] gap-10">
           <h1 className="text-6xl font-semibold text-[#446E6D]">{details?.Service?.Title}</h1>
-          <p className="text-xl font-sans">{details?.Service?.detail}</p>
+          <p className="text-xl font-sans">{details?.Service?.moreDetail}</p>
           <div className="flex font-sans gap-5">
             <button className="py-2 px-5 bg-[#446E6D] rounded-sm text-white">Watch Demo</button>
             <button className="py-2 px-5 text-[#446E6D] border-[#446E6D] border-2 rounded-sm bg-white">Try for free</button>
