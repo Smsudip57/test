@@ -41,12 +41,18 @@ export default async function Page({params}) {
 
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/service/getservice`);
+    
+    services  = response?.data?.services;
+  } catch (error) {
+    services = [];
+  }
+  try {
     const productResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/product/get`);
 
-    services  = response?.data?.services;
     products = productResponse?.data?.products;
   } catch (error) {
     console.log(error.response?.data);
+    products = [];
   }
 
   const slug = await params.slug;

@@ -56,7 +56,7 @@ const service = [
 ]
 
 
-export default function FacultyManagement() {
+export default function FacultyManagement({industry}) {
   const [f1, setf1] = useState(false)
   const [f2, setf2] = useState(false)
   const [f3, setf3] = useState(false)
@@ -71,12 +71,12 @@ export default function FacultyManagement() {
         <div className='basis-1/2 flex flex-col justify-center lg:pr-[10%] z-20 gap-8 order-2 lg:order-1'>
         <span className='text-2xl lg:text-4xl '>
           <strong>
-          Transform Your Facility Management with Our IT Solutions Optimize Operations and Enhance Efficiency
+          {industry?.Heading || 'Transform Your Facility Management with Our IT Solutions Optimize Operations and Enhance Efficiency'}
 
             </strong>
         </span>
-        <p className='text-base lg:text-lg'>
-        In the dynamic world of facility management, staying ahead means embracing technology that streamlines operations and enhances efficiency. Our services provide tailored solutions to help facility management companies optimize their processes, reduce costs, and improve service delivery.
+        <p className='text-base lg:text-lg whitespace-prewrap'>
+        {industry?.detail ||'In the dynamic world of facility management, staying ahead means embracing technology that streamlines operations and enhances efficiency. Our services provide tailored solutions to help facility management companies optimize their processes, reduce costs, and improve service delivery.'}
         </p>
         <div className='flex gap-5'>
           <button className='bg-[#446E6D] text-white py-2 px-4 flex items-center rounded font-semibold gap-2 cursor-pointer'><span>Try for free <OpenInNewIcon fontSize='inherit'/></span></button>
@@ -85,7 +85,7 @@ export default function FacultyManagement() {
         </div>
         </div>
         <div className='basis-1/2 px-10 lg:p-28 order-1 lg:order-2'>
-        <img className='w-full rounded overflow-hidden' src='/f-m-t.jpg'/>
+        <img className='w-full rounded overflow-hidden' src={ industry?.image ||'/f-m-t.jpg'}/>
         
         </div>
       </div>
@@ -99,7 +99,14 @@ export default function FacultyManagement() {
         <div className='mx-auto text-center  w-[90%] sm:w-[1000px]  z-20 py-16 lg:p-0'>
           <span className='text-2xl lg:text-3xl text-[#446E6D]'> 
             <strong>
-            Facility Management Companies Thriving with Our IT Services <span className='hidden lg:block'>Discover how leading facility management companies in UAE have transformed their operations and achieved remarkable success with our tailored IT solutions.</span>
+            {industry?.Title?.split(' ')?.map((word, index) => (
+              <span key={index}>
+                {word.split('').map((char, charIndex) =>
+                  charIndex === 0 ? char.toUpperCase() : char
+                ).join('')} {''}
+              </span>
+            )) || 'Facility Management'}
+             Companies Thriving with Our IT Services <span className='hidden lg:block'>Discover how leading facility management companies in UAE have transformed their operations and achieved remarkable success with our tailored IT solutions.</span>
               </strong>
 
           </span>
@@ -137,7 +144,7 @@ export default function FacultyManagement() {
             <div className='w-full min-h-[20vh] bg-[url(https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Retail_Salesforce-for-Retail_Statistics-Card_Card-1_Version-1-1.png?w=800)] bg-cover shadow-lg rounded-2xl overflow-hidden p-14 border-2 border-gray-200 text-base grid gap-2'>
              <span className='text-7xl'>
               <strong>
-              35%
+              {industry?.Efficiency || '35'}{"%"}
                 </strong>
               </span>
               <span className='text-2xl'>
@@ -152,7 +159,7 @@ export default function FacultyManagement() {
             <div className='w-full min-h-[20vh] bg-[url(https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Retail_Salesforce-for-Retail_Statistics-Card_Card-1_Version-1-1.png?w=800)] bg-cover shadow-lg rounded-2xl overflow-hidden p-14 border-2 border-gray-200 text-base grid gap-2'>
              <span className='text-7xl'>
               <strong>
-                20%
+              {industry?.costSaving || '20'}{"%"}
                 </strong>
               </span>
               <span className='text-2xl'>
@@ -167,7 +174,7 @@ export default function FacultyManagement() {
             <div className='w-full min-h-[20vh] bg-[url(https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Retail_Salesforce-for-Retail_Statistics-Card_Card-1_Version-1-1.png?w=800)] bg-cover shadow-lg rounded-2xl overflow-hidden p-14 border-2 border-gray-200 text-base grid gap-2'>
              <span className='text-7xl'>
               <strong>
-                40%
+              {industry?.customerSatisfaction || '40'}{"%"}
                 </strong>
               </span>
               <span className='text-2xl'>

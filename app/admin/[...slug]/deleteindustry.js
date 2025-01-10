@@ -26,7 +26,14 @@ const IndustryManager = () => {
     if (!confirmDelete) return;
 
     try {
-      const response = await axios.delete(`/api/industry/delete`, { data: { id } });
+      const response = await axios.delete(
+        `/api/industry/delete`, 
+        {
+          data: { id }, // Pass the id in the data object
+          withCredentials: true // Ensure cookies are sent with the request
+        }
+      );
+      
       if (response.status === 200) {
         setMessage('Industry deleted successfully.');
         setIndustries((prev) => prev.filter((industry) => industry._id !== id));

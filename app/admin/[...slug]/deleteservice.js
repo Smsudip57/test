@@ -37,9 +37,10 @@ export default function ServiceList() {
 
   // Delete a specific service
   const handleDelete = async (serviceId) => {
-    if (!confirm('Are you sure you want to delete this service?')) return;
+    console.log(serviceId);
+    setDeletingServiceId(serviceId); 
+    // if (!confirm('Are you sure you want to delete this service?')) return;
 
-    setDeletingServiceId(serviceId); // Track which service is being deleted
     try {
       await axios.post(
         '/api/service/deleteservice',

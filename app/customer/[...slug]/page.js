@@ -54,7 +54,7 @@ export default async function Page({params}) {
     if (!slug) {
         return (
           <div className='p-6 pt-24 h-[200vh]'>
-          {user && user.name && <h1 className='text-2xl font-bold'>Welcome, {user.name}!</h1>}
+          {user && user?.profile?.name && <h1 className='text-2xl font-bold'>Welcome, {user?.profile?.name}!</h1>}
           <p className='mt-4'>You are now logged in.</p>
         </div>
         )
@@ -65,7 +65,7 @@ export default async function Page({params}) {
       default:
         return (
           <div className='p-6 pt-24 h-[200vh]'>
-          {user && user.name && <h1 className='text-2xl font-bold'>Welcome, {user.name}!</h1>}
+          {user && user?.profile?.name && <h1 className='text-2xl font-bold'>Welcome, {user?.profile?.name}!</h1>}
           <p className='mt-4'>You are now logged in.</p>
         </div>
         )

@@ -21,7 +21,7 @@ const IndustryManager = () => {
     const fetchIndustries = async () => {
       try {
         const response = await axios.get('/api/industry/get');
-        setIndustries(response.data);
+        setIndustries(response.data.industries);
       } catch (error) {
         console.error('Failed to fetch industries:', error);
       }
@@ -76,6 +76,7 @@ const IndustryManager = () => {
     try {
       const response = await axios.post('/api/industry/edit', data, {
         headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true,
       });
 
       if (response.status === 200) {

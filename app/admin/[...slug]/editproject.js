@@ -22,7 +22,7 @@ export default function EditProject() {
     // Fetch projects on component mount
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('/api/project/get',{withCredentials:true});
+        const response = await axios.get('/api/project/get', { withCredentials: true });
         if (response.data.success) {
           setProjects(response.data.data);
         } else {
@@ -50,96 +50,99 @@ export default function EditProject() {
   // Handle input changes
   const handleInputChange = (e, sectionIndex) => {
     const { name, value } = e.target;
+
     if (name.startsWith('section')) {
+      // Extract the section index and field name from the input name
       const sectionId = parseInt(name.split('-')[1], 10);
+      const field = name.split('-')[2]; // This will be either Heading, subHeading, or subHeadingDetails
+
+      // Update the correct field in the corresponding section
       const updatedSections = [...formValues.sections];
-      updatedSections[sectionId][name.split('-')[0]] = value;
+      updatedSections[sectionId][field] = value;
+
       setFormValues({ ...formValues, sections: updatedSections });
     } else {
+      // For non-section fields like Title, detail
       setFormValues({ ...formValues, [name]: value });
     }
   };
 
-  // Handle image changes
   // Handle image changes for the main project image and section images
-const handleImageChange = (e, sectionIndex) => {
-  const { name, files } = e.target;
+  const handleImageChange = (e, sectionIndex) => {
+    const { name, files } = e.target;
 
-  // Check if the field is a section
-  if (name.startsWith('section')) {
-    const sectionId = parseInt(name.split('-')[1], 10);  // Extract section index
-    const updatedSections = [...formValues.sections];
-    // console.log(updatedSections);
-    // console.log(name.split('-')[0]);
-    // Check if a file is selected and update the section's image
-    if (files && files[0]) {
-      updatedSections[sectionId]['image'] = files[0];
+    // Check if the field is a section
+    if (name.startsWith('section')) {
+      const sectionId = parseInt(name.split('-')[1], 10);  // Extract section index
+      const updatedSections = [...formValues.sections];
+      if (files && files[0]) {
+        updatedSections[sectionId]['image'] = files[0]; // Update section image
+      } else {
+        updatedSections[sectionId]['image'] = null; // If no file selected, set to null
+      }
+
+      setFormValues({ ...formValues, sections: updatedSections });
     } else {
-      updatedSections[sectionId][name.split('-')[0]] = null;
+      // For the main project image
+      if (files && files[0]) {
+        setFormValues({ ...formValues, [name]: files[0] });
+      }
+    }
+  };
+
+  // Handle form submission (Save edited project)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+
+    // Create FormData instance for the POST request
+    const formData = new FormData();
+    formData.append('_id', selectedProject._id);
+    formData.append('Title', formValues.Title);
+    formData.append('detail', formValues.detail);
+
+    // Append the main project image if it's selected
+    if (formValues.image) {
+      formData.append('image', formValues.image);  // Append the actual image file
     }
 
-    setFormValues({ ...formValues, sections: updatedSections });
-  } else {
-    // If it's the main project image, update formValues directly
-    if (files && files[0]) {
-      setFormValues({ ...formValues, [name]: files[0] });
-    }
-  }
-};
-
-// Handle form submission (Save edited project)
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setSaving(true);
-
-  // Create FormData instance for the POST request
-  const formData = new FormData();
-  formData.append('_id', selectedProject._id);
-  formData.append('Title', formValues.Title);
-  formData.append('detail', formValues.detail);
-
-  // Append the main project image if it's selected
-  if (formValues.image) {
-    formData.append('image', formValues.image);  // Append the actual image file
-  }
-
-  console.log(formValues.sections);
-  // Append section fields and files
-  formValues.sections.forEach((section, index) => {
-    formData.append(`section[${index}][Heading]`, section.Heading);
-    if (section.image) {
-      formData.append(`section[${index}][image]`, section.image);  // Append image file for section
-    } else {
-      formData.append(`section[${index}][image]`, 'null');  // Handle case when no image is uploaded for section
-    }
-    formData.append(`section[${index}][subHeading1]`, section.subHeading1);
-    formData.append(`section[${index}][subHeading2]`, section.subHeading2);
-    formData.append(`section[${index}][subHeading3]`, section.subHeading3);
-    formData.append(`section[${index}][subHeadingdetails1]`, section.subHeadingdetails1);
-    formData.append(`section[${index}][subHeadingdetails2]`, section.subHeadingdetails2);
-    formData.append(`section[${index}][subHeadingdetails3]`, section.subHeadingdetails3);
-  });
-
-  try {
-    const response = await axios.post(`/api/project/edit`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+    // Append section fields and files
+    formValues.sections.forEach((section, index) => {
+      formData.append(`section[${index}][Heading]`, section.Heading);
+      if (section.image) {
+        formData.append(`section[${index}][image]`, section.image);  // Append image file for section
+      } else {
+        formData.append(`section[${index}][image]`, 'null');  // Handle case when no image is uploaded for section
+      }
+      formData.append(`section[${index}][subHeading1]`, section.subHeading1);
+      formData.append(`section[${index}][subHeading2]`, section.subHeading2);
+      formData.append(`section[${index}][subHeading3]`, section.subHeading3);
+      formData.append(`section[${index}][subHeadingdetails1]`, section.subHeadingdetails1);
+      formData.append(`section[${index}][subHeadingdetails2]`, section.subHeadingdetails2);
+      formData.append(`section[${index}][subHeadingdetails3]`, section.subHeadingdetails3);
     });
 
-    if (response.data.success) {
-      setSuccess('Project updated successfully!');
-      setTimeout(() => {
-        router.push('/admin/projects/edit');
-      }, 5000);
-    } else {
-      setError('Error updating project');
-    }
-  } catch (err) {
-    setError('Error updating project');
-  } finally {
-    setSaving(false);
-  }
-};
+    try {
+      const response = await axios.post(`/api/project/edit`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true
+      });
 
+      if (response.data.success) {
+        setSuccess('Project updated successfully!');
+        setTimeout(() => {
+          router.push('/admin/projects/edit');
+        }, 5000);
+      } else {
+        setError('Error updating project');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Error updating project');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -251,8 +254,7 @@ const handleSubmit = async (e) => {
                       value={section[`subHeadingdetails${subIndex}`]}
                       onChange={(e) => handleInputChange(e, index)}
                       className="mt-1 block w-full p-2 border rounded-md"
-                      rows="2"
-                      required
+                      rows="3"
                     />
                   </div>
                 ))}
@@ -261,15 +263,13 @@ const handleSubmit = async (e) => {
           </div>
 
           {/* Submit Button */}
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md mt-5"
-              disabled={saving}
-            >
-              {saving ? 'Saving...' : 'Update Project'}
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="mt-4 py-2 px-4 bg-blue-600 text-white rounded-md"
+            disabled={saving}
+          >
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
         </form>
       )}
     </div>

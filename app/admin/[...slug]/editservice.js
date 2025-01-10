@@ -12,6 +12,7 @@ export default function EditServiceList() {
   const [formValues, setFormValues] = useState({
     Title: '',
     deltail: '',
+    moreDetail: '',
     category: '',
     image: null,
   });
@@ -59,6 +60,7 @@ export default function EditServiceList() {
       Title: service.Title,
       deltail: service.deltail,
       category: service.category,
+      moreDetail: service.moreDetail,
       image: null,
     });
   };
@@ -66,7 +68,7 @@ export default function EditServiceList() {
   // Close edit modal
   const closeEditModal = () => {
     setEditingService(null);
-    setFormValues({ Title: '', deltail: '', category: '', image: null });
+    setFormValues({ Title: '', deltail: '', category: '', image: null, moreDetail: '' });
   };
 
   // Handle input changes
@@ -88,6 +90,7 @@ export default function EditServiceList() {
     formData.append('Title', formValues.Title);
     formData.append('deltail', formValues.deltail);
     formData.append('category', formValues.category);
+    formData.append('moreDetail', formValues.moreDetail);
     if (formValues.image) {
       formData.append('image', formValues.image);
     }
@@ -170,7 +173,7 @@ export default function EditServiceList() {
 
       {/* Modal for editing */}
       {editingService && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed z-10 inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-lg font-bold mb-4">Edit Service</h2>
             <div className="mb-4">
@@ -188,6 +191,16 @@ export default function EditServiceList() {
               <textarea
                 name="deltail"
                 value={formValues.deltail}
+                onChange={handleInputChange}
+                className="mt-1 block w-full p-2 border rounded-md"
+                rows="4"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">More Detail</label>
+              <textarea
+                name="moreDetail"
+                value={formValues.moreDetail}
                 onChange={handleInputChange}
                 className="mt-1 block w-full p-2 border rounded-md"
                 rows="4"

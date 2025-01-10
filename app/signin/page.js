@@ -41,8 +41,10 @@ export default function Example() {
 
     try {
       // Send a POST request with email and password
-      const response = await axios.post('/api/login', { email, password });
-
+      const response = await axios.post('/api/login', { email, password },
+        {withCredentials: true}
+      );
+      console.log(response.data);
       if (response.data.user) {
         // If user data is returned, set it to the context state
         setUser(response.data.user);

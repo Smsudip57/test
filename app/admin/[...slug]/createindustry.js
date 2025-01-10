@@ -44,6 +44,7 @@ const CreateIndustry = () => {
     try {
       const response = await axios.post('/api/industry/create', data, {
         headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true
       });
 
       if (response.status === 201) {

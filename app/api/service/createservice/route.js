@@ -70,7 +70,7 @@ export const POST = async (req) => {
     fs.writeFileSync(filePath, buffer); // Save file to disk
 
     const imageUrl = `/${filename}`; // Public access path for the image
-
+    console.log(imageUrl);
     // Save the service data to MongoDB
     const newService = new Service({
       Title,

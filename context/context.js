@@ -17,6 +17,7 @@ export const ThemeProvider = ({ children }) => {
   const fetchedOnce = useRef(false); 
   const router = useRouter();
   const pathname = usePathname();
+  axios.defaults.baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
 
   const customToast = (value) => {

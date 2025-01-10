@@ -23,14 +23,24 @@ export default async function Page({params}) {
   
   const slug = await params.slug;
 
+  let industry ;
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/industry/get`);
+    if (response.data.success) {
+      industry = response.data.industries.find((industry) => industry?.Title.toLowerCase() === decodeURIComponent(slug).toLowerCase());
+    }
+  } catch (error) {
+    industry = null
+  }
+
 
   const renderContent = () => {
     if (!slug) {
       notFound();
     }
 
-    if(industries.map((industry) => industry.toLowerCase()).includes(decodeURIComponent(slug))){
-        return <Content  />;
+    if(true){
+        return <Content industry={industry} />;
 
     }else{
         notFound();
