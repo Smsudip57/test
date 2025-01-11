@@ -36,7 +36,9 @@ export default function Adminnav({user, login}) {
 
     const handleLogout = async() => {
       try {
-        const response = await axios.get('/api/user/logout');
+        const response = await axios.get('/api/user/logout',
+          {withCredentials: true}
+        );
         if(response?.data?.success){
           context?.setUser(null);
           context?.customToast(response?.data);
