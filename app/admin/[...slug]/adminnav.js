@@ -14,10 +14,10 @@ export default function Adminnav({user, login}) {
   const router = useRouter();
 
   React.useEffect(()=>{
-    if((!context.user||context.user.role!=='admin')){
+    if(!context.user||context.user.role!=='admin'){
       notFound();
     }
-  },[context.user,context.loading])
+  },[context.user])
 
   const handleToggle = async() => {
     try {
