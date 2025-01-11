@@ -30,7 +30,7 @@ export default async function Page({params}) {
   try {
     const cookieHeader = cookies(); 
     const userCookie = cookieHeader.get('user')?.value; 
-    
+    console.log(cookieHeader);
     
     
     if (!userCookie) {
