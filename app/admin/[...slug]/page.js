@@ -31,18 +31,10 @@ export default async function Page({params}) {
     const cookieHeader = cookies(); 
     const userCookie = cookieHeader.get('user')?.value; 
     
-    try {
-      login = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/setting/checkLogin`, {
-      headers: {
-        Cookie: `user=${userCookie}`, 
-      },
-
-    });
-    } catch (error) {
-    }
     
     
     if (!userCookie) {
+      console.log('User cookie not found');
       notFound(); 
     }
 
@@ -50,10 +42,13 @@ export default async function Page({params}) {
       headers: {
         Cookie: `user=${userCookie}`, 
       },
+      withCredentials: true
     });
+    console.log(response?.data);
 
     user = response?.data?.user;
   } catch (error) {
+    console.log(error);
     console.log(error.response?.data?.error);
     if(!login?.data?.loginOn){notFound();}
   }
