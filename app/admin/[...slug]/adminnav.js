@@ -48,9 +48,9 @@ export default function Adminnav({user, login}) {
           {withCredentials: true}
         );
         if(response?.data?.success){
+          router.push('/');
           context?.setUser(null);
           context?.customToast(response?.data);
-          router.push('/');
         }
       } catch (error) {
         context?.customToast({success:false, message:'Something went wrong'})

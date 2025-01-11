@@ -15,6 +15,7 @@ import { CircleUser,Crown,LogOut,User   } from 'lucide-react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css'
 import axios from "axios";
+import path from "path";
 
 
 
@@ -120,13 +121,10 @@ const Navbar = () => {
   pathname.includes('/signin') ||
   pathname.includes('/signup') ||
   pathname.includes('/forgot-password') ||
-  pathname.includes('/customer') 
+  (pathname.includes('/customer') && !pathname.includes('/customer-success-stories'))
   ) {
     return null;
   }
-  // if (!loaded) {
-  //   return null;
-  // }
   
   return (
     <div className="w-full relative xl:block ">

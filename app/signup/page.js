@@ -31,41 +31,56 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Validate input before submission
-    if (!email || !password || !name) {
+    if (!email || !password || !name ) {
       customToast({ success: false, message: 'All fields are required.' });
       return;
     }
-
+  
     // Clear any existing errors
     setError('');
-
+  
+    // Create a new AbortController instance
+    const controller = new AbortController();
+    const { signal } = controller;
+  
     try {
-      // Send a POST request with email, name, password, and role
-      const response = await axios.post('/api/register', { email, name, password, role });
-
+      // Send a POST request with email, name, password, and role, including the abort signal
+      const response = await axios.post('/api/register', { email, name, password, role }, {
+        signal: signal, // Attach the abort signal here
+      });
+  
       if (response.data.user) {
         // If user data is returned, set it to the context state
         setUser(response.data.user);
         customToast(response.data);
-        if(response?.data?.user?.role === 'admin'){router.push('/admin');;}
-        else if(response?.data?.user?.role === 'user'){
+        if (response?.data?.user?.role === 'admin') {
+          router.push('/admin');
+        } else if (response?.data?.user?.role === 'user') {
           router.push('/customer');
-          ;
         }
       } else {
-        customToast({success:false, message:'Something went wrong'});
+        customToast({ success: false, message: 'Something went wrong' });
       }
     } catch (err) {
-      customToast(err.response?.data || { success: false, message: 'An error occurred' });
+      // Handle errors, including request cancellation
+      if (err.name === 'AbortError') {
+        console.log('Request was aborted');
+      } else {
+        customToast(err.response?.data || { success: false, message: 'An error occurred' });
+      }
     }
-
+  
     // After successful submission, reset the fields
     setEmail('');
     setPassword('');
     setName('');
+  
+    // Optional: you could abort the request after a timeout or some other condition
+    // controller.abort(); // This can be used to cancel the request if needed
   };
+  
 
   return (
     <>
