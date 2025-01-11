@@ -40,7 +40,6 @@ export const ThemeProvider = ({ children }) => {
           withCredentials: true,
         },
       );
-      console.log(response.data);
         if (response.data) {
           setUser(response.data.user); 
         } else {

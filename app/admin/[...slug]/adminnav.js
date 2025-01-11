@@ -3,7 +3,7 @@ import React,{useState} from 'react'
 import LogoutIcon from '@mui/icons-material/Logout';
 import axios from 'axios';
 import Link from 'next/link';
-import { set } from 'mongoose';
+import { notFound } from 'next/navigation';
 import {useRouter} from 'next/navigation';
 import { MyContext } from '@/context/context';
 
@@ -14,8 +14,11 @@ export default function Adminnav({user, login}) {
   const router = useRouter();
 
   React.useEffect(()=>{
-    setIsOn(login);
-  },[login])
+    if(!context.loading&& (!context.user||context.user.role!=='admin')){
+      notFound();
+    }
+  },[context.user,context.loading])
+
   const handleToggle = async() => {
     try {
       setisLoading(true);
@@ -83,7 +86,7 @@ export default function Adminnav({user, login}) {
                  <h1 className='text-[#446E6D] text-xl font-bold'>
                   {context?.user && context?.user?.profile?.name && `Welcome, ${context?.user?.profile?.name}!`}
                   <Link href='/admin/login'>
-                  {!user && 'Please log in!'}
+                  {!context?.user && 'Please log in!'}
                   </Link>
                     </h1>
                 </li>
