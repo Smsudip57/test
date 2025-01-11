@@ -81,7 +81,7 @@ export default function Adminnav({user, login}) {
                 </li>} */}
                 <li className='grid cursor-pointer'>
                  <h1 className='text-[#446E6D] text-xl font-bold'>
-                  {user && user?.profile?.name && `Welcome, ${user?.profile?.name}!`}
+                  {context?.user && context?.user?.profile?.name && `Welcome, ${context?.user?.profile?.name}!`}
                   <Link href='/admin/login'>
                   {!user && 'Please log in!'}
                   </Link>
