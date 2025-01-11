@@ -12,15 +12,16 @@ export default function Adminnav({user, login}) {
   const [isLoading,setisLoading] = useState(false)
   const context = React.useContext(MyContext);
   const router = useRouter();
+  const [loginout, setloginout] = useState(false);
 
   React.useEffect(()=>{
-    if(!context.loading&& (!context.user||context.user.role!=='admin')){
+    if(!context.loading&&!loginout&& (!context.user||context.user.role!=='admin')){
       notFound();
     }
   },[context.user,context.loading])
   if(context.loading){
     return(
-      <div className='min-h-screen min-w-screen bg-transparent'></div>
+      <div className='fixed top-0 bg-white left-0 z-50 min-h-screen min-w-screen bg-transparent'></div>
     )
   }
 
@@ -48,7 +49,9 @@ export default function Adminnav({user, login}) {
           {withCredentials: true}
         );
         if(response?.data?.success){
+          console.log(true)
           router.push('/');
+          setloginout(true);
           context?.setUser(null);
           context?.customToast(response?.data);
         }

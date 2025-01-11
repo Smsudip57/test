@@ -32,7 +32,6 @@ export default async function Page({params}) {
 
 
   const renderContent = () => {
-    console.log(slug)
     if (!slug) {
         return (
           <div className='p-6 pt-24 h-[200vh]'>

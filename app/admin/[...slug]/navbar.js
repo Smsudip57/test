@@ -17,7 +17,7 @@ export default function Navbar() {
     {
       icons : <LayoutTemplate/>,
       name: 'Website',
-      basePath: '/admin/website/services',
+      basePath: '/admin/website/services/create',
     },
     // Add more routes as needed
   ];

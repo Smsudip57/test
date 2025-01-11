@@ -16,9 +16,9 @@ export default function Example() {
 
   useEffect(() => {
     if (context?.user) {
-      if(context?.user?.role === 'admin'){router.push('/admin'); ;}
+      if(context?.user?.role === 'admin'){router.push('/admin/dashboard'); ;}
         else if(context?.user?.role === 'user'){
-          router.push('/customer');
+          router.push('/customer/dashboard');
           ;
         }else {
           router.push('/');
@@ -58,15 +58,14 @@ export default function Example() {
         customToast(response.data);
   
         if (response?.data?.user?.role === 'admin') {
-          router.push('/admin');
+          router.push('/admin/dashboard');
         } else if (response?.data?.user?.role === 'user') {
-          router.push('/customer');
+          router.push('/customer/dashboard');
         }
       } else {
         customToast({ success: false, message: 'Something went wrong' });
       }
     } catch (err) {
-      // Handle errors, including request cancellation
       if (err.name === 'AbortError') {
         console.log('Request was aborted');
       } else {
