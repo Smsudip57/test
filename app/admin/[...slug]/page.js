@@ -25,38 +25,8 @@ import Editwebsite from './editwebsite';
 export default async function Page({params}) {
   let user = null;
   let login
-
-
-  try {
-    const cookieHeader = cookies(); 
-    const userCookie = cookieHeader.get('user')?.value; 
-    console.log(cookieHeader);
-    
-    
-    if (!userCookie) {
-      console.log('User cookie not found');
-      // notFound(); 
-    }
-
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getuserinfo`, {
-      headers: {
-        Cookie: `user=${userCookie}`, 
-      },
-      withCredentials: true
-    });
-    console.log(response?.data);
-
-    user = response?.data?.user;
-  } catch (error) {
-    console.log(error);
-    console.log(error.response?.data?.error);
-    // if(!login?.data?.loginOn){notFound();}
-  }
-
-  if (!user || user?.role !== 'admin') {
-    // notFound();
-  }
-
+  
+   
   const slug = await params.slug;
 
 
