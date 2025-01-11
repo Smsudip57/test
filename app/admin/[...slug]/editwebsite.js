@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import axios from 'axios';
 import Adminnav from './adminnav';
-import Navbar from './navbar';
+import Navbar from './navbarr';
 import CreateService from './createService';
 import DeleteService from './deleteservice';
 import EditService from './editservice';
@@ -18,54 +18,21 @@ import EditIndustry from './editindustry';
 import DeleteIndustry from './deleteindustry';
 import CreateTestimonial from './createtestimonial';
 import EditTestimonial from './edittestimonial';
-import Editwebsite from './editwebsite';
 
 
 
 export default async function Page({params}) {
-  let user = null;
-  let login
-
-
-  try {
-    const cookieHeader = cookies(); 
-    const userCookie = cookieHeader.get('user')?.value; 
-    
-    try {
-      login = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/setting/checkLogin`, {
-      headers: {
-        Cookie: `user=${userCookie}`, 
-      },
-
-    });
-    } catch (error) {
+  const slug = params.filter((element,i) => {
+    if(i !== 0) {
+      return element
     }
-    
-    
-    if (!userCookie) {
-      notFound(); 
-    }
-
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getuserinfo`, {
-      headers: {
-        Cookie: `user=${userCookie}`, 
-      },
-    });
-
-    user = response?.data?.user;
-  } catch (error) {
-    console.log(error.response?.data?.error);
-    if(!login?.data?.loginOn){notFound();}
-  }
-
-  if (!user || user?.role !== 'admin') {
-    notFound();
-  }
-
-  const slug = await params.slug;
+  });;
+  const user = {}
+  const login = {}
 
 
   const renderContent = () => {
+    console.log(slug)
     if (!slug) {
         return (
           <div className='p-6 pt-24 h-[200vh]'>
@@ -76,8 +43,6 @@ export default async function Page({params}) {
     }
         
     switch (slug[0]) {
-      case 'website':
-        return <Editwebsite params={slug}/>
       case 'services':
         if(slug[1] === 'create') {
           return <CreateService />
@@ -135,11 +100,10 @@ export default async function Page({params}) {
 
 
   return (
-    <div className='relative bg-[#F3F4F6]'>
-      <Adminnav user={user} login={login?.data?.loginOn}/>
-      <div className='w-full relative flex'>
+    <div className='relative'>
+      <div className='w-full relative flex flex-col gap-5'>
         <Navbar />
-        <div className='p-6 pt-28 w-full'>
+        <div className='p-6 bg-white rounded-md shadow  w-full'>
           {renderContent()}
         </div>
       </div>

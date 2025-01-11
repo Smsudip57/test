@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import {LayoutTemplate,LayoutDashboard  } from 'lucide-react'
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState('');
@@ -9,49 +10,14 @@ export default function Navbar() {
 
   const routes = [
     {
-      name: 'Services',
-      basePath: '/admin/services',
-      buttons: [
-        { name: 'Create', path: 'create' },
-        { name: 'Edit', path: 'edit' },
-        { name: 'Delete', path: 'delete' },
-      ],
+      icons : <LayoutDashboard />,
+      name: 'Dashboard',
+      basePath: '/admin/dashboard',
     },
     {
-      name: 'Products',
-      basePath: '/admin/products',
-      buttons: [
-        { name: 'Create', path: 'create' },
-        { name: 'Edit', path: 'edit' },
-        { name: 'Delete', path: 'delete' },
-      ],
-    },
-    {
-      name: 'Projects',
-      basePath: '/admin/projects',
-      buttons: [
-        { name: 'Create', path: 'create' },
-        { name: 'Edit', path: 'edit' },
-        { name: 'Delete', path: 'delete' },
-      ],
-    },
-    {
-      name: 'Testimonials',
-      basePath: '/admin/testimonials',
-      buttons: [
-        { name: 'Create', path: 'create' },
-        // { name: 'Edit', path: 'edit' },
-        { name: 'Delete', path: 'delete' },
-      ],
-    },
-    {
-      name: 'Industries',
-      basePath: '/admin/industries',
-      buttons: [
-        { name: 'Create', path: 'create' },
-        { name: 'Edit', path: 'edit' },
-        { name: 'Delete', path: 'delete' },
-      ],
+      icons : <LayoutTemplate/>,
+      name: 'Website',
+      basePath: '/admin/website/services',
     },
     // Add more routes as needed
   ];
@@ -69,7 +35,7 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <div className="h-screen w-1/5 pt-28 pl-[50px] bg-[#C1EBE7] sticky top-0 overflow-hidden">
+    <div className="h-screen w-1/5 pt-28 px-[25px] bg-white shadow-md sticky top-0 overflow-hidden">
       {routes.map((route) => {
         const isActiveDropdown = openDropdown === route.name;
 
@@ -78,14 +44,22 @@ export default function Navbar() {
             {/* Dropdown Button */}
             <button
               onClick={() =>
-                setOpenDropdown((prev) => (prev === route.name ? '' : route.name))
+              {
+                if(!route?.button || route?.button?.length === 0) {
+                  setOpenDropdown((prev) =>  route.name);
+                  router.push(route.basePath);
+                }else{
+                  setOpenDropdown((prev) => (prev === route.name ? '' : route.name));
+                }
               }
-              className={`inline-flex justify-between w-full  border-b border-gray-300 shadow-sm px-5 py-3 font-medium text-gray-700 ${
-                isActiveDropdown ? 'bg-[#446E6D] text-white' : 'hover:bg-[#446e6d61] hover:text-white'
+              }
+              className={`inline-flex gap-3 rounded-md w-full border-gray-300 shadow-sm px-5 py-3 font-medium  ${
+                isActiveDropdown ? 'bg-[#446e6d3b] text-[#446E6D]'
+                          : 'hover:bg-black/5 text-gray-500'
               } focus:outline-none text-left`}
             >
-              {route.name}
-              <svg
+              {route.icons}{route.name}
+              {route?.buttons?.length>0 &&<svg
                 className={`-mr-1 ml-2 h-5 w-5 ${
                   isActiveDropdown ? 'rotate-180' : ''
                 } transition-transform`}
@@ -99,13 +73,13 @@ export default function Navbar() {
                   d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.27a.75.75 0 01.02-1.06z"
                   clipRule="evenodd"
                 />
-              </svg>
+              </svg>}
             </button>
 
             {/* Dropdown Menu */}
             {isActiveDropdown && (
               <div className="ml-[20px] border-l-2 border-[#446E6D] w-full origin-top-right divide-y divide-gray-100 focus:outline-none">
-                {route.buttons.map((button) => {
+                {route.buttons?.map((button) => {
                   const isActiveButton =
                     pathname === `${route.basePath}/${button.path}`;
                   return (
