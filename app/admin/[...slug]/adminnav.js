@@ -21,7 +21,7 @@ export default function Adminnav({user, login}) {
   },[context.user,context.loading])
   if(context.loading){
     return(
-      <div className='fixed top-0 bg-white left-0 z-50 min-h-screen min-w-screen bg-transparent'></div>
+      <div className='fixed top-0 bg-white left-0 z-50 min-h-screen min-w-screen'></div>
     )
   }
 

@@ -244,11 +244,13 @@ const Navbar = () => {
           </h1>
         }
         {profileopen && context?.user && context?.user?.role && <div className="absolute top-[200%] right-0 p-4 w-content bg-white rounded-lg overflow-hidden text-gray-600 flex flex-col gap-4 border-[3px] border-[#E7F7F6]/[70]
-        shadow-sm shadow-[#E7F7F6]">
+        shadow-sm shadow-[#E7F7F6]"
+          onMouseLeave={()=>setprofileopen(false)}
+        >
           {
             context.user && !context.loading && context.user?.role==='admin' &&
               // <Link href="/admin">
-            <p className="text-nowrap flex gap-3" onClick={()=>{router.push('/admin')}}>
+            <p className="text-nowrap flex gap-3" onClick={()=>{router.push('/admin/dashboard')}}>
               <Crown/> Admin Dashboard
               </p>
               // </Link>

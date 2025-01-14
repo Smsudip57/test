@@ -17,6 +17,8 @@ export const ThemeProvider = ({ children }) => {
   const fetchedOnce = useRef(false); 
   const router = useRouter();
   const pathname = usePathname();
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [confirmFunction, setConfirmFunction] = useState(null);
   axios.defaults.baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
 
@@ -74,7 +76,7 @@ export const ThemeProvider = ({ children }) => {
   // progress && <CircularProgressWithLabel value={progress} />
 
   return (
-    <MyContext.Provider value={{ user, setUser,login,setLogin, loading, error, customToast }}>
+    <MyContext.Provider value={{ user, setUser,login,setLogin, loading, error, customToast, showConfirm, setShowConfirm, confirmFunction, setConfirmFunction }}>
       {children}
     </MyContext.Provider>
   );

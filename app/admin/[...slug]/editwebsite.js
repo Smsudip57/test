@@ -1,5 +1,5 @@
-import { cookies } from 'next/headers';
-import { notFound } from 'next/navigation';
+'use client'
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Adminnav from './adminnav';
 import Navbar from './navbarr';
@@ -22,6 +22,7 @@ import EditTestimonial from './edittestimonial';
 
 
 export default async function Page({params}) {
+  const router = useRouter();
   const slug = params.filter((element,i) => {
     if(i !== 0) {
       return element
@@ -87,12 +88,8 @@ export default async function Page({params}) {
       case 'login':
         return <Login />
       default:
-        return (
-          <div className='p-6 pt-24 h-[200vh]'>
-          {user && user?.profile?.name && <h1 className='text-2xl font-bold'>Welcome, {user?.profile?.name}!</h1>}
-          <p className='mt-4'>You are now logged in.</p>
-        </div>
-        )
+        router.replace('/admin/website/services/create');
+        return <CreateService/>
     }
     
   };
@@ -102,7 +99,7 @@ export default async function Page({params}) {
     <div className='relative'>
       <div className='w-full relative flex flex-col gap-5'>
         <Navbar />
-        <div className='p-6 bg-white rounded-md shadow  w-full'>
+        <div className='bg- rounded-md sh  w-full'>
           {renderContent()}
         </div>
       </div>

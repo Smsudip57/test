@@ -10,14 +10,14 @@ export default function Navbar() {
 
   const routes = [
     {
-      icons : <LayoutDashboard />,
+      icons : <LayoutDashboard style={{ width: '1em', height: '1em' }}/>,
       name: 'Dashboard',
       basePath: '/admin/dashboard',
     },
     {
-      icons : <LayoutTemplate/>,
+      icons : <LayoutTemplate style={{ width: '1em', height: '1em' }}/>,
       name: 'Website',
-      basePath: '/admin/website/services/create',
+      basePath: '/admin/website',
     },
     // Add more routes as needed
   ];
@@ -53,9 +53,9 @@ export default function Navbar() {
                 }
               }
               }
-              className={`inline-flex gap-3 rounded-md w-full border-gray-300 shadow-sm px-5 py-3 font-medium  ${
+              className={`flex gap-3 items-center rounded-md w-full border-gray-300 shadow-sm px-5 py-3 font-medium  ${
                 isActiveDropdown ? 'bg-[#446e6d3b] text-[#446E6D]'
-                          : 'hover:bg-black/5 text-gray-500'
+                          : 'hover:bg-black/5 text-gray-700'
               } focus:outline-none text-left`}
             >
               {route.icons}{route.name}

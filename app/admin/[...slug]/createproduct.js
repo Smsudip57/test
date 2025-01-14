@@ -126,9 +126,24 @@ export default function CreateProduct() {
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-3xl font-semibold text-center mb-6">Create Product</h2>
+      <h1 className="text-xl font-bold mb-4 w-full text-left">Create a Product</h1>
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
       <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          {/* Image Upload */}
+        <div className="flex flex-col">
+          <label htmlFor="image" className="font-medium text-gray-700">Product Image</label>
+          <input
+            id="image"
+            name="image"
+            type="file"
+            onChange={handleImageChange}
+            required
+            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+        </div>
+        </div>
+        <div>
         {/* Title */}
         <div className="flex flex-col">
           <label htmlFor="Title" className="font-medium text-gray-700">Title</label>
@@ -166,7 +181,7 @@ export default function CreateProduct() {
             onChange={handleInputChange}
             required
             className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
+            >
             <option value="">Select a category</option>
             {categoriesEnum.map((cat) => (
               <option key={cat} value={cat}>
@@ -187,7 +202,7 @@ export default function CreateProduct() {
             required
             className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={!formValues.selectedCategory}
-          >
+            >
             <option value="">Select a service</option>
             {filteredServices.map((service) => (
               <option key={service._id} value={service.Title}>
@@ -200,19 +215,6 @@ export default function CreateProduct() {
           )}
         </div>
 
-        {/* Image Upload */}
-        <div className="flex flex-col">
-          <label htmlFor="image" className="font-medium text-gray-700">Product Image</label>
-          <input
-            id="image"
-            name="image"
-            type="file"
-            onChange={handleImageChange}
-            required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
         {/* Sub Heading 1 */}
         <div className="flex flex-col">
           <label htmlFor="subHeading1" className="font-medium text-gray-700">Sub Heading 1</label>
@@ -223,7 +225,7 @@ export default function CreateProduct() {
             onChange={handleInputChange}
             required
             className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+            />
         </div>
         <div className="flex flex-col">
           <label htmlFor="subHeading1edtails" className="font-medium text-gray-700">Sub Heading 1 Details</label>
@@ -247,7 +249,7 @@ export default function CreateProduct() {
             onChange={handleInputChange}
             required
             className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+            />
         </div>
         <div className="flex flex-col">
           <label htmlFor="subHeading2edtails" className="font-medium text-gray-700">Sub Heading 2 Details</label>
@@ -258,7 +260,7 @@ export default function CreateProduct() {
             onChange={handleInputChange}
             required
             className="mt-1 p-3 border whitespace-pre-wrap border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+            />
         </div>
 
         {/* Sub Heading 3 */}
@@ -271,7 +273,7 @@ export default function CreateProduct() {
             onChange={handleInputChange}
             required
             className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+            />
         </div>
         <div className="flex flex-col">
           <label htmlFor="subHeading3edtails" className="font-medium text-gray-700">Sub Heading 3 Details</label>
@@ -282,7 +284,7 @@ export default function CreateProduct() {
             onChange={handleInputChange}
             required
             className="mt-1 p-3 border whitespace-pre-wrap border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+            />
         </div>
 
         {/* Submit Button */}
@@ -291,9 +293,10 @@ export default function CreateProduct() {
             type="submit"
             disabled={loading}
             className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
-          >
+            >
             {loading ? 'Creating...' : 'Create Product'}
           </button>
+        </div>
         </div>
       </form>
     </div>

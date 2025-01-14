@@ -7,7 +7,7 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/admin/home');
+    router.replace('/admin/dashboard');
   });
 
   return null; 

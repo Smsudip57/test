@@ -6,7 +6,7 @@ import Navbar from "@/components/main/Navbar";
 import Footer from "@/components/main/Footer";
 import { ThemeProvider  } from "@/context/context";
 import { ToastContainer } from 'react-toastify'; 
-
+import ConfirimModel from '@/components/main/ConfirmModel';
 const inter = Inter({ subsets: ["latin"] });
 
 
@@ -27,6 +27,7 @@ export default function RootLayout({
         className={`${inter.className} overflow-y-scroll overflow-x-hidden`}
       >
         <ThemeProvider>
+        <ConfirimModel />
         <ToastContainer 
           position="bottom-right"
           autoClose={5000}

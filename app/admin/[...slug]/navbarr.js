@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import {HeartHandshake, PackageSearch,FolderGit ,MessageCircleCode,Factory    } from 'lucide-react'
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState('');
@@ -10,6 +11,7 @@ export default function Navbar() {
   const routes = [
     {
       name: 'Services',
+      icons: <HeartHandshake style={{ width: '1em', height: '1em' }}/>,
       basePath: '/admin/website/services',
       buttons: [
         { name: 'Create', path: 'create' },
@@ -20,6 +22,7 @@ export default function Navbar() {
     {
       name: 'Products',
       basePath: '/admin/website/products',
+      icons: <PackageSearch  style={{ width: '1em', height: '1em' }}/>,
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
@@ -29,6 +32,7 @@ export default function Navbar() {
     {
       name: 'Projects',
       basePath: '/admin/website/projects',
+      icons: <FolderGit  style={{ width: '1em', height: '1em' }}/>,
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
@@ -37,6 +41,7 @@ export default function Navbar() {
     },
     {
       name: 'Testimonials',
+      icons: <MessageCircleCode  style={{ width: '1em', height: '1em' }}/>,
       basePath: '/admin/website/testimonials',
       buttons: [
         { name: 'Create', path: 'create' },
@@ -46,6 +51,7 @@ export default function Navbar() {
     },
     {
       name: 'Industries',
+      icons: <Factory  style={{ width: '1em', height: '1em' }}/>,
       basePath: '/admin/website/industries',
       buttons: [
         { name: 'Create', path: 'create' },
@@ -57,16 +63,16 @@ export default function Navbar() {
   ];
 
   // Automatically set the dropdown state based on the current route
-  useEffect(() => {
-    const activeRoute = routes.find((route) =>
-      pathname.startsWith(route.basePath)
-    );
-    if (activeRoute) {
-      setOpenDropdown(activeRoute.name);
-    } else {
-      setOpenDropdown('');
-    }
-  }, [pathname]);
+  // useEffect(() => {
+  //   const activeRoute = routes.find((route) =>
+  //     pathname.startsWith(route.basePath)
+  //   );
+  //   if (activeRoute) {
+  //     setOpenDropdown(activeRoute.name);
+  //   } else {
+  //     setOpenDropdown('');
+  //   }
+  // }, [pathname]);
 
   return (
     <div className="min-w-full flex p-4 px-36 items-center justify-between bg-white rounded-md top-0 shadow">
@@ -80,11 +86,11 @@ export default function Navbar() {
               onClick={() =>
                 setOpenDropdown((prev) => (prev === route.name ? '' : route.name))
               }
-              className={`inline-flex justify-between rounded-sm font w-full border-gray-300 shadow-sm px-5 py-2 font-semibold ${
-                isActiveDropdown ? 'bg-[#446e6d24] text-[#446E6D]' : 'hover:bg-[#446e6d24]  text-gray-700'
+              className={`inline-flex gap-2 items-center justify-between rounded font w-full border-gray-300 shadow-sm px-5 py-2 font-semibold ${
+                (pathname.startsWith(route.basePath) && !isActiveDropdown) ? 'bg-[#446e6d24] text-[#446E6D]' : 'hover:bg-[#446e6d24]  text-gray-700'
               } focus:outline-none text-left`}
             >
-              {route.name}
+              {route.icons}{route.name}
               <svg
                 className={`-mr-1 ml-2 h-5 w-5 ${
                   isActiveDropdown ? 'rotate-180' : ''

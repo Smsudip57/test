@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import {Trash2 } from 'lucide-react';
 
 export default function ServiceList() {
   const [services, setServices] = useState([]);
@@ -12,6 +13,7 @@ export default function ServiceList() {
   const [error, setError] = useState('');
   const [deletingServiceId, setDeletingServiceId] = useState(null); // Track only the service being deleted
 
+  
   // Fetch all services
   const fetchServices = useCallback(async () => {
     setLoading(true);
@@ -80,61 +82,63 @@ export default function ServiceList() {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Services</h1>
+    <div className="w-full text=gray-700 mx-auto p-6 bg-[#f5f5f5]">
+      { <div>
+
+      <div className="mb-4 flex justify-between">
+      <h1 className="text-xl font-bold mb-4 w-full text-left">Choose to Delete Service</h1>
 
       {/* Category Filter */}
-      <div className="mb-6">
-        <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-          Filter by Category
-        </label>
+      <div className="mb-4">
+        <label className="block text-xs text-gray-500 font-medium mb-2">Filter by Category</label>
         <select
-          id="category"
           value={selectedCategory}
           onChange={(e) => handleCategoryChange(e.target.value)}
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-        >
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
+          className="mt-1 block w-full p-2 border rounded-md"
+          >
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
             </option>
           ))}
         </select>
       </div>
+      </div>
 
-      {/* Service List */}
       {filteredServices.length === 0 ? (
-        <p>No services available for the selected category.</p>
+        <p className='text-gray-700 w-full h-[40vh] flex justify-center items-center text-center'>No services available.</p>
       ) : (
         <ul className="space-y-4">
           {filteredServices.map((service) => (
             <li
               key={service._id}
-              className="flex justify-between items-center bg-white p-4 shadow rounded-lg"
+              className="flex items-center bg-white p-4 shadow rounded-lg space-x-4"
             >
-              <div className="flex items-center">
+              {/* Display Service Image */}
+              {service.image && (
                 <img
-                  src={service.image || '/placeholder.png'}
-                  alt={service.Title}
-                  className="w-16 h-16 rounded-lg object-cover mr-4"
+                src={service.image}
+                alt={'Couldn\'t load'}
+                className="w-16 h-16 rounded-md text-gray-400 text-xs object-cover overflow-hidden"
                 />
-                <div>
-                  <h2 className="text-lg font-semibold">{service.Title}</h2>
-                  <p className="text-gray-600">{service.deltail}</p>
-                  <p className="text-gray-500 text-sm">{service.category}</p>
-                </div>
+              )}
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold">{service.Title}</h2>
+                <p className="text-gray-600">{service.deltail}</p>
+                <p className="text-gray-500 text-sm">{service.category}</p>
               </div>
               <button
                 onClick={() => handleDelete(service._id)}
                 disabled={deletingServiceId === service._id}
-                className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md disabled:opacity-50"
-              >
+                className="text-white text-sm bg-red-500 hover:bg-red-300 px-4 py-2 rounded-md flex items-center gap-2"
+              > <Trash2  style={{ width: '1em', height: '1em' }} /> 
                 {deletingServiceId === service._id ? 'Deleting...' : 'Delete'}
               </button>
             </li>
           ))}
         </ul>
       )}
+      </div>}
     </div>
   );
 }

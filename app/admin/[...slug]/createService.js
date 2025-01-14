@@ -1,6 +1,10 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
+import {Upload} from 'lucide-react'
+import { MyContext } from '@/context/context';
+import { useContext } from 'react';
+
 
 export default function ServiceForm() {
   const [formData, setFormData] = useState({
@@ -13,6 +17,7 @@ export default function ServiceForm() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const imageInputRef = useRef(null);
 
   const categories = [
     'Branding',
@@ -21,6 +26,7 @@ export default function ServiceForm() {
     'Digital',
     'Endless Support',
   ];
+  const context = useContext(MyContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,26 +40,28 @@ export default function ServiceForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Ensure all required fields are filled
-    if (!formData.Title || !formData.detail || !formData.moreDetail || !formData.category || !formData.image) {
-      setErrorMessage('All fields are required!');
-      return;
-    }
-
-    setLoading(true);
-    setErrorMessage('');
-    setSuccessMessage('');
-
-    // Prepare form data
-    const data = new FormData();
-    data.append('Title', formData.Title);
-    data.append('detail', formData.detail);
-    data.append('moreDetail', formData.moreDetail);
-    data.append('category', formData.category);
-    data.append('image', formData.image);
-
-    try {
+    
+    const Delete = async () => {
+      
+      // Ensure all required fields are filled
+      if (!formData.Title || !formData.detail || !formData.moreDetail || !formData.category || !formData.image) {
+        setErrorMessage('All fields are required!');
+        return;
+      }
+      
+      setLoading(true);
+      setErrorMessage('');
+      setSuccessMessage('');
+      
+      // Prepare form data
+      const data = new FormData();
+      data.append('Title', formData.Title);
+      data.append('detail', formData.detail);
+      data.append('moreDetail', formData.moreDetail);
+      data.append('category', formData.category);
+      data.append('image', formData.image);
+      
+      try {
       const response = await axios.post('/api/service/createservice', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -61,7 +69,7 @@ export default function ServiceForm() {
         withCredentials: true, 
       });
 
-      setSuccessMessage('Service created successfully!');
+      context.customToast(response.data)
       setFormData({
         Title: '',
         detail: '',
@@ -70,22 +78,52 @@ export default function ServiceForm() {
         image: null,
       });
     } catch (error) {
-      setErrorMessage('Error creating service. Please try again.');
+      context.customToast({success:false, message:'Something went wrong'})
     } finally {
       setLoading(false);
     }
+  }
+  context.setShowConfirm('Are you sure you want to create a new service?');
+  context.setConfirmFunction(() => Delete);
   };
-
+  
   return (
-    <div className="p-4 w-full mx-auto">
-      <h1 className="text-2xl font-bold mb-4 text-center">Create a New Service</h1>
+    <div className="p-10 bg-white rounded-md w-full mx-auto text-gray-700">
+      <h1 className="text-xl font-bold mb-4 w-full text-left">Create a New Service</h1>
 
       {successMessage && <p className="text-green-500">{successMessage}</p>}
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
-      <form onSubmit={handleSubmit} className="w-full">
+      <form onSubmit={handleSubmit} className="w-full flex flex-row items-center">
+      <div className="mb-4 basis-1/2"
+         
+      >
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="w-full hidden"
+            ref={imageInputRef}
+            />
+            <div className='flex flex-col items-center justify-center border border-dashed border-gray-400 rounded-lg p-4 cursor-pointer hover:bg-[#D4DDDD] transition-colors duration-300 mr-12 aspect-[2/1]'
+             onClick={() => imageInputRef.current && imageInputRef.current.click()}
+            >
+            {formData.image ? <img src={URL.createObjectURL(formData.image)} alt="Selected Image" className='w-full h-full object-cover' /> :<span className='flex items-center justify-center flex-col gap-5'>
+
+          <label htmlFor="image" className="block font-semibold mb-1 ">
+            Upload Image
+          </label>
+            <Upload size={36} className='text-gray-700'/>
+            </span>}
+            </div>
+        </div>
+
+        <div className='basis-1/2'>
+
         <div className="mb-4">
-          <label htmlFor="Title" className="block font-semibold mb-1">
+          <label htmlFor="Title" className="block font-semibold mb-3">
             Title
           </label>
           <input
@@ -96,11 +134,11 @@ export default function ServiceForm() {
             onChange={handleChange}
             className="w-full p-2 border rounded"
             placeholder="Enter the title"
-          />
+            />
         </div>
 
         <div className="mb-4">
-          <label htmlFor="detail" className="block font-semibold mb-1">
+          <label htmlFor="detail" className="block font-semibold mb-3">
             Detail
           </label>
           <textarea
@@ -115,7 +153,7 @@ export default function ServiceForm() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="moreDetail" className="block font-semibold mb-1">
+          <label htmlFor="moreDetail" className="block font-semibold mb-3">
             More Detail
           </label>
           <textarea
@@ -126,11 +164,11 @@ export default function ServiceForm() {
             className="w-full p-2 border rounded"
             placeholder="Enter more details (new lines will be preserved)"
             rows={3}
-          ></textarea>
+            ></textarea>
         </div>
 
         <div className="mb-4">
-          <label htmlFor="category" className="block font-semibold mb-1">
+          <label htmlFor="category" className="block font-semibold mb-3">
             Category
           </label>
           <select
@@ -148,28 +186,15 @@ export default function ServiceForm() {
             ))}
           </select>
         </div>
-
-        <div className="mb-4">
-          <label htmlFor="image" className="block font-semibold mb-1">
-            Image
-          </label>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="w-full"
-          />
-        </div>
-
+        
         <button
           type="submit"
           className="bg-blue-500 text-white p-2 rounded w-full"
           disabled={loading}
-        >
+          >
           {loading ? 'Submitting...' : 'Submit'}
         </button>
+          </div>
       </form>
     </div>
   );
