@@ -3,7 +3,7 @@ import React,{useState} from 'react'
 import LogoutIcon from '@mui/icons-material/Logout';
 import axios from 'axios';
 import Link from 'next/link';
-import { set } from 'mongoose';
+import { notFound } from 'next/navigation';
 import {useRouter} from 'next/navigation';
 import { MyContext } from '@/context/context';
 
@@ -12,10 +12,10 @@ export default function Adminnav({user, login}) {
   const [isLoading,setisLoading] = useState(false)
   const context = React.useContext(MyContext);
   const router = useRouter();
+  const [loginout, setloginout] = useState(false);
 
-  React.useEffect(()=>{
-    setIsOn(login);
-  },[login])
+
+
   const handleToggle = async() => {
     try {
       setisLoading(true);
@@ -40,9 +40,11 @@ export default function Adminnav({user, login}) {
           {withCredentials: true}
         );
         if(response?.data?.success){
+          console.log(true)
+          router.push('/');
+          setloginout(true);
           context?.setUser(null);
           context?.customToast(response?.data);
-          router.push('/');
         }
       } catch (error) {
         context?.customToast({success:false, message:'Something went wrong'})
@@ -52,13 +54,13 @@ export default function Adminnav({user, login}) {
 
 
   return (
-    <header className='bg-[#C1EBE7] w-full px-[10%] py-5 text-[#446E6D border-b-2 border-[#446e6d25] shadow-md fixed top-0 z-10'>
+    <header className='bg-white w-full px-[10%] py-5 text-[#446E6D border-b-2 border-[#446e6d25] shadow-md fixed top-0 z-10'>
         <div className='container mx-auto flex justify-between items-center'>
         <div className='flex items-center space-x-4 justify-center'>
         <Link href={`/`}>
         <img alt="logo" width="17" height="17"  className="cursor-pointer hover:animate-slowspin"  src="/logo.svg"/>
         </Link>
-        <h1 className='text-[#446E6D] text-xl font-bold'>Webmedigital Admin pannel</h1>
+        <h1 className='text-[#446E6D] text-lg font-semibold'>Webmedigital</h1>
         </div>
             <nav>
             <ul className='flex space-x-16'>
@@ -81,9 +83,9 @@ export default function Adminnav({user, login}) {
                 </li>} */}
                 <li className='grid cursor-pointer'>
                  <h1 className='text-[#446E6D] text-xl font-bold'>
-                  {user && user?.profile?.name && `Welcome, ${user?.profile?.name}!`}
+                  {context?.user && context?.user?.profile?.name && `Welcome, ${context?.user?.profile?.name}!`}
                   <Link href='/admin/login'>
-                  {!user && 'Please log in!'}
+                  {!context?.user && 'Please log in!'}
                   </Link>
                     </h1>
                 </li>

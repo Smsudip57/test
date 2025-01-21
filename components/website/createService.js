@@ -88,8 +88,8 @@ export default function ServiceForm() {
   };
   
   return (
-    <div className="p-10 bg-white rounded-md w-full mx-auto text-gray-700">
-      <h1 className="text-xl font-bold mb-4 w-full text-left">Create a New Service</h1>
+    <div className="p-10 bg-white shadow rounded-md w-full mx-auto text-gray-700">
+      <h1 className="text-xl font-bold mb-4 w-full text-left">Create a Service</h1>
 
       {successMessage && <p className="text-green-500">{successMessage}</p>}
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}

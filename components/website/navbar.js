@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import {LayoutTemplate,LayoutDashboard,Settings,DollarSign,Cast  } from 'lucide-react'
+import {LayoutTemplate,LayoutDashboard  } from 'lucide-react'
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState('');
@@ -12,28 +12,14 @@ export default function Navbar() {
     {
       icons : <LayoutDashboard style={{ width: '1em', height: '1em' }}/>,
       name: 'Dashboard',
-      basePath: '/customer/dashboard',
-    },
-    // {
-    //   icons : <LayoutTemplate style={{ width: '1em', height: '1em' }}/>,
-    //   name: 'Website',
-    //   basePath: '/customer/website',
-    // },
-    {
-      icons : <Cast  style={{ width: '1em', height: '1em' }}/>,
-      name: 'Consultancy',
-      basePath: '/customer/consultancy',
+      basePath: '/admin/dashboard',
     },
     {
-      icons : <DollarSign  style={{ width: '1em', height: '1em' }}/>,
-      name: 'Payment',
-      basePath: '/customer/payment',
+      icons : <LayoutTemplate style={{ width: '1em', height: '1em' }}/>,
+      name: 'Website',
+      basePath: '/admin/website',
     },
-    {
-      icons : <Settings style={{ width: '1em', height: '1em' }}/>,
-      name: 'Setting',
-      basePath: '/customer/setting',
-    },
+    // Add more routes as needed
   ];
 
   // Automatically set the dropdown state based on the current route

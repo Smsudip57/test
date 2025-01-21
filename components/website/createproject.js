@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import Head from 'next/head';
+import { Upload } from 'lucide-react';
 
 export default function CreateProject() {
   const [formValues, setFormValues] = useState({
@@ -22,7 +22,7 @@ export default function CreateProject() {
       },
     ],
   });
-
+  const imageInputRef = useRef(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -133,59 +133,78 @@ export default function CreateProject() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <Head>
-        <title>Create New Project</title>
-      </Head>
-
-      <h1 className="text-2xl font-bold mb-4">Create New Project</h1>
+    <div className="p-10 bg-white shadow rounded-md w-full mx-auto text-gray-700">
+      <h1 className="text-xl font-bold mb-4 w-full text-left">Create a Project</h1>
 
       {error && <div className="text-red-500">{error}</div>}
       {success && <div className="text-green-500">{success}</div>}
 
-      <form onSubmit={handleSubmit}>
-        {/* Project Title */}
+      <form onSubmit={handleSubmit}
+      >
+        <div
+          className=' flex justify-center items-start'
+        >
+
+        <div className='basis-1/2 p-10'>
+        {/* Project Image */}
+        <div className="mb-4 border-[1px] relative border-dashed border-gray-400 rounded-lg p-4 cursor-pointer hover:bg-[#D4DDDD] transition-colors duration-300 mr-12 aspect-[2/1]">
+        {formValues?.image ? (
+          <img
+            src={URL.createObjectURL(formValues.image)}
+            alt="Selected"
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <span className="flex items-center justify-center flex-col gap-5 w-full aspect-[2/1] pointer-events-none z-10 cursor-pointer">
+            <p className="font-semibold">Upload Image</p>
+            <Upload size={36} className="text-gray-700" />
+          </span>
+        )}
+        <input
+          id="image"
+          type="file"
+          name="image"
+          onChange={(e)=>handleImageChange(e, null , 'image')}
+          className=" absolute opacity-0 top-10 cursor-pointer w-full h-full"
+          accept="image/*"
+        />
+        </div>
+        </div>
+        <div className='basis-1/2'>
         <div className="mb-4">
-          <label className="block text-sm font-medium">Project Title</label>
+        {/* Project Title */}
+          <label className="block font-semibold mb-3">Project Title</label>
           <input
             type="text"
             name="Title"
             value={formValues.Title}
             onChange={(e) => handleInputChange(e, null, 'Title')}
-            className="mt-1 block w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded"
             required
-          />
+            />
         </div>
 
         {/* Project Detail */}
         <div className="mb-4">
-          <label className="block text-sm font-medium">Project Detail</label>
+          <label className="block font-semibold mb-3">Project Detail</label>
           <textarea
             name="detail"
             value={formValues.detail}
             onChange={(e) => handleInputChange(e, null, 'detail')}
-            className="mt-1 block w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded"
             rows="4"
             required
-          />
+            />
+            </div>
         </div>
+      </div>
 
-        {/* Project Image */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Project Image</label>
-          <input
-            type="file"
-            name="image"
-            onChange={(e) => handleImageChange(e, null, 'image')}
-            className="mt-1 block w-full p-2 border rounded-md"
-            required
-          />
-        </div>
+        
 
         {/* Sections */}
-        <div className="space-y-4">
+        <div className="">
           {formValues.sections.map((section, index) => (
-            <div key={index} className="border p-4 rounded-lg shadow-md">
+            <div key={index} className="p-10 border-[1px] rounded-lg ">
               <div className='flex justify-between items-center'>
                 <h3 className="text-lg font-semibold mb-2">Section {index + 1}</h3>
                 <button
@@ -198,49 +217,70 @@ export default function CreateProject() {
               </div>
 
               {/* Heading */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Heading</label>
+              <div className='flex w-full items-center'>
+
+              <div className="mb-4 basis-1/2 order-2">
+                <label className="block font-semibold mb-3">Heading</label>
                 <input
                   type="text"
                   name={`Heading-${index}`}
                   value={section.Heading}
                   onChange={(e) => handleInputChange(e, index, 'Heading')}
-                  className="mt-1 block w-full p-2 border rounded-md"
+                  className="w-full p-2 border rounded"
                   required
                 />
               </div>
 
+
               {/* Section Image */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Section Image</label>
+              <div className='basis-1/2 order-1 p-10'>
+
+              <div className="mb-4 border-[1px]  relative border-dashed border-gray-400 rounded-lg p-4 cursor-pointer hover:bg-[#D4DDDD] transition-colors duration-300 mr-12 aspect-[2/1]">
+                {formValues?.sections[index]?.image ? (
+                  <img
+                  src={URL.createObjectURL(formValues?.sections[index]?.image)}
+                    alt="Selected"
+                    className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="flex items-center justify-center flex-col gap-5 w-full aspect-[2/1] pointer-events-none z-10 cursor-pointer">
+                    <p className="font-semibold">Upload Image</p>
+                    <Upload size={36} className="text-gray-700" />
+                  </span>
+                )}
                 <input
+                  id="image"
                   type="file"
-                  name={`image-${index}`}
+                  name="image"
                   onChange={(e) => handleImageChange(e, index, 'image')}
-                  className="mt-1 block w-full p-2 border rounded-md"
-                  required
-                />
+                  className=" absolute opacity-0 top-10 cursor-pointer w-full h-full"
+                  accept="image/*"
+                  />
+                </div>
+                  </div>
               </div>
 
               {/* Sub Headings and Details */}
               {['1', '2', '3'].map((subIndex) => (
-                <div key={subIndex} className="space-y-2 mb-4">
-                  <label className="block text-sm font-medium">Sub Heading {subIndex}</label>
+                <div key={subIndex} className="space-y-2 pb-4">
+                  <label className="block font-semibold mb-3">Sub Heading {subIndex}</label>
                   <input
                     type="text"
                     name={`subHeading${subIndex}-${index}`}
                     value={section[`subHeading${subIndex}`]}
+                    placeholder={`Enter sub Heading ${subIndex}`}
                     onChange={(e) => handleInputChange(e, index, `subHeading${subIndex}`)}
-                    className="mt-1 block w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded"
                     required
                   />
 
-                  <label className="block text-sm font-medium">Sub Heading {subIndex} Details</label>
+                  <label className="block font-semibold py-3">Sub Heading {subIndex} Details</label>
                   <textarea
                     name={`subHeadingdetails${subIndex}-${index}`}
                     value={section[`subHeadingdetails${subIndex}`]}
                     onChange={(e) => handleInputChange(e, index, `subHeadingdetails${subIndex}`)}
-                    className="mt-1 block w-full p-2 border rounded-md"
+                    placeholder={`Enter sub Heading ${subIndex} Details`}
+                    className="w-full p-2 border rounded"
                     rows="2"
                     required
                   />

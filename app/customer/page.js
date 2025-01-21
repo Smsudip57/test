@@ -1,9 +1,14 @@
-import React from 'react'
+'use client';
+
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
-  return (
-    <div className='min-h-screen min-w-screen bg-[#f9f9f9] flex items-center justify-center font-bold text-4xl'> 
-        This is the customer page
-    </div>
-  )
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/customer/dashboard');
+  });
+
+  return null; 
 }

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import axios from 'axios';
-import {Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { MyContext } from '@/context/context';
 
 export default function ServiceList() {
   const [services, setServices] = useState([]);
@@ -12,7 +13,7 @@ export default function ServiceList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [deletingServiceId, setDeletingServiceId] = useState(null); // Track only the service being deleted
-
+  const { setShowConfirm, setConfirmFunction, customToast  } = useContext(MyContext);
   
   // Fetch all services
   const fetchServices = useCallback(async () => {
@@ -39,12 +40,13 @@ export default function ServiceList() {
 
   // Delete a specific service
   const handleDelete = async (serviceId) => {
-    console.log(serviceId);
-    setDeletingServiceId(serviceId); 
-    // if (!confirm('Are you sure you want to delete this service?')) return;
-
-    try {
-      await axios.post(
+    const Delete = async () => {
+      
+      setDeletingServiceId(serviceId); 
+      // if (!confirm('Are you sure you want to delete this service?')) return;
+      
+      try {
+        const response = await axios.post(
         '/api/service/deleteservice',
         { serviceId },
         {
@@ -52,16 +54,22 @@ export default function ServiceList() {
           headers: { 'Content-Type': 'application/json' },
         }
       );
-
+      customToast(response.data);
+      if (response.data.success) {
+        setServices((prevServices) => prevServices.filter((service) => service._id !== serviceId));
+        setFilteredServices((prevServices) => prevServices.filter((service) => service._id !== serviceId));
+      }
       // Remove deleted service
-      setServices((prevServices) => prevServices.filter((service) => service._id !== serviceId));
-      setFilteredServices((prevServices) => prevServices.filter((service) => service._id !== serviceId));
     } catch (err) {
-      console.error('Error deleting service:', err);
-      setError(err.response?.data?.message || 'Something went wrong. Please try again.');
+      customToast(err?.response?.data);
     } finally {
       setDeletingServiceId(null); // Reset after deletion
     }
+    
+  }
+
+    setConfirmFunction(() => Delete);
+    setShowConfirm('Are you sure you want to delete this service?');
   };
 
   // Filter services by category
@@ -86,7 +94,7 @@ export default function ServiceList() {
       { <div>
 
       <div className="mb-4 flex justify-between">
-      <h1 className="text-xl font-bold mb-4 w-full text-left">Choose to Delete Service</h1>
+      <h1 className="text-xl font-bold mb-4 w-full text-left">Service List</h1>
 
       {/* Category Filter */}
       <div className="mb-4">

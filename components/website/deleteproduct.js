@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Trash2 } from 'lucide-react';
 
 export default function ProductListWithDelete() {
   const [products, setProducts] = useState([]);
@@ -81,16 +82,16 @@ export default function ProductListWithDelete() {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Product List</h1>
-
+    <div className="w-full mx-auto p-6">
+      <div className="mb-4 flex justify-center gap-5">
+      <h1 className="text-xl font-bold mb-4 w-full text-left">Product List</h1>
       {/* Category Selection */}
       <div className="mb-4">
-        <label className="block text-sm font-medium">Category</label>
-        <select
+      <label className="block text-xs text-gray-500 font-medium mb-2">Filter by Category</label>
+      <select
           value={selectedCategory}
           onChange={(e) => handleCategoryChange(e.target.value)}
-          className="mt-1 block w-full p-2 border rounded-md"
+          className="mt-1 block min-w-max p-2 border rounded-md"
         >
           <option value="">Select a category</option>
           {allCategories.map((category) => (
@@ -100,16 +101,15 @@ export default function ProductListWithDelete() {
           ))}
         </select>
       </div>
-
       {/* Service Selection */}
-      {selectedCategory && (
+      { true && (
         <div className="mb-4">
-          <label className="block text-sm font-medium">Service</label>
+          <label className="block text-xs text-gray-500 font-medium mb-2">Filter by Service</label>
           <select
             value={selectedService}
             onChange={(e) => handleServiceChange(e.target.value)}
-            className="mt-1 block w-full p-2 border rounded-md"
-          >
+            className="mt-1 block min-w-max p-2 border rounded-md"
+            >
             <option value="">Select a service</option>
             {services
               .filter((service) => service.category === selectedCategory)
@@ -121,6 +121,8 @@ export default function ProductListWithDelete() {
           </select>
         </div>
       )}
+      </div>
+      
 
       {/* Product List */}
       <ul className="space-y-4">
@@ -134,11 +136,11 @@ export default function ProductListWithDelete() {
               </div>
               <button
                 onClick={() => handleDeleteClick(product._id)}
-                className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md"
-                disabled={deleting}
-              >
-                {deleting ? 'Deleting...' : 'Delete'}
-              </button>
+              disabled={deleting}
+              className="text-white text-sm bg-red-500 hover:bg-red-300 px-4 py-2 rounded-md flex items-center gap-2"
+            > <Trash2  style={{ width: '1em', height: '1em' }} /> 
+              {deleting ? 'Deleting...' : 'Delete'}
+            </button>
             </li>
           ))
         ) : (

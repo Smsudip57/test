@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import {LayoutTemplate,LayoutDashboard  } from 'lucide-react'
+import {LayoutTemplate,LayoutDashboard,MessageCircleMore   } from 'lucide-react'
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState('');
@@ -18,6 +18,11 @@ export default function Navbar() {
       icons : <LayoutTemplate style={{ width: '1em', height: '1em' }}/>,
       name: 'Website',
       basePath: '/admin/website',
+    },
+    {
+      icons : <MessageCircleMore  style={{ width: '1em', height: '1em' }}/>,
+      name: 'Chat',
+      basePath: '/admin/chat',
     },
     // Add more routes as needed
   ];

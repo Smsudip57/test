@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef, useContext } from 'react';
 import axios from 'axios';
+import { Upload } from 'lucide-react';
+import { MyContext } from '@/context/context';
 
 export default function CreateProduct() {
   const [formValues, setFormValues] = useState({
@@ -23,7 +25,8 @@ export default function CreateProduct() {
   const [services, setServices] = useState([]);
   const [filteredServices, setFilteredServices] = useState([]);
   const [noServicesMessage, setNoServicesMessage] = useState('');
-
+  const imageInputRef = useRef(null);
+  const { setShowConfirm, setConfirmFunction, customToast  } = useContext(MyContext);
   // Enum for category options
   const categoriesEnum = [
     'Branding',
@@ -83,11 +86,13 @@ export default function CreateProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
-    // Create a FormData object and append all the form fields
-    const formData = new FormData();
-    Object.keys(formValues).forEach((key) => {
+    const Create = async() => {
+      
+      setLoading(true);
+      
+      // Create a FormData object and append all the form fields
+      const formData = new FormData();
+      Object.keys(formValues).forEach((key) => {
       if (key === 'image' && formValues[key]) {
         formData.append(key, formValues[key]);
       } else if (formValues[key]) {
@@ -101,7 +106,7 @@ export default function CreateProduct() {
       setLoading(false);
       return;
     }
-
+    
     try {
       const response = await axios.post('/api/product/create', formData, {
         withCredentials: true,
@@ -111,42 +116,70 @@ export default function CreateProduct() {
       });
 
       if (response.data.success) {
-        setError('');
-        alert('Product created successfully');
+        customToast(response.data);
+        setFormValues({
+          Title: '',
+          detail: '',
+          selectedCategory: '',
+          selectedService: '',
+          image: null,
+          subHeading1: '',
+          subHeading1edtails: '',
+          subHeading2: '',
+          subHeading2edtails: '',
+          subHeading3: '',
+          subHeading3edtails: '',
+        });
+        imageInputRef.current.value = null;
       } else {
-        setError(response.data.message || 'Failed to create product.');
+        customToast(response.data);
       }
     } catch (err) {
       console.error(err);
-      setError('Something went wrong. Please try again.');
+      customToast(err.response.data);
     } finally {
       setLoading(false);
     }
+  }
+
+    setShowConfirm('Are you sure you want to create this product?');
+  setConfirmFunction(() => Create);
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="w-full mx-auto p-10 bg-white rounded-lg shadow">
       <h1 className="text-xl font-bold mb-4 w-full text-left">Create a Product</h1>
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
+      <form onSubmit={handleSubmit} className="space-y-4 flex items-center">
+        <div className='mb-4 basis-1/2'>
           {/* Image Upload */}
-        <div className="flex flex-col">
-          <label htmlFor="image" className="font-medium text-gray-700">Product Image</label>
+        <div className="">
           <input
             id="image"
             name="image"
             type="file"
             onChange={handleImageChange}
             required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 hidden p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            ref={imageInputRef}
             />
+                        <div className='mb-4 flex items-center justify-center border border-dashed border-gray-400 rounded-lg p-4 cursor-pointer hover:bg-[#D4DDDD] transition-colors duration-300 mr-12 aspect-[2/1]'
+             onClick={() => imageInputRef.current && imageInputRef.current.click()}
+            >
+            {formValues.image ? <img src={URL.createObjectURL(formValues.image)} alt="Selected Image" className='w-full h-full object-cover' /> :<span className='flex items-center justify-center flex-col gap-5'>
+
+          <label htmlFor="image" className="block font-semibold mb-1 ">
+            Upload Image
+          </label>
+            <Upload size={36} className='text-gray-700'/>
+            </span>}
+            </div>
         </div>
         </div>
-        <div>
+        <div className='basis-1/2'>
         {/* Title */}
-        <div className="flex flex-col">
-          <label htmlFor="Title" className="font-medium text-gray-700">Title</label>
+        <div className="mb-4">
+          <label htmlFor="Title" className="block font-semibold mb-3">Title</label>
           <input
             id="Title"
             name="Title"
@@ -154,33 +187,34 @@ export default function CreateProduct() {
             onChange={handleInputChange}
             type="text"
             required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border rounded"
           />
         </div>
 
         {/* Detail */}
-        <div className="flex flex-col">
-          <label htmlFor="detail" className="font-medium text-gray-700">Detail</label>
+        <div className="mb-4 ">
+          <label htmlFor="detail" className="block font-semibold mb-3">Detail</label>
           <textarea
             id="detail"
             name="detail"
             value={formValues.detail}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border whitespace-pre-wrap border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border rounded"
+            rows={3}
           />
         </div>
 
         {/* Category Dropdown */}
-        <div className="flex flex-col">
-          <label htmlFor="selectedCategory" className="font-medium text-gray-700">Related to (Category)</label>
+        <div className="mb-4">
+          <label htmlFor="selectedCategory" className="block font-semibold mb-3">Related to (Category)</label>
           <select
             id="selectedCategory"
             name="selectedCategory"
             value={formValues.selectedCategory}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border rounded"
             >
             <option value="">Select a category</option>
             {categoriesEnum.map((cat) => (
@@ -192,15 +226,15 @@ export default function CreateProduct() {
         </div>
 
         {/* Service Dropdown */}
-        <div className="flex flex-col">
-          <label htmlFor="selectedService" className="font-medium text-gray-700">Related to (Service)</label>
+        <div className="mb-4">
+          <label htmlFor="selectedService" className="block font-semibold mb-3">Related to (Service)</label>
           <select
             id="selectedService"
             name="selectedService"
             value={formValues.selectedService}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border rounded"
             disabled={!formValues.selectedCategory}
             >
             <option value="">Select a service</option>
@@ -216,74 +250,74 @@ export default function CreateProduct() {
         </div>
 
         {/* Sub Heading 1 */}
-        <div className="flex flex-col">
-          <label htmlFor="subHeading1" className="font-medium text-gray-700">Sub Heading 1</label>
+        <div className="mb-4">
+          <label htmlFor="subHeading1" className="block font-semibold mb-3">Sub Heading 1</label>
           <input
             id="subHeading1"
             name="subHeading1"
             value={formValues.subHeading1}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border rounded"
             />
         </div>
-        <div className="flex flex-col">
-          <label htmlFor="subHeading1edtails" className="font-medium text-gray-700">Sub Heading 1 Details</label>
+        <div className="mb-4">
+          <label htmlFor="subHeading1edtails" className="block font-semibold mb-3">Sub Heading 1 Details</label>
           <textarea
             id="subHeading1edtails"
             name="subHeading1edtails"
             value={formValues.subHeading1edtails}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border whitespace-pre-wrap border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border rounded"
           />
         </div>
 
         {/* Sub Heading 2 */}
-        <div className="flex flex-col">
-          <label htmlFor="subHeading2" className="font-medium text-gray-700">Sub Heading 2</label>
+        <div className="mb-4">
+          <label htmlFor="subHeading2" className="block font-semibold mb-3">Sub Heading 2</label>
           <input
             id="subHeading2"
             name="subHeading2"
             value={formValues.subHeading2}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border rounded"
             />
         </div>
-        <div className="flex flex-col">
-          <label htmlFor="subHeading2edtails" className="font-medium text-gray-700">Sub Heading 2 Details</label>
+        <div className="mb-4">
+          <label htmlFor="subHeading2edtails" className="block font-semibold mb-3">Sub Heading 2 Details</label>
           <textarea
             id="subHeading2edtails"
             name="subHeading2edtails"
             value={formValues.subHeading2edtails}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border whitespace-pre-wrap border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border rounded"
             />
         </div>
 
         {/* Sub Heading 3 */}
-        <div className="flex flex-col">
-          <label htmlFor="subHeading3" className="font-medium text-gray-700">Sub Heading 3</label>
+        <div className="mb-4">
+          <label htmlFor="subHeading3" className="block font-semibold mb-3">Sub Heading 3</label>
           <input
             id="subHeading3"
             name="subHeading3"
             value={formValues.subHeading3}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border rounded"
             />
         </div>
-        <div className="flex flex-col">
-          <label htmlFor="subHeading3edtails" className="font-medium text-gray-700">Sub Heading 3 Details</label>
+        <div className="mb-4">
+          <label htmlFor="subHeading3edtails" className="block font-semibold mb-3">Sub Heading 3 Details</label>
           <textarea
             id="subHeading3edtails"
             name="subHeading3edtails"
             value={formValues.subHeading3edtails}
             onChange={handleInputChange}
             required
-            className="mt-1 p-3 border whitespace-pre-wrap border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border rounded"
             />
         </div>
 
@@ -292,7 +326,7 @@ export default function CreateProduct() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
+            className="bg-blue-500 text-white p-2 rounded w-full"
             >
             {loading ? 'Creating...' : 'Create Product'}
           </button>

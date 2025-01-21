@@ -226,15 +226,15 @@ const Navbar = () => {
         </div>
 
         <div className="w-auto cursor-pointer text-left relative" 
-        onClick={()=>setprofileopen(!profileopen)}
-        onAbort={()=>setprofileopen(false)} 
-        onBlur={()=>setprofileopen(false)} 
+          onClick={()=>setprofileopen(!profileopen)}
+          onAbort={()=>setprofileopen(false)} 
+          onBlur={()=>setprofileopen(false)} 
         >
         {context.user && !context.loading ?<div>
           <p className="flex gap-2 font-bold items-center text-[#446E6D]">
             <CircleUser size={20}/> {context?.user?.name?.split(" ")[0] || context?.user?.profile?.name?.split(" ")[0]}
             </p>
-        </div>: !context.loading&& <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm " onClick={()=>{ router.push('/signin');}}>Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
+        </div>: !context.loading && <button className=" lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm " onClick={()=>{ router.push('/signin');}}>Connect<span className="invisible">-</span><span className="hidden lg:block"> WEBME</span></button>
         }
         {
           context.loading && <h1 className="w-20">

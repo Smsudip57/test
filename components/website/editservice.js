@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
-import { Upload , Pencil } from 'lucide-react';
+import { Upload ,ChevronLeft , Pencil } from 'lucide-react';
+import { MyContext } from '@/context/context';
 
 export default function EditServiceList() {
   const [services, setServices] = useState([]);
@@ -27,7 +28,7 @@ export default function EditServiceList() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [saving, setSaving] = useState(false);
   const imageInputRef = useRef(null);
-
+  const { setShowConfirm, setConfirmFunction, customToast  } = useContext(MyContext);
   // Fetch services
   const fetchServices = async () => {
     try {
@@ -86,30 +87,38 @@ export default function EditServiceList() {
 
   // Save edited service
   const handleSave = async () => {
-    setSaving(true);
-    const formData = new FormData();
-    formData.append('serviceId', editingService);
-    formData.append('Title', formValues.Title);
-    formData.append('deltail', formValues.deltail);
-    formData.append('category', formValues.category);
+    const Save = async () => {
+      
+      setSaving(true);
+      const formData = new FormData();
+      formData.append('serviceId', editingService);
+      formData.append('Title', formValues.Title);
+      formData.append('deltail', formValues.deltail);
+      formData.append('category', formValues.category);
     formData.append('moreDetail', formValues.moreDetail);
     if (formValues.image) {
       formData.append('image', formValues.image);
     }
 
     try {
-      await axios.post('/api/service/editservice', formData, {
+      const response = await axios.post('/api/service/editservice', formData, {
         withCredentials: true,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+      if(response?.data?.success){
+      customToast(response?.data)
       await fetchServices();
       closeEditModal();
+    }
     } catch (err) {
-      console.error('Error saving service:', err);
-      setError(err.response?.data?.message || 'Failed to save service.');
+      customToast(err?.response?.data)
     } finally {
       setSaving(false);
     }
+  }
+
+  setConfirmFunction(()=>Save);
+  setShowConfirm('Are you sure you want to update this service?');
   };
 
   useEffect(() => {
@@ -118,9 +127,9 @@ export default function EditServiceList() {
 
   if (loading) return <div>Loading services...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
-
+  
   return (
-    <div className="w-full text=gray-700 mx-auto p-6 bg-[#f5f5f5]">
+    <div className="w-full text=gray-700 mx-auto  bg-[#f5f5f5]">
       {!editingService && <div>
 
       <div className="mb-4 flex justify-between">
@@ -177,9 +186,18 @@ export default function EditServiceList() {
         </ul>
       )}
       </div>}
+      {
+        editingService && (
+          <div className='w-full'>
+            <p className='flex gap-2 cursor-pointer justify-center items-center max-w-max text-gray-500 mb-4'
+            onClick={closeEditModal}
+            ><ChevronLeft style={{ width: '1em', height: '1em'}}/> Back</p>
+            </div>
+        )
+      }
       {/* Modal for editing */}
       {editingService && (
-        <div>
+        <div className='shadow'>
 
         {
               <div className="p-10 bg-white rounded-md w-full mx-auto text-gray-700">
@@ -204,7 +222,7 @@ export default function EditServiceList() {
                     typeof formValues.image === 'string' // Use lowercase 'string'
                       ? formValues.image
                       : URL.createObjectURL(formValues.image) // Ensure it's a File/Blob
-                  }alt="Selected Image" className='w-full h-full object-cover' /> :<span className='flex items-center justify-center flex-col gap-5'>
+                  }  alt="Couldn't load" className='w-full h-full object-cover text-center' /> :<span className='flex items-center justify-center flex-col gap-5'>
 
                   <label htmlFor="image" className="block font-semibold mb-1 z-10">
                     Upload Image
