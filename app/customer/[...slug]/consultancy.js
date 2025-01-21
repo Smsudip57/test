@@ -7,7 +7,7 @@ const inter = Nunito({
 });
 import React,{useState,useEffect,useContext, } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, CheckCheck , SendHorizontal , X } from 'lucide-react'
+import { Search, CheckCheck , SendHorizontal , X, Headset  } from 'lucide-react'
 import axios from 'axios'
 import { MyContext } from '@/context/context'
 import io from "socket.io-client";
@@ -447,8 +447,9 @@ export default function Page() {
           className='w-[340px] md:w-[450px] h-[550px] p-4 bg-white  border rounded shadow'  >
             <div className='h-full w-full bg-[#] '>
               <div className='h-14 gap-5 pb-4 w-full border-b border-gray-300 flex items-center justify-between'>
-                <span className='flex items-center gap-5 text-white'>
+                <span className='flex items-center gap-2 text-gray-700'>
                  <span className='bg-green-500 w-2 h-2 rounded-full'></span>
+                 <Headset /><span className='font-semibold'>Live Chat</span>
                 {/* <div className='flex items-center gap-3'>
                 <img src={sessionProduct?.image} alt='' className='h-[40px] rounded-md overflow-hidden border border-gray-300'/>
                 <p className='text-gray-700 text-ellipsis pb- overflow-hidden text-wrap leading line-clamp-2 text-xs'>{sessionProduct?.Title}</p>
@@ -459,11 +460,21 @@ export default function Page() {
                 <div className='flex flex-col p-4 gap-2'>
                   {chatmessages.length > 0 && chatmessages.map((message, index) => (
                     <div className='flex justify-between items-end' key={index}>
-                      {message.sender === 'admin' && <span className=' text-gray-700 text-sm'> 2:30 am </span>}
+                      {message.sender === 'admin' && <span className=' text-gray-500 text-[10px] flex flex-col'><span>{new Date(message.timestamp).toLocaleString([], {
+                      // weekday: 'short', 
+                      year: 'numeric',  
+                        month: 'short',    
+                        day: 'numeric',    
+                        
+                      })} </span><span className='flex gap-1 items-end'>{new Date(message.timestamp).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                      })} </span></span>}
                     <span  className={`py-2 px-3 whitespace-pre-line w-max text-wrap bg-white text-gray-700 ${message.sender ==='user' ? 'rounded-b-2xl rounded-tr-2xl':'rounded-b-2xl rounded-tl-2xl'}  w-4/5 `}>
                     {message.message}
                     </span>
-                    {message.sender === 'user' && <span className=' text-gray-700 text-xs flex flex-col'><span>{new Date(message.timestamp).toLocaleString([], {
+                    {message.sender === 'user' && <span className=' text-gray-500 text-[10px] flex flex-col'><span>{new Date(message.timestamp).toLocaleString([], {
                       // weekday: 'short', 
                       year: 'numeric',  
                         month: 'short',    

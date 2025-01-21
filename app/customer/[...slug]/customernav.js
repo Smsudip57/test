@@ -89,7 +89,7 @@ export default function Adminnav({user, login}) {
                     onAbort={()=>setprofileopen(false)} 
                     onBlur={()=>setprofileopen(false)} 
                   >
-                    {context?.user?.profile?.avatarUrl !== 'https://default-avatar-url.com' ? <User2 className='border-2 border-gray-500 rounded-full' style={{width:'1.8em', height:'1.8em'}}/>: <img style={{width:'1.8em', height:'1.8em'}} className='border-2 border-gray-500 rounded-full' src={context?.user?.profile?.avatarUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s'}/>}
+                    {context?.user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User2 className='border-2 border-gray-500 rounded-full' style={{width:'1.8em', height:'1.8em'}}/>: <img style={{width:'1.8em', height:'1.8em'}} className='border-2 border-gray-500 rounded-full' src={context?.user?.profile?.avatarUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s'}/>}
                     <span className=''>{`${context?.user?.profile?.name}`}</span>
                     
                     {profileopen && context?.user && context?.user?.role && <div className="absolute top-[200%] right-0 p-3 w-content bg-white rounded-lg overflow-hidden text-gray-600 flex flex-col gap-2
@@ -98,7 +98,7 @@ export default function Adminnav({user, login}) {
                     >
 
                     <span className='flex gap-3 items-center min-w-max border-b pb-3 px-2'>
-                    {context?.user?.profile?.avatarUrl !== 'https://default-avatar-url.com' ? <User2 className='border-2 border-gray-500 rounded-full' style={{width:'2em', height:'2em'}}/>: <img style={{width:'2em', height:'2em'}} className='border-2 border-gray-500 rounded-full' src={context?.user?.profile?.avatarUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s'}/>}
+                    {context?.user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User2 className='border-2 border-gray-500 rounded-full' style={{width:'2em', height:'2em'}}/>: <img style={{width:'2em', height:'2em'}} className='border-2 border-gray-500 rounded-full' src={context?.user?.profile?.avatarUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s'}/>}
                     <span className='flex flex-col min-w-max'><span>{`${context?.user?.profile?.name}`}</span><span className='font-normal'>{`${context?.user?.email}`}</span></span></span>
 
 
