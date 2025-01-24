@@ -319,7 +319,7 @@ const handleDelete = async () => {
             </span> */}
             <div className='flex items-center  text-gray-700 gap-3'>
             <span className='flex gap-3 items-center min-w-max px-2 text-gray-700'>
-                    {Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User2 className='border-[3px] text-gray-700 border-gray-500 rounded-full' style={{width:'2em', height:'2em'}}/>: <img style={{width:'3em', height:'3em'}} className='border-2 cursor-pointer border-gray-500 rounded-full' src={Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s'}/>}</span>
+                    {Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User2 className='border-[3px] text-gray-700 border-gray-500 rounded-full' style={{width:'2em', height:'2em'}}/>: <img style={{width:'3em', height:'3em'}} className='border-2 cursor-pointer border-gray-500 rounded-full' src={Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl} alt='Not Available'/>}</span>
             {sessionActive && <div className='flex flex-col items-start gap-1'>
                 <p className='text-gray-700 text-ellipsis overflow-hidden text-wrap leading line-clamp-2 text-base'> {Sessions?.find((session) => session?._id === sessionActive)?.user?.profile?.name ?? 'No name available'}</p>
                 <p className='text-gray-700 text-ellipsis overflow-hidden text-wrap leading line-clamp-2 text-sm'> {Sessions?.find((session) => session?._id === sessionActive)?.user?.email ?? 'No email available'}</p>
