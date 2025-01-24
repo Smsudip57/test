@@ -244,7 +244,7 @@ export default function EditProductList() {
     <div className="w-full mx-auto p-10 bg-white rounded-lg shadow-lg">
     <h1 className="text-xl font-bold mb-4 w-full text-left">Edit Service</h1>
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
-      <form onSubmit={handleSave} className="space-y-4 flex items-center">
+      <div onSubmit={handleSave} className="space-y-4 flex items-center">
         <div className='mb-4 basis-1/2'>
           {/* Image Upload */}
         <div className="relative overflow-hidden">
@@ -388,7 +388,7 @@ export default function EditProductList() {
         </button>
       </div>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 )}

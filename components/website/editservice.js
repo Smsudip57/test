@@ -203,7 +203,9 @@ export default function EditServiceList() {
               <div className="p-10 bg-white rounded-md w-full mx-auto text-gray-700">
               <h1 className="text-xl font-bold mb-4 w-full text-left">Edit Service</h1>
 
-              <form  className="w-full flex flex-row items-center">
+              <div  className="w-full flex flex-row items-center"
+                onclick={(e) => e.preventDefault()}
+              >
               <div className="mb-4 basis-1/2"
                 
               >
@@ -318,7 +320,7 @@ export default function EditServiceList() {
                             </button>
                           </div>
                   </div>
-              </form>
+              </div>
               </div>
 
 
