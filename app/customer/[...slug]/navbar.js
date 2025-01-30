@@ -24,11 +24,11 @@ export default function Navbar() {
       name: 'Consultancy',
       basePath: '/customer/consultancy',
     },
-    {
-      icons : <DollarSign  style={{ width: '1em', height: '1em' }}/>,
-      name: 'Payment',
-      basePath: '/customer/payment',
-    },
+    // {
+    //   icons : <DollarSign  style={{ width: '1em', height: '1em' }}/>,
+    //   name: 'Payment',
+    //   basePath: '/customer/payment',
+    // },
     {
       icons : <Settings style={{ width: '1em', height: '1em' }}/>,
       name: 'Setting',

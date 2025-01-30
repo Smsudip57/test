@@ -3,6 +3,7 @@ import Navbar from './navbar';
 // import Login from './login';
 import Editwebsite from './website/editwebsite';
 import Consultancy from './consultancy';
+import Settings from './settings'
 import { Nunito } from 'next/font/google';
 
 const inter = Nunito({
@@ -34,6 +35,8 @@ export default async function Page({params}) {
         return <Editwebsite params={slug}/>
       case 'consultancy':
         return <Consultancy />
+      case 'setting':
+        return <Settings />
       case 'login':
         // return <Login />
       default:

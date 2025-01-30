@@ -162,7 +162,7 @@ export default function Page() {
         setbookon(false)
       }
     }catch(e){
-
+      console.log(e)
     }
     finally
     {

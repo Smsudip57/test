@@ -203,7 +203,9 @@ export default function EditServiceList() {
               <div className="p-10 bg-white rounded-md w-full mx-auto text-gray-700">
               <h1 className="text-xl font-bold mb-4 w-full text-left">Edit Service</h1>
 
-              <form  className="w-full flex flex-row items-center">
+              <form  className="w-full flex flex-row items-center"
+                onSubmit={(e)=>e.preventDefault()}  
+              >
               <div className="mb-4 basis-1/2"
                 
               >

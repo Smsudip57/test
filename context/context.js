@@ -52,7 +52,7 @@ export const ThemeProvider = ({ children }) => {
           }
         }
       } catch (err) {
-        customToast(err.response.data)
+        customToast(err?.response?.data)
         setError(err.message); 
         setUser(null); 
         if(window.location.href.includes("dashboard")){
