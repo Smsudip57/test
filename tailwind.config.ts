@@ -1,3 +1,4 @@
+import PreviousMap_ from 'postcss/lib/previous-map'
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
@@ -14,6 +15,10 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'custom-gradient': 'linear-gradient(to left, #4C6C61, #446E6D, #76B4B1, #75A899, #E5F8F6, #66A3A6, #C1ECE5)',
       },
+      colors: {
+        primary: '#446E6D',
+        primary_dark: '#1a2928',
+      }
     },
   },
   plugins: [],

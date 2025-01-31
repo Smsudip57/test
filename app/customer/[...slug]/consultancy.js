@@ -275,8 +275,16 @@ export default function Page() {
     <div className='min-h-screen w-full'>
         <div className='w-full flex items-center justify-between relative mb-6'>
         <h2 className="text-xl font-semibold text-center text-gray-700">Book Consultaion</h2>
-            <input type="text" placeholder='Search' className='border rounded-md px-3 py-2 outline-none outline-offset-0 focus:outline-[#446E6D] text-sm text-[#446E6D]'/>
-            <Search className='absolute right-2 cursor-pointer active:opacity-50 text-[#446E6D]' style={{width: '1em', height: '1em'}}/>
+        <nav>
+          <ol className="flex items-center gap-2">
+            <li>
+              <a className="font-medium text-gray-600 hover:text-primary" href="/">
+                Dashboard /
+              </a>
+            </li>
+            <li className="font-medium text-primary">Book Consultaion</li>
+          </ol>
+        </nav>
         </div>
 
 
@@ -286,12 +294,12 @@ export default function Page() {
           
         {service?.length > 0 ? (
     <table className="table-auto w-full border-collapse ">
-      <thead className={`${inter.className} text-sm text-gray-500`}>
+      <thead className={`${inter.className} text-sm text-black`}>
         <tr className="border-b border-gray-200">
-          <th className="px-4 py-2 text-left font-semibold">Service</th>
-          {user?.booking.length>0 ?<th className="px-4 py-2 text-left font-semibold">Date</th>:<td></td>}
-          {user?.booking.length>0 ? <th className="px-4 py-2 text-left font-semibold">Time</th>:<td></td>}
-          <th className="pl-7 py-2 text-left font-semibold">Action</th>
+          <th className="px-4 pb-4 text-left font-medium">Service</th>
+          {user?.booking.length>0 ?<th className="px-4 pb-4 text-left font-medium">Date</th>:<td></td>}
+          {user?.booking.length>0 ? <th className="px-4 pb-4 text-left font-medium">Time</th>:<td></td>}
+          <th className="pl-7 pb-4 text-left font-medium">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -316,7 +324,7 @@ export default function Page() {
                   alt=""
                   className="h-10 object-cover"
                 />
-                <p className="font-semibold">{item?.Title}</p>
+                <p className="font-semibold text-gray-700">{item?.Title}</p>
               </td>
               <td className="px-4 py-2 text-sm">
                 {startedAt &&
@@ -391,7 +399,7 @@ export default function Page() {
               exit="exit"
               className='w-[340px] md:w-[450px] h-[550px] flex flex-col gap-6'  >
               <div className='p-6 bg-white  border rounded shadow'>
-                <h2 className={`${inter.className} text-sm text-gray-500 font-semibold text-center text-[#] border-b pb-3`}>Pick Your Time</h2>
+                <h2 className={`${inter.className} text-sm text-black font-medium text-center text-[#] border-b pb-3`}>Pick Your Time</h2>
                 <input
                   type="datetime-local"
                   id="datetime"
@@ -403,9 +411,9 @@ export default function Page() {
                 />
               </div>
               <div className='p-6 bg-white h-full border rounded shadow'>
-                <h2 className={`${inter.className} text-md font-semibold text-center text-sm text-gray-500 border-b pb-3 `}>Prefered Platform</h2>
+                <h2 className={`${inter.className} text-md font-medium text-center text-sm text-black border-b pb-3 `}>Prefered Platform</h2>
                 <div className='grid grid-rows-3 gap-2 pt-5'>
-                <div className={` flex  items-center justify-center gap-5 ${platform === "Skype" && " border-gray-700"} border-2 rounded cursor-pointer text-xl`}
+                <div className={` flex  items-center justify-center gap-5 ${platform === "Skype" && " border-primary"} border-2 rounded cursor-pointer text-xl`}
                   onClick={()=>setplatform('Skype')}
                 >
                   <img src='https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2hvdy10by11c2Utc2t5cGUtMS5qcGciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjI5MH19fQ==' className=' h-[50px]'/>
@@ -413,12 +421,12 @@ export default function Page() {
                     Skype
                   </span> */}
                 </div>
-                <div className={` flex px-5  items-center justify-center ${platform === "Google Meet" && " border-gray-700"} border-2 rounded cursor-pointer text-xl`}
+                <div className={` flex px-5  items-center justify-center ${platform === "Google Meet" && " border-primary"} border-2 rounded cursor-pointer text-xl`}
                   onClick={()=>setplatform('Google Meet')}
                 >
                   <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Google_Meet_text_logo_%282020%29.svg/2560px-Google_Meet_text_logo_%282020%29.svg.png' className=' h-[30px]'/>
                 </div>
-                <div className={` flex px-5 max-h-[70px] overflow-hidden items-center justify-center ${platform === "Microsoft Team" && "  border-gray-700"} rounded border-2 cursor-pointer text-xl`}
+                <div className={` flex px-5 max-h-[70px] overflow-hidden items-center justify-center ${platform === "Microsoft Team" && "border-primary"} rounded border-2 cursor-pointer text-xl`}
                   onClick={()=>setplatform('Microsoft Team')}
                 >
                   <img src='https://varvid.com/wp-content/uploads/2021/03/teamsLogo.png' className=' h-[70px]'/>
