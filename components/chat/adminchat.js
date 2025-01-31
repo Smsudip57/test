@@ -75,7 +75,7 @@ const SupportChatting = () => {
             console.log(response.data[0])
             setSessions(response.data);
             setSessionActive(response.data[0]?._id);
-            setChatMessages(response.data.find(session => session._id === response.data[0]?._id)?.messages || [])
+            setChatMessages(response?.data?.find(session => session._id === response.data[0]?._id)?.messages || [])
             try {
                 await axios.get(`/api/chat/seen`, {
                     params: {
@@ -104,7 +104,7 @@ const SupportChatting = () => {
 
  const SelectACtiveSession = async(sessionId) => {
     setSessionActive(sessionId);
-      setChatMessages(Sessions.find(session => session._id === sessionId)?.messages || [])
+      setChatMessages(Sessions?.find(session => session._id === sessionId)?.messages || [])
       setSessions((prevSessions) =>
         prevSessions.map((session) =>
           session._id === sessionId
@@ -118,7 +118,7 @@ const SupportChatting = () => {
             : session
         )
       );
-      Sessions.find(session => session._id === sessionId)?.messages?.forEach((message) => {
+      Sessions?.find(session => session._id === sessionId)?.messages?.forEach((message) => {
         if (message.isReadByAdmin) return;
         socket.emit("adminReadsMessage", sessionId, message._id);
     });
@@ -319,7 +319,7 @@ const handleDelete = async () => {
             </span> */}
             <div className='flex items-center  text-gray-700 gap-3'>
             <span className='flex gap-3 items-center min-w-max px-2 text-gray-700'>
-                    {Sessions.find((s)=> s._id === sessionActive).user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User2 className='border-[3px] text-gray-700 border-gray-500 rounded-full' style={{width:'2em', height:'2em'}}/>: <img style={{width:'3em', height:'3em'}} className='border-2 cursor-pointer border-gray-500 rounded-full' src={Sessions.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s'}/>}</span>
+                    {Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User2 className='border-[3px] text-gray-700 border-gray-500 rounded-full' style={{width:'2em', height:'2em'}}/>: <img style={{width:'3em', height:'3em'}} className={`${Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl ? 'border-2 cursor-pointer border-gray-500 rounded-full':'text-nowrap'}`} src={Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl} alt='Not Available'/>}</span>
             {sessionActive && <div className='flex flex-col items-start gap-1'>
                 <p className='text-gray-700 text-ellipsis overflow-hidden text-wrap leading line-clamp-2 text-base'> {Sessions?.find((session) => session?._id === sessionActive)?.user?.profile?.name ?? 'No name available'}</p>
                 <p className='text-gray-700 text-ellipsis overflow-hidden text-wrap leading line-clamp-2 text-sm'> {Sessions?.find((session) => session?._id === sessionActive)?.user?.email ?? 'No email available'}</p>
@@ -343,10 +343,10 @@ const handleDelete = async () => {
             </div>
             <div className='h-[calc(92vh-112px)] w-full overflow-y-auto border border-gray-300'>
             <div className='flex flex-col p-4 gap-2 relative'>
-                {sessionActive && Sessions.find((s)=> s._id === sessionActive )?.user?.booking?.length>0 && <div title='Query Product' className={`w-full flex gap-5 border-b border-gray-300  mb-3 ${producStickOnTop && 'sticky top-0 bg-white '}`}>
+                {sessionActive && Sessions?.find((s)=> s._id === sessionActive )?.user?.booking?.length>0 && <div title='Query Product' className={`w-full flex gap-5 border-b border-gray-300  mb-3 ${producStickOnTop && 'sticky top-0 bg-white '}`}>
                 <table className="table-auto w-full border-collapse text-sm">
                     <tbody>
-                      {Sessions.find((s)=> s._id === sessionActive )?.user?.booking?.map((service, index) => {
+                      {Sessions?.find((s)=> s._id === sessionActive )?.user?.booking?.map((service, index) => {
                         const item = service?.serviceDetails;
                         const session = true
                         const startedAt = service?.time
