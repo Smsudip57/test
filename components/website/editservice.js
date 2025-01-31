@@ -203,13 +203,8 @@ export default function EditServiceList() {
               <div className="p-10 bg-white rounded-md w-full mx-auto text-gray-700">
               <h1 className="text-xl font-bold mb-4 w-full text-left">Edit Service</h1>
 
-<<<<<<< HEAD
               <form  className="w-full flex flex-row items-center"
                 onSubmit={(e)=>e.preventDefault()}  
-=======
-              <div  className="w-full flex flex-row items-center"
-                onclick={(e) => e.preventDefault()}
->>>>>>> aeae3d408106257497fdda3e7f58ff2829a7f019
               >
               <div className="mb-4 basis-1/2"
                 
@@ -325,7 +320,7 @@ export default function EditServiceList() {
                             </button>
                           </div>
                   </div>
-              </div>
+              </form>
               </div>
 
 
