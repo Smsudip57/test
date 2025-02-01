@@ -1,101 +1,112 @@
 "use client";
-import React,{useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-  const Webme = () => {
-    const [active, setActive] = useState('');
+const Webme = () => {
+  const [active, setActive] = useState("");
 
-    useEffect(() => {
-      console.log(active)
-    }, [active])
+  useEffect(() => {
+    console.log(active);
+  }, [active]);
 
-    return (
-        <section className="" style={{backgroundColor: "rgba(231,247,246,1)"}} id="services">
+  // List of services
+  const services = [
+    { key: "b", img: "/nextjs.jpg", link: "/branding?search=webdev#details" },
+    { key: "w", img: "/m365.jpg", link: "/workfrom anywhere?search=microsolft365#details" },
+    { key: "en", img: "/consult.png", link: "/endless support#details" },
+    { key: "m", img: "/nnetwork.jpg", link: "/modern workplace?search=networksecurity#details" },
+    { key: "m", img: "/newerp.jpg", link: "/modern workplace?search=erp#details" },
+    { key: "b", img: "/expt.jpg", link: "/branding?search=appdev#details" },
+    { key: "d", img: "/cctv.jpg", link: "/digital?search=surveillancesystems#details" },
+    { key: "d", img: "/iot.jpg", link: "/digital?search=iotsystems#details" },
+    { key: "w", img: "/micro-t.jpg", link: "/workfrom anywhere?search=windowsvirtualdesktop#details" },
+  ];
 
-          <div className="lg:w-full md:text-xl hidden lg:text-2xl text-[#282828] font-lora mb-10 font-extralight list-none lg:flex  justify-around p-5 box-border uppercase cursor-pointer opacity-50" >
-            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("w")} onMouseLeave={() => setActive('')}>Workfrom Anywhere</li>
-            <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
-            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("ex")} onMouseLeave={() => setActive('')}>Expertise</li>
-            <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
-            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("b")} onMouseLeave={() => setActive('')}> Branding</li>
-            <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
-            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("m")} onMouseLeave={() => setActive('')}>Modernworkplace</li>
-            <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
-            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("en")} onMouseLeave={() => setActive('')}>Endless Support</li>
-            <li className=" border-[1px] border-[#446E6D] opacity-50"></li>
-            <li className=" py-0 hover:opacity-60  text-nowrap" onMouseEnter={() => setActive("d")} onMouseLeave={() => setActive('')}>Digital</li>
-            </div>
-          <div className="text-center pb-10 md:pb-24 px-4 sm:px-0 lg:px-[48px] z-10">
-        <div className="mb-5 sm:mb-10 md:px-20 lg:px-89 px-5 ">
+  // Reorder list: bring related items to the top
+  const sortedServices = [...services].sort((a, b) => {
+    if (!active) return 0; // No sorting if no active hover
+    if (a.key === active && b.key !== active) return -1; // Move related items up
+    if (b.key === active && a.key !== active) return 1; // Move unrelated items down
+    return 0; // Keep original order for others
+  });
+
+  return (
+    <section className="" style={{ backgroundColor: "rgba(231,247,246,1)" }} id="services">
+      {/* Navbar */}
+      <div className="lg:w-full md:text-xl hidden lg:text-2xl text-[#282828] font-lora mb-10 font-extralight list-none lg:flex justify-around p-5 box-border uppercase cursor-pointer opacity-50 mt-6">
+        {[
+          { key: "w", label: "Workfrom Anywhere" },
+          { key: "ex", label: "Expertise" },
+          { key: "b", label: "Branding" },
+          { key: "m", label: "Modern Workplace" },
+          { key: "en", label: "Endless Support" },
+          { key: "d", label: "Digital" },
+        ].map((item, index) => (
+          <React.Fragment key={item.key}>
+            <li
+              className="py-0 hover:opacity-60 text-nowrap"
+              onClick={() => setActive(item.key)}
+              // onMouseLeave={() => setActive("")}
+            >
+              {item.label}
+            </li>
+            {index < 5 && <li className="border-[1px] border-[#446E6D] opacity-50"></li>}
+          </React.Fragment>
+        ))}
+      </div>
+
+      {/* Title Animation */}
+      <div className="text-center pb-10 md:pb-24 px-4 sm:px-0 lg:px-[48px] z-10">
+        <div className="mb-5 sm:mb-10 md:px-20 lg:px-89 px-5">
           <div className="relative cursor-pointer">
-            
-            <div className=" mx-auto w-full text-2xl md:text-xl lg:text-4xl text-[#446E6D] font-lora my-8 lg:my-0 lg:mb-16 font-bold list-none flex  justify-center items-center" >
-            <p className="upper">
-              <span className={`uppercase ${active==="w" ? "text-[#D5E928]" : ""}`}>w</span>
-              <span className={`uppercase ${active==="ex" ? "text-[#D5E928]" : ""}`}>E</span>
-              <span className={`uppercase ${active==="b" ? "text-[#D5E928]" : ""}`} >B</span>
-              <span className={`uppercase ${active==="m" ? "text-[#D5E928]" : ""}`}>M</span>
-              <span className={`uppercase ${active==="en" ? "text-[#D5E928]" : ""}`}>E</span>
-               <span className={` ${active==="d" ? "text-[#D5E928]" : ""}`}>DIGITAL</span></p>
+            <div className="mx-auto w-full text-2xl md:text-xl lg:text-4xl text-[#446E6D] font-lora my-8 lg:my-0 lg:mb-16 font-bold flex justify-center items-center">
+              <p className="upper">
+                <span className={`uppercase transition-all duration-300 ${active === "w" ? "text-[#D5E928]" : ""}`}>W</span>
+                <span className={`uppercase transition-all duration-300 ${active === "ex" ? "text-[#D5E928]" : ""}`}>E</span>
+                <span className={`uppercase transition-all duration-300 ${active === "b" ? "text-[#D5E928]" : ""}`}>B</span>
+                <span className={`uppercase transition-all duration-300 ${active === "m" ? "text-[#D5E928]" : ""}`}>M</span>
+                <span className={`uppercase transition-all duration-300 ${active === "en" ? "text-[#D5E928]" : ""}`}>E</span>
+                <span className={`transition-all duration-300 ${active === "d" ? "text-[#D5E928]" : ""}`}>DIGITAL</span>
+              </p>
             </div>
-            
-            
           </div>
         </div>
-        <div className="flex flex-col justify-center sm:flex-wrap gap-4 lg:gap-5 sm:flex-row">
-          <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='b'?"hidden sp":"block"} `}>
-              <span>
-                <a href="/branding?search=webdev#details"><img src="/nextjs.jpg"  className={`${active==='b'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"} w-full  p-1 rounded-md overflow-hidden aspect-[16/9]`}  /></a>
-              </span>
-          </div>
-          <div className={`${active!==''&&active!=='w'?"hidden sp":"block"} sm:basis-1/3  lg:basis-1/4 aspect-[16/9]`}>
-          <span>
-                {/* <img src="Odoo ERP.jpg"/> */}
-                <a href="/workfrom anywhere?search=microsolft365#details"><img src="/m365.jpg" className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[16/9]`}/></a>
-              </span>
-          </div>
-          <div className={`${active!==''&&active!=='en'?"hidden sp":"block"} sm:basis-1/3  lg:basis-1/4 `}>
-          <span>
-          <a href="/endless support#details"><img src="/consult.png" className={`${active==='en'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden aspect-[16/9]`}/></a>
-              </span>
-          </div>
-          <div className={`${active!==''&&active!=='m'?"hidden sp":"block"} sm:basis-1/3  lg:basis-1/4 serviceforce aspect-[16/9]`}>
-          <span>
-          <a href="/modern workplace?search=networksecurity#details"><img src="/nnetwork.jpg" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[16/9]`}/></a>
-              </span>
-          </div>
-          <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='m'?"hidden sp":"block"} serviceforce aspect-[16/9]`} >
-          <span>
-          <a href="/modern workplace?search=erp#details"><img src="/newerp.jpg" className={`${active==='m'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500 "}  p-1 rounded-md overflow-hidden serviceforce aspect-[16/9]`}/></a>
-              </span>
-          </div>
-          <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='b'?"hidden sp":"block"} aspect-[16/9]`}>
-              <span>
-                <a href="/branding?search=appdev#details"><img src="/expt.jpg"  className={`${active==='b'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[16/9]`}  /></a>
-              </span>
-          </div>
 
-          {/* new */}
-          <div className={`${active!==''&&active!=='d'?"hidden sp":"block"} sm:basis-1/3  lg:basis-1/4 aspect-[16/9]`}>
-          <span>
-                <a href="/digital?search=surveillancesystems#details"><img src="/cctv.jpg" className={`${active==='d'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[16/9]`}/></a>
-              </span>
-          </div>
-          <div className={`${active!==''&&active!=='d'?"hidden sp":"block"} sm:basis-1/3  lg:basis-1/4 aspect-[16/9]`}>
-          <span>
-                <a href="/digital?search=iotsystems#details"><img src="/iot.jpg" className={`${active==='d'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}  p-1 rounded-md overflow-hidden serviceforce aspect-[16/9]`}/></a>
-              </span>
-          </div>
-          <div className={`sm:basis-1/3  lg:basis-1/4 ${active!==''&&active!=='w'?"hidden sp":"block"} aspect-[16/9]`}>
-              <span>
-                <a href="/workfrom anywhere?search=windowsvirtualdesktop#details"><img src="/micro-t.jpg"  className={`${active==='w'?"bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1":"border-[1px] border-[#76b4b1d0] shadow-md shadow-slate-500"}   p-1 rounded-md overflow-hidden aspect-[16/9]`}  /></a>
-              </span>
-          </div>
+        {/* Image Cards Grid */}
+        <div className="flex flex-col justify-center sm:flex-wrap gap-4 lg:gap-5 sm:flex-row">
+          <AnimatePresence>
+            {sortedServices.map((item, index) => (
+              <motion.div
+              key={item.key + index}
+              layout // Enables smooth movement transition
+              initial={{ opacity: 1,  }}
+              animate={{
+                opacity: active === "" || active === item.key ? 1 : 0.1,
+                scale: active === "" || active === item.key ? 1 : 0.95, // Fade unrelated items
+                // y: 0,
+              }}
+              exit={{ opacity: 0,  }}
+              transition={{ type: "tween", duration: .5, ease: "easeInOut",
+                opacity: { duration: active === "" || active === item.key ? 0.5 : 0.5 }, // Longer fade for unrelated
+               }}
+              className="sm:basis-1/3 lg:basis-1/4 aspect-[16/9] "
+            >
+            
+                <a href={item.link}>
+                  <img
+                    src={item.img}
+                    className={`w-full p-1 rounded-md overflow-hidden aspect-[16/9] border-[1px] shadow-md shadow-slate-500 transition-all duration-300 ${
+                      active === item.key ? "bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1" : "border-[#76b4b1d0]"
+                    }`}
+                  />
+                </a>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
-          </div>
-      </section>
-      
-    );
-  };
-  
-  export default Webme;
-  
+      </div>
+    </section>
+  );
+};
+
+export default Webme;
