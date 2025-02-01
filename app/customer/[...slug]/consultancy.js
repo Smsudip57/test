@@ -288,20 +288,29 @@ export default function Page() {
         </div>
 
 
-        <div className='w-full flex gap-6'>
+        <div className='w-full flex gap-6 '>
         <AnimatePresence>
-        <motion.div className='w-full bg-white p-6 shadow border'>
-          
+        <motion.div className='w-full bg-white p-6 shadow border  max-h-[550px] overflow-hidden'>
+          <div className='overflow-y-scroll max-h-full relative'>
         {service?.length > 0 ? (
     <table className="table-auto w-full border-collapse ">
-      <thead className={`${inter.className} text-sm text-black`}>
-        <tr className="border-b border-gray-200">
+     <thead className={`${inter.className} text-sm text-black `}>
+        <tr className=" sticky top-0 bg-white z-10 shadow-sm shadow-gray-200">
           <th className="px-4 pb-4 text-left font-medium">Service</th>
-          {user?.booking.length>0 ?<th className="px-4 pb-4 text-left font-medium">Date</th>:<td></td>}
-          {user?.booking.length>0 ? <th className="px-4 pb-4 text-left font-medium">Time</th>:<td></td>}
+          {user?.booking.length > 0 ? (
+            <th className="px-4 pb-4 text-left font-medium">Date</th>
+          ) : (
+            <th className="px-4 pb-4 text-left font-medium"></th>
+          )}
+          {user?.booking.length > 0 ? (
+            <th className="px-4 pb-4 text-left font-medium">Time</th>
+          ) : (
+            <th className="px-4 pb-4 text-left font-medium"></th>
+          )}
           <th className="pl-7 pb-4 text-left font-medium">Action</th>
         </tr>
       </thead>
+
       <tbody>
         {service?.map((item, index) => {
           const session = user?.booking?.find(
@@ -374,10 +383,11 @@ export default function Page() {
       </tbody>
     </table>
   ) : (
-    <div className="h-[80vh] flex items-center justify-center">
+    <div className="h-[550px] flex items-center justify-center">
       <p className="text-gray-500">No Service Found</p>
     </div>
   )}
+        </div>
         </motion.div></AnimatePresence>
 
 
