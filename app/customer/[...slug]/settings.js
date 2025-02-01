@@ -151,7 +151,7 @@ export default function Settings() {
                         name="name"
                         value={fields?.name || ""}
                         onChange={handleChange}
-                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg--900 dark:text-"
                         placeholder="Enter your full name"
                         autoComplete="new-password"
                         type="text"
@@ -166,7 +166,7 @@ export default function Settings() {
                         name="phoneNumber"
                         value={fields?.phoneNumber || ""}
                         onChange={handleChange}
-                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg--900 dark:text-"
                         placeholder="Enter your phone number"
                         autoComplete="new-username"
                         type="text"
@@ -185,7 +185,7 @@ export default function Settings() {
                         name="newPassword"
                         value={fields?.newPassword || ""}
                         onChange={handleChange}
-                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg--900 dark:text-"
                         placeholder="Enter new password"
                         autoComplete="new-password"
                         type="password"
@@ -200,7 +200,7 @@ export default function Settings() {
                         name="confirmPassword"
                         value={fields?.confirmPassword || ""}
                         onChange={handleChange}
-                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg--900 dark:text-"
                         placeholder="Confirm new password"
                         autoComplete="new-password"
                         type="password"
@@ -224,7 +224,7 @@ export default function Settings() {
                         name="companyName"
                         value={fields?.companyName || ""}
                         onChange={handleChange}
-                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg--900 dark:text-"
                         placeholder="Enter company name"
                         autoComplete="new-password"
                         type="text"
@@ -239,7 +239,7 @@ export default function Settings() {
                         name="address"
                         value={fields?.address || ""}
                         onChange={handleChange}
-                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg--900 dark:text-"
                         placeholder="Enter company address"
                         autoComplete="new-password"
                         type="text"
@@ -258,7 +258,7 @@ export default function Settings() {
                         name="companyRole"
                         value={fields?.companyRole || ""}
                         onChange={handleChange}
-                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg--900 dark:text-"
                         placeholder="Enter your role"
                         autoComplete="off"
                         type="text"
@@ -273,7 +273,7 @@ export default function Settings() {
                         name="oldPassword"
                         value={fields?.oldPassword || ""}
                         onChange={handleChange}
-                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                        className="w-full rounded-md border px-12 py-2 text-dark focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg--900 dark:text-"
                         placeholder="Enter old password"
                         autoComplete="current-password"
                         type="password"
