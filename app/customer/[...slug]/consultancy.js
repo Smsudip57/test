@@ -353,7 +353,7 @@ export default function Page() {
                   </button>
                 ) : (
                   <button
-                    className={` ${sessionProduct?._id === item?._id ? 'text-red-500' : 'text-[#446E6D]'}  font-semibold text-sm hover:opacity-80 active:opacity-50 py-2 px-3 rounded-md`}
+                    className={` ${sessionProduct?._id === item?._id ? 'text-red-500' : 'text-[#446E6D]'}  font-semibold text-sm hover:opacity-80 active:opacity-50 py-2 px-3 rounded-md text-nowrap`}
                     onClick={() => {
                       if(sessionProduct?._id === item?._id ){
                         setbookon()
