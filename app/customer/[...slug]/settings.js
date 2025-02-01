@@ -87,7 +87,7 @@ export default function Settings() {
           <h3 className="font-medium text-dark">{title}</h3>
         </div>
         <div className="p-7 text-center">
-          <div className="mb-4 flex justify-center relative cursor-pointer">
+          <div className=" flex justify-center relative cursor-pointer">
             <label className="absolute opacity-0 hover:opacity-100 transition-opacity duration-500 ease-in-out z-10 cursor-pointer flex flex-col items-center justify-center bg-primary/70 p-4 rounded-full h-full aspect-square">
               <Upload className="text-white" size={24} />
               <input type="file" className="hidden" onChange={handleUpload} />
@@ -96,12 +96,12 @@ export default function Settings() {
             <img
               src={imageSrc}
               alt="unavailable"
-              width={100}
-              height={100}
+              width={145}
+              height={145}
               className="rounded-full aspect-square border shadow"
             />
           </div>
-          <div className="mt-6 flex justify-center gap-3">
+          <div className="mt-6 flex justify-center gap-3 hidden">
             <button className="text-sm text-red-500 hover:text-red-700 flex items-center gap-2">
               <Trash size={16} />
               Delete
