@@ -171,7 +171,9 @@ const Navbar = () => {
             <a href="/#pricing" className="cursor-pointer hover:opacity-70  hidden lg:block">
             Pricing
             </a>
-            <a href="https://store.webmedigital.com" className="cursor-pointer hover:opacity-70 hidden xl:block">
+            <a href="https://store.webmedigital.com" className="cursor-pointer hover:opacity-70 hidden xl:block"
+              style={{display:'none'}}
+            >
             Store
             </a>
             <div>

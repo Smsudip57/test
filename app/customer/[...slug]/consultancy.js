@@ -295,7 +295,7 @@ export default function Page() {
         {service?.length > 0 ? (
     <table className="table-auto w-full border-collapse ">
      <thead className={`${inter.className} text-sm text-black `}>
-        <tr className=" sticky top-0 bg-white z-10 shadow-sm shadow-gray-200">
+        <tr className=" sticky top-0 bg-white z-[1] shadow-sm shadow-gray-200">
           <th className="px-4 pb-4 text-left font-medium">Service</th>
           {user?.booking.length > 0 ? (
             <th className="px-4 pb-4 text-left font-medium">Date</th>

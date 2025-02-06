@@ -1,7 +1,6 @@
 import Adminnav from './customernav';
 import Navbar from './navbar';
-// import Login from './login';
-import Editwebsite from './website/editwebsite';
+import Profile from './profile';
 import Consultancy from './consultancy';
 import Settings from './settings'
 import { Nunito } from 'next/font/google';
@@ -31,14 +30,12 @@ export default async function Page({params}) {
     }
         
     switch (slug[0]) {
-      case 'website':
-        return <Editwebsite params={slug}/>
       case 'consultancy':
         return <Consultancy />
       case 'setting':
         return <Settings />
-      case 'login':
-        // return <Login />
+      case 'profile':
+        return <Profile />
       default:
         return (
           <div className='p-6 pt-24 h-[200vh]'>

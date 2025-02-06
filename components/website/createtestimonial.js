@@ -1,42 +1,44 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { Loader2, UploadCloud, X } from 'lucide-react'; // Icons
+import { MyContext } from '@/context/context';
+import { context } from '@react-three/fiber';
 
 const CreateTestimonial = () => {
   const [formData, setFormData] = useState({
     Testimonial: '',
+    video: null,
+    image: null,
     postedBy: '',
     role: '',
-    image: null,
-    relatedService: '',  // Only one service
-    relatedIndustry: '', // Only one industry
+    relatedService: '',
+    relatedIndustries: '',
   });
+
   const [services, setServices] = useState([]);
   const [industries, setIndustries] = useState([]);
   const [message, setMessage] = useState('');
+  const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
+  const { customToast } = useContext(MyContext)
 
   useEffect(() => {
-    // Fetch services and industries from the backend
-    const fetchServices = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get('/api/service/getservice');
-        setServices(response.data.services);
+        const [serviceRes, industryRes] = await Promise.all([
+          axios.get('/api/service/getservice'),
+          axios.get('/api/industry/get'),
+        ]);
+        setServices(serviceRes.data.services || []);
+        setIndustries(industryRes.data.industries || []);
       } catch (error) {
-        console.error('Error fetching services:', error);
+        console.error('Error fetching data:', error);
       }
     };
-
-    const fetchIndustries = async () => {
-      try {
-        const response = await axios.get('/api/industry/get');
-        setIndustries(response.data.industries);
-      } catch (error) {
-        console.error('Error fetching industries:', error);
-      }
-    };
-
-    fetchServices();
-    fetchIndustries();
+    fetchData();
   }, []);
 
   const handleInputChange = (e) => {
@@ -44,165 +46,222 @@ const CreateTestimonial = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e) => {
-    setFormData((prev) => ({ ...prev, image: e.target.files[0] }));
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const { name } = e.target;
+
+    if (!file) return;
+
+    if (name === 'image') {
+      setImagePreview(URL.createObjectURL(file));
+    } else if (name === 'video') {
+      setVideoPreview(URL.createObjectURL(file));
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: file }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    // Ensure all required fields are filled in
-    if (!formData.Testimonial || !formData.postedBy || !formData.role || !formData.image) {
-      setMessage('Please fill in all the fields and upload an image.');
+    if (!formData.Testimonial || !formData.postedBy || !formData.role || !formData.image || !formData.video) {
+      customToast({
+        success:false,
+        message: 'Please fill all information!'
+      })
+      setLoading(false);
       return;
     }
 
     const data = new FormData();
-    data.append('Testimonial', formData.Testimonial);
-    data.append('postedBy', formData.postedBy);
-    data.append('role', formData.role);
-    data.append('image', formData.image);
-
-    // Append the selected related service and industry to the FormData
-    if (formData.relatedService) {
-      data.append('relatedService', formData.relatedService);
-    }
-    if (formData.relatedIndustry) {
-      data.append('relatedIndustry', formData.relatedIndustry);
-    }
+    Object.keys(formData).forEach((key) => {
+      data.append(key, formData[key]);
+    });
 
     try {
       const response = await axios.post('/api/testimonial/create', data, {
         headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true,
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setProgress(percentCompleted);
+        },
       });
 
       if (response.status === 201) {
         setMessage('Testimonial created successfully!');
+        setProgress(0);
+        setLoading(false);
+        setImagePreview(null);
+        setVideoPreview(null);
         setFormData({
           Testimonial: '',
+          video: null,
+          image: null,
           postedBy: '',
           role: '',
-          image: null,
-          relatedService: '',  // Reset the service selection
-          relatedIndustry: '', // Reset the industry selection
+          relatedService: '',
+          relatedIndustries: '',
         });
+        console.log('sudip')
+        customToast(response.data)
       }
     } catch (error) {
       console.error('Error creating testimonial:', error);
-      setMessage('Failed to create testimonial. Please try again.');
+      customToast(error.response?.data)
+      setProgress(0);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-6 text-center">Create Testimonial</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="max-w-full mx-auto p-8 bg-white rounded-lg shadow-lg border">
+      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Create Testimonial</h2>
+
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex flex-col justify-center items-center z-50">
+          <Loader2 className="h-12 w-12 animate-spin text-white" />
+          <p className="text-white text-lg font-semibold mt-2">{progress}% Uploaded</p>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="mt-16  grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <div className='flex gap-4'>
+        {/* Image Upload with Preview */}
+        <div className="relative  max-w-64 w-full h-max border rounded-lg p-4 text-center cursor-pointer hover:opacity-80 transition">
+          {imagePreview ? (
+            <img src={imagePreview} alt="Preview" className="w-full aspect-square object-cover rounded-lg" />
+          ) : (
+            <label className="mb-2 flex items-center aspect-square justify-center">
+              <div>
+              <UploadCloud className="mx-auto h-12 w-12 text-gray-500" />
+              <p className="text-gray-700 font-medium">Click to upload an image</p>
+              <input
+                type="file"
+                accept="image/*"
+                name="image"
+                onChange={handleFileChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                required
+                />
+                </div>
+            </label>
+          )}
+        </div>
+
+
+        {/* Video Upload with Preview */}
+        <div className="relative w-full h-max aspect-[16/9] border rounded-lg p-4 text-center cursor-pointer hover:opacity-80 transition flex items-center justify-center">
+          {videoPreview ? (
+            <video src={videoPreview} controls className="w-full h-48 object-cover rounded-lg" />
+          ) : (
+            <label className="mb-2 flex items-center aspect-[16/9] justify-center">
+              <span className='mx-auto w-max'>
+
+              <UploadCloud className="mx-auto h-12 w-12 text-gray-500" />
+              <p className="text-gray-700 font-medium">Click to upload a video</p>
+              <input
+                type="file"
+                accept="video/*"
+                name="video"
+                onChange={handleFileChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                required
+                />
+                </span>
+            </label>
+          )}
+        </div>
+            </div>
+        <div>
         {/* Testimonial Input */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Testimonial</label>
+        <div>
+          <label className="mb-2 block text-gray-700 font-medium">Testimonial</label>
           <textarea
             name="Testimonial"
             value={formData.Testimonial}
             onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-2 border rounded-lg mb-2 focus:ring-2 focus:ring-blue-500"
             rows="4"
             required
-          ></textarea>
-        </div>
-
-        {/* Author's Name Input */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Posted By</label>
-          <input
-            type="text"
-            name="postedBy"
-            value={formData.postedBy}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            required
           />
         </div>
-
-        {/* Role Input */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Role</label>
-          <input
-            type="text"
-            name="role"
-            value={formData.role}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            required
-          />
+        {/* Author Info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="mb-2 block text-gray-700 font-medium">Posted By</label>
+            <input
+              type="text"
+              name="postedBy"
+              value={formData.postedBy}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg mb-2"
+              required
+            />
+          </div>
+          <div>
+            <label className="mb-2 block text-gray-700 font-medium">Role</label>
+            <input
+              type="text"
+              name="role"
+              value={formData.role}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg mb-2"
+              required
+            />
+          </div>
         </div>
 
-        {/* Image Upload */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Upload Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            required
-          />
-        </div>
-
-        {/* Related Service */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Related Service</label>
-          <select
-            name="relatedService"
-            value={formData.relatedService} // Single selection value
-            onChange={handleInputChange} // Handle single selection change
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            {services.length > 0 ? (
-              services.map((service) => (
+        {/* Related Service & Industry */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="mb-2 block text-gray-700 font-medium">Related Service</label>
+            <select
+              name="relatedService"
+              value={formData.relatedService}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg mb-2"
+            >
+              <option value="">Select a Service</option>
+              {services.map((service) => (
                 <option key={service._id} value={service._id}>
                   {service.Title}
                 </option>
-              ))
-            ) : (
-              <option disabled>No services available</option>
-            )}
-          </select>
-        </div>
-
-        {/* Related Industry */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Related Industry</label>
-          <select
-            name="relatedIndustry"
-            value={formData.relatedIndustry} // Single selection value
-            onChange={handleInputChange} // Handle single selection change
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            {industries.length > 0 ? (
-              industries.map((industry) => (
-                <option key={industry._id} value={industry._id}>
-                  {industry.Title}
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="mb-2 block text-gray-700 font-medium">Related Industry</label>
+            <select
+              name="relatedIndustries"
+              value={formData.relatedIndustries}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg mb-2"
+            >
+              <option value="">Select a Industry</option>
+              {industries.map((service) => (
+                <option key={service._id} value={service._id}>
+                  {service.Title}
                 </option>
-              ))
-            ) : (
-              <option disabled>No industries available</option>
-            )}
-          </select>
+              ))}
+            </select>
+          </div>
+        </div>
         </div>
 
+      </form>
         {/* Submit Button */}
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mt-16 max-w-64 mx-auto">
           <button
-            type="submit"
-            className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none"
+            onClick={handleSubmit}
+            className="bg-blue-500 text-white p-2 rounded w-full transition duration-300"
           >
-            Submit Testimonial
+            Create Testimonial
           </button>
         </div>
-      </form>
-
-      {/* Message */}
-      {message && <p className="text-center text-lg font-medium">{message}</p>}
     </div>
   );
 };

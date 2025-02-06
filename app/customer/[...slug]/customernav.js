@@ -56,7 +56,7 @@ export default function Adminnav({user, login}) {
 
   return (
     <header className='bg-white w-full px-20 py-5 text-[#446E6D border-b-2 border-[#446e6d25] shadow-md fixed top-0 z-10'>
-        <div className='container mx-auto flex justify-between items-center'>
+        <div className=' w-full mx-auto flex justify-between items-center'>
         <div className='flex items-center space-x-4 justify-center'>
         <Link href={`/`}>
         <img alt="logo" width="17" height="17"  className="cursor-pointer hover:animate-slowspin"  src="/logo.svg"/>
