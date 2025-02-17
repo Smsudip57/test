@@ -4,6 +4,7 @@ import "./globals.css";
 import StarsCanvas from "@/components/main/StarBackground";
 import Navbar from "@/components/main/Navbar";
 import Footer from "@/components/main/Footer";
+import Chat from "@/components/chat/globalSupportChat";
 import { ThemeProvider  } from "@/context/context";
 import { ToastContainer } from 'react-toastify'; 
 import ConfirimModel from '@/components/main/ConfirmModel';
@@ -41,6 +42,7 @@ export default function RootLayout({
           <StarsCanvas />
           <Navbar />
           {children}
+          <Chat />
           <Footer />
         </ThemeProvider>
       </body>
