@@ -20,7 +20,7 @@ export default function Page() {
       const [chatloading, setchatloading] = useState(false);
       const pathname = usePathname();
 
-      if(pathname.startsWith('/admin')){return null}
+      
       
       useEffect(() => {
         const hour = new Date().getHours();
@@ -168,7 +168,7 @@ export default function Page() {
 
 
 
-
+      if(pathname.startsWith('/admin')){return null}
   return (
     // <div className=''>
       <div className='right-8 fixed bottom-8 p-3 aspect-square bg-green-400 rounded-full  z-[9999999999999] flex items-center justify-center text-4xl cursor-pointer'>
