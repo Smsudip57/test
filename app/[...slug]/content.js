@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import StarsCanvas from "@/components/main/StarBackground";
 import { useSearchParams } from "next/navigation";
 import EastIcon from "@mui/icons-material/East";
@@ -8,11 +8,14 @@ import Industies from "@/components/main/Industies";
 import CaseStudy from "@/components/main/CaseStudy";
 import Link from "next/link";
 import Head from "next/head"; // Import Head for SEO
+import { MyContext } from "@/context/context";
 
 export default function Firewall({ services, products, slug, Mainservice }) {
   const [main, setmain] = useState(0);
   const [others, setothers] = useState([]);
   const [servicebasedProducts, setservicebasedProducts] = useState([]);
+
+  const {setChatBoxOpen} = useContext(MyContext);
 
   useEffect(() => {
     const val = window.location.href.split("?")?.[1];
@@ -61,7 +64,7 @@ export default function Firewall({ services, products, slug, Mainservice }) {
                 {Mainservice?.description}
               </p>
               <div className="flex gap-6">
-                <button className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded hover:opacity-70 text-sm">
+                <button className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded hover:opacity-70 text-sm" onClick={() => setChatBoxOpen(true)}>
                   Book Free Consultation
                 </button>
                 <button className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base">

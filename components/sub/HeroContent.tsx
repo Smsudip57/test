@@ -1,6 +1,6 @@
 "use client";
 
-import React,{useState, useEffect} from "react";
+import React,{useState, useEffect, } from "react";
 import EastIcon from '@mui/icons-material/East';
 import { motion } from "framer-motion";
 import {
@@ -9,6 +9,7 @@ import {
   slideInFromTop,
 } from "@/utils/motion";
 import SearchIcon from '@mui/icons-material/Search';
+import { MyContext } from "@/context/context";
 
 const HeroContent = () => {
   const [imageStyle, setImageStyle] = useState<number>(0);
@@ -18,6 +19,8 @@ const HeroContent = () => {
   const [deleting, setDeleting] = useState(false);
   const [index, setIndex] = useState(0);
   const [isTypingData1, setIsTypingData1] = useState(true);
+  const {setChatBoxOpen} = React.useContext(MyContext);
+
 
   useEffect(() => {
     // Function to update window width
@@ -93,7 +96,7 @@ const HeroContent = () => {
           <div className="mt-6 ml-2">
             <div className=" flex gap-5 w-full">
           <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-base gap-3 items-center font-normal flex'>Let&#39;s Start<EastIcon fontSize='inherit'/></button>
-          <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-base gap-3 items-center font-normal flex'>Book Free Consultancy<EastIcon fontSize='inherit'/></button>
+          <button className='align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-base gap-3 items-center font-normal flex' onClick={() => setChatBoxOpen(true)}>Book Free Consultancy<EastIcon fontSize='inherit'/></button>
           </div>
             </div>
         </motion.div>

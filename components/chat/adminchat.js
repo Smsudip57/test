@@ -296,16 +296,29 @@ const handleDelete = async () => {
              <div className='w-full h-full pr-3 '>
             <div className='w-full h-[calc(100vh-90px)] bg-[#] overflow-y-auto flex-col 
              py-2 '> 
-                {Sessions?.length > 0 ? Sessions.filter((session) => session?.user?.profile?.name?.toLowerCase().includes(SearchTerm.toLowerCase())).map((session, index) => (
+                {Sessions?.length > 0 ? Sessions.filter((session) => session?.user?.profile?.name?.toLowerCase().includes(SearchTerm.toLowerCase()) || session?.uid?.name?.toLowerCase().includes(SearchTerm.toLowerCase())).map((session, index) => (
                     <div className={`mx-1 flex justify-between items-end mb-2 cursor-pointer rounded-lg bg-white border ${session?._id !== sessionActive ? '':'border bg-gray-200'}`} key={index}
                     onClick={() => SelectACtiveSession(session?._id)}
                     >    
                     <span className='py-2 px-3 text-wrap bg-[#] text-black rounded-lg w-full flex items-center gap-2 relative'>
-                       {session?.user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User/> :<img style={{width:'2em', height:'2em'}} className='border-2 border-gray-500 rounded-full' src={session?.user?.profile?.avatarUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s'}/>} {session?.user?.profile?.name ?? 'No message content'}
+                       {session?.user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User/> :session?.user?.profile?.avatarUrl?<img style={{width:'2em', height:'2em'}} className='border-2 border-gray-500 rounded-full' src={session?.user?.profile?.avatarUrl}/>: <User/>} 
+                       <span className='grid'>
+                       {session?.user?.profile?.name ? session?.user?.profile?.name : session?.uid?.name}
+                       <span className='text-xs'>
+                       {
+                         !session?.user?.profile?.name && session?.uid?.email
+                        }
+                        </span>
+                        </span>
                        {session?.messages?.filter((message)=>!message?.isReadByAdmin).length > 0 && <span className='bg-red-500 text-red-100 rounded-full text-xs  aspect-square px-1'>{session?.messages?.filter((message)=>!message?.isReadByAdmin).length}</span>}
                        {session?.type==='booking' && <span className=' rounded-full text-base text-green-700 absolute top-0 right-0' >
                         <Bookmark  style={{height:'1em' , width:'1em'}}/>
                     </span>}
+                    {
+                      session.type === 'supportchat' && <span className='px-2 pt-1 text-xs text-gray-600 absolute top-0 right-0' >
+                        Guest
+                      </span>
+                    }
                     </span>
                     </div>
                 )):<span className='text-gray-700 w-full text-center flex justify-center'>No messages</span>}
