@@ -16,7 +16,7 @@ export default function Adminnav({user, login}) {
 
   React.useEffect(()=>{
     if(!context.loading&&!loginout&& (!context.user||context.user.role!=='admin')){
-      notFound();
+      // notFound();
     }
   },[context.user,context.loading])
   if(context.loading){

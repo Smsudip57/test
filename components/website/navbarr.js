@@ -45,8 +45,7 @@ export default function Navbar() {
       basePath: '/admin/website/testimonials',
       buttons: [
         { name: 'Create', path: 'create' },
-        // { name: 'Edit', path: 'edit' },
-        { name: 'Delete', path: 'delete' },
+        { name: 'Edit', path: 'edit' },
       ],
     },
     {
