@@ -109,7 +109,7 @@ html {
   animation-delay: -2s;
 }
 .rounded-full {
-  border-radius: 9999px;
+  /* border-radius: 9999px; */
 }
 .cursor-pointer {
   cursor: pointer;
