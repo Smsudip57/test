@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import {HeartHandshake, PackageSearch,FolderGit ,MessageCircleCode,Factory    } from 'lucide-react'
+import {HeartHandshake, PackageSearch,FolderGit ,MessageCircleCode,Factory  ,Newspaper   } from 'lucide-react'
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState('');
@@ -56,6 +56,16 @@ export default function Navbar() {
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
         { name: 'Delete', path: 'delete' },
+      ],
+    },
+    {
+      name: 'Blogs',
+      icons: <Newspaper   style={{ width: '1em', height: '1em' }}/>,
+      basePath: '/admin/website/blog',
+      buttons: [
+        { name: 'Create', path: 'create' },
+        // { name: 'Edit', path: 'edit' },
+        // { name: 'Delete', path: 'delete' },
       ],
     },
     // Add more routes as needed

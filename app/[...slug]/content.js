@@ -12,18 +12,20 @@ import { MyContext } from "@/context/context";
 
 export default function Firewall({ services, products, slug, Mainservice }) {
   const [main, setmain] = useState(0);
+  const params = useSearchParams();
   const [others, setothers] = useState([]);
   const [servicebasedProducts, setservicebasedProducts] = useState([]);
 
   const {setChatBoxOpen} = useContext(MyContext);
 
   useEffect(() => {
-    const val = window.location.href.split("?")?.[1];
-    const search = val ? val.split("=")?.[1]?.toLowerCase() : "";
-    const index = services?.findIndex((item) =>
-      decodeURIComponent(search).includes(item?.Title?.toLowerCase())
-    );
-    setmain(index !== -1 ? index : 0);
+    // const val = window.location.href.split("?")?.[1];
+    // const search = val ? val.split("=")?.[1]?.toLowerCase() : "";
+    // const index = services?.findIndex((item) =>
+    //   decodeURIComponent(search).includes(item?.Title?.toLowerCase())
+    // );
+    // setmain(index !== -1 ? index : 0);
+    console.log(params.get("search"));
   }, [services]);
 
   useEffect(() => {
@@ -58,10 +60,10 @@ export default function Firewall({ services, products, slug, Mainservice }) {
           <div className="w-[90%] xl:w-[1280px] mx-auto flex flex-col xl:flex-row">
             <div className="xl:w-[50%] flex flex-col justify-around gap-10 z-30 order-2 xl:order-1">
               <h1 className="text-2xl xl:text-[36px] font-bold xl:leading-[45px] font-sans">
-                {Mainservice?.title}
+                {services?.[main]?.Title}
               </h1>
               <p className="pr-10 font-medium whitespace-pre-wrap">
-                {Mainservice?.description}
+                {services?.[main]?.deltail}
               </p>
               <div className="flex gap-6">
                 <button className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded hover:opacity-70 text-sm" onClick={() => setChatBoxOpen(true)}>
@@ -76,7 +78,7 @@ export default function Firewall({ services, products, slug, Mainservice }) {
 
             <div className="xl:w-[50%] flex justify-center items-center z-30 order-1 xl:order-2">
               <div className="flex justify-center mb-12 xl:flex-wrap items-center">
-                {services?.map((product, index) => (
+                {/* {services?.map((product, index) => (
                   <div
                     className="text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md text-3xl"
                     key={index}
@@ -95,7 +97,24 @@ export default function Firewall({ services, products, slug, Mainservice }) {
                       />
                     </a>
                   </div>
-                ))}
+                ))} */}
+                {
+                  <div
+                  className="text-center text-nowrap basis-[65%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md text-3xl"
+                
+                >
+                  <a
+                    href="#details"
+                    className="cursor-pointer hover:mix-blend-plus-darker"
+                  >
+                    <img
+                      src={services?.[main]?.image}
+                      alt={`Image of ${services?.[main]?.Title}`} 
+                      className="w-full hover:opacity-70"
+                    />
+                  </a>
+                </div>
+                }
               </div>
             </div>
           </div>

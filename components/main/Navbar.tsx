@@ -1,7 +1,7 @@
 "use client"
 import { Socials } from "@/constants";
 import Image from "next/image";
-import React,{useState, useEffect,useRef, useContext} from "react";
+import React,{useState, useEffect,useRef, useContext, use} from "react";
 import { MyContext } from "@/context/context";
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import { styled, alpha } from '@mui/material/styles';
@@ -18,27 +18,27 @@ import axios from "axios";
 import path from "path";
 
 
-
 const Navbar = () => {
   const [scrolled,setscrolled] = useState(false);
   const [animated, setAnimated] = useState('');
   const [completed, setCompleted] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [option, setoption] = useState('');
-  const industries = [
-    "Automotive",
-    "Construction",
-    "Facility Management",
-    "Legal & Administrative",
-    "Mechanical & Engineering",
-    "Healthcare and Pharmaceuticals",
-    "Retail",
-    "Logistics and Transportation",
-    "Manufacturing",
-    "Food & Agriculture",
-    "Interior and Fitout",
-    "Real Estate"
-  ];
+  // const industries = [
+  //   "Automotive",
+  //   "Construction",
+  //   "Facility Management",
+  //   "Legal & Administrative",
+  //   "Mechanical & Engineering",
+  //   "Healthcare and Pharmaceuticals",
+  //   "Retail",
+  //   "Logistics and Transportation",
+  //   "Manufacturing",
+  //   "Food & Agriculture",
+  //   "Interior and Fitout",
+  //   "Real Estate"
+  // ];
+  const [ industries, setindustries] = useState<any>([]);
   const about = [
     "About WEBME",
     "Blog",
@@ -57,7 +57,6 @@ const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-
   const handleOpen = (event:any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -67,6 +66,27 @@ const Navbar = () => {
   const handleOpen3 = (event:any) => {
     setAnchorE3(event.currentTarget);
   };
+
+  useEffect(() => {
+    const fetchIndustries = async () => {
+      try {
+        const response = await axios.get('/api/industry/get');
+        console.log(response?.data?.industries);
+        if(response?.data?.success){
+          const industries = response?.data?.industries?.map((element: any) => {
+            const title = element?.Title;
+            const capitalizedTitle = title.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            return capitalizedTitle;
+          });
+          setindustries(industries);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchIndustries();
+  }, []);
 
   
 
@@ -211,7 +231,7 @@ const Navbar = () => {
             onClose={handleClose3}
           >
             {
-              industries.map((item,i) => (
+              industries.map((item:any,i:number) => (
                 <MenuItem key={i} onClick={()=>{
                   window.location.href = `/industries/${item.split(' ').join('-').toLowerCase()}`
                   }}>{item}</MenuItem>
@@ -281,7 +301,7 @@ const Navbar = () => {
       </strong>
       </h1>
       { option === "industries" &&
-        industries.map((item,i) => (
+        industries.map((item:any,i:number) => (
 
       <p className=" text-base text-nowrap font-semibold flex items-center text-[#747474] cursor-pointer hover:text-[#265353] pl-4 rounded-md py-3 hover:bg-[#e7f7f68f] justify-start gap-3 box-border opani" key={i} onClick={()=>{
         window.location.href = `/industries/${item.split(' ').join(' ').toLowerCase()}`

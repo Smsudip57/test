@@ -18,6 +18,7 @@ import EditIndustry from './editindustry';
 import DeleteIndustry from './deleteindustry';
 import CreateTestimonial from './createtestimonial';
 import EditTestimonial from './edittestimonial';
+import CreateBlog from './createblog';
 
 
 
@@ -85,6 +86,16 @@ export default async function Page({params}) {
         else if(slug[1] === 'edit') {
           return <EditTestimonial />
         }
+      case 'blog':
+        if(slug[1] === 'create') {
+          return <CreateBlog />
+        }
+        // else if(slug[1] === 'delete') {
+          // return <DeleteIndustry/>
+        // }
+        // else if(slug[1] === 'edit') {
+        //   return <EditTestimonial />
+        // }
       case 'login':
         return <Login />
       default:

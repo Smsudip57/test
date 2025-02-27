@@ -2,25 +2,46 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const Webme = () => {
+const Webme = ({service :apiservice}:any) => {
   const [active, setActive] = useState("");
+ 
 
   useEffect(() => {
     console.log(active);
   }, [active]);
 
+
+
+
   // List of services
-  const services = [
-    { key: "b", img: "/nextjs.jpg", link: "/branding?search=webdev#details" },
-    { key: "w", img: "/m365.jpg", link: "/workfrom anywhere?search=microsolft365#details" },
-    { key: "en", img: "/consult.png", link: "/endless support#details" },
-    { key: "m", img: "/nnetwork.jpg", link: "/modern workplace?search=networksecurity#details" },
-    { key: "m", img: "/newerp.jpg", link: "/modern workplace?search=erp#details" },
-    { key: "b", img: "/expt.jpg", link: "/branding?search=appdev#details" },
-    { key: "d", img: "/cctv.jpg", link: "/digital?search=surveillancesystems#details" },
-    { key: "d", img: "/iot.jpg", link: "/digital?search=iotsystems#details" },
-    { key: "w", img: "/micro-t.jpg", link: "/workfrom anywhere?search=windowsvirtualdesktop#details" },
-  ];
+  // const services = [
+  //   { key: "b", img: "/nextjs.jpg", link: "/branding?search=webdev#details" },
+  //   { key: "w", img: "/m365.jpg", link: "/workfrom anywhere?search=microsolft365#details" },
+  //   { key: "en", img: "/consult.png", link: "/endless support#details" },
+  //   { key: "m", img: "/nnetwork.jpg", link: "/modern workplace?search=networksecurity#details" },
+  //   { key: "m", img: "/newerp.jpg", link: "/modern workplace?search=erp#details" },
+  //   { key: "b", img: "/expt.jpg", link: "/branding?search=appdev#details" },
+  //   { key: "d", img: "/cctv.jpg", link: "/digital?search=surveillancesystems#details" },
+  //   { key: "d", img: "/iot.jpg", link: "/digital?search=iotsystems#details" },
+  //   { key: "w", img: "/micro-t.jpg", link: "/workfrom anywhere?search=windowsvirtualdesktop#details" },
+  // ];
+// console.log(apiservice);
+const services = apiservice?.services 
+  ? apiservice?.services?.map((service: any) => {
+      let link = `/${service?.category.toLowerCase()}?search=${service.Title.toLowerCase()}#details`;
+      return {
+        key: service?.category?.trim()?.toLowerCase() === "endless support" ? "en" : service.category.charAt(0).toLowerCase(),
+        img: service.image,
+        link: link
+      };
+    }) 
+  : [];
+
+  
+  
+  
+  // console.log(services);
+  
 
   // Reorder list: bring related items to the top
   const sortedServices = [...services].sort((a, b) => {
