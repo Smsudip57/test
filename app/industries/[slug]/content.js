@@ -270,7 +270,7 @@ export default function FacultyManagement({industry}) {
             <div className=' grid lg:grid-cols-4 gap-6 lg:gap-10'>
             {
               blogs?.map((item,index)=>(
-                <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
+                <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col' key={index}>
                 <img src={item?.image} className='w-full'/>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
