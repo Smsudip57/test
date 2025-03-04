@@ -1,25 +1,28 @@
-import React from "react";
-const industries = [
-  "Automotive",
-  "Construction",
-  "Facility Management",
-  "Legal & Administrative",
-  "Mechanical & Engineering",
-  "Healthcare and Pharmaceuticals",
-  "Retail",
-  "Logistics and Transportation",
-  "Manufacturing",
-  "Food & Agriculture",
-  "Interior and Fitout",
-  "Real Estate"
-]
+'use client';
+import axios from "axios";
+import React,{useState, useEffect } from "react";
 
 
 const Projects = () => {
+  const [industries, setIndustries] = useState([]);
+
+
+  useEffect(() => {
+    const fetchIndustries = async () => {
+      try {
+        const response = await axios.get('/api/industry/get');
+        setIndustries(response.data.industries);
+        console.log(response.data.industries);
+      } catch (error) {
+        console.error('Failed to fetch industries:', error);
+      }
+    };
+
+    fetchIndustries();
+  }, []);
   return (
     <div
       className="flex flex-col items-center justify-center pb-20"
-      id="projects"
     >
      <section className="  px-4 sm:px-12 lg:px-[136px]">
   <div className="mx-auto mb-10 sm:mb-14 px-4 max-w-6xl text-center">
@@ -35,10 +38,10 @@ const Projects = () => {
         See all customer stories
       </button> */}
       <div className="flex flex-wrap gap-4 justify-center items-center place-items-center">
-        {industries.map((name, index) => (
-          <a href={`/industries/${name.toLowerCase().split(" ").join(' ')}`} className="basis-[45%] lg:basis-[14.28%] flex justify-center items-center  shadow-lg border rounded-lg p-4"  key={index}>
+        {industries.map((item: any, index) => (
+          <a href={`/industries/${item?.Title?.toLowerCase().split(" ").join(' ')}`} className="basis-[45%] lg:basis-[14.28%] flex justify-center items-center  shadow-lg border rounded-lg p-4"  key={index}>
           <div className="">
-            <img src={`/${name.toLowerCase().split(" ").join('')}.jpg`} alt={`Company logo ${index + 1}`} />
+            <img src={item?.logo ? item?.logo : item?.image  } alt={`Company logo ${index + 1}`} />
           </div>
           </a>
         ))}

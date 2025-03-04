@@ -12,6 +12,7 @@ const CreateIndustry = () => {
     customerSatisfaction: '',
   });
   const [image, setImage] = useState(null);
+  const [logo, setLogo] = useState(null);
   const [message, setMessage] = useState('');
 
   const handleInputChange = (e) => {
@@ -27,8 +28,8 @@ const CreateIndustry = () => {
     e.preventDefault();
 
     // Ensure required fields are filled
-    if (!formData.Title || !formData.Heading || !formData.detail || !image) {
-      setMessage('Please fill all required fields and upload an image.');
+    if (!formData.Title || !formData.Heading || !formData.detail || !image || !logo) {
+      setMessage('Please fill all required fields and upload images.');
       return;
     }
 
@@ -40,6 +41,7 @@ const CreateIndustry = () => {
     data.append('costSaving', formData.costSaving || 0); // Defaults to 0 if not provided
     data.append('customerSatisfaction', formData.customerSatisfaction || 0); // Defaults to 0 if not provided
     data.append('image', image);
+    data.append('logo', logo);
 
     try {
       const response = await axios.post('/api/industry/create', data, {
@@ -138,6 +140,16 @@ const CreateIndustry = () => {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
+            className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">Logo (Homepage):</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setLogo(e.target.files[0])}
             className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
             required
           />

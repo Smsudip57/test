@@ -128,7 +128,7 @@ export default function Firewall({ services, products, slug, Mainservice }) {
             className="w-[90%] xl:w-[1280px] mx-auto flex flex-col xl:flex-row pt-16 gap-6"
             id="details"
           >
-            <div className="flex flex-col basis-1/3 justify-between items-start z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]">
+            {/* <div className="flex flex-col basis-1/3 justify-between items-start z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]">
               <div className="flex flex-col justify-center items-start gap-10">
                 <img
                   src={services?.[main]?.image}
@@ -154,7 +154,7 @@ export default function Firewall({ services, products, slug, Mainservice }) {
                   </Link>
                 </button>
               </div>
-            </div>
+            </div> */}
 
             {servicebasedProducts?.map((item, index) => (
               <div

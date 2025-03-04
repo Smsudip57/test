@@ -185,6 +185,9 @@ const Navbar = () => {
             }, 500);setClicked(true);setoption('industries')}} onBlur={()=>{if(animated && completed ) {setAnimated('leftslider2') ; setCompleted(false);setClicked(false)}}} onFocus={()=>console.log(true)}>
             Industries
             </a>
+            <a href="/#projects" className="cursor-pointer hover:opacity-70  hidden lg:block">
+            Projects
+            </a>
             <a href="/" className="cursor-pointer hover:opacity-70  hidden lg:block">
             Products
             </a>
@@ -239,6 +242,7 @@ const Navbar = () => {
             }
           </Menu>
         </MenuItem>
+        <MenuItem><a href="/#projects">Projects</a></MenuItem>
         <MenuItem><a href="/">Products</a></MenuItem>
         <MenuItem><a href="/#pricing">Pricing</a></MenuItem>
         <MenuItem><a href="/#store">Store</a></MenuItem>

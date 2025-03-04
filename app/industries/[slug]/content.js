@@ -1,7 +1,8 @@
 "use client"
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CaseStudy from '@/components/main/CaseStudy';
+import axios from 'axios';
 const service = [
   {
     Name:"Branding",
@@ -61,6 +62,21 @@ export default function FacultyManagement({industry}) {
   const [f2, setf2] = useState(false)
   const [f3, setf3] = useState(false)
   const [f4, setf4] = useState(false)
+  const [blogs, setBlogs] = useState([])
+
+
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get(`/api/blog/get`);
+        setBlogs(response.data.blogs.filter((item) => item?.relatedIndustries === industry?._id));
+      } catch (error) {
+      }
+    }
+
+    fetchBlogs();
+  },[])
 
 
 
@@ -93,7 +109,7 @@ export default function FacultyManagement({industry}) {
       </div>
       <div className='relative  bg-no-repeat bg-cover w-full bg-bottom'  >
         <div className='absolute top-0 left-0 w-full h-full '>
-          <img src='/yoyo-bg.png' className='w-full h-full'/>
+          <img src='/inductrybg1.jpg' className='w-full h-full'/>
         </div>
         <div className='flex justify-center mt-[65px] w-full'>
         <div className='mx-auto text-center  w-[90%] sm:w-[1000px]  z-20 py-16 lg:p-0'>
@@ -196,7 +212,7 @@ export default function FacultyManagement({industry}) {
       </div>
         <div className='relative  bg-no-repeat bg-cover w-full bg-bottom'  >
         <div className='absolute top-0 left-0 w-full h-full hidden xl:block'>
-          <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Automotive-Category-pg-Featured-solution-background-2.png?w=1024' className='w-full h-full'/>
+          <img src='/inductrybg2.jpg' className='w-full h-full'/>
         </div>
         <div className='flex flex-col justify-center mt-[65px] w-[90%] mx-auto lg:w-full'>
         <div className='mx-auto text-center w-full lg:w-[1000px]  z-20'>
@@ -252,77 +268,26 @@ export default function FacultyManagement({industry}) {
         </div>
           <div className='w-full xl:w-[1280px] mx-auto my-16 z-20'>
             <div className=' grid lg:grid-cols-4 gap-6 lg:gap-10'>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Trends-in-Automotive.png?resize=1024,576' className='w-full'/>
+            {
+              blogs?.map((item,index)=>(
+                <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
+                <img src={item?.image} className='w-full'/>
                 <div className='p-8 h-full relative'>
                 <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
-                  Report
+                  Blog
                 </p>
-                <p className='text-xl mt-4 mb-8'>
+                <p className='text-xl mt-4 mb-8 line-clamp-2'>
                   <strong>
-                  Trends in Automotive 
+                  {item?.title}
                   </strong>
                 </p>
-                <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
-                  <span className='font-bold'>Get the report <OpenInNewIcon fontSize='inherit'/></span>
+                <button className='absolute bottom-0 mb-8 mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
+                  <span className='font-bold'>Read <OpenInNewIcon fontSize='inherit'/></span>
                 </button>
 
                 </div>
-              </div>
-              
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/New-Automotive-Innovations-for-Connected-Vehicles-Captive-Finance.png?resize=1024,576' className='w-full'/>
-                <div className='p-8 h-full relative'>
-                <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
-                  Webinar
-                </p>
-                <p className='text-xl mt-4 mb-16'>
-                  <strong>
-                  New Automotive Innovations for Connected Vehicles and Captive Finance
-                  </strong>
-                </p>
-                <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
-                  <span className='font-bold'>Watch now <OpenInNewIcon fontSize='inherit'/></span>
-                </button>
-
-                </div>
-              </div>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Smarter-Savings-for-Automotive.png?resize=1024,576' className='w-full'/>
-                <div className='p-8 h-full relative'>
-                <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
-                  Guide
-                </p>
-                <p className='text-xl mt-4 mb-8'>
-                  <strong>
-                  Smarter Savings for Automotive 
-                  </strong>
-                </p>
-                <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
-                  <span className='font-bold'>Get the guide <OpenInNewIcon fontSize='inherit'/></span>
-                </button>
-
-                </div>
-              </div>
-            <div className='bg-white overflow-hidden rounded-xl shadow-xl flex flex-col'>
-                <img src='https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/05/Connected-Car-Disconnect_-65-of-U.S.-Drivers-Dont-Understand-1.png?resize=1024,576' className='w-full'/>
-                <div className='p-8 h-full relative'>
-                <p className='text-sm bg-[#6a949221] px-3 py-1 rounded-full w-max'>
-                  News
-                </p>
-                <p className='text-xl mt-4 mb-8'>
-                  <strong>
-                  65% of U.S. Drivers Don’t Understand Connected Cars 
-                  </strong>
-                </p>
-                <button className='absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe'>
-                  <span className='font-bold'>Read the story <OpenInNewIcon fontSize='inherit'/></span>
-                </button>
-
-                </div>
-              </div>
-              
-              
+              </div>))
+            }
             </div>
           </div>
           <button className='text-[#446E6D] w-max mx-auto border-[1px] border-[#446E6D] py-3 px-6 flex items-center rounded font-semibold cursor-pointer gap-2'><span>Read all resources <OpenInNewIcon fontSize='inherit'/></span></button>

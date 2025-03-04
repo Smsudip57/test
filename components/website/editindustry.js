@@ -14,6 +14,7 @@ const IndustryManager = () => {
     customerSatisfaction: '',
   });
   const [image, setImage] = useState(null);
+  const [logo, setLogo] = useState(null);
   const [message, setMessage] = useState('');
 
   // Fetch industries on load
@@ -71,7 +72,8 @@ const IndustryManager = () => {
     data.append('Efficiency', formData.Efficiency || 0);
     data.append('costSaving', formData.costSaving || 0);
     data.append('customerSatisfaction', formData.customerSatisfaction || 0);
-    if (image) data.append('image', image); // Only append image if updated
+    if (image) data.append('image', image); 
+    if (logo) data.append('logo', logo);
 
     try {
       const response = await axios.post('/api/industry/edit', data, {
@@ -88,6 +90,8 @@ const IndustryManager = () => {
           )
         );
         setSelectedIndustry(null);
+        setImage(null);
+        setLogo(null);
       }
     } catch (error) {
       console.error('Failed to update industry:', error);
@@ -211,6 +215,15 @@ const IndustryManager = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
+                className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">New Logo:</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setLogo(e.target.files[0])}
                 className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
               />
             </div>
