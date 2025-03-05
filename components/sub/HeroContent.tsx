@@ -136,7 +136,7 @@ const HeroContent = () => {
       <img alt="modern-workspacem " loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="roundedfull cursor-pointer moving-item" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px' }} src="/mwp.jpg"/></a>
       {/* <a href="/work-from-anywere"> */}
       {/* /erp.jpeg */}
-      <a href="/work from anywere">
+      <a href="/workfrom anywere">
       <img alt="erp" loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="roundedfull cursor-pointer moving-item-2" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px'}} src="/workfromi.jpg"/></a>
       {/* <a href="/secure-firewall"> */}
       <a href="/endless support">
