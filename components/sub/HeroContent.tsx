@@ -131,6 +131,7 @@ const HeroContent = () => {
         <div className="w-full md:w-full relative block ">
   <div className="mt-10">
     <div className="flex justify-center gap-2 sm:gap-5 mb-4">
+      <span className="hidden">sudip</span>
       <a href="/modern workplace">
       <img alt="modern-workspacem " loading="lazy" width="149" height="152" decoding="async" data-nimg="1" className="roundedfull cursor-pointer moving-item" style={{color:"transparent",width:imageStyle < 640 ? '100px':'149px', height:imageStyle < 640 ? '100px':'140px' }} src="/mwp.jpg"/></a>
       {/* <a href="/work-from-anywere"> */}
