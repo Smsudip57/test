@@ -38,7 +38,7 @@ export default function page() {
                   WEBME is here to guide you through every step of your IT
                   journey, ensuring seamless operations and transformative
                   growth. We believe that technology should be an enabler, not a
-                  hindrance, and that's why we strive to deliver tailor-made IT
+                  hindrance, and that&apos;s why we strive to deliver tailor-made IT
                   solutions that align with your unique needs.
                 </p>
 
@@ -54,12 +54,12 @@ export default function page() {
                   WEBMEDIGITAL: Your IT Solutions Galaxy
                 </p>
                 <p className="mb-4">
-                  Once you connect with WEBME, you'll have an all-in-one
+                  Once you connect with WEBME, you&apos;ll have an all-in-one
                   solution WEBMEDIGITAL at your fingertips, eliminating the need
                   to rely on any other service and allowing you to focus
-                  entirely on growing. Whether you're looking to enhance your
+                  entirely on growing. Whether you&apos;re looking to enhance your
                   digital presence, streamline your operations, or ensure robust
-                  support, we've got you covered.
+                  support, we&apos;ve got you covered.
                 </p>
 
                 <p className="mb-2 mt-4">
