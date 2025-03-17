@@ -81,7 +81,7 @@ const Servicetiles = ({ item, index, imageStyle }: any) => {
       }, 400); // Slightly longer fade out for smoother effect
     };
     
-    intervalRef.current = setInterval(rotateImage, 3000);
+    intervalRef.current = setInterval(rotateImage, 6000);
     
     return () => {
       if (intervalRef.current) {
