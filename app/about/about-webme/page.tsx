@@ -3,7 +3,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 export default function page() {
   return (
-    <div className="min-h-screen  py-[150px] xl:pt-0">
+    <div className="min-h-screen  lg:py-[150px] ">
       <div className="mx-auto mb-20 lg:mb-0 lg:h-[680px] bg-white max-w-[1536px] flex  items-center ">
         <div className=" flex flex-col lg:flex-row gap-6">
           <div className="lg:basis-1/2 z-10 relative">
