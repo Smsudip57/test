@@ -30,38 +30,9 @@ export default function page() {
               <span className="text-[#446E6D] mb-2">About</span>
               <span className="text-5xl mb-7">WEBME</span>
               <p className="text-gray-500 whitespace-pre-line">
-                WEBME: Your Co-Pilot in the IT Journey With a passion for
-                technology and a commitment to excellence, WEBME is here to
-                guide you through every step of your IT journey, ensuring
-                seamless operations and transformative growth. We believe that
-                technology should be an enabler, not a hindrance, and
-                that&apos;s why we strive to deliver tailor-made IT solutions
-                that align with your unique needs. WEBME Information Technology
-                is here to guide you through the complex landscape of IT,
-                ensuring that your technology supports your goals and drives
-                success. WEBME, your virtual companion in the digital world and
-                your trusted IT consultancy provider. WEBMEDIGITAL: Your IT
-                Solutions Galaxy Once you connect with WEBME, you&apos;ll have
-                an all-in-one solution WEBMEDIGITAL at your fingertips,
-                eliminating the need to rely on any other service and allowing
-                you to focus entirely on growing. Whether you&apos;re looking to
-                enhance your digital presence, streamline your operations, or
-                ensure robust support, we&apos;ve got you covered. Work From
-                Anywhere: Empower your team with the flexibility to work from
-                anywhere, ensuring productivity and collaboration no matter
-                where they are. Expertise: Leverage our deep industry knowledge
-                and technical expertise to drive your business forward.
-                Branding: Strengthen your brand with our innovative IT solutions
-                that enhance your digital footprint and market presence. Modern
-                Workplace: Transform your workplace with cutting-edge technology
-                that fosters innovation and efficiency. Endless Support: Enjoy
-                peace of mind with our continuous support, ensuring your IT
-                infrastructure is always running smoothly. Digital: Embrace the
-                digital age with our comprehensive services that cover all
-                aspects of your IT needs. Ready to transform your IT journey?
-                Connect with WEBME and become part of a community dedicated to a
-                future of excellence, innovation, and the freedom to focus on
-                what matters most.
+                {
+                  "WEBME: Your Co-Pilot in the IT Journey\n\nWith a passion for technology and a commitment to excellence, WEBME is here to guide you through every step of your IT journey, ensuring seamless operations and transformative growth. We believe that technology should be an enabler, not a hindrance, and that's why we strive to deliver tailor-made IT solutions that align with your unique needs.\n\nWEBME Information Technology is here to guide you through the complex landscape of IT, ensuring that your technology supports your goals and drives success. WEBME, your virtual companion in the digital world and your trusted IT consultancy provider.\n\nWEBMEDIGITAL: Your IT Solutions Galaxy\n\nOnce you connect with WEBME, you'll have an all-in-one solution WEBMEDIGITAL at your fingertips, eliminating the need to rely on any other service and allowing you to focus entirely on growing. Whether you're looking to enhance your digital presence, streamline your operations, or ensure robust support, we've got you covered.\n\nWork From Anywhere: Empower your team with the flexibility to work from anywhere, ensuring productivity and collaboration no matter where they are.\n\nExpertise: Leverage our deep industry knowledge and technical expertise to drive your business forward.\n\nBranding: Strengthen your brand with our innovative IT solutions that enhance your digital footprint and market presence.\n\nModern Workplace: Transform your workplace with cutting-edge technology that fosters innovation and efficiency.\n\nEndless Support: Enjoy peace of mind with our continuous support, ensuring your IT infrastructure is always running smoothly.\n\nDigital: Embrace the digital age with our comprehensive services that cover all aspects of your IT needs.\n\nReady to transform your IT journey? Connect with WEBME and become part of a community dedicated to a future of excellence, innovation, and the freedom to focus on what matters most."
+                }
               </p>
               <button className="bg-[#446E6D] text-white py-2 px-4 flex items-center rounded font-semibold gap-2 cursor-pointer w-max mt-7">
                 <span>
