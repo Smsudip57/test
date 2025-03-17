@@ -19,12 +19,12 @@ export default function Firewall({ services, products, slug, Mainservice }) {
   const {setChatBoxOpen} = useContext(MyContext);
 
   useEffect(() => {
-    // const val = window.location.href.split("?")?.[1];
-    // const search = val ? val.split("=")?.[1]?.toLowerCase() : "";
-    // const index = services?.findIndex((item) =>
-    //   decodeURIComponent(search).includes(item?.Title?.toLowerCase())
-    // );
-    // setmain(index !== -1 ? index : 0);
+    const val = window.location.href.split("?")?.[1];
+    const search = val ? val.split("=")?.[1]?.toLowerCase() : "";
+    const index = services?.findIndex((item) =>
+      decodeURIComponent(search).includes(item?.Title?.toLowerCase())
+    );
+    setmain(index !== -1 ? index : 0);
     console.log(params.get("search"));
   }, [services]);
 

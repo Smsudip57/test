@@ -75,6 +75,7 @@ html {
   animation-duration: 3s;
 }
 .moving-item {
+  aspect-ratio: 16/9!important;
   animation-iteration-count: infinite;
   animation-delay: -1s;
 }

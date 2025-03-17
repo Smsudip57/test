@@ -10,15 +10,15 @@ export default function page() {
             <div className='lg:basis-1/2 z-10 relative'>
             <div className='top-0 bg-white p-2 absolute right-0  mr-[60px] z-20'>
                 <div className='w-full h-[366px] relative'>
-            <img src='/img-20230815-wa00021692086402.webp' className='h-[366px]'/>
+            <img src='/logo.svg' className='h-[366px] aspect-[12/9] pt-14'/>
                     <div className='bg-white absolute z-30 aspect-[1/1] bottom-[-14%] right-[-7%] px-5 flex flex-col justify-center items-center gap-1 border-b-4 border-[#446E6D]'>
                     <span className='text-4xl font-semibold text-[#446E6D]'>8+</span>
                     <p className='uppercase font-semibold '>Experience</p>
                     </div>
                 </div>
             </div>
-            <div className='absolute h-[366px] w-1/2 left-0 top-0 bg-[#446E6D] z-10 bg-opacity-80'></div>
-            <img src='/portrait-woman-customer-service-worker1688325158.webp' className='h-[366px] invisible xl:visible'/>
+            <div className='absolute h-[366px] w-1/2 left-0 top-0 bg- z-10 bg-opacity-80'></div>
+            <img src='' className='h-[366px] invisible xl:visible'/>
             <img src='/07.webp' className='absolute right-0 top-0 pr-[20px]'/>
             </div>
             <div className='lg:basis-1/2 z-20 w-[90%] mx-auto lg:w-full'>
