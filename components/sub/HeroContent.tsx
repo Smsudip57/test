@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import EastIcon from "@mui/icons-material/East";
-import { motion } from "framer-motion";
+import { motion, useAnimationControls, useMotionValue,animate } from "framer-motion";
 import {
   slideInFromLeft,
   slideInFromRight,
@@ -13,108 +13,76 @@ import { MyContext } from "@/context/context";
 import Link from "next/link";
 import axios from "axios";
 
-const Servicetiles = ({ item, index, imageStyle }: any) => {
-  const [imageData, setImageData] = useState<any>({});
-  const [dataArray, setDataArray] = useState<any>([]);
-  const [opacity, setOpacity] = useState(1);
-  const intervalRef = useRef<any>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Set up initial data and preload images
+const InfiniteScroller = ({ data }: any) => {
+  const x = useMotionValue(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+  
   useEffect(() => {
-    const data1 = {
-      href: item.href,
-      alt: item.alt,
-      src: item.src,
-      className: item.className,
-    };
+    if (!data || data.length === 0) return;
     
-    const otherdataArray = item.subservices?.map((subservice: any) => {
-      return {
-        href: `${item?.href}/${subservice?.Title?.toLowerCase()}`,
-        alt: subservice.Title,
-        src: subservice?.image,
-        className: item.className,
-      };
-    }) || [];
-    
-    // Preload all images
-    const allImages = [data1, ...otherdataArray];
-    allImages.forEach(imgData => {
-      if (imgData.src) {
-        const img = new Image();
-        img.src = imgData.src;
+    // Calculate total width of all items
+    if (containerRef.current) {
+      const firstItem = containerRef.current.children[0] as HTMLElement;
+      if (firstItem) {
+        const itemWidth = firstItem.offsetWidth;
+        const totalItems = data.length;
+        setWidth(itemWidth * totalItems);
       }
+    }
+  }, [data]);
+  
+  useEffect(() => {
+    if (width === 0) return;
+    
+    // Create smooth animation that runs continuously
+    const controls = animate(x, -width, {
+      type: "tween",
+      duration: 40, // Adjust speed here
+      ease: "linear",
+      repeat: Infinity,
+      repeatType: "loop"
     });
     
-    setImageData(data1);
-    setDataArray([...otherdataArray, data1]);
-    
-    // Clear interval when props change
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [item]);
-
-  // Handle image rotation with smoother transitions
-  useEffect(() => {
-    if (dataArray.length <= 1) return;
-    
-    const rotateImage = () => {
-      setOpacity(0);
-      setIsLoading(true);
-      
-      setTimeout(() => {
-        setDataArray((prevArray:any) => {
-          const newArray = [...prevArray];
-          const firstItem = newArray.shift();
-          setImageData(firstItem);
-          return [...newArray, firstItem];
-        });
-        
-        setTimeout(() => {
-          setOpacity(1);
-          setIsLoading(false);
-        }, 50); // Small delay to ensure DOM update before fade-in
-      }, 400); // Slightly longer fade out for smoother effect
-    };
-    
-    intervalRef.current = setInterval(rotateImage, 6000);
-    
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [dataArray.length]); // Only depend on array length, not content
-
+    return controls.stop;
+  }, [width, x]);
+  
+  if (!data || data.length === 0) {
+    return null;
+  }
+  
+  // Display items twice to create seamless loop
+  const displayItems = [...data, ...data];
+  
   return (
-    <a href={imageData?.href} key={index} className="block overflow-hidden relative">
-      {imageData?.src && (
-        <img
-          alt={imageData?.alt}
-          loading="lazy"
-          width="149"
-          height="152"
-          decoding="async"
-          data-nimg="1"
-          className={`roundedfull cursor-pointer ${imageData?.className}`}
-          style={{
-            color: "transparent",
-            width: imageStyle < 640 ? "169px" : "248.89px",
-            height: imageStyle < 640 ? "100px" : "140px",
-            opacity: opacity,
-            transition: "opacity 400ms cubic-bezier(0.4, 0, 0.2, 1)",
-            transform: `scale(${isLoading ? 0.95 : 1})`,
-          }}
-          src={imageData?.src}
-        />
-      )}
-    </a>
+    <div className="overflow-hidden relative w-full">
+      <motion.div 
+        ref={containerRef}
+        className="flex whitespace-nowrap"
+        style={{ x }}
+      >
+        {displayItems.map((item: any, index: number) => (
+          <div
+            key={index}
+            className="scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block"
+          >
+            <img
+              src={item?.image}
+              alt={item?.alt || 'Service image'}
+              className="w-80 aspect-[16/9] object-cover rounded-lg"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = '/placeholder.jpg';
+              }}
+            />
+          </div>
+        ))}
+      </motion.div>
+    </div>
   );
 };
+
+
 const HeroContent = () => {
   const [imageStyle, setImageStyle] = useState<number>(0);
   const data = "Your IT Solutions Galaxy";
@@ -143,24 +111,20 @@ const HeroContent = () => {
       const activeData = isTypingData1 ? data : data2;
 
       if (!deleting) {
-        // Typing forward
         if (index < activeData.length) {
           setText((prev) => prev + activeData[index]);
           setIndex((prev) => prev + 1);
         } else {
-          // When typing completes, start deleting after a delay
           setTimeout(() => setDeleting(true), 1000);
         }
       } else {
-        // Deleting backward
         if (index > 0) {
           setText((prev) => prev.slice(0, -1));
           setIndex((prev) => prev - 1);
         } else {
-          // When deletion completes, reset for the next text
           setDeleting(false);
           setIsTypingData1((prev) => !prev);
-          setIndex(0); // Reset index to start typing from the beginning of the next text
+          setIndex(0); 
         }
       }
     };
@@ -218,7 +182,7 @@ const HeroContent = () => {
             subservices: targets,
           };
         });
-        setServices(serviceData);
+        setServices(response?.data?.services);
       } catch (error) {}
     };
     fetchServices();
@@ -308,7 +272,7 @@ const HeroContent = () => {
 
         <motion.div
           variants={slideInFromRight(0.8)}
-          className="w-full h-full flex justify-center items-center"
+          className="w-[50%] h-full flex justify-center items-center"
         >
           {/* <Image
           src="/mainIconsdark.svg"
@@ -318,16 +282,11 @@ const HeroContent = () => {
           /> */}
           <div className="w-full md:w-full relative block ">
             <div className="mt-10">
-              <div className="grid grid-cols-3 gap-2 lg:gap-5 mb-4">
-                {services?.map((item: any, index: number) => (
-                  <Servicetiles
-                    key={index}
-                    item={item}
-                    index={index}
-                    imageStyle={imageStyle}
-                  />
-                ))}
+              <div className="w-full mb-4">
+              {/* {services?.map((item: any, index: number) => ( */}
+              <InfiniteScroller data={services} />
               </div>
+              {/* ))} */}
             </div>
             <div className="rounded-[70px] w-full  mx-auto border-[1.5px] gap-2 xs:gap-4 flex md:gap-5 border-[#0B2B20] p-1 justify-between bg-white border-box">
               <div className="flex gap-2.5 items-center">
