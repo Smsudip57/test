@@ -2,7 +2,12 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import EastIcon from "@mui/icons-material/East";
-import { motion, useAnimationControls, useMotionValue,animate } from "framer-motion";
+import {
+  motion,
+  useAnimationControls,
+  useMotionValue,
+  animate,
+} from "framer-motion";
 import {
   slideInFromLeft,
   slideInFromRight,
@@ -17,11 +22,13 @@ const InfiniteScroller = ({ data }: any) => {
   const x = useMotionValue(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
-  
+  const [currentTitle, setCurrentTitle] = useState("");
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const displayItems = [...data, ...data];
   useEffect(() => {
     if (!data || data.length === 0) return;
-    
-    // Calculate total width of all items
+
     if (containerRef.current) {
       const firstItem = containerRef.current.children[0] as HTMLElement;
       if (firstItem) {
@@ -30,58 +37,112 @@ const InfiniteScroller = ({ data }: any) => {
         setWidth(itemWidth * totalItems);
       }
     }
+
+    if (data.length > 0 && data[0].masterTitle) {
+      setCurrentTitle(data[0].masterTitle);
+    }
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries.filter(
+          (entry) => entry.isIntersecting && entry.intersectionRatio > 0.5
+        );
+
+        if (visibleEntries.length > 0) {
+          const index = Number(
+            visibleEntries[0].target.getAttribute("data-index")
+          );
+          const item = displayItems[index];
+          if (item && item.masterTitle !== currentTitle) {
+            setCurrentTitle(item.masterTitle);
+          }
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: [0.5],
+      }
+    );
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
   }, [data]);
-  
+
+  useEffect(() => {
+    itemRefs.current = itemRefs.current.slice(0, displayItems?.length);
+    itemRefs.current.forEach((ref, index) => {
+      if (ref && observerRef.current) {
+        observerRef.current.observe(ref);
+      }
+    });
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [displayItems]);
+
   useEffect(() => {
     if (width === 0) return;
-    
-    // Create smooth animation that runs continuously
+
     const controls = animate(x, -width, {
       type: "tween",
-      duration: 40, // Adjust speed here
+      duration: 60,
       ease: "linear",
       repeat: Infinity,
-      repeatType: "loop"
+      repeatType: "loop",
     });
-    
+
     return controls.stop;
   }, [width, x]);
-  
+
   if (!data || data.length === 0) {
     return null;
   }
-  
-  // Display items twice to create seamless loop
-  const displayItems = [...data, ...data];
-  
+
   return (
     <div className="overflow-hidden relative w-full">
-      <motion.div 
+      <h2 className="mx-auto w-max mb-4 text-primary font-semibold text-2xl">
+        {currentTitle || "Title"}
+      </h2>
+      <motion.div
         ref={containerRef}
         className="flex whitespace-nowrap"
         style={{ x }}
       >
-        {displayItems.map((item: any, index: number) => (
-          <div
-            key={index}
-            className="scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block"
-          >
-            <img
-              src={item?.image}
-              alt={item?.alt || 'Service image'}
-              className="w-80 aspect-[16/9] object-cover rounded-lg"
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = '/placeholder.jpg';
-              }}
-            />
-          </div>
-        ))}
+        {displayItems.map((item: any, index: number) => {
+          const setRef = (el: HTMLDivElement | null) => {
+            itemRefs.current[index] = el;
+          };
+
+          return (
+            <div
+              key={index}
+              data-index={index}
+              ref={setRef}
+              className="scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block"
+            >
+              <img
+                src={item?.image}
+                alt={item?.alt || "Service image"}
+                className="w-80 aspect-[16/9] object-cover rounded-lg"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "/placeholder.jpg";
+                }}
+              />
+            </div>
+          );
+        })}
       </motion.div>
     </div>
   );
 };
-
 
 const HeroContent = () => {
   const [imageStyle, setImageStyle] = useState<number>(0);
@@ -124,7 +185,7 @@ const HeroContent = () => {
         } else {
           setDeleting(false);
           setIsTypingData1((prev) => !prev);
-          setIndex(0); 
+          setIndex(0);
         }
       }
     };
@@ -136,55 +197,53 @@ const HeroContent = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get("/api/service/getservice", {
-          params: {
-            populate: "category",
-          },
-        });
-        const serviceData = [
+        const [
+          servicesResponse,
+          testimonialsResponse,
+          industriesResponse,
+          projectsResponse,
+        ] = await Promise.all([
+          axios.get("/api/service/getservice", {
+            params: { populate: "category" },
+          }),
+          axios.get("/api/testimonial/get"),
+          axios.get("/api/industry/get"),
+          axios.get("/api/project/get"),
+        ]);
+
+        const dataSources = [
+          { title: "Our Services", data: servicesResponse.data.services },
           {
-            href: "/modern workplace",
-            alt: "modern-workspace",
-            src: "/mwp.jpg",
-            className: "moving-item",
+            title: "Customer Success Stories",
+            data: testimonialsResponse.data.testimonials,
           },
-          {
-            href: "/workfrom anywhere",
-            alt: "erp",
-            src: "/workfromi.jpg",
-            className: "moving-item-2",
+          { title: "Industries", data: industriesResponse.data.industries },
+          { title: "Our Projects", data: projectsResponse.data.data },
+        ];
+
+        const formattedData = dataSources.reduce(
+          (allItems: any, { title, data }: any) => {
+            if (Array.isArray(data)) {
+              const itemsWithMasterTitle = data.map((item) => ({
+                masterTitle: title,
+                ...item,
+                image: item?.image,
+              }));
+
+              return [...allItems, ...itemsWithMasterTitle];
+            }
+            return allItems;
           },
-          {
-            href: "/endless support",
-            alt: "network security",
-            src: "/supporti.jpg",
-            className: "moving-item-3",
-          },
-          {
-            href: "/digital",
-            alt: "digital",
-            src: "/digital.jpg",
-            className: "moving-item-4",
-          },
-          {
-            href: "/branding",
-            alt: "branding",
-            src: "/branding.jpg",
-            className: "moving-item-5",
-          },
-        ].map((item, index) => {
-          const tragetmatch = item?.href.split("/")[1];
-          const targets = response?.data?.services?.filter(
-            (service: any) => service?.category?.toLowerCase() === tragetmatch
-          );
-          return {
-            ...item,
-            subservices: targets,
-          };
-        });
-        setServices(response?.data?.services);
-      } catch (error) {}
+          []
+        );
+        console.log(formattedData);
+        setServices(formattedData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Optionally set an error state here
+      }
     };
+
     fetchServices();
   }, []);
 
@@ -192,7 +251,7 @@ const HeroContent = () => {
     <motion.div
       initial="hidden"
       animate="visible"
-      className="px-10 xl:px-20 min-h-screen z-[20] py-28"
+      className="px-10 xl:px-20 min-h-screen z-[20] sm:py-28"
     >
       <motion.div variants={slideInFromTop} className="">
         <div className="bg-slate-300 h-28 w-full rounded-xl overflow-hidden">
@@ -272,7 +331,7 @@ const HeroContent = () => {
 
         <motion.div
           variants={slideInFromRight(0.8)}
-          className="w-[50%] h-full flex justify-center items-center"
+          className="w-full sm:w-[50%] h-full flex justify-center items-center"
         >
           {/* <Image
           src="/mainIconsdark.svg"
@@ -283,8 +342,8 @@ const HeroContent = () => {
           <div className="w-full md:w-full relative block ">
             <div className="mt-10">
               <div className="w-full mb-4">
-              {/* {services?.map((item: any, index: number) => ( */}
-              <InfiniteScroller data={services} />
+                {/* {services?.map((item: any, index: number) => ( */}
+                <InfiniteScroller data={services} />
               </div>
               {/* ))} */}
             </div>
@@ -297,7 +356,7 @@ const HeroContent = () => {
                   height="25"
                   decoding="async"
                   data-nimg="1"
-                  className="sm:ml-2 xs:w-6 xs:h-6 w-5 h-5"
+                  className="sm:ml-2 xs:w-6 xs:h-6 w-5 invisible sm:visible"
                   style={{ color: "transparent" }}
                   src="/search.svg"
                 />
