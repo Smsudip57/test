@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    swcMinify: true, // Enable SWC minification for faster builds
+    swcMinify: true, 
+    images: {
+      domains: ['api.webmedigital.com'],
+    },
   };
   
   export default nextConfig;

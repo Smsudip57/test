@@ -7,6 +7,7 @@ import {
   useAnimationControls,
   useMotionValue,
   animate,
+  AnimatePresence,
 } from "framer-motion";
 import {
   slideInFromLeft,
@@ -17,141 +18,128 @@ import SearchIcon from "@mui/icons-material/Search";
 import { MyContext } from "@/context/context";
 import Link from "next/link";
 import axios from "axios";
+import SearchComponent from "./component/heroSearchComponent";
+import Image from "next/image";
 
-const InfiniteScroller = ({ data }: any) => {
-  const x = useMotionValue(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(0);
-  const [currentTitle, setCurrentTitle] = useState("");
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const displayItems = [...data, ...data];
+const Advertiser = ({ data }: any) => {
+  const [currentItems, setCurrentItems] = useState<any>([]);
+  const [currentTitle, setCurrentTitle] = useState<string>("");
+  const [isAnimating, setIsAnimating] = useState(false);
+
   useEffect(() => {
-    if (!data || data.length === 0) return;
+    // Only proceed if we have valid data
+    if (!data || !Array.isArray(data) || data.length === 0) return;
 
-    if (containerRef.current) {
-      const firstItem = containerRef.current.children[0] as HTMLElement;
-      if (firstItem) {
-        const itemWidth = firstItem.offsetWidth;
-        const totalItems = data.length;
-        setWidth(itemWidth * totalItems);
-      }
-    }
-
-    if (data.length > 0 && data[0].masterTitle) {
-      setCurrentTitle(data[0].masterTitle);
-    }
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        const visibleEntries = entries.filter(
-          (entry) => entry.isIntersecting && entry.intersectionRatio > 0.5
-        );
-
-        if (visibleEntries.length > 0) {
-          const index = Number(
-            visibleEntries[0].target.getAttribute("data-index")
-          );
-          const item = displayItems[index];
-          if (item && item.masterTitle !== currentTitle) {
-            setCurrentTitle(item.masterTitle);
-          }
-        }
-      },
-      {
-        root: null,
-        rootMargin: "0px",
-        threshold: [0.5],
-      }
+    // Get unique categories
+    const categories: String[] = data.map((item: any) => item.masterTitle);
+    const uniqueCategories = categories.filter(
+      (item, index) => categories.indexOf(item) === index
     );
 
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
+    // Initial selection
+    const selectRandomItems = () => {
+      if (uniqueCategories.length === 0) return;
+
+      // Start animation transition
+      setIsAnimating(true);
+
+      setTimeout(() => {
+        const randomIndex = Math.floor(Math.random() * uniqueCategories.length);
+        const randomCategory = uniqueCategories[randomIndex];
+
+        setCurrentTitle(randomCategory as string);
+
+        const filteredItems = data.filter(
+          (item: any) => item.masterTitle === randomCategory
+        );
+
+        // Pick random 2 items from filteredItems
+        const randomItems = filteredItems
+          .sort(() => 0.5 - Math.random())
+          .slice(0, Math.min(2, filteredItems.length));
+
+        setCurrentItems(randomItems);
+
+        // Reset animation flag after items are updated
+        setTimeout(() => {
+          setIsAnimating(false);
+        }, 100);
+      }, 500); // Wait for exit animation to complete
     };
-  }, [data]);
 
-  useEffect(() => {
-    itemRefs.current = itemRefs.current.slice(0, displayItems?.length);
-    itemRefs.current.forEach((ref, index) => {
-      if (ref && observerRef.current) {
-        observerRef.current.observe(ref);
-      }
-    });
+    // Initial call
+    selectRandomItems();
 
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, [displayItems]);
+    // Set up interval for updates
+    const interval = setInterval(selectRandomItems, 5000);
 
-  useEffect(() => {
-    if (width === 0) return;
-
-    const controls = animate(x, -width, {
-      type: "tween",
-      duration: 60,
-      ease: "linear",
-      repeat: Infinity,
-      repeatType: "loop",
-    });
-
-    return controls.stop;
-  }, [width, x]);
-
-  if (!data || data.length === 0) {
-    return null;
-  }
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, [data]); // Only depend on data
 
   return (
     <div className="overflow-hidden relative w-full">
-      <h2 className="mx-auto w-max mb-4 text-primary font-semibold text-2xl">
-        {currentTitle || "Title"}
-      </h2>
-      <motion.div
-        ref={containerRef}
-        className="flex whitespace-nowrap"
-        style={{ x }}
+      <motion.h2
+        className="mx-auto w-max mb-4 text-primary font-semibold text-2xl"
+        key={currentTitle} // Key helps React identify when to animate
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5 }}
       >
-        {displayItems.map((item: any, index: number) => {
-          const setRef = (el: HTMLDivElement | null) => {
-            itemRefs.current[index] = el;
-          };
+        {currentTitle || "Featured"}
+      </motion.h2>
 
-          return (
-            <div
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentTitle + "-container"} // Unique key for container based on title
+          className="flex whitespace-nowrap justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {currentItems.map((item: any, index: number) => (
+            <motion.div
               key={index}
               data-index={index}
-              ref={setRef}
               className="scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block"
+              initial={{
+                opacity: 0,
+                scale: 0.8,
+                x: index % 2 === 0 ? -50 : 50,
+              }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
+              transition={{ duration: 0.4, delay: index * 0.2 }}
             >
-              <img
+              <Image
+                width={400}
+                height={200}
                 src={item?.image}
                 alt={item?.alt || "Service image"}
-                className="w-80 aspect-[16/9] object-cover rounded-lg"
+                className="w-80 aspect-[16/9] object-cover rounded-lg shadow-lg bg-white"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src = "/placeholder.jpg";
                 }}
               />
-            </div>
-          );
-        })}
-      </motion.div>
+              <div className="mt-2 text-center">
+                <p className="text-sm text-gray-500">
+                  {item?.title || item?.name}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };
 
 const HeroContent = () => {
   const [imageStyle, setImageStyle] = useState<number>(0);
-  const data = "Your IT Solutions Galaxy";
-  const data2 = "Search for Products, Services you wish to explore";
-  const [text, setText] = useState("");
-  const [deleting, setDeleting] = useState(false);
-  const [index, setIndex] = useState(0);
-  const [isTypingData1, setIsTypingData1] = useState(true);
+
   const { setChatBoxOpen } = React.useContext(MyContext);
   const [services, setServices] = useState<any>([]);
 
@@ -166,33 +154,6 @@ const HeroContent = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  useEffect(() => {
-    const handleTyping = () => {
-      const activeData = isTypingData1 ? data : data2;
-
-      if (!deleting) {
-        if (index < activeData.length) {
-          setText((prev) => prev + activeData[index]);
-          setIndex((prev) => prev + 1);
-        } else {
-          setTimeout(() => setDeleting(true), 1000);
-        }
-      } else {
-        if (index > 0) {
-          setText((prev) => prev.slice(0, -1));
-          setIndex((prev) => prev - 1);
-        } else {
-          setDeleting(false);
-          setIsTypingData1((prev) => !prev);
-          setIndex(0);
-        }
-      }
-    };
-
-    const timeoutId = setTimeout(handleTyping, 100);
-    return () => clearTimeout(timeoutId);
-  }, [index, deleting, isTypingData1]);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -343,35 +304,11 @@ const HeroContent = () => {
             <div className="mt-10">
               <div className="w-full mb-4">
                 {/* {services?.map((item: any, index: number) => ( */}
-                <InfiniteScroller data={services} />
+                <Advertiser data={services} />
               </div>
               {/* ))} */}
             </div>
-            <div className="rounded-[70px] w-full  mx-auto border-[1.5px] gap-2 xs:gap-4 flex md:gap-5 border-[#0B2B20] p-1 justify-between bg-white border-box">
-              <div className="flex gap-2.5 items-center">
-                <img
-                  alt="search"
-                  loading="lazy"
-                  width="25"
-                  height="25"
-                  decoding="async"
-                  data-nimg="1"
-                  className="sm:ml-2 xs:w-6 xs:h-6 w-5 invisible sm:visible"
-                  style={{ color: "transparent" }}
-                  src="/search.svg"
-                />
-                <input
-                  placeholder={text}
-                  className="text-[#101513] text-base xs:text-base leading-7 focus:outline-none"
-                />
-              </div>
-              <button className="bg-[#446E6D] font-medium text-white text-lg sm:text-base px-1.5 xs:px-3 md:px-[34px] py-2 md:py-[11.5px] font-graphik rounded-[39px] border-box">
-                <span className="hidden sm:block">webmedigital</span>
-                <span className="sm:hidden aspect-square p-2">
-                  <SearchIcon fontSize="inherit" />
-                </span>
-              </button>
-            </div>
+            <SearchComponent />
           </div>
         </motion.div>
       </div>
