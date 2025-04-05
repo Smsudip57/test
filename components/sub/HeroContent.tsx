@@ -81,7 +81,7 @@ const Advertiser = ({ data }: any) => {
   return (
     <div className="overflow-hidden relative w-full">
       <motion.h2
-        className="mx-auto w-max mb-4 text-primary font-semibold text-2xl"
+        className="mx-auto w-max mb-4 text-primary text-2xl uppercase font-bold"
         key={currentTitle} // Key helps React identify when to animate
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
