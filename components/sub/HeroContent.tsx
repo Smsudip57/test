@@ -20,6 +20,7 @@ import Link from "next/link";
 import axios from "axios";
 import SearchComponent from "./component/heroSearchComponent";
 import Image from "next/image";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 const Advertiser = ({ data }: any) => {
   const [currentItems, setCurrentItems] = useState<any>([]);
@@ -93,44 +94,214 @@ const Advertiser = ({ data }: any) => {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentTitle + "-container"} // Unique key for container based on title
-          className="flex whitespace-nowrap justify-center"
+          className="flex justify-center items-strech"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {currentItems.map((item: any, index: number) => (
-            <motion.div
-              key={index}
-              data-index={index}
-              className="scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block"
-              initial={{
-                opacity: 0,
-                scale: 0.8,
-                x: index % 2 === 0 ? -50 : 50,
-              }}
-              animate={{ opacity: 1, scale: 1, x: 0 }}
-              exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
-              transition={{ duration: 0.4, delay: index * 0.2 }}
-            >
-              <Image
-                width={400}
-                height={200}
-                src={item?.image}
-                alt={item?.alt || "Service image"}
-                className="w-80 aspect-[16/9] object-cover rounded-lg shadow-lg bg-white"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = "/placeholder.jpg";
+          {currentItems.map((item: any, index: number) => {
+            return item?.masterTitle === "Customer Success Stories" ? (
+              <motion.div
+                key={index}
+                data-index={index}
+                className={` scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block`}
+                initial={{
+                  opacity: 0,
+                  scale: 0.8,
+                  x: index % 2 === 0 ? -50 : 50,
                 }}
-              />
-              <div className="mt-2 text-center">
-                <p className="text-sm text-gray-500">
-                  {item?.title || item?.name}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
+                transition={{ duration: 0.4, delay: index * 0.2 }}
+              >
+                <div
+                  className={`max-w-80 bg-white ${
+                    item?.masterTitle === "Our Services"
+                      ? "aspect-[16/9]"
+                      : "aspect-square  "
+                  } p-3 px-6 rounded-lg  text-left relative`}
+                >
+                  <div
+                    className="absolute top-0 left-0 w-full h-full"
+                    style={{ zIndex: 1 }}
+                  >
+                    <svg
+                      width="full"
+                      viewBox="0 0 1280 459"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="aspect-[1280/459]"
+                    >
+                      <path
+                        d="M2462 -979C2462 -184.814 1812.81 459 1012 459C211.187 459 -438 -184.814 -438 -979C-438 -1773.19 211.187 -2417 1012
+                            -2417C1812.81 -2417 2462 -1773.19 2462 -979Z"
+                        fill="rgb(259, 240, 255)"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div className="relative z-10">
+                    <div className="h-[10px] mb-2">
+                      <img
+                        src="https://a.sfdcstatic.com/shared/images/pbc/icons/quotation-english.svg"
+                        alt="quote"
+                        className="h-full"
+                      />
+                    </div>
+                    <span
+                      className="text-xl lg:text-sm line-clamp-[9] "
+                      style={{ minHeight: "calc(8 * 1.5em)" }}
+                    >
+                      <span className="font-medium break-words">
+                        {item.Testimonial}
+                      </span>
+                    </span>
+                    {/* <br /> */}
+                    {/* <br /> */}
+                    <div className="flex gap-3 mt-3 items-center">
+                      {item.image && (
+                        <img
+                          src={item.image}
+                          alt={item.postedBy || "Testimonial author"}
+                          className="h-6 w-6 rounded-full object-cover"
+                          onError={(e) =>
+                            (e.currentTarget.style.display = "none")
+                          }
+                        />
+                      )}
+                      <div>
+                        <span className="font-medium text-sm">
+                          {item.postedBy}
+                        </span>
+                        <p className="mt-[2px] text-lg lg:text-xs font-extralight">
+                          {item.role}
+                        </p>
+                      </div>
+                    </div>
+                    <button className="mt-2 text-[#446E6D] border-[1px] border-[#446E6D] py-1  px-2 flex items-center rounded font-semibold cursor-pointer gap-2 text-[10px]  hover:bg-[#446E6D] hover:text-white transition-all">
+                      <span className="flex items-center">
+                        Read the story{" "}
+                        <OpenInNewIcon fontSize="inherit" className="ml-1" />
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ) : item?.masterTitle === "Our Projects" ? (
+              <motion.div
+                key={index}
+                data-index={index}
+                className={` scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block`}
+                initial={{
+                  opacity: 0,
+                  scale: 0.8,
+                  x: index % 2 === 0 ? -50 : 50,
+                }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
+                transition={{ duration: 0.4, delay: index * 0.2 }}
+              >
+                <div
+                  className={`max-w-80 ${
+                    index % 4 === 0
+                      ? "bg-[#FFE8D7]"
+                      : index % 3 === 0
+                      ? "bg-[#FCE5F3]"
+                      : index % 2 === 0
+                      ? "bg-[#E5EDFD]"
+                      : "bg-[#FFF8BB]"
+                  } ${
+                    item?.masterTitle === "Our Services"
+                      ? "aspect-[16/9]"
+                      : "aspect-square  "
+                  } p-3 rounded-lg  text-left relative`}
+                >
+                  <div
+                    className={`m-0.5  basis-[46%] lg:basis-[47.2%] rounded-xl`}
+                    key={index}
+                  >
+                    {!(index % 2 === 0) && (
+                      <img
+                        alt="project-image"
+                        loading="lazy"
+                        width="0"
+                        // height="239"
+                        decoding="async"
+                        data-nimg="1"
+                        className="w-full rounded-lg aspect-[16/9] object-cover"
+                        style={{ color: "transparent" }}
+                        src={item?.image}
+                      />
+                    )}
+                    <h1
+                      className="font-medium text-sm text-[#0B2B20]  font-lora mb-[22px] line-clamp-2"
+                      style={{ marginTop: !(index % 2 === 0) ? "24px" :""}}
+                    >
+                      {item?.Title}
+                    </h1>
+                    <p className="text-[#0B2B20] text-xs  mb-[10px] whitespace-pre-wrap line-clamp-3">
+                      {item?.detail}
+                    </p>
+                    <button className="bg-[#0B2B20]  px-3 py-1 mb-6 text-[10px] rounded text-white"
+                    style={{ marginBottom: !(index % 2 === 0) ? "0px" :""}}
+                    >
+                      <Link href={`/details/projects/${item?.Title}`}>
+                        Know More
+                      </Link>
+                    </button>
+                    {index % 2 === 0 && (
+                      <img
+                        alt="project-image"
+                        loading="lazy"
+                        width="0"
+                        // height="239"
+                        decoding="async"
+                        data-nimg="1"
+                        className="w-full rounded-lg aspect-[16/9] object-cover"
+                        style={{ color: "transparent" }}
+                        src={item?.image}
+                      />
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={index}
+                data-index={index}
+                className="scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block"
+                initial={{
+                  opacity: 0,
+                  scale: 0.8,
+                  x: index % 2 === 0 ? -50 : 50,
+                }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
+                transition={{ duration: 0.4, delay: index * 0.2 }}
+              >
+                <Image
+                  width={400}
+                  height={200}
+                  src={item?.image}
+                  alt={item?.alt || "Service image"}
+                  className={`w-80 ${
+                    item?.masterTitle === "Our Services"
+                      ? "aspect-[16/9]"
+                      : "aspect-square  "
+                  } object-cover rounded-lg shadow-lg bg-white`}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/placeholder.jpg";
+                  }}
+                />
+                <div className="mt-2 text-center">
+                  <p className="text-sm text-gray-500">
+                    {item?.title || item?.name}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </AnimatePresence>
     </div>
