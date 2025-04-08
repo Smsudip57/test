@@ -64,7 +64,7 @@ export default function Navbar() {
       basePath: '/admin/website/blog',
       buttons: [
         { name: 'Create', path: 'create' },
-        // { name: 'Edit', path: 'edit' },
+        { name: 'Edit', path: 'edit' },
         // { name: 'Delete', path: 'delete' },
       ],
     },

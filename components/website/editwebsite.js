@@ -19,10 +19,11 @@ import DeleteIndustry from './deleteindustry';
 import CreateTestimonial from './createtestimonial';
 import EditTestimonial from './edittestimonial';
 import CreateBlog from './createblog';
+import EditBlog from './editblog';
 
 
 
-export default async function Page({params}) {
+export default function Page({params}) {
   const router = useRouter();
   const slug = params.filter((element,i) => {
     if(i !== 0) {
@@ -93,9 +94,9 @@ export default async function Page({params}) {
         // else if(slug[1] === 'delete') {
           // return <DeleteIndustry/>
         // }
-        // else if(slug[1] === 'edit') {
-        //   return <EditTestimonial />
-        // }
+        else if(slug[1] === 'edit') {
+          return <EditBlog />
+        }
       case 'login':
         return <Login />
       default:

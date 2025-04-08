@@ -13,12 +13,12 @@ export default function page() {
                   src="/logo.svg"
                   className="h-[366px] aspect-[12/9] pt-14"
                 />
-                <div className="bg-white absolute z-30 aspect-[1/1] bottom-[-14%] right-[-7%] px-5 flex flex-col justify-center items-center gap-1 border-b-4 border-[#446E6D]">
+                {/* <div className="bg-white absolute z-30 aspect-[1/1] bottom-[-14%] right-[-7%] px-5 flex flex-col justify-center items-center gap-1 border-b-4 border-[#446E6D]">
                   <span className="text-4xl font-semibold text-[#446E6D]">
                     8+
                   </span>
                   <p className="uppercase font-semibold ">Experience</p>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="absolute h-[366px] w-1/2 left-0 top-0 bg- z-10 bg-opacity-80"></div>
