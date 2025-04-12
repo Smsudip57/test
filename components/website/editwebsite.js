@@ -20,6 +20,10 @@ import CreateTestimonial from './createtestimonial';
 import EditTestimonial from './edittestimonial';
 import CreateBlog from './createblog';
 import EditBlog from './editblog';
+import CreateKnowledgebase from './createKnowledgebase';
+import EditKnowledgebase from './editknowlegdebase';
+import CreateFaq from './createFaq';
+import EditFaq from './editfaq';
 
 
 
@@ -96,6 +100,26 @@ export default function Page({params}) {
         // }
         else if(slug[1] === 'edit') {
           return <EditBlog />
+        }
+      case 'knowledgebase':
+        if(slug[1] === 'create') {
+          return <CreateKnowledgebase />
+        }
+        // else if(slug[1] === 'delete') {
+          // return <DeleteIndustry/>
+        // }
+        else if(slug[1] === 'edit') {
+          return <EditKnowledgebase />
+        }
+      case 'faq':
+        if(slug[1] === 'create') {
+          return <CreateFaq />
+        }
+        // else if(slug[1] === 'delete') {
+          // return <DeleteIndustry/>
+        // }
+        else if(slug[1] === 'edit') {
+          return <EditFaq />
         }
       case 'login':
         return <Login />
