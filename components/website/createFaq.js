@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Box, TextField, Button, Typography, Paper, IconButton, 
-         FormControl, InputLabel, Select, MenuItem, CircularProgress } from '@mui/material';
+import {
+  Box, TextField, Button, Typography, Paper, IconButton,
+  FormControl, InputLabel, Select, MenuItem, CircularProgress
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -15,32 +17,32 @@ export default function CreateFaq() {
     relatedServices: '',
     relatedIndustries: ''
   });
-  
+
   // Services and Industries lists
   const [services, setServices] = useState([]);
   const [industries, setIndustries] = useState([]);
-  
+
   // Loading and submission states
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
-  
+
   // Fetch services and industries on component mount
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         // Fetch services
-        const servicesRes = await axios.get('/api/service/getservice',{
+        const servicesRes = await axios.get('/api/service/getservice', {
           withCredentials: true
         });
         if (servicesRes.data.success) {
           setServices(servicesRes.data.services || []);
         }
-        
+
         // Fetch industries
-        const industriesRes = await axios.get('/api/industry/get',{
-            withCredentials: true
+        const industriesRes = await axios.get('/api/industry/get', {
+          withCredentials: true
         });
         if (industriesRes.data.success) {
           setIndustries(industriesRes.data.industries || []);
@@ -52,10 +54,10 @@ export default function CreateFaq() {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, []);
-  
+
   // Handle input change for title and dropdowns
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,18 +66,18 @@ export default function CreateFaq() {
       [name]: value
     }));
   };
-  
+
   // Handle question or answer change
   const handleQuestionChange = (index, field, value) => {
     const updatedQuestions = [...formData.questions];
     updatedQuestions[index][field] = value;
-    
+
     setFormData(prev => ({
       ...prev,
       questions: updatedQuestions
     }));
   };
-  
+
   // Add a new question-answer pair
   const addQuestion = () => {
     setFormData(prev => ({
@@ -83,46 +85,47 @@ export default function CreateFaq() {
       questions: [...prev.questions, { question: '', answer: '' }]
     }));
   };
-  
+
   // Remove a question-answer pair
   const removeQuestion = (index) => {
     if (formData.questions.length === 1) {
       return toast.warning("You need at least one question");
     }
-    
+
     const updatedQuestions = [...formData.questions];
     updatedQuestions.splice(index, 1);
-    
+
     setFormData(prev => ({
       ...prev,
       questions: updatedQuestions
     }));
   };
-  
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    // console.log(formData)
+    // return
     // Basic validation
     if (!formData.title.trim()) {
       return toast.error("Title is required");
     }
-    
-    if (!formData.relatedServices) {
-      return toast.error("Please select a related service");
+
+    if (!formData.relatedIndustries) {
+      return toast.error("Please select a related industry");
     }
-    
+
     // Validate all questions have both question and answer
-    const hasEmptyFields = formData.questions.some(qa => 
+    const hasEmptyFields = formData.questions.some(qa =>
       !qa.question.trim() || !qa.answer.trim()
     );
-    
+
     if (hasEmptyFields) {
       return toast.error("All questions and answers are required");
     }
-    
+
     setSubmitting(true);
-    
+
     try {
       const response = await axios.post('/api/faq/create', {
         title: formData.title,
@@ -130,11 +133,11 @@ export default function CreateFaq() {
         relatedServices: formData.relatedServices,
         relatedIndustries: formData.relatedIndustries || null
       });
-      
+
       if (response.data.success) {
         toast.success("FAQ created successfully");
         setSuccess(true);
-        
+
         // Reset form
         setFormData({
           title: '',
@@ -152,12 +155,12 @@ export default function CreateFaq() {
       setSubmitting(false);
     }
   };
-  
+
   // Reset form after successful submission
   const handleAddAnother = () => {
     setSuccess(false);
   };
-  
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
@@ -165,25 +168,25 @@ export default function CreateFaq() {
       </Box>
     );
   }
-  
+
   if (success) {
     return (
       <Paper elevation={3} sx={{ p: 4, maxWidth: 800, mx: 'auto', mt: 4 }}>
         <Typography variant="h5" sx={{ mb: 2, color: 'success.main' }}>
-            <span className='text-green-500 font-semibold'>
+          <span className='text-green-500 font-semibold'>
 
-          FAQ Created Successfully!
-            </span>
+            FAQ Created Successfully!
+          </span>
         </Typography>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           onClick={handleAddAnother}
           sx={{ mr: 2 }}
         >
           Add Another FAQ
         </Button>
-        <Button 
-          variant="outlined" 
+        <Button
+          variant="outlined"
           onClick={() => window.location.href = '/admin/faqs'}
         >
           View All FAQs
@@ -191,11 +194,11 @@ export default function CreateFaq() {
       </Paper>
     );
   }
-  
+
   return (
-    <Paper elevation={3} sx={{ p: 6,}}>
-      <Typography variant="h5" sx={{ mb: 4  }} className=' font-semibold'>Create New FAQ</Typography>
-      
+    <Paper elevation={3} sx={{ p: 6, }}>
+      <Typography variant="h5" sx={{ mb: 4 }} className=' font-semibold'>Create New FAQ</Typography>
+
       <form onSubmit={handleSubmit}>
         {/* FAQ Title */}
         <TextField
@@ -207,9 +210,9 @@ export default function CreateFaq() {
           required
           margin="normal"
         />
-        
+
         {/* Service Selection */}
-        <FormControl fullWidth margin="normal" required>
+        {/* <FormControl fullWidth margin="normal" required>
           <InputLabel>Related Service</InputLabel>
           <Select
             name="relatedServices"
@@ -223,11 +226,11 @@ export default function CreateFaq() {
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
-        
+        </FormControl> */}
+
         {/* Industry Selection (Optional) */}
-        {/* <FormControl fullWidth margin="normal">
-          <InputLabel>Related Industry (Optional)</InputLabel>
+        <FormControl fullWidth margin="normal">
+          <InputLabel>Related Industry </InputLabel>
           <Select
             name="relatedIndustries"
             value={formData.relatedIndustries}
@@ -237,24 +240,24 @@ export default function CreateFaq() {
             <MenuItem value="">None</MenuItem>
             {industries.map(industry => (
               <MenuItem key={industry._id} value={industry._id}>
-                {industry.title}
+                {industry.Title}
               </MenuItem>
             ))}
           </Select>
-        </FormControl> */}
-        
+        </FormControl>
+
         {/* Questions and Answers */}
         <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
           Questions & Answers
         </Typography>
-        
+
         {formData.questions.map((qa, index) => (
-          <Box 
-            key={index} 
-            sx={{ 
-              mt: 3, 
-              p: 2, 
-              border: '1px solid #e0e0e0', 
+          <Box
+            key={index}
+            sx={{
+              mt: 3,
+              p: 2,
+              border: '1px solid #e0e0e0',
               borderRadius: 1,
               position: 'relative'
             }}
@@ -262,7 +265,7 @@ export default function CreateFaq() {
             <Typography variant="subtitle1" sx={{ mb: 2 }}>
               Question {index + 1}
             </Typography>
-            
+
             <TextField
               label="Question"
               value={qa.question}
@@ -271,7 +274,7 @@ export default function CreateFaq() {
               required
               margin="normal"
             />
-            
+
             <TextField
               label="Answer"
               value={qa.answer}
@@ -282,9 +285,9 @@ export default function CreateFaq() {
               multiline
               rows={3}
             />
-            
-            <IconButton 
-              color="error" 
+
+            <IconButton
+              color="error"
               sx={{ position: 'absolute', top: 10, right: 10 }}
               onClick={() => removeQuestion(index)}
             >
@@ -292,22 +295,22 @@ export default function CreateFaq() {
             </IconButton>
           </Box>
         ))}
-        
+
         {/* Add Question Button */}
-        <Button 
+        <Button
           startIcon={<AddIcon />}
           onClick={addQuestion}
           sx={{ mt: 2 }}
         >
           Add Question
         </Button>
-        
+
         {/* Submit Button */}
         <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button 
-            type="submit" 
-            variant="contained" 
-            color="primary" 
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
             disabled={submitting}
           >
             {submitting ? <CircularProgress size={24} /> : "Create FAQ"}

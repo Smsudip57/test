@@ -24,6 +24,7 @@ import CreateKnowledgebase from './createKnowledgebase';
 import EditKnowledgebase from './editknowlegdebase';
 import CreateFaq from './createFaq';
 import EditFaq from './editfaq';
+import CreateServiceDetails from './createServiceDetails';
 
 
 
@@ -114,6 +115,16 @@ export default function Page({params}) {
       case 'faq':
         if(slug[1] === 'create') {
           return <CreateFaq />
+        }
+        // else if(slug[1] === 'delete') {
+          // return <DeleteIndustry/>
+        // }
+        else if(slug[1] === 'edit') {
+          return <EditFaq />
+        }
+      case 'service-details':
+        if(slug[1] === 'create') {
+          return <CreateServiceDetails />
         }
         // else if(slug[1] === 'delete') {
           // return <DeleteIndustry/>

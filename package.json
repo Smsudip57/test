@@ -33,6 +33,8 @@
     "next": "^14.2.5",
     "notistack": "^3.0.1",
     "react": "^18",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18",
     "react-google-charts": "^4.0.1",
     "react-icons": "^4.11.0",

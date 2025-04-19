@@ -44,7 +44,7 @@ export default async function AdminPage({params}) {
     const Name = decodeURIComponent(name);
     if (services && services.length > 0 && Name && products && products.length > 0) {
       const Service = services.find((service) => service.Title === Name);
-      const Product = products.filter((product) => product.category === Service._id);
+      const Product = products.filter((product) => product?.category === Service?._id);
       return {Service, Product};
     }else{
       return false;

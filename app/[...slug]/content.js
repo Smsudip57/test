@@ -16,7 +16,7 @@ export default function Firewall({ services, products, slug, Mainservice }) {
   const [others, setothers] = useState([]);
   const [servicebasedProducts, setservicebasedProducts] = useState([]);
 
-  const {setChatBoxOpen} = useContext(MyContext);
+  const { setChatBoxOpen } = useContext(MyContext);
 
   useEffect(() => {
     const val = window.location.href.split("?")?.[1];
@@ -46,7 +46,7 @@ export default function Firewall({ services, products, slug, Mainservice }) {
           content={Mainservice?.description || "Discover our services and products."}
         />
         <meta name="robots" content="index, follow" />
-        
+
       </Head>
 
       <div className="min-h-[650px] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni z-[-10]"></div>
@@ -54,31 +54,33 @@ export default function Firewall({ services, products, slug, Mainservice }) {
         <StarsCanvas />
       </div>
       <div className="w-full relative">
-      <div className="min-h-full w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni z-[-10]"></div>
-      <div className="w-full lg:w-[90%] max-w-[1920px] mx-auto">
-        <div className="w-full h-full py-[19vh]">
-          <div className="w-[90%] xl:w-[1280px] mx-auto flex flex-col xl:flex-row">
-            <div className="xl:w-[50%] flex flex-col justify-around gap-10 z-30 order-2 xl:order-1">
-              <h1 className="text-2xl xl:text-[36px] font-bold xl:leading-[45px] font-sans">
-                {services?.[main]?.Title}
-              </h1>
-              <p className="pr-10 font-medium whitespace-pre-wrap">
-                {services?.[main]?.deltail}
-              </p>
-              <div className="flex gap-6">
-                <button className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded hover:opacity-70 text-sm" onClick={() => setChatBoxOpen(true)}>
-                  Book Free Consultation
-                </button>
-                <button className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base">
-                  <span className="mr-1">Explore</span>
-                  <EastIcon fontSize="inherit" />
-                </button>
+        <div className="min-h-full w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni z-[-10]"></div>
+        <div className="w-full lg:w-[90%] max-w-[1920px] mx-auto">
+          <div className="w-full h-full py-[19vh]">
+            <div className="w-[90%] xl:w-[1280px] mx-auto flex flex-col xl:flex-row">
+              <div className="xl:w-[50%] flex flex-col justify-around gap-10 z-30 order-2 xl:order-1">
+                <h1 className="text-2xl xl:text-[36px] font-bold xl:leading-[45px] font-sans">
+                  {services?.[main]?.Title}
+                </h1>
+                <p className="pr-10 font-medium whitespace-pre-wrap">
+                  {services?.[main]?.deltail}
+                </p>
+                <div className="flex gap-6">
+                  <button className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded hover:opacity-70 text-sm" onClick={() => setChatBoxOpen(true)}>
+                    Book Free Consultation
+                  </button>
+                  <button className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base">
+                    <Link href={`/service-details/${services?.[main]?.Title}`}>
+                      <span className="mr-1">Explore</span>
+                      <EastIcon fontSize="inherit" />
+                    </Link>
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <div className="xl:w-[50%] flex justify-center items-center z-30 order-1 xl:order-2">
-              <div className="flex justify-center mb-12 xl:flex-wrap items-center">
-                {/* {services?.map((product, index) => (
+              <div className="xl:w-[50%] flex justify-center items-center z-30 order-1 xl:order-2">
+                <div className="flex justify-center mb-12 xl:flex-wrap items-center">
+                  {/* {services?.map((product, index) => (
                   <div
                     className="text-center text-nowrap basis-[45%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md text-3xl"
                     key={index}
@@ -98,30 +100,30 @@ export default function Firewall({ services, products, slug, Mainservice }) {
                     </a>
                   </div>
                 ))} */}
-                {
-                  <div
-                  className="text-center text-nowrap basis-[65%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md text-3xl"
-                
-                >
-                  <a
-                    href="#details"
-                    className="cursor-pointer hover:mix-blend-plus-darker"
-                  >
-                    <img
-                      src={services?.[main]?.image}
-                      alt={`Image of ${services?.[main]?.Title}`} 
-                      className="w-full hover:opacity-70"
-                    />
-                  </a>
+                  {
+                    <div
+                      className="text-center text-nowrap basis-[65%] m-3 shadow-gray-400 shadow-lg overflow-hidden rounded-md text-3xl"
+
+                    >
+                      <a
+                        href="#details"
+                        className="cursor-pointer hover:mix-blend-plus-darker"
+                      >
+                        <img
+                          src={services?.[main]?.image}
+                          alt={`Image of ${services?.[main]?.Title}`}
+                          className="w-full hover:opacity-70"
+                        />
+                      </a>
+                    </div>
+                  }
                 </div>
-                }
               </div>
             </div>
           </div>
-          </div>
-          </div>
-          </div>
-          <div className="min-h-screen w-full lg:w-[90%] max-w-[1920px] mx-auto">
+        </div>
+      </div>
+      <div className="min-h-screen w-full lg:w-[90%] max-w-[1920px] mx-auto">
         <div className="w-full h-full">
 
           <div

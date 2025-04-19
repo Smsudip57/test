@@ -79,12 +79,22 @@ export default function Navbar() {
       ],
     },
     {
-      name: 'faq',
+      name: 'Faq',
       icons: <FileQuestion  style={{ width: '1em', height: '1em' }}/>,
       basePath: '/admin/website/faq',
       buttons: [
         { name: 'Create', path: 'create' },
-        { name: 'Edit', path: 'edit' },
+        // { name: 'Edit', path: 'edit' },
+        // { name: 'Delete', path: 'delete' },
+      ],
+    },
+    {
+      name: 'Service Details',
+      icons: <FileQuestion  style={{ width: '1em', height: '1em' }}/>,
+      basePath: '/admin/website/service-details',
+      buttons: [
+        { name: 'Create', path: 'create' },
+        // { name: 'Edit', path: 'edit' },
         // { name: 'Delete', path: 'delete' },
       ],
     },
@@ -104,7 +114,7 @@ export default function Navbar() {
   // }, [pathname]);
 
   return (
-    <div className="min-w-full flex p-4 px-36 items-center justify-between bg-white rounded-md top-0 shadow">
+    <div className="min-w-full flex p-4 items-center justify-between bg-white rounded-md top-0 shadow">
       {routes.map((route) => {
         const isActiveDropdown = openDropdown === route.name;
 
