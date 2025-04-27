@@ -20,6 +20,16 @@ export default function Navbar() {
       ],
     },
     {
+      name: 'Service Details',
+      icons: <FileQuestion  style={{ width: '1em', height: '1em' }}/>,
+      basePath: '/admin/website/service-details',
+      buttons: [
+        { name: 'Create', path: 'create' },
+        // { name: 'Edit', path: 'edit' },
+        // { name: 'Delete', path: 'delete' },
+      ],
+    },
+    {
       name: 'Products',
       basePath: '/admin/website/products',
       icons: <PackageSearch  style={{ width: '1em', height: '1em' }}/>,
@@ -88,16 +98,7 @@ export default function Navbar() {
         // { name: 'Delete', path: 'delete' },
       ],
     },
-    {
-      name: 'Service Details',
-      icons: <FileQuestion  style={{ width: '1em', height: '1em' }}/>,
-      basePath: '/admin/website/service-details',
-      buttons: [
-        { name: 'Create', path: 'create' },
-        // { name: 'Edit', path: 'edit' },
-        // { name: 'Delete', path: 'delete' },
-      ],
-    },
+    
     // Add more routes as needed
   ];
 
@@ -125,7 +126,7 @@ export default function Navbar() {
               onClick={() =>
                 setOpenDropdown((prev) => (prev === route.name ? '' : route.name))
               }
-              className={`inline-flex gap-2 items-center justify-between rounded font w-full border-gray-300 shadow-sm px-5 py-2 font-semibold ${
+              className={`inline-flex text-nowrap gap-2 items-center justify-between rounded font w-full border-gray-300 shadow-sm px-5 py-2 font-semibold ${
                 (pathname.startsWith(route.basePath) && !isActiveDropdown) ? 'bg-[#446e6d24] text-[#446E6D]' : 'hover:bg-[#446e6d24]  text-gray-700'
               } focus:outline-none text-left`}
             >
@@ -159,7 +160,7 @@ export default function Navbar() {
                     <button
                       key={button.name}
                       onClick={() => router.push(`${route.basePath}/${button.path}`)}
-                      className={`w-full block px-5 py-3  border-gray-300 text-left ${
+                      className={`w-full block px-5 py-3  border-gray-300 text-left textn-nowrap ${
                         isActiveButton
                           ? 'bg-[#446e6d3b] text-[#446E6D]'
                           : 'hover:bg-[#446e6d24] text-gray-700'
