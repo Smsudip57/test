@@ -314,17 +314,17 @@ export default function EditProductList() {
   const validateForm = useCallback(() => {
     // Check main product fields
     if (!productData.Title || !productData.Title.trim()) {
-      setError('Service title is required');
+      setError('Child Service title is required');
       return false;
     }
     
     if (!productData.detail || !productData.detail.trim()) {
-      setError('Service detail is required');
+      setError('Child Service detail is required');
       return false;
     }
     
     if (!productData.moreDetail || !productData.moreDetail.trim()) {
-      setError('Service more detail is required');
+      setError('Child Service more detail is required');
       return false;
     }
     
@@ -334,7 +334,7 @@ export default function EditProductList() {
     }
     
     if (!productData.category) {
-      setError('Service is required');
+      setError('Child Service is required');
       return false;
     }
     
@@ -454,7 +454,7 @@ export default function EditProductList() {
           withCredentials: true
         });
         
-        customToast({ success: true, message: 'Service updated successfully!' });
+        customToast({ success: true, message: 'Child Service updated successfully!' });
         
         // Refresh data and exit edit mode
         await fetchProductsAndServices();
@@ -481,13 +481,13 @@ export default function EditProductList() {
       {!editingProduct && (
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-xl shadow-md">
-            <h1 className="text-2xl font-bold mb-6 text-gray-800">Edit Products</h1>
+            <h1 className="text-2xl font-bold mb-6 text-gray-800">Edit Child Service</h1>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Service Selection */}
+              {/* Child Service Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Filter by Service
+                  Filter by Parent Service
                 </label>
                 <div className="relative">
                   <select
@@ -495,7 +495,7 @@ export default function EditProductList() {
                     onChange={(e) => handleServiceChange(e.target.value)}
                     className="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white appearance-none"
                   >
-                    <option value="">Select a Service</option>
+                    <option value="">Select a Parent Service</option>
                     {services.map((service) => (
                       <option key={service._id} value={service._id}>
                         {service.Title} ({service.category})
@@ -513,7 +513,7 @@ export default function EditProductList() {
               {/* Search */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Search Products
+                  Search Child Service
                 </label>
                 <div className="flex">
                   <input
@@ -552,7 +552,7 @@ export default function EditProductList() {
             <div className="bg-white p-6 rounded-xl shadow-md">
               <h2 className="text-lg font-semibold mb-4 flex items-center">
                 <Filter size={18} className="mr-2 text-blue-600" />
-                Products ({filteredProducts.length})
+                Child Service ({filteredProducts.length})
               </h2>
               <div className="divide-y divide-gray-200">
                 {filteredProducts.map((product) => (
@@ -628,10 +628,10 @@ export default function EditProductList() {
                   className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   <ChevronLeft size={20} className="mr-1" />
-                  <span>Back to Products</span>
+                  <span>Back to Child Service</span>
                 </button>
                 
-                <h1 className="text-2xl font-bold text-center text-gray-800">Edit Service</h1>
+                <h1 className="text-2xl font-bold text-center text-gray-800">Edit Child Service</h1>
                 
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -676,7 +676,7 @@ export default function EditProductList() {
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="p-6 border-b border-gray-200">
                   <h2 className="text-xl font-semibold text-gray-800">
-                    Basic Service Information
+                    Basic Child Service Information
                   </h2>
                 </div>
                 
@@ -685,7 +685,7 @@ export default function EditProductList() {
                     {/* Left column - Image */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Service Image*
+                        Child Service Image*
                       </label>
                       <div className="relative">
                         <input
@@ -702,7 +702,7 @@ export default function EditProductList() {
                           <div className="relative rounded-lg overflow-hidden border border-gray-200">
                             <img 
                               src={mainImagePreview}
-                              alt="Service preview" 
+                              alt="Child Service preview" 
                               className="w-full h-64 object-cover" 
                             />
                             <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
@@ -727,10 +727,10 @@ export default function EditProductList() {
                         )}
                       </div>
 
-                      {/* Service Selection */}
+                      {/* Child Service Selection */}
                       <div className="mt-6">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Service Category*
+                          Child Service Category*
                         </label>
                         <select
                           name="category"
@@ -738,7 +738,7 @@ export default function EditProductList() {
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
-                          <option value="">Select a Service</option>
+                          <option value="">Select a Child Service</option>
                           {services.map((service) => (
                             <option key={service._id} value={service._id}>
                               {service.Title} ({service.category})
@@ -752,7 +752,7 @@ export default function EditProductList() {
                     <div className="space-y-5">
                       <div>
                         <label htmlFor="Title" className="block text-sm font-medium text-gray-700 mb-1">
-                          Service Title*
+                          Child Service Title*
                         </label>
                         <input
                           id="Title"
@@ -806,7 +806,7 @@ export default function EditProductList() {
                     <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">
                       {productData.sections.length}
                     </span>
-                    Service Sections
+                    Child Service Sections
                   </h2>
                   
                   <motion.button

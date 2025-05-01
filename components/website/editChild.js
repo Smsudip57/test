@@ -487,7 +487,7 @@ export default function EditProductList() {
               {/* Service Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Filter by Service
+                  Filter by Child Service
                 </label>
                 <div className="relative">
                   <select

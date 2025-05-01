@@ -30,7 +30,7 @@ export default function Navbar() {
       ],
     },
     {
-      name: 'Services',
+      name: 'Child Services',
       basePath: '/admin/website/products',
       icons: <PackageSearch  style={{ width: '1em', height: '1em' }}/>,
       buttons: [
@@ -40,7 +40,7 @@ export default function Navbar() {
       ],
     },
     {
-      name: 'Child Services',
+      name: 'Products',
       basePath: '/admin/website/child-service',
       icons: <Baby  style={{ width: '1em', height: '1em' }}/>,
       buttons: [

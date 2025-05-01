@@ -229,19 +229,19 @@ export default function CreateProduct() {
 
   // Form validation
   const validateForm = useCallback(() => {
-    // Check main Child Service fields
+    // Check main Product fields
     if (!productData.Title || !productData.Title.trim()) {
-      setError('Child Service title is required');
+      setError('Product title is required');
       return false;
     }
     
     if (!productData.detail || !productData.detail.trim()) {
-      setError('Child Service detail is required');
+      setError('Product detail is required');
       return false;
     }
     
     if (!productData.moreDetail || !productData.moreDetail.trim()) {
-      setError('Child Service more detail is required');
+      setError('Product more detail is required');
       return false;
     }
     
@@ -251,7 +251,7 @@ export default function CreateProduct() {
     }
     
     if (!productData.image) {
-      setError('Main Child Service image is required');
+      setError('Main Product image is required');
       return false;
     }
     
@@ -300,7 +300,7 @@ export default function CreateProduct() {
         // Prepare form data for submission
         const submitFormData = new FormData();
         
-        // Add basic Child Service fields
+        // Add basic Product fields
         submitFormData.append('Title', productData.Title);
         submitFormData.append('detail', productData.detail);
         submitFormData.append('moreDetail', productData.moreDetail);
@@ -334,7 +334,7 @@ export default function CreateProduct() {
           withCredentials: true
         });
         
-        customToast({ success: true, message: 'Child Service created successfully!' });
+        customToast({ success: true, message: 'Product created successfully!' });
         
         // Reset form or redirect
         setTimeout(() => {
@@ -342,17 +342,17 @@ export default function CreateProduct() {
         }, 2000);
         
       } catch (error) {
-        console.error('Error creating Child Service:', error);
+        console.error('Error creating Product:', error);
         customToast({ 
           success: false, 
-          message: error.response?.data?.message || 'Failed to create Child Service' 
+          message: error.response?.data?.message || 'Failed to create Product' 
         });
       } finally {
         setLoading(false);
       }
     };
     
-    setShowConfirm('Are you sure you want to create this Child Service?');
+    setShowConfirm('Are you sure you want to create this Product?');
     setConfirmFunction(() => createProduct);
   };
 
@@ -376,7 +376,7 @@ export default function CreateProduct() {
                 <ArrowLeft size={20} />
               </button>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
-                Create New Child Service
+                Create New Product
               </h1>
             </div>
             
@@ -401,7 +401,7 @@ export default function CreateProduct() {
               ) : (
                 <>
                   <CheckCircle className="mr-2" size={20} />
-                  Create Child Service
+                  Create Product
                 </>
               )}
             </motion.button>
@@ -409,11 +409,11 @@ export default function CreateProduct() {
           
           <div className="bg-white rounded-xl shadow-md p-8 mb-8">
             <form className="space-y-8">
-              {/* Child Service Main Information */}
+              {/* Product Main Information */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Left Column - Image Upload */}
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Child Service Image</h2>
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Product Image</h2>
                   <div className="mb-6">
                     <input
                       id="mainImage"
@@ -432,7 +432,7 @@ export default function CreateProduct() {
                       >
                         <div className="flex flex-col items-center justify-center py-8">
                           <Upload className="text-blue-500 mb-3" size={48} />
-                          <p className="text-base font-medium text-blue-600 mb-1">Click to upload Child Service image</p>
+                          <p className="text-base font-medium text-blue-600 mb-1">Click to upload Product image</p>
                           <p className="text-sm text-gray-500">PNG, JPG or GIF (Max 10MB)</p>
                         </div>
                       </div>
@@ -440,7 +440,7 @@ export default function CreateProduct() {
                       <div className="relative w-full h-72 rounded-xl overflow-hidden shadow-sm border border-gray-200">
                         <img 
                           src={mainImagePreview} 
-                          alt="Child Service preview" 
+                          alt="Product preview" 
                           className="w-full h-full object-cover"
                         />
                         <button 
@@ -458,7 +458,7 @@ export default function CreateProduct() {
                     )}
                   </div>
                   
-                  {/* Category & Child Service Selection */}
+                  {/* Category & Product Selection */}
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="parent service">
@@ -471,7 +471,7 @@ export default function CreateProduct() {
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm"
                       >
-                        <option value="">Select a parent service</option>
+                        <option value="">Select a child service</option>
                         {services?.map((category) => (
                           <option key={category?._id} value={category?._id}>
                             {category?.Title}
@@ -483,13 +483,13 @@ export default function CreateProduct() {
                   </div>
                 </div>
                 
-                {/* Right Column - Child Service Details */}
+                {/* Right Column - Product Details */}
                 <div className="space-y-6">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Child Service Details</h2>
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Product Details</h2>
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="Title">
-                      Child Service Title*
+                      Product Title*
                     </label>
                     <input
                       id="Title"
@@ -498,7 +498,7 @@ export default function CreateProduct() {
                       value={productData.Title}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-                      placeholder="Enter Child Service title"
+                      placeholder="Enter Product title"
                     />
                   </div>
                   
@@ -513,7 +513,7 @@ export default function CreateProduct() {
                       onChange={handleInputChange}
                       rows={3}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-                      placeholder="Brief description of the Child Service"
+                      placeholder="Brief description of the Product"
                     />
                   </div>
                   
@@ -528,20 +528,20 @@ export default function CreateProduct() {
                       onChange={handleInputChange}
                       rows={5}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-                      placeholder="Detailed description of the Child Service"
+                      placeholder="Detailed description of the Product"
                     />
                   </div>
                 </div>
               </div>
               
-              {/* Child Service Sections */}
+              {/* Product Sections */}
               <div className="pt-8 border-t border-gray-200">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold text-gray-800 flex items-center">
                     <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">
                       <span>{productData.sections.length}</span>
                     </span>
-                    Child Service Sections
+                    Product Sections
                   </h2>
                   <motion.button
                     type="button"

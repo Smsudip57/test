@@ -84,7 +84,7 @@ export default function ProductListWithDelete() {
   return (
     <div className="w-full mx-auto p-6">
       <div className="mb-4 flex justify-center gap-5">
-      <h1 className="text-xl font-bold mb-4 w-full text-left">Product List</h1>
+      <h1 className="text-xl font-bold mb-4 w-full text-left">Child Service List</h1>
       {/* Category Selection */}
       <div className="mb-4">
       <label className="block text-xs text-gray-500 font-medium mb-2">Filter by Category</label>
@@ -104,7 +104,7 @@ export default function ProductListWithDelete() {
       {/* Service Selection */}
       { true && (
         <div className="mb-4">
-          <label className="block text-xs text-gray-500 font-medium mb-2">Filter by Service</label>
+          <label className="block text-xs text-gray-500 font-medium mb-2">Filter by Parent Service</label>
           <select
             value={selectedService}
             onChange={(e) => handleServiceChange(e.target.value)}
@@ -124,7 +124,7 @@ export default function ProductListWithDelete() {
       </div>
       
 
-      {/* Product List */}
+      {/* Child Service List */}
       <ul className="space-y-4">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
