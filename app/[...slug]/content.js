@@ -10,11 +10,12 @@ import Link from "next/link";
 import Head from "next/head"; // Import Head for SEO
 import { MyContext } from "@/context/context";
 
-export default function Firewall({ services, products, slug, Mainservice }) {
+export default function Firewall({ services, products, slug, Mainservice, childs }) {
   const [main, setmain] = useState(0);
   const params = useSearchParams();
   const [others, setothers] = useState([]);
   const [servicebasedProducts, setservicebasedProducts] = useState([]);
+  const [filterchilds, setChilds] = useState([]);
 
   const { setChatBoxOpen } = useContext(MyContext);
 
@@ -31,11 +32,29 @@ export default function Firewall({ services, products, slug, Mainservice }) {
   useEffect(() => {
     const selectedService = services?.[main];
     if (selectedService) {
-      setservicebasedProducts(
-        products?.filter((product) => product?.category === selectedService?._id)
+      // Set service-based products
+      const filteredProducts = products?.filter(
+        (product) => product?.category === selectedService?._id
       );
+      setservicebasedProducts(filteredProducts);
+      
+      const relatedChildren = [];
+      filteredProducts?.forEach((product) => {
+        const childProduct = childs?.find(
+          (child) => child?.category === product?._id
+        );
+        
+        if (childProduct) {
+          relatedChildren.push(childProduct);
+        }
+      });
+      
+      setChilds(relatedChildren);
     }
-  }, [main, services, products]);
+  }, [main, services, products, childs]);
+
+
+
 
   return (
     <div className="w-full relative">
@@ -182,7 +201,39 @@ export default function Firewall({ services, products, slug, Mainservice }) {
                     Get it today!
                   </button>
                   <button className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base">
-                    <Link href={`/details/products/${services?.[main]?.Title}`}>
+                    <Link href={`/details/services/${item?.Title}`}>
+                      <span className="mr-1">Discover</span>
+                      <EastIcon fontSize="inherit" />
+                    </Link>
+                  </button>
+                </div>
+              </div>
+            ))}
+            {filterchilds?.map((item, index) => (
+              <div
+                className="flex flex-col basis-1/3 justify-between items-start z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px]"
+                key={index}
+              >
+                <div className="flex flex-col justify-center items-start gap-10">
+                  <img
+                    src={item?.image}
+                    alt={`Image of ${item?.Title}`}
+                    className="w-full rounded-md"
+                  />
+                  <h2 className="text-2xl font-semibold font-sans">
+                    {item?.Title}
+                  </h2>
+                  <div className="w-full flex flex-col gap-4 pr-3 whitespace-pre-wrap">
+                    {item?.detail}
+                  </div>
+                </div>
+
+                <div className="flex justify-center gap-6 my-16">
+                  <button className="text-sm hover:opacity-70 bg-[#446E6D] text-white rounded py-2 px-4">
+                    Get it today!
+                  </button>
+                  <button className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base">
+                    <Link href={`/details/childs/${item?.Title}`}>
                       <span className="mr-1">Discover</span>
                       <EastIcon fontSize="inherit" />
                     </Link>

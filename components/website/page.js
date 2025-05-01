@@ -19,6 +19,7 @@ import DeleteIndustry from './deleteindustry';
 import CreateTestimonial from './createtestimonial';
 import EditTestimonial from './edittestimonial';
 import Editwebsite from './editwebsite';
+import CreateChildService from './crateChild'
 
 
 
@@ -39,6 +40,7 @@ export default async function Page({params}) {
         </div>
         )
     }
+    console.log(slug[0])
         
     switch (slug[0]) {
       case 'website':
@@ -77,6 +79,16 @@ export default async function Page({params}) {
         }
       case 'testimonials':
         if(slug[1] === 'create') {
+          return <CreateTestimonial />
+        }
+        // else if(slug[1] === 'delete') {
+          // return <DeleteIndustry/>
+        // }
+        else if(slug[1] === 'edit') {
+          return <EditTestimonial />
+        }
+      case 'child':
+       if(slug[1] === 'create') {
           return <CreateTestimonial />
         }
         // else if(slug[1] === 'delete') {

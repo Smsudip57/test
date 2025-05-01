@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import {HeartHandshake, PackageSearch,FolderGit ,MessageCircleCode,Factory  ,Newspaper, NewspaperIcon, FileQuestion   } from 'lucide-react'
+import {HeartHandshake, PackageSearch,FolderGit ,MessageCircleCode,Factory  ,Newspaper, NewspaperIcon, FileQuestion, Baby   } from 'lucide-react'
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState('');
@@ -10,7 +10,7 @@ export default function Navbar() {
 
   const routes = [
     {
-      name: 'Services',
+      name: 'Parent Services',
       icons: <HeartHandshake style={{ width: '1em', height: '1em' }}/>,
       basePath: '/admin/website/services',
       buttons: [
@@ -20,7 +20,7 @@ export default function Navbar() {
       ],
     },
     {
-      name: 'Service Details',
+      name: 'Parent Service Details',
       icons: <FileQuestion  style={{ width: '1em', height: '1em' }}/>,
       basePath: '/admin/website/service-details',
       buttons: [
@@ -30,7 +30,7 @@ export default function Navbar() {
       ],
     },
     {
-      name: 'Products',
+      name: 'Services',
       basePath: '/admin/website/products',
       icons: <PackageSearch  style={{ width: '1em', height: '1em' }}/>,
       buttons: [
@@ -39,6 +39,17 @@ export default function Navbar() {
         { name: 'Delete', path: 'delete' },
       ],
     },
+    {
+      name: 'Child Services',
+      basePath: '/admin/website/child-service',
+      icons: <Baby  style={{ width: '1em', height: '1em' }}/>,
+      buttons: [
+        { name: 'Create', path: 'create' },
+        { name: 'Edit', path: 'edit' },
+        // { name: 'Delete', path: 'delete' },
+      ],
+    },
+    
     {
       name: 'Projects',
       basePath: '/admin/website/projects',
@@ -115,7 +126,7 @@ export default function Navbar() {
   // }, [pathname]);
 
   return (
-    <div className="min-w-full flex p-4 items-center justify-between bg-white rounded-md top-0 shadow">
+    <div className="min-w-full flex flex-wrap gap-5 p-4 items-center justify-start bg-white rounded-md top-0 shadow">
       {routes.map((route) => {
         const isActiveDropdown = openDropdown === route.name;
 
@@ -150,7 +161,7 @@ export default function Navbar() {
 
             {/* Dropdown Menu */}
             {isActiveDropdown && (
-              <div className="ml-[20px] bg-white absolute rounded-sm overflow-hidden shadow-md border-[#446E6D] w-full origin-top-right divide-y divide-gray-100 focus:outline-none" 
+              <div className="ml-[20px] z-[999999999999] bg-white absolute rounded-sm overflow-hidden shadow-md border-[#446E6D] w-full origin-top-right divide-y divide-gray-100 focus:outline-none" 
                 onMouseLeave={() => setOpenDropdown('')}
               >
                 {route.buttons.map((button) => {

@@ -25,6 +25,8 @@ import EditKnowledgebase from './editknowlegdebase';
 import CreateFaq from './createFaq';
 import EditFaq from './editfaq';
 import CreateServiceDetails from './createServiceDetails';
+import CreateChildService from './crateChild';
+import EditChildService from './editChild';
 
 
 
@@ -131,6 +133,16 @@ export default function Page({params}) {
         // }
         else if(slug[1] === 'edit') {
           return <EditFaq />
+        }
+      case 'child-service':
+        if(slug[1] === 'create') {
+          return <CreateChildService />
+        }
+        // else if(slug[1] === 'delete') {
+          // return <DeleteIndustry/>
+        // }
+        else if(slug[1] === 'edit') {
+          return <EditChildService />
         }
       case 'login':
         return <Login />

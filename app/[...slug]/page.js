@@ -10,6 +10,7 @@ import { url } from 'inspector';
 export default async function Page({params}) {
   let services = null;
   let products = null;
+  let childs = null;
   const Mainservice = [
     {
       name: "Branding",
@@ -54,6 +55,14 @@ export default async function Page({params}) {
     console.log(error.response?.data);
     products = [];
   }
+  try {
+    const productResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/child/get`);
+
+    childs = productResponse?.data?.products;
+  } catch (error) {
+    console.log(error.response?.data);
+    childs = [];
+  }
 
   const slug = await params.slug;
 
@@ -70,7 +79,7 @@ export default async function Page({params}) {
     const slugCategory = decodeURIComponent(slug[0]?.toLowerCase());
     // const slugCategory = 'digital';
     // const slugCategory = 'branding';
-    // console.log(slugCategory);
+    console.log(childs);
     
     
     if (normalizedMainServices.includes(slugCategory)) {
@@ -88,7 +97,7 @@ export default async function Page({params}) {
 
 
 
-      return <Content services={filteredServices} slug={slugCategory} products={filteredProducts} Mainservice={mainservice} />;
+      return <Content services={filteredServices} slug={slugCategory} products={filteredProducts} Mainservice={mainservice} childs={childs} />;
     }
   
     // If no match, render 404

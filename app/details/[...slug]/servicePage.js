@@ -2,55 +2,60 @@
 import React, { useEffect, useState } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Head from "next/head";
+import axios from "axios";
 
-export default function Page({ details }) {
-  // Initialize with first section of each item open
-  // Initialize with first section of each item open
-  const [openSections, setOpenSections] = useState(() => {
-    // Create an array with the same length as details.Product
-    return details?.Product?.map((_, index) => 0) || [];
-  });
+export default function Page({ details:Service }) {
   const [f1, setf1] = useState(false);
   const [f2, setf2] = useState(false);
   const [f3, setf3] = useState(false);
   const [f4, setf4] = useState(false);
 
-  const toggleSection = (index) => {
-    setOpenSections(
-      (prev) => prev.map((isOpen, i) => (i === index ? !isOpen : false)) // Toggle the clicked section, close others
-    );
-  };
+  useEffect(() => {
+    const fetchdata = async () => {
+      try {
+        const response = await axios.get("/api/servicedetails/get")
+        if (response?.data) {
+          // console.log(response?.data?.servicedetails)
+          // console.log(Service)
+          setdetails(response?.data?.servicedetails?.find((item) => item?.relatedServices?._id === Service?._id))
+        }
+      } catch (error) {
+
+      }
+    }
+    fetchdata()
+  }, [])
 
   return (
     <div className="min-h-screen min-w-screen text-center relative font-sans">
       <title>
-        {details?.Service?.Title
-          ? `Webmedigital - ${details?.Service?.Title}`
+        {Service?.Title
+          ? `Webmedigital - ${Service?.Title}`
           : "Webmedigital - Projects"}
       </title>
       <Head>
         <meta
           name="description"
           content={
-            details?.Service?.moreDetail ||
+            Service?.description ||
             "Explore this amazing details?.Service with a detailed showcase."
           }
         />
         <meta name="robots" content="index, follow" />
         <meta
           property="og:title"
-          content={details?.Service?.Title || "Project Showcase"}
+          content={Service?.Title || "Project Showcase"}
         />
         <meta
           property="og:description"
           content={
-            details?.Service?.moreDetail ||
+            Service?.moreDetail ||
             "Explore this amazing details?.Service with a detailed showcase."
           }
         />
         <meta
           property="og:image"
-          content={details?.Service?.image || "/default-image.jpg"}
+          content={Service?.image || "/default-image.jpg"}
         />
         {/* <meta property="og:url" content={window.location.href} /> */}
       </Head>
@@ -58,9 +63,9 @@ export default function Page({ details }) {
       <header className="flex min-h-screen">
         <section className="basis-1/2 min-h-full pt-16 flex flex-col justify-center items-start text-start px-[10%] gap-10">
           <h1 className="text-6xl font-semibold text-[#446E6D]">
-            {details?.Service?.Title}
+            {Service?.Title}
           </h1>
-          <p className="text-xl font-sans">{details?.Service?.moreDetail}</p>
+          <p className="text-xl font-sans">{Service?.moreDetail}</p>
           <div className="flex font-sans gap-5">
             <button className="py-2 px-5 bg-[#446E6D] rounded-sm text-white">
               Watch Demo
@@ -72,61 +77,29 @@ export default function Page({ details }) {
         </section>
         <section className="basis-1/2 min-h-full pt-16 flex flex-col">
           <div className="pt-[10%]">
-            <img src={details?.Service?.image} alt="Service overview" />
+            <img src={Service?.image} alt="Service overview" />
           </div>
         </section>
       </header>
 
-      {details.Product?.map((item, index) => (
+      {Service?.sections?.map((item, index) => (
         <section key={index} className={`${index % 2 === 0 ? "my-24" : ""}`}>
           <div className="w-4/5 mx-auto flex justify-between gap-[15%]">
             <div
-              className={`basis-1/2 w-full h-full pt-[10%] ${
-                index % 2 === 0 ? "order-1" : "order-2"
-              }`}
+              className={`basis-1/2 w-full h-full pt-[10%] ${index % 2 === 0 ? "order-1" : "order-2"
+                }`}
             >
-              <img src={item.image} alt={item.Heading} className="w-full" />
+              <img src={item?.image} alt={item?.title} className="w-full" />
             </div>
             <div
-              className={`basis-1/2 h-full pt-16 items-start text-start ${
-                index % 2 === 0 ? "order-2" : "order-1"
-              }`}
+              className={`basis-1/2 h-full pt-16 items-start text-start ${index % 2 === 0 ? "order-2" : "order-1"
+                }`}
             >
               <h2 className="text-5xl font-semibold text-[#446E6D]">
-                {item.Title}
+                {item?.title}
               </h2>
-              <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
-                {Array.from(Array(3)).map((_, subIndex) => (
-                  <div
-                    key={subIndex}
-                    className={`w-full border-l-4 pl-6 cursor-pointer ${
-                      openSections[index] === subIndex
-                        ? "border-l-[#446E6D]"
-                        : "border-l-white"
-                    }`}
-                    onClick={() =>
-                      setOpenSections((prev) => {
-                        // Close all sections except the clicked one
-                        const updatedSections = [...prev];
-                        updatedSections[index] =
-                          updatedSections[index] === subIndex ? null : subIndex;
-                        return updatedSections;
-                      })
-                    }
-                  >
-                    <h3 className="text-2xl font-semibold text-[#446E6D]">
-                      {item[`subHeading${subIndex + 1}`]}
-                    </h3>
-                    <p
-                      className={`text-lg font-sans mt-4 text-stone-700 ${
-                        openSections[index] === subIndex ? "block" : "hidden"
-                      }`}
-                    >
-                      {item[`subHeading${subIndex + 1}edtails`]}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              <PointComp points={item?.points} />
+             
             </div>
           </div>
         </section>
@@ -670,4 +643,37 @@ export default function Page({ details }) {
       </div>
     </div>
   );
+}
+
+
+const PointComp = ({ points }) => {
+  const [open, setopen] = useState(0)
+
+  return <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
+    {
+      points.map((item, index) => (
+        <div
+          key={index}
+          className={`w-full border-l-4 pl-6 cursor-pointer ${open === index
+            ? "border-l-[#446E6D]"
+            : "border-l-white"
+            }`}
+          onClick={() =>
+            setopen(index)
+          }
+        >
+          <h3 className="text-2xl font-semibold text-[#446E6D]">
+            {item?.title}
+          </h3>
+          <p
+            className={`text-lg font-sans mt-4 text-stone-700 ${open === index ? "block" : "hidden"
+              }`}
+          >
+            {item?.detail}
+          </p>
+        </div>
+      ))
+    }
+  </div>
+
 }

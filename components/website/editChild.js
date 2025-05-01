@@ -58,11 +58,11 @@ export default function EditProductList() {
   const fetchProductsAndServices = async () => {
     try {
       setLoading(true);
-      const productsResponse = await axios.get('/api/product/get', { withCredentials: true });
-      const servicesResponse = await axios.get('/api/service/getservice', { withCredentials: true });
+      const productsResponse = await axios.get('/api/child/get', { withCredentials: true });
+      const servicesResponse = await axios.get('/api/product/get', { withCredentials: true });
 
       setProducts(productsResponse.data.products || []);
-      setServices(servicesResponse.data.services || []);
+      setServices(servicesResponse.data.products || []);
       
       // If there's already a selected service, update the filtered products
       if (selectedService) {
@@ -447,7 +447,7 @@ export default function EditProductList() {
         });
         
         // Submit the update
-        const response = await axios.put('/api/product/edit', formData, {
+        const response = await axios.put('/api/child/edit', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           },
@@ -498,7 +498,7 @@ export default function EditProductList() {
                     <option value="">Select a Service</option>
                     {services.map((service) => (
                       <option key={service._id} value={service._id}>
-                        {service.Title} ({service.category})
+                        {service.Title}
                       </option>
                     ))}
                   </select>
@@ -739,11 +739,11 @@ export default function EditProductList() {
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
                           <option value="">Select a Service</option>
-                          {services.map((service) => (
-                            <option key={service._id} value={service._id}>
-                              {service.Title} ({service.category})
-                            </option>
-                          ))}
+                          {services?.map((category) => (
+                          <option key={category?._id} value={category?._id}>
+                            {category?.Title}
+                          </option>
+                        ))}
                         </select>
                       </div>
                     </div>
