@@ -2,7 +2,7 @@
 const nextConfig = {
     swcMinify: true, 
     images: {
-      domains: ['api.webmedigital.com', "localhost"],
+      domains: ['api.webmedigital.com', "localhost","server.webmedigital.com"],
     },
   };
   
