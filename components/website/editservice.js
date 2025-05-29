@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
-import { Upload ,ChevronLeft , Pencil } from 'lucide-react';
+import { Upload, ChevronLeft, Pencil } from 'lucide-react';
 import { MyContext } from '@/context/context';
 
 export default function EditServiceList() {
@@ -13,6 +13,7 @@ export default function EditServiceList() {
   const [editingService, setEditingService] = useState(null);
   const [formValues, setFormValues] = useState({
     Title: '',
+    slug: '',
     deltail: '',
     moreDetail: '',
     category: '',
@@ -27,8 +28,31 @@ export default function EditServiceList() {
   ]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [saving, setSaving] = useState(false);
+  const [slugError, setSlugError] = useState('');
+  const [autoGenerateSlug, setAutoGenerateSlug] = useState(false);
   const imageInputRef = useRef(null);
-  const { setShowConfirm, setConfirmFunction, customToast  } = useContext(MyContext);
+  const { setShowConfirm, setConfirmFunction, customToast } = useContext(MyContext);
+  
+  // Function to generate slug from title
+  const generateSlug = (title) => {
+    return title
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+      .trim();
+  };
+
+  // Auto-generate slug when title changes if autoGenerateSlug is true
+  useEffect(() => {
+    if (autoGenerateSlug && formValues.Title) {
+      setFormValues(prev => ({
+        ...prev,
+        slug: generateSlug(prev.Title)
+      }));
+    }
+  }, [formValues.Title, autoGenerateSlug]);
+
   // Fetch services
   const fetchServices = async () => {
     try {
@@ -61,23 +85,46 @@ export default function EditServiceList() {
     setEditingService(service._id);
     setFormValues({
       Title: service.Title,
+      slug: service.slug || generateSlug(service.Title),
       deltail: service.deltail,
       category: service.category,
       moreDetail: service.moreDetail,
       image: service.image,
     });
+    setAutoGenerateSlug(false); // Turn off auto-generation when editing
+    setSlugError('');
   };
 
   // Close edit modal
   const closeEditModal = () => {
     setEditingService(null);
-    setFormValues({ Title: '', deltail: '', category: '', image: null, moreDetail: '' });
+    setFormValues({ 
+      Title: '', 
+      slug: '', 
+      deltail: '', 
+      category: '', 
+      image: null, 
+      moreDetail: '' 
+    });
+    setSlugError('');
   };
 
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear slug error when slug is modified
+    if (name === 'slug') {
+      setSlugError('');
+    }
+  };
+
+  // Handle slug change (separate from other inputs to handle auto-generate toggle)
+  const handleSlugChange = (e) => {
+    // When manually editing the slug, turn off auto-generation
+    setAutoGenerateSlug(false);
+    handleInputChange(e);
   };
 
   // Handle image upload
@@ -85,40 +132,56 @@ export default function EditServiceList() {
     setFormValues((prev) => ({ ...prev, image: e.target.files[0] }));
   };
 
+  // Validate slug format
+  const validateSlug = (slug) => {
+    const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+    return slugRegex.test(slug);
+  };
+
   // Save edited service
   const handleSave = async () => {
     const Save = async () => {
+      // Validate slug format
+      if (!validateSlug(formValues.slug)) {
+        setSlugError('Slug must be lowercase, containing only letters, numbers, and hyphens');
+        return;
+      }
       
       setSaving(true);
       const formData = new FormData();
       formData.append('serviceId', editingService);
       formData.append('Title', formValues.Title);
+      formData.append('slug', formValues.slug);
       formData.append('deltail', formValues.deltail);
       formData.append('category', formValues.category);
-    formData.append('moreDetail', formValues.moreDetail);
-    if (formValues.image) {
-      formData.append('image', formValues.image);
+      formData.append('moreDetail', formValues.moreDetail);
+      if (formValues.image) {
+        formData.append('image', formValues.image);
+      }
+
+      try {
+        const response = await axios.post('/api/service/editservice', formData, {
+          withCredentials: true,
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        if(response?.data?.success){
+          customToast(response?.data)
+          await fetchServices();
+          closeEditModal();
+        }
+      } catch (err) {
+        customToast(err?.response?.data);
+        // Set specific error for slug if that's the issue
+        if (err.response?.data?.message && err.response?.data?.message.includes('slug')) {
+          setSlugError(err.response?.data?.message);
+        }
+      } finally {
+        setSaving(false);
+      }
     }
 
-    try {
-      const response = await axios.post('/api/service/editservice', formData, {
-        withCredentials: true,
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      if(response?.data?.success){
-      customToast(response?.data)
-      await fetchServices();
-      closeEditModal();
-    }
-    } catch (err) {
-      customToast(err?.response?.data)
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  setConfirmFunction(()=>Save);
-  setShowConfirm('Are you sure you want to update this service?');
+    setConfirmFunction(()=>Save);
+    setShowConfirm('Are you sure you want to update this service?');
   };
 
   useEffect(() => {
@@ -203,12 +266,10 @@ export default function EditServiceList() {
               <div className="p-10 bg-white rounded-md w-full mx-auto text-gray-700">
               <h1 className="text-xl font-bold mb-4 w-full text-left">Edit Service</h1>
 
-              <form  className="w-full flex flex-row items-center"
+              <form className="w-full flex flex-row items-center"
                 onSubmit={(e)=>e.preventDefault()}  
               >
-              <div className="mb-4 basis-1/2"
-                
-              >
+              <div className="mb-4 basis-1/2">
                   <input
                     type="file"
                     name="image"
@@ -255,6 +316,34 @@ export default function EditServiceList() {
                     className="w-full p-2 border rounded"
                     placeholder="Enter the title"
                     />
+                </div>
+
+                <div className="mb-4">
+                  <label htmlFor="slug" className="block font-semibold mb-3">
+                    Slug
+                  </label>
+                  <div className="flex flex-col">
+                    <input
+                      type="text"
+                      id="slug"
+                      name="slug"
+                      value={formValues.slug}
+                      onChange={handleSlugChange}
+                      className={`w-full p-2 border rounded ${slugError ? 'border-red-500' : ''}`}
+                      placeholder="Enter the slug (e.g., my-service-name)"
+                    />
+                    {slugError && <p className="text-red-500 text-sm mt-1">{slugError}</p>}
+                    <div className="mt-1 flex items-center">
+                      <input
+                        type="checkbox"
+                        id="autoSlug"
+                        checked={autoGenerateSlug}
+                        onChange={() => setAutoGenerateSlug(!autoGenerateSlug)}
+                        className="mr-2"
+                      />
+                      <label htmlFor="autoSlug" className="text-sm text-gray-600">Auto-generate from title</label>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="mb-4">

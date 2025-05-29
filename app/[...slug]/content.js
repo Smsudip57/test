@@ -3,7 +3,6 @@ import React, { useState, useEffect, useContext, useMemo, useCallback, useRef } 
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 import EastIcon from "@mui/icons-material/East";
 import StarsCanvas from "@/components/main/StarBackground";
 import Projects from "@/components/main/Projects";
@@ -33,7 +32,6 @@ const PointComp = ({ points }) => {
 };
 
 export default function Firewall({ services, products, slug, Mainservice, childs }) {
-  const [main, setMain] = useState(0);
   const rotationIntervalRef = useRef(null);
   const [currentDisplay, setCurrentDisplay] = useState({
     serviceIndex: 0,
@@ -44,68 +42,54 @@ export default function Firewall({ services, products, slug, Mainservice, childs
 
   const { setChatBoxOpen } = useContext(MyContext);
 
-  // Find the relevant service category based on URL
-  useEffect(() => {
-    if (!services?.length) return;
-
-    const val = window.location.href.split("?")?.[1];
-    const search = val ? val.split("=")?.[1]?.toLowerCase() : "";
-    const index = services.findIndex((item) =>
-      decodeURIComponent(search).includes(item?.Title?.toLowerCase())
+  // Find the selected service based on Mainservice
+  const selectedService = useMemo(() => {
+    if (!Mainservice || !services?.length) return null;
+    
+    // If Mainservice has serviceData (specific service), use that directly
+    if (Mainservice.serviceData) {
+      return Mainservice.serviceData;
+    }
+    
+    // Otherwise find the service by name
+    return services.find(service => 
+      service?.Title?.toLowerCase() === Mainservice?.name?.toLowerCase() ||
+      service?.category?.toLowerCase() === Mainservice?.name?.toLowerCase()
     );
-    setMain(index !== -1 ? index : 0);
-  }, [services]);
+  }, [Mainservice, services]);
 
   // Calculate filtered products and children once when dependencies change
   const { servicebasedProducts, filteredChildren } = useMemo(() => {
-    if (!services?.[main] || !products?.length) {
+    if (!selectedService || !products?.length) {
       return { servicebasedProducts: [], filteredChildren: [] };
     }
 
-    const selectedService = services[main];
+    // Find products related to this service
     const filteredProducts = products.filter(
       (product) => product?.category === selectedService?._id
     );
 
+    // Find children related to these products
     const relatedChildren = [];
     if (childs?.length) {
       filteredProducts.forEach((product) => {
-        const childProduct = childs.find(
+        const childrenForProduct = childs.filter(
           (child) => child?.category === product?._id
         );
-        if (childProduct) {
-          relatedChildren.push(childProduct);
-        }
+        relatedChildren.push(...childrenForProduct);
       });
     }
 
     return { servicebasedProducts: filteredProducts, filteredChildren: relatedChildren };
-  }, [main, services, products, childs]);
+  }, [selectedService, products, childs]);
 
-
-
-  // Fixed useEffect with proper dependencies and selectedService reference
+  // Fetch child product data
   useEffect(() => {
-    if (!childs?.length || !products?.length || !services?.[main]) return;
+    if (!filteredChildren?.length) return;
 
     const fetchChildData = async () => {
       try {
-        const selectedService = services[main];
-        const filteredProducts = products.filter(
-          (product) => product?.category === selectedService?._id
-        );
-        const relatedChildren = [];
-        filteredProducts.forEach((product) => {
-          const childrenForProduct = childs.filter(
-            (child) => child?.category === product?._id
-          );
-          relatedChildren.push(...childrenForProduct);
-        });
-        if (relatedChildren.length === 0) {
-          console.log("No related children found for this service");
-          return;
-        }
-        const promises = relatedChildren.map(child =>
+        const promises = filteredChildren.map(child =>
           axios.get(process.env.NEXT_PUBLIC_API_URL || "https://server.webmedigital.com/api/products/catName", {
             params: { catName: child?.Title },
             timeout: 5000
@@ -128,16 +112,9 @@ export default function Firewall({ services, products, slug, Mainservice, childs
             })
         );
 
-        // Wait for all requests to complete
         const results = await Promise.all(promises);
-
-        // Only filter out completely failed requests
         const validResults = results.filter(item => item !== null);
-
-        // Log success for debugging
         console.log(`Successfully fetched data for ${validResults.length} child products`);
-
-        // Update state
         setItemsforChilds(validResults);
       } catch (error) {
         console.error("Error in batch child data fetching:", error);
@@ -145,8 +122,9 @@ export default function Firewall({ services, products, slug, Mainservice, childs
     };
 
     fetchChildData();
-  }, [childs, products, services, main]); // Include all dependencies
+  }, [filteredChildren]);
 
+  // Update current display when products or children change
   useEffect(() => {
     if (!servicebasedProducts.length) return;
 
@@ -201,7 +179,8 @@ export default function Firewall({ services, products, slug, Mainservice, childs
   }, [setChatBoxOpen]);
 
   // Current service data for easier rendering
-  const currentService = services?.[main];
+  const currentService = Mainservice?.serviceData || selectedService;
+  
   const { productData, childData } = currentDisplay;
 
   // SEO structured data
@@ -230,7 +209,7 @@ export default function Firewall({ services, products, slug, Mainservice, childs
   ), [Mainservice, currentService]);
 
   const pageDescription = useMemo(() => (
-    Mainservice?.description || `Learn more about our ${currentService?.Title} services and solutions. Professional digital transformation and IT services from Webmedigital.`
+    currentService?.deltail || Mainservice?.description || `Learn more about our ${currentService?.Title || 'professional'} services and solutions. Professional digital transformation and IT services from Webmedigital.`
   ), [Mainservice, currentService]);
 
   return (
@@ -281,10 +260,10 @@ export default function Firewall({ services, products, slug, Mainservice, childs
               {/* Service info */}
               <div className="xl:w-[50%] flex flex-col justify-around gap-10 z-30 order-2 xl:order-1">
                 <h1 className="text-2xl xl:text-[36px] font-bold xl:leading-[45px] font-sans">
-                  {currentService?.Title}
+                  {Mainservice?.title || currentService?.Title}
                 </h1>
                 <p className="pr-10 font-medium whitespace-pre-wrap">
-                  {currentService?.deltail}
+                  {currentService?.deltail || Mainservice?.description}
                 </p>
                 <div className="flex gap-6">
                   <button
@@ -295,7 +274,7 @@ export default function Firewall({ services, products, slug, Mainservice, childs
                     Book Free Consultation
                   </button>
                   <Link
-                    href={`/service-details/${currentService?.Title}`}
+                    href={`/service-details/${currentService?.slug || currentService?.Title?.toLowerCase()}`}
                     className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     aria-label={`Explore ${currentService?.Title}`}
                   >
@@ -307,9 +286,9 @@ export default function Firewall({ services, products, slug, Mainservice, childs
 
               {/* Service image */}
               <div className="xl:w-[50%] flex justify-center items-center z-30 order-1 xl:order-2">
-                <div className="w-full  flex justify-center mb-12 xl:flex-wrap items-center">
+                <div className="w-full flex justify-center mb-12 xl:flex-wrap items-center">
                   {currentService?.image && (
-                    <div className="w-full  text-center text-nowrap basis-[65%] m-3 shadow-gray-400 overflow-hidden rounded-md">
+                    <div className="w-full text-center text-nowrap basis-[65%] m-3 shadow-gray-400 overflow-hidden rounded-md">
                       <a
                         href="#details"
                         className="w-full cursor-pointer block relative aspect-[4/3]"
@@ -485,8 +464,7 @@ export default function Firewall({ services, products, slug, Mainservice, childs
                         {productsForChild.products.map((product) => (
                           <div
                             key={product._id}
-
-                            className="group  min-w-full rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-all duration-300"
+                            className="group min-w-full rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-all duration-300"
                           >
                             <Link href={`https://store.webmedigital.com/product/${product._id}`}
                               target="_blank"

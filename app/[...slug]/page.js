@@ -4,8 +4,53 @@ import Content from './content';
 
 // Define metadata for better SEO
 export async function generateMetadata({ params }) {
-  const slug = params.slug || [];
-  const mainCategory = slug[0]?.toLowerCase() || '';
+  const slug = params?.slug || [];
+  const mainSlug = slug[0] ? decodeURIComponent(slug[0]).toLowerCase() : '';
+  
+  try {
+    // Check if this is a service-specific slug
+    const servicesRes = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/service/getservice`);
+    const services = servicesRes?.data?.services || [];
+    
+    // Find service by slug
+    const serviceBySlug = services.find(service => {
+      const serviceSlug = service.slug?.toLowerCase() || '';
+      const serviceTitle = service.Title?.toLowerCase() || '';
+      
+      return serviceSlug === mainSlug || serviceTitle === mainSlug;
+    });
+    
+    // If service is found by slug, use its metadata
+    if (serviceBySlug) {
+      return {
+        title: `${serviceBySlug.Title} | Professional IT Solutions | Webmedigital`,
+        description: serviceBySlug.deltail || serviceBySlug.moreDetail,
+        openGraph: {
+          title: serviceBySlug.Title,
+          description: serviceBySlug.deltail || serviceBySlug.moreDetail,
+          url: `https://webmedigital.com/${mainSlug}`,
+          siteName: 'Webmedigital',
+          images: [
+            {
+              url: serviceBySlug.image || 'https://webmedigital.com/og-image.jpg',
+              width: 1200,
+              height: 630,
+            }
+          ],
+          locale: 'en_US',
+          type: 'website',
+        },
+        twitter: {
+          card: 'summary_large_image',
+          title: serviceBySlug.Title,
+          description: serviceBySlug.deltail || serviceBySlug.moreDetail,
+          images: [serviceBySlug.image || 'https://webmedigital.com/og-image.jpg'],
+        },
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching service data for metadata:", error);
+  }
   
   // Predefined service categories for static metadata
   const serviceMetadata = {
@@ -31,8 +76,8 @@ export async function generateMetadata({ params }) {
     }
   };
   
-  // Get metadata for the current category
-  const metadata = serviceMetadata[mainCategory] || {
+  // Get metadata for the current category or default
+  const metadata = serviceMetadata[mainSlug] || {
     title: "Professional IT Services & Solutions | Webmedigital",
     description: "Webmedigital offers comprehensive IT services from modern workplace solutions to digital transformation, branding, and 24/7 technical support."
   };
@@ -65,7 +110,9 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function Page({params}) {
-  const slug = params.slug || [];
+  const slug = params?.slug || [];
+  // First decode, then lowercase for consistency
+  const mainSlug = slug[0] ? decodeURIComponent(slug[0]).toLowerCase() : '';
   
   // Predefined service categories with structured metadata
   const Mainservice = {
@@ -108,10 +155,31 @@ export default async function Page({params}) {
     const products = productsRes?.data?.products || [];
     const childs = childsRes?.data?.products || [];
     
-    // Get the current category from the slug
-    const category = slug[0]?.toLowerCase();
-    const currentMainService = Mainservice[category] || null;
+    // First check if the slug matches a predefined category
+    let currentMainService = Mainservice[mainSlug] || null;
     
+    // If not a category, check if it's a specific service by slug
+    if (!currentMainService) {
+      const serviceBySlug = services.find(service => {
+        const serviceSlug = service.slug?.toLowerCase() || '';
+        const serviceTitle = service.Title?.toLowerCase() || '';
+        
+        return serviceSlug === mainSlug || serviceTitle === mainSlug;
+      });
+      
+      if (serviceBySlug) {
+        // Create a dynamic main service entry for the specific service
+        currentMainService = {
+          name: serviceBySlug.Title,
+          title: serviceBySlug.Title,
+          image: serviceBySlug.image || 'https://webmedigital.com/og-image.jpg',
+          description: serviceBySlug.deltail || serviceBySlug.moreDetail,
+          isSpecificService: true,
+          serviceData: serviceBySlug
+        };
+      }
+    }
+    console.log("Current Main Service:", currentMainService);
     // Pass required props to Content component
     return (
       <Content 
@@ -130,6 +198,32 @@ export default async function Page({params}) {
 
 // Generate static paths for better performance
 export async function generateStaticParams() {
-  const categories = ['branding', 'workfrom-anywhere', 'modern-workplace', 'digital', 'endless-support'];
-  return categories.map(category => ({ slug: [category] }));
+  try {
+    // Fetch services to generate paths for both categories and individual services
+    const servicesRes = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/service/getservice`);
+    const services = servicesRes?.data?.services || [];
+    
+    // Base categories
+    const categories = ['branding', 'workfrom-anywhere', 'modern-workplace', 'digital', 'endless-support'];
+    
+    // Get slugs from services
+    const serviceParams = services
+      .filter(service => service.slug)
+      .map(service => ({ slug: [service.slug] }));
+    
+    // Combine both for complete path coverage
+    return [
+      ...categories.map(category => ({ slug: [category] })),
+      ...serviceParams
+    ];
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [
+      { slug: ['branding'] },
+      { slug: ['workfrom-anywhere'] },
+      { slug: ['modern-workplace'] },
+      { slug: ['digital'] },
+      { slug: ['endless-support'] }
+    ];
+  }
 }
