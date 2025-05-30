@@ -42,7 +42,7 @@ export default function Page({ project }) {
         </section>
         <section className="basis-1/2 min-h-full pt-16 flex flex-col">
           <div className="pt-[10%]">
-            <img src="/p1.jpg" alt="Project overview" />
+            <img src={project?.image} alt="Project overview" />
           </div>
         </section>
       </header>
