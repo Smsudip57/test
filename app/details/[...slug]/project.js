@@ -59,8 +59,8 @@ export default function Page({ project }) {
       </Head>
 
       <header className="flex min-h-screen">
-        <section className="basis-1/2 min-h-full pt-16 flex flex-col justify-center items-start text-start px-[10%] gap-10">
-          <h1 className="text-6xl font-semibold text-[#446E6D]">{project?.Title}</h1>
+        <section className="basis-1/2 min-h-full pt-16 flex flex-col justify-center items-start text-start pl-[10%] pr-[5%] gap-10">
+          <h1 className="text-6xl lg:text-4xl font-semibold text-[#446E6D]">{project?.Title}</h1>
           <p className="text-xl font-sans">{project?.detail}</p>
           <div className="flex font-sans gap-5">
             <button className="py-2 px-5 bg-[#446E6D] rounded-sm text-white">Watch Demo</button>
@@ -118,7 +118,7 @@ export default function Page({ project }) {
             <div
               className={`basis-1/2 h-full pt-16 items-start text-start ${sectionIndex % 2 === 0 ? 'order-2' : 'order-1'}`}
             >
-              <h2 className="text-5xl font-semibold text-[#446E6D]">{section.title}</h2>
+              <h2 className="text-5xl lg:text-3xl font-semibold text-[#446E6D]">{section.title}</h2>
               <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
                 {section.points.map((point, pointIndex) => (
                   <div
