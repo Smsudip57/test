@@ -35,7 +35,7 @@ export default async function AdminPage({params}) {
   const checkProject = (name) => {
     const Name = decodeURIComponent(name);
     if (project && project.length > 0) {
-    const Project = project.find((project) => project.Title === Name);
+    const Project = project.find((project) => project.Title === Name || project.slug === Name);
       return Project;
     }else{
       return false;

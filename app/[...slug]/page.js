@@ -179,7 +179,7 @@ export default async function Page({params}) {
         };
       }
     }
-    console.log("Current Main Service:", currentMainService);
+    // console.log("Current Main Service:", currentMainService);
     // Pass required props to Content component
     return (
       <Content 
@@ -191,7 +191,7 @@ export default async function Page({params}) {
       />
     );
   } catch (error) {
-    console.error("Error fetching data:", error);
+    // console.error("Error fetching data:", error);
     return notFound();
   }
 }
@@ -217,7 +217,7 @@ export async function generateStaticParams() {
       ...serviceParams
     ];
   } catch (error) {
-    console.error("Error generating static params:", error);
+    // console.error("Error generating static params:", error);
     return [
       { slug: ['branding'] },
       { slug: ['workfrom-anywhere'] },

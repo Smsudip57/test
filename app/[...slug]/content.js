@@ -101,7 +101,7 @@ export default function Firewall({ services, products, slug, Mainservice, childs
               products: res?.data?.products || []
             }))
             .catch(error => {
-              console.error(`Error fetching data for ${child?.Title}:`, error);
+              // console.error(`Error fetching data for ${child?.Title}:`, error);
               return {
                 id: child?._id,
                 title: child?.Title,
@@ -114,7 +114,7 @@ export default function Firewall({ services, products, slug, Mainservice, childs
 
         const results = await Promise.all(promises);
         const validResults = results.filter(item => item !== null);
-        console.log(`Successfully fetched data for ${validResults.length} child products`);
+        // console.log(`Successfully fetched data for ${validResults.length} child products`);
         setItemsforChilds(validResults);
       } catch (error) {
         console.error("Error in batch child data fetching:", error);
@@ -537,9 +537,9 @@ export default function Firewall({ services, products, slug, Mainservice, childs
           </div>
 
           {/* Projects, Industries, and Case Studies sections */}
-          <section aria-labelledby="related-projects-heading" className="mt-20">
+          <section aria-labelledby="related-projects-heading" className="mt-20 relative z-30">
             <h2 id="related-projects-heading" className="sr-only">Related Projects</h2>
-            <Projects />
+            <Projects service={currentService?._id}  />
           </section>
 
           <section aria-labelledby="industries-heading" className="mt-16">
