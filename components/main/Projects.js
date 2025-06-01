@@ -4,7 +4,7 @@ import ProjectCard from "../sub/ProjectCard";
 import Link from "next/link";
 import axios from "axios";
 
-const Projects = ({ industry, service }) => {
+const Projects = ({ industry = null, service = null }) => {
   const [projects, setProjects] = useState([]);
   useEffect(() => {
     const controller = new AbortController();

@@ -290,7 +290,7 @@ export default function Page({ project }) {
                     News
                   </p>
                   <p className='text-xl mt-4 mb-8'>
-                    <strong>65% of U.S. Drivers Don't Understand Connected Cars</strong>
+                    <strong>65% of U.S. Drivers Don&apos;t Understand Connected Cars</strong>
                   </p>
                   <button className='absolute bottom-0 mb-8 mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointer'>
                     <span className='font-bold'>Read the story <OpenInNewIcon fontSize='inherit'/></span>
@@ -393,7 +393,7 @@ export default function Page({ project }) {
                   </span>
                 </button>
                 <p className={`${f1 ? 'block' : 'hidden'} mb-6`}>
-                  Customer relationship management for the automotive industry is a system for managing all of your company's interactions with current and potential customers, as well as critical information like driver, vehicle, retail, and automotive financial data.
+                  Customer relationship management for the automotive industry is a system for managing all of your company&apos;s interactions with current and potential customers, as well as critical information like driver, vehicle, retail, and automotive financial data.
                 </p>
               </div>
               <div className={`w-full border-b-2 border-[#446e6d44]`} onClick={() => setf2(prev=>!prev)}>
@@ -453,7 +453,7 @@ export default function Page({ project }) {
                   </span>
                 </button>
                 <p className={`${f4 ? 'block' : 'hidden'} mb-6`}>
-                  Consider an automotive CRM if you find that your customer-facing interactions are misguided, that you're missing upsell opportunities, or if you want to better serve drivers and their households. An automotive CRM like Automotive Cloud helps teams take action fast and delight every customer.
+                  Consider an automotive CRM if you find that your customer-facing interactions are misguided, that you&apos;re missing upsell opportunities, or if you want to better serve drivers and their households. An automotive CRM like Automotive Cloud helps teams take action fast and delight every customer.
                 </p>
               </div>                        
             </div>

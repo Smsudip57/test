@@ -358,7 +358,7 @@ export default function CreateProject() {
                 required
               />
               <p className="text-xs text-gray-500 mt-1">
-                Use lowercase letters, numbers, and hyphens only (e.g., "my-project-name")
+                Use lowercase letters, numbers, and hyphens only (e.g., &quot;my-project-name&quot;)
               </p>
             </div>
 
