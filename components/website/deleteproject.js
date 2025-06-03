@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function DeleteProject() {
   const [projects, setProjects] = useState([]);
@@ -38,6 +39,7 @@ export default function DeleteProject() {
       );
       if (response.data.success) {
         setSuccess('Project deleted successfully!');
+        toast.success('Project deleted successfully!');
         setProjects(projects.filter((project) => project._id !== projectId));
       } else {
         setError('Error deleting project');

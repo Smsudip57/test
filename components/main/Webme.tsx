@@ -28,9 +28,6 @@ const Webme = ({service :apiservice}:any) => {
 // console.log(apiservice);
 const services = apiservice?.services 
   ? apiservice?.services?.map((service: any) => {
-    console.log("Service object:", service);
-      console.log("Slug value:", service?.slug);
-      console.log("Title value:", service?.Title);
       let link = `/${service?.slug ? service.slug : service?.Title?.toLowerCase()}#details`;
       return {
         key: service?.category?.trim()?.toLowerCase() === "endless support" ? "en" : service.category.charAt(0).toLowerCase(),

@@ -1,13 +1,21 @@
 'use client';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Head from 'next/head';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import VideoPlayer from '@/components/shaerd/Video';
+import ImageCarousel from '@/components/shaerd/ImageCarousel';
+
+// VideoPlayer Component
+
+
 
 export default function Page({ project }) {
   const [openPoints, setOpenPoints] = useState(
-    project?.section?.map(() => 0) || [] // Now tracking first point (index 0) as open by default
+    project?.section?.map(() => 0) || [] // Track first point (index 0) as open by default
   );
   const [f1, setf1] = useState(false);
   const [f2, setf2] = useState(false);
@@ -35,7 +43,6 @@ export default function Page({ project }) {
     }
   };
 
-  // Handle when video ends
   const handleVideoEnd = () => {
     setIsPlaying(false);
     if (videoRef.current) {
@@ -58,7 +65,7 @@ export default function Page({ project }) {
         <meta property="og:image" content={project?.media?.url || '/default-image.jpg'} />
       </Head>
 
-      <header className="flex min-h-screen">
+      <header className="flex min-h-screen max-w-[1920px] mx-auto">
         <section className="basis-1/2 min-h-full pt-16 flex flex-col justify-center items-start text-start pl-[10%] pr-[5%] gap-10">
           <h1 className="text-6xl lg:text-4xl font-semibold text-[#446E6D]">{project?.Title}</h1>
           <p className="text-xl font-sans">{project?.detail}</p>
@@ -70,36 +77,12 @@ export default function Page({ project }) {
         <section className="basis-1/2 min-h-full pt-16 flex flex-col">
           <div className="pt-[10%]">
             {project?.media?.type === 'video' ? (
-              <div className="relative w-full h-auto aspect-video">
-                <video 
-                  ref={videoRef}
-                  src={project?.media?.url} 
-                  className="w-full h-full object-cover"
-                  // poster="/p1.jpg"
-                  onEnded={handleVideoEnd}
-                  playsInline
-                />
-                {!isPlaying && (
-                  <div 
-                    className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center cursor-pointer transition-opacity duration-300 hover:bg-opacity-20"
-                    onClick={togglePlay}
-                  >
-                    <div className="w-20 h-20 bg-[#446E6D] bg-opacity-90 rounded-full flex items-center justify-center shadow-lg">
-                      <PlayArrowIcon style={{ fontSize: '3rem', color: 'white' }} />
-                    </div>
-                  </div>
-                )}
-                {isPlaying && (
-                  <div 
-                    className="absolute bottom-4 right-4 opacity-70 hover:opacity-100 transition-opacity duration-300"
-                    onClick={togglePlay}
-                  >
-                    <div className="w-12 h-12 bg-[#446E6D] bg-opacity-90 rounded-full flex items-center justify-center shadow-lg cursor-pointer">
-                      <PauseIcon style={{ fontSize: '1.5rem', color: 'white' }} />
-                    </div>
-                  </div>
-                )}
-              </div>
+              <VideoPlayer 
+                src={project?.media?.url}
+                themeColor="#446E6D"
+                aspectRatio="16/9"
+                onEnd={handleVideoEnd}
+              />
             ) : (
               <img src={project?.media?.url} alt={project?.Title} className="w-full" />
             )}
@@ -113,7 +96,11 @@ export default function Page({ project }) {
             <div
               className={`basis-1/2 w-full h-full pt-[10%] ${sectionIndex % 2 === 0 ? 'order-1' : 'order-2'}`}
             >
-              <img src={section.image} alt={section.title} className="w-full" />
+              {/* Using the ImageCarousel component */}
+              <ImageCarousel 
+                images={section.image} 
+                title={section.title} 
+              />
             </div>
             <div
               className={`basis-1/2 h-full pt-16 items-start text-start ${sectionIndex % 2 === 0 ? 'order-2' : 'order-1'}`}

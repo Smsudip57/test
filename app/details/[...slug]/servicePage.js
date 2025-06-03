@@ -62,7 +62,7 @@ export default function Page({ details:Service }) {
 
       <header className="flex min-h-screen">
         <section className="basis-1/2 min-h-full pt-16 flex flex-col justify-center items-start text-start px-[10%] gap-10">
-          <h1 className="text-6xl font-semibold text-[#446E6D]">
+          <h1 className="text-6xl lg:text-4xl font-semibold text-[#446E6D]">
             {Service?.Title}
           </h1>
           <p className="text-xl font-sans">{Service?.moreDetail}</p>
@@ -95,7 +95,7 @@ export default function Page({ details:Service }) {
               className={`basis-1/2 h-full pt-16 items-start text-start ${index % 2 === 0 ? "order-2" : "order-1"
                 }`}
             >
-              <h2 className="text-5xl font-semibold text-[#446E6D]">
+              <h2 className="text-5xl lg:text-3xl font-semibold text-[#446E6D]">
                 {item?.title}
               </h2>
               <PointComp points={item?.points} />

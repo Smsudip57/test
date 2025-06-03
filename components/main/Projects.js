@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import ProjectCard from "../sub/ProjectCard";
 import Link from "next/link";
 import axios from "axios";
+import VideoPlayer from '@/components/shaerd/Video';
 
 const Projects = ({ industry = null, service = null }) => {
   const [projects, setProjects] = useState([]);
@@ -75,17 +76,21 @@ const Projects = ({ industry = null, service = null }) => {
                 key={index}
               >
                 {!(index % 2 === 0) && (
+                 project?.media?.type === 'video' ? (
+                  <div className="w-full aspect-video rounded-lg overflow-hidden">
+                    <VideoPlayer src={project?.media?.url} />
+                  </div>
+                ) : (
                   <img
-                    alt="project-image"
+                    alt={`${project?.Title || 'Project'} image`}
                     loading="lazy"
-                    width="0"
-                    height="239"
                     decoding="async"
                     data-nimg="1"
-                    className="w-full rounded-lg h-[239px] object-cover"
+                    className="w-full rounded-lg aspect-video object-cover"
                     style={{ color: "transparent" }}
-                    src={project?.image}
+                    src={project?.media?.url || project?.image}
                   />
+                )
                 )}
                 <h1
                   className="font-bold text-2xl lg:text-4xl text-[#0B2B20]  font-lora mb-[22px]"
@@ -106,17 +111,21 @@ const Projects = ({ industry = null, service = null }) => {
                   </Link>
                 </button>
                 {index % 2 === 0 && (
-                  <img
-                    alt="project-image"
-                    loading="lazy"
-                    width="0"
-                    height="239"
-                    decoding="async"
-                    data-nimg="1"
-                    className="w-full rounded-lg h-[239px] object-cover"
-                    style={{ color: "transparent" }}
-                    src={project?.image}
-                  />
+                  project?.media?.type === 'video' ? (
+                    <div className="w-full aspect-video rounded-lg overflow-hidden">
+                      <VideoPlayer src={project?.media?.url} />
+                    </div>
+                  ) : (
+                    <img
+                      alt={`${project?.Title || 'Project'} image`}
+                      loading="lazy"
+                      decoding="async"
+                      data-nimg="1"
+                      className="w-full rounded-lg aspect-video object-cover"
+                      style={{ color: "transparent" }}
+                      src={project?.media?.url || project?.image}
+                    />
+                  )
                 )}
               </div>
             ))}
