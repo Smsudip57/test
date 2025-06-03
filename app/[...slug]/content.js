@@ -443,10 +443,7 @@ export default function Firewall({ services, products, slug, Mainservice, childs
                   transition={{ duration: 0.5, delay: 0.3 }}
                   className="flex flex-col basis-1/3 justify-start items-start z-30 mx-3 p-6 rounded-md shadow-lg shadow-gray-400 border-gray-400 border-[1px] overflow-hidden"
                 >
-                  <h2 className="text-xl font-semibold font-sans w-full mb-4 pb-2 border-b border-gray-200">
-                    {childData.Title} Products
-                  </h2>
-
+                 
                   {/* Find products for this child */}
                   {(() => {
                     const productsForChild = itemsforChilds.find(item => item?.id === childData?._id);

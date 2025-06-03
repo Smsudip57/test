@@ -301,8 +301,8 @@ export default function Page() {
   return (
     <div className='pt-16' id="read more">
       <div className='w-full grid justify-center'>
-        <p className='w-max text-4xl py-16 text-center text-[#446E6D] cursor-pointer hover:text-[#37c0bd] transition-colors duration-700  z-20' onClick={()=>{setCategory('');setSingle(null)}}>
-        Blog
+        <p className='w-max text-4xl py-16 text-center text-[#446E6D] cursor-pointer hover:text-[#37c0bd] transition-colors duration-700  z-20 font-semibold capitalize' onClick={()=>{setCategory('');setSingle(null)}}>
+        BLOG
       </p>
         </div>
         <div className='w-[1320px] mx-auto flex items-start z-20 gap-7'>
@@ -358,7 +358,7 @@ export default function Page() {
                 {
                   single.points.map((item:point,index:number)=>(
                     <div key={index}>
-                      <span className='text-gray-700'> {index+1}. {item.title}</span>
+                      <span className='text-gray-700 text-xl font-semibold'> {index+1}. {item.title}</span>
                       <p className='my-6'>{item?.explanation}</p>
                     </div>
 
@@ -384,7 +384,7 @@ export default function Page() {
               <p className='mb-6 text-lg font-bold w-full '>Blog Categories</p>
               {
                 Categories?.map((item:any,In:number)=>(
-                  <p className='w-full mb-2 text-gray-500 flex items-center hover:text-[#37c0bd] transition-colors duration-700 cursor-pointer ' onClick={()=>{setCategory(item);setSingle(null)}} key={In}><ArrowForwardIosIcon fontSize='inherit' className='font-semibold'/> {item} </p>
+                  <p className='w-full mb-2 text-gray-500 flex items-center hover:text-[#37c0bd] transition-colors duration-700 cursor-pointer font-semibold' onClick={()=>{setCategory(item);setSingle(null)}} key={In}><ArrowForwardIosIcon fontSize='inherit' className='font-bold mr-2'/> {item} </p>
                 ))
               }
             </div>
