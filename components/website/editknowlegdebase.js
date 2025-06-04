@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import {
   Loader2,
@@ -14,6 +14,11 @@ import {
   Calendar,
   BookOpen,
   FileText,
+  Upload,
+  Image as ImageIcon,
+  X,
+  ChevronDown,
+  Check,
 } from "lucide-react";
 import { MyContext } from "@/context/context";
 
@@ -29,8 +34,22 @@ export default function EditKnowledgeBase() {
   const [formData, setFormData] = useState(null);
   const [services, setServices] = useState([]);
   const [industries, setIndustries] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [childServices, setChildServices] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const [tagError, setTagError] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const imageInputRef = useRef(null);
+  const [submitting, setSubmitting] = useState(false);
+  
+  // Dropdown states
+  const [dropdownOpen, setDropdownOpen] = useState({
+    services: false,
+    industries: false,
+    products: false,
+    childServices: false
+  });
   
   const { customToast } = useContext(MyContext);
 
@@ -38,18 +57,25 @@ export default function EditKnowledgeBase() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [articlesRes, servicesRes, industriesRes] = await Promise.all([
+        const [articlesRes, servicesRes, industriesRes, productsRes, childServicesRes] = await Promise.all([
           axios.get("/api/knowledgebase/get"),
           axios.get("/api/service/getservice"),
           axios.get("/api/industry/get"),
+          axios.get("/api/product/get"),
+          axios.get("/api/child/get")
         ]);
         
         setArticles(articlesRes.data.knowledgebases || []);
         setServices(servicesRes.data.services || []);
         setIndustries(industriesRes.data.industries || []);
+        setProducts(productsRes.data.products || []);
+        setChildServices(childServicesRes.data.products || []); // Note: API returns child services in 'products' field
       } catch (error) {
         console.error("Error fetching data:", error);
-        customToast("Failed to load data", "error");
+        customToast({
+          success: false,
+          message: "Failed to load data"
+        });
       } finally {
         setLoading(false);
       }
@@ -57,22 +83,165 @@ export default function EditKnowledgeBase() {
     fetchData();
   }, []);
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const dropdownContainers = document.querySelectorAll('.dropdown-container');
+      let clickedOutside = true;
+      
+      dropdownContainers.forEach(container => {
+        if (container.contains(event.target)) {
+          clickedOutside = false;
+        }
+      });
+      
+      if (clickedOutside) {
+        setDropdownOpen({
+          services: false,
+          industries: false,
+          products: false,
+          childServices: false
+        });
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Validate image aspect ratio (16:7)
+  const validateImageDimensions = (file) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const targetAspectRatio = 16 / 7;
+      const tolerance = 0.1; // Allow some tolerance in aspect ratio
+
+      img.onload = () => {
+        const aspectRatio = img.width / img.height;
+        URL.revokeObjectURL(img.src); // Clean up object URL
+
+        if (Math.abs(aspectRatio - targetAspectRatio) > tolerance) {
+          reject({
+            message: `Image should have a 16:7 aspect ratio. Current ratio is ${img.width}x${img.height} (${aspectRatio.toFixed(2)}:1).`,
+            dimensions: { width: img.width, height: img.height, aspectRatio },
+          });
+        } else {
+          resolve({ width: img.width, height: img.height, aspectRatio });
+        }
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(img.src);
+        reject({
+          message: "Failed to load image. Please select a valid image file.",
+        });
+      };
+
+      const objectUrl = URL.createObjectURL(file);
+      img.src = objectUrl;
+    });
+  };
+
+  // Handle image upload
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      customToast({
+        success: false,
+        message: "Please select only image files"
+      });
+      e.target.value = "";
+      return;
+    }
+
+    // Validate file size (10MB limit)
+    if (file.size > 10 * 1024 * 1024) {
+      customToast({
+        success: false,
+        message: `File ${file.name} is too large. Maximum size is 10MB.`
+      });
+      e.target.value = "";
+      return;
+    }
+
+    // Validate image dimensions (16:7 aspect ratio)
+    try {
+      await validateImageDimensions(file);
+      setImageFile(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+      
+    } catch (dimensionError) {
+      console.error(`Dimension validation failed:`, dimensionError);
+      customToast({
+        success: false,
+        message: `Image must have a 16:7 aspect ratio. Current ratio is ${
+          dimensionError.dimensions?.width
+        }x${dimensionError.dimensions?.height} (${
+          dimensionError.dimensions?.aspectRatio.toFixed(2)
+        }:1)`
+      });
+      e.target.value = "";
+    }
+  };
+
+  // Remove image
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
+  };
+
+  // Ensure data is properly formatted
+  const ensureArray = (value) => {
+    if (Array.isArray(value)) return value;
+    if (!value) return [];
+    // Handle case where value might be a string representation of an array
+    try {
+      const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  };
+
   const handleEdit = (article) => {
     setSelectedArticle(article);
+    
+    // Ensure all data is properly formatted when initializing the form
     setFormData({
       articleId: article._id,
-      title: article.title,
-      introduction: article.introduction,
-      mainSections: article.mainSections.map(section => ({
+      title: article.title || "",
+      introduction: article.introduction || "",
+      mainSections: (article.mainSections || []).map(section => ({
         ...section,
-        points: section.points || [] // Ensure points array exists
+        points: ensureArray(section.points)
       })),
-      conclusion: article.conclusion,
-      tags: article.tags || [],
-      relatedServices: article.relatedServices || "",
-      relatedIndustries: article.relatedIndustries || "",
-      status: article.status,
+      conclusion: article.conclusion || "",
+      tags: ensureArray(article.tags),
+      relatedServices: ensureArray(article.relatedServices),
+      relatedIndustries: ensureArray(article.relatedIndustries),
+      relatedProducts: ensureArray(article.relatedProducts),
+      relatedChikfdServices: ensureArray(article.relatedChikfdServices),
+      status: article.status || "draft",
     });
+    
+    // Set image preview from the existing article
+    if (article.Image) {
+      setImagePreview(article.Image);
+    }
   };
 
   const handleChange = (e) => {
@@ -80,6 +249,33 @@ export default function EditKnowledgeBase() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  // Toggle item selection for related content
+  const toggleItemSelection = (itemId, listName) => {
+    setFormData(prev => {
+      const currentList = ensureArray(prev[listName]);
+      
+      if (currentList.includes(itemId)) {
+        return {
+          ...prev,
+          [listName]: currentList.filter(id => id !== itemId)
+        };
+      } else {
+        return {
+          ...prev,
+          [listName]: [...currentList, itemId]
+        };
+      }
+    });
+  };
+
+  // Remove related item
+  const removeRelatedItem = (itemId, listName) => {
+    setFormData(prev => ({
+      ...prev,
+      [listName]: ensureArray(prev[listName]).filter(id => id !== itemId)
     }));
   };
 
@@ -144,7 +340,7 @@ export default function EditKnowledgeBase() {
   const addSection = () => {
     setFormData((prev) => ({
       ...prev,
-      mainSections: [...prev.mainSections, { title: "", content: "" }],
+      mainSections: [...prev.mainSections, { title: "", content: "", points: [] }],
     }));
   };
 
@@ -160,13 +356,14 @@ export default function EditKnowledgeBase() {
     const trimmedTag = tagInput.trim();
 
     if (trimmedTag) {
-      if (formData.tags.includes(trimmedTag)) {
+      const currentTags = ensureArray(formData.tags);
+      if (currentTags.includes(trimmedTag)) {
         setTagError("This tag already exists!");
         setTimeout(() => setTagError(""), 3000);
       } else {
         setFormData((prev) => ({
           ...prev,
-          tags: [...prev.tags, trimmedTag],
+          tags: [...currentTags, trimmedTag],
         }));
         setTagInput("");
         setTagError("");
@@ -177,37 +374,157 @@ export default function EditKnowledgeBase() {
   const removeTag = (tagToRemove) => {
     setFormData((prev) => ({
       ...prev,
-      tags: prev.tags.filter((tag) => tag !== tagToRemove),
+      tags: ensureArray(prev.tags).filter((tag) => tag !== tagToRemove),
     }));
+  };
+
+  // Validate form before submission
+  const validateForm = () => {
+    if (!formData.title.trim()) {
+      customToast({
+        success: false,
+        message: "Title is required"
+      });
+      return false;
+    }
+
+    if (!formData.introduction.trim()) {
+      customToast({
+        success: false,
+        message: "Introduction is required"
+      });
+      return false;
+    }
+
+    if (!formData.conclusion.trim()) {
+      customToast({
+        success: false,
+        message: "Conclusion is required"
+      });
+      return false;
+    }
+
+    if (formData.mainSections.length === 0) {
+      customToast({
+        success: false,
+        message: "At least one section is required"
+      });
+      return false;
+    }
+
+    for (const [i, section] of formData.mainSections.entries()) {
+      if (!section.title.trim()) {
+        customToast({
+          success: false,
+          message: `Title for section ${i + 1} is required`
+        });
+        return false;
+      }
+
+      if (!section.content.trim()) {
+        customToast({
+          success: false,
+          message: `Content for section ${i + 1} is required`
+        });
+        return false;
+      }
+
+      // Validate points if they exist
+      if (section.points && section.points.length > 0) {
+        for (const [j, point] of section.points.entries()) {
+          if (!point.title.trim()) {
+            customToast({
+              success: false,
+              message: `Title for point ${j + 1} in section ${i + 1} is required`
+            });
+            return false;
+          }
+
+          if (!point.description.trim()) {
+            customToast({
+              success: false,
+              message: `Description for point ${j + 1} in section ${i + 1} is required`
+            });
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setSubmitting(true);
+    
     try {
-      const response = await axios.post("/api/knowledgebase/edit", formData);
+      // Create FormData object to handle file upload
+      const formDataToSubmit = new FormData();
+      
+      // Append article ID
+      formDataToSubmit.append("articleId", formData.articleId);
+      
+      // Append image file if a new one was selected
+      if (imageFile) {
+        formDataToSubmit.append("Image", imageFile);
+      }
+      
+      // Append other form fields
+      formDataToSubmit.append("title", formData.title);
+      formDataToSubmit.append("introduction", formData.introduction);
+      formDataToSubmit.append("conclusion", formData.conclusion);
+      formDataToSubmit.append("mainSections", JSON.stringify(formData.mainSections));
+      formDataToSubmit.append("tags", JSON.stringify(ensureArray(formData.tags)));
+      formDataToSubmit.append("relatedServices", JSON.stringify(ensureArray(formData.relatedServices)));
+      formDataToSubmit.append("relatedIndustries", JSON.stringify(ensureArray(formData.relatedIndustries)));
+      formDataToSubmit.append("relatedProducts", JSON.stringify(ensureArray(formData.relatedProducts)));
+      formDataToSubmit.append("relatedChikfdServices", JSON.stringify(ensureArray(formData.relatedChikfdServices)));
+      formDataToSubmit.append("status", formData.status);
+
+      const response = await axios.post(
+        "/api/knowledgebase/edit",
+        formDataToSubmit,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
 
       if (response.data.success) {
-        customToast("Article updated successfully!", "success");
+        customToast({
+          success: true,
+          message: "Knowledge base article updated successfully"
+        });
+        
         // Update the article in the list
         setArticles(prev =>
           prev.map(article =>
             article._id === formData.articleId ? response.data.article : article
           )
         );
+        
         // Return to list view
         setSelectedArticle(null);
         setFormData(null);
+        setImageFile(null);
+        setImagePreview(null);
       }
     } catch (error) {
       console.error("Error updating article:", error);
-      customToast(
-        error.response?.data?.message || "Failed to update article",
-        "error"
-      );
+      customToast({
+        success: false,
+        message: error.response?.data?.message || "Failed to update article"
+      });
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -218,10 +535,24 @@ export default function EditKnowledgeBase() {
     return matchesSearch && matchesStatus;
   });
 
+  // Get status badge color
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'published':
+        return 'bg-green-100 text-green-800';
+      case 'draft':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'archived':
+        return 'bg-gray-100 text-gray-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   // Render list view if no article is selected
   if (!selectedArticle) {
     return (
-      <div className=" mx-auto mb-10 p-6 bg-white rounded-lg shadow-lg">
+      <div className="mx-auto mb-10 p-6 bg-white rounded-lg shadow-lg">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Knowledge Base Management
@@ -238,7 +569,7 @@ export default function EditKnowledgeBase() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search articles..."
-              className="pl-10 w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="pl-10 w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           
@@ -247,20 +578,24 @@ export default function EditKnowledgeBase() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="pl-10 w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white"
+              className="pl-10 w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
             >
               <option value="">All Status</option>
               <option value="draft">Draft</option>
               <option value="published">Published</option>
               <option value="archived">Archived</option>
             </select>
+            <ChevronDown 
+              size={20} 
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" 
+            />
           </div>
         </div>
 
         {/* Articles Grid */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <Loader2 className="animate-spin w-12 h-12 text-primary" />
+            <Loader2 className="animate-spin w-12 h-12 text-blue-600" />
           </div>
         ) : filteredArticles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -269,16 +604,21 @@ export default function EditKnowledgeBase() {
                 key={article._id}
                 className="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
               >
+                {article.Image && (
+                  <div className="h-44 overflow-hidden">
+                    <img 
+                      src={article.Image} 
+                      alt={article.title}
+                      className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                )}
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-4">
                     <h2 className="text-xl font-semibold text-gray-800 line-clamp-2">
                       {article.title}
                     </h2>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      article.status === 'published' ? 'bg-green-100 text-green-800' :
-                      article.status === 'draft' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(article.status)}`}>
                       {article.status}
                     </span>
                   </div>
@@ -288,17 +628,17 @@ export default function EditKnowledgeBase() {
                   </p>
                   
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {article.tags?.slice(0, 3).map((tag, index) => (
+                    {ensureArray(article.tags).slice(0, 3).map((tag, index) => (
                       <span
                         key={index}
-                        className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs"
+                        className="px-2 py-1 bg-blue-50 text-blue-600 rounded-full text-xs"
                       >
                         {tag}
                       </span>
                     ))}
-                    {article.tags?.length > 3 && (
+                    {ensureArray(article.tags).length > 3 && (
                       <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
-                        +{article.tags.length - 3}
+                        +{ensureArray(article.tags).length - 3}
                       </span>
                     )}
                   </div>
@@ -313,7 +653,7 @@ export default function EditKnowledgeBase() {
                     
                     <button
                       onClick={() => handleEdit(article)}
-                      className="flex items-center gap-1 px-3 py-1 text-primary hover:bg-primary/10 rounded-md transition-colors"
+                      className="flex items-center gap-1 px-3 py-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
                     >
                       <Edit2 size={16} />
                       <span>Edit</span>
@@ -338,13 +678,15 @@ export default function EditKnowledgeBase() {
 
   // Render edit form if an article is selected
   return (
-    <div className=" mx-auto mb-10 p-6 bg-white rounded-lg shadow-lg">
+    <div className="mx-auto mb-10 p-6 bg-white rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-2">
           <button
             onClick={() => {
               setSelectedArticle(null);
               setFormData(null);
+              setImageFile(null);
+              setImagePreview(null);
             }}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
@@ -356,6 +698,57 @@ export default function EditKnowledgeBase() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
+        {/* Featured Image */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">
+            Featured Image <span className="text-red-500">*</span>
+            <span className="text-sm font-normal text-gray-500 ml-2">(16:7 aspect ratio required)</span>
+          </label>
+          
+          <input
+            type="file"
+            ref={imageInputRef}
+            onChange={handleImageChange}
+            accept="image/*"
+            className="hidden"
+          />
+          
+          {!imagePreview ? (
+            <div 
+              onClick={() => imageInputRef.current?.click()}
+              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 transition-colors"
+            >
+              <Upload className="mx-auto text-gray-400 mb-2" size={32} />
+              <p className="text-sm text-gray-500 mb-1">Click to upload an image</p>
+              <p className="text-xs text-gray-400">PNG, JPG, WebP up to 10MB (16:7 aspect ratio required)</p>
+            </div>
+          ) : (
+            <div className="relative rounded-lg overflow-hidden border border-gray-200">
+              <img 
+                src={imagePreview} 
+                alt="Featured image preview" 
+                className="w-full h-auto object-cover max-h-[300px]" 
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
+                <button
+                  type="button"
+                  onClick={() => imageInputRef.current?.click()}
+                  className="bg-white rounded-full p-2 m-1 shadow-md"
+                >
+                  <Upload size={18} className="text-gray-700" />
+                </button>
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="bg-white rounded-full p-2 m-1 shadow-md text-red-500"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Title */}
         <div>
           <label className="block text-gray-700 font-medium mb-2">
@@ -366,7 +759,7 @@ export default function EditKnowledgeBase() {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             required
           />
         </div>
@@ -381,7 +774,7 @@ export default function EditKnowledgeBase() {
             value={formData.introduction}
             onChange={handleChange}
             rows="4"
-            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             required
           />
         </div>
@@ -395,7 +788,7 @@ export default function EditKnowledgeBase() {
             <button
               type="button"
               onClick={addSection}
-              className="inline-flex items-center text-primary hover:text-primary/80"
+              className="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100"
             >
               <Plus size={18} className="mr-1" /> Add Section
             </button>
@@ -403,98 +796,125 @@ export default function EditKnowledgeBase() {
 
           <div className="space-y-6">
             {formData.mainSections.map((section, index) => (
-              <div key={index} className="p-4 bg-gray-50 rounded-lg relative">
+              <div key={index} className="p-5 bg-gray-50 rounded-lg relative border border-gray-200 shadow-sm">
                 {formData.mainSections.length > 1 && (
                   <button
                     type="button"
                     onClick={() => removeSection(index)}
-                    className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                    className="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-white rounded-full p-1 shadow-sm"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={16} />
                   </button>
                 )}
 
                 <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Section Title</label>
+                  <label className="block text-gray-700 mb-2 font-medium">
+                    Section Title <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     value={section.title}
                     onChange={(e) => handleSectionChange(index, "title", e.target.value)}
-                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Section title"
                     required
                   />
                 </div>
 
-                <div>
-                  <label className="block text-gray-700 mb-2">Section Content</label>
+                <div className="mb-4">
+                  <label className="block text-gray-700 mb-2 font-medium">
+                    Section Content <span className="text-red-500">*</span>
+                  </label>
                   <textarea
                     value={section.content}
                     onChange={(e) => handleSectionChange(index, "content", e.target.value)}
                     rows="4"
-                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Section content"
                     required
                   />
                 </div>
-                <div className="mt-6">
-  <div className="flex justify-between items-center mb-4">
-    <label className="block text-gray-700 font-medium">
-      Section Points
-    </label>
-    <button
-      type="button"
-      onClick={() => addPoint(index)}
-      className="inline-flex items-center text-primary hover:text-primary/80"
-    >
-      <Plus size={16} className="mr-1" /> Add Point
-    </button>
-  </div>
 
-  <div className="space-y-4">
-    {section.points?.map((point, pointIndex) => (
-      <div key={pointIndex} className="p-4 bg-white rounded-md border relative">
-        <button
-          type="button"
-          onClick={() => removePoint(index, pointIndex)}
-          className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-        >
-          <Trash2 size={16} />
-        </button>
+                {/* Points Section */}
+                <div className="mt-6 bg-white p-4 rounded-md border border-gray-100">
+                  <div className="flex justify-between items-center mb-4">
+                    <label className="block text-gray-700 font-medium">
+                      Section Points
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => addPoint(index)}
+                      className="inline-flex items-center text-blue-600 bg-blue-50 px-2 py-1 rounded-md hover:bg-blue-100"
+                    >
+                      <Plus size={16} className="mr-1" /> Add Point
+                    </button>
+                  </div>
 
-        <div className="mb-3">
-          <label className="block text-gray-700 text-sm mb-2">
-            Point Title
-          </label>
-          <input
-            type="text"
-            value={point.title}
-            onChange={(e) => handlePointChange(index, pointIndex, "title", e.target.value)}
-            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-            placeholder="Point title"
-          />
-        </div>
+                  <div className="space-y-4">
+                    {section.points?.map((point, pointIndex) => (
+                      <div
+                        key={pointIndex}
+                        className="p-4 bg-gray-50 rounded-md border border-gray-200 relative"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => removePoint(index, pointIndex)}
+                          className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                        >
+                          <Trash2 size={16} />
+                        </button>
 
-        <div>
-          <label className="block text-gray-700 text-sm mb-2">
-            Point Description
-          </label>
-          <textarea
-            value={point.description}
-            onChange={(e) => handlePointChange(index, pointIndex, "description", e.target.value)}
-            rows="2"
-            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-            placeholder="Point description"
-          />
-        </div>
-      </div>
-    ))}
+                        <div className="mb-3">
+                          <label className="block text-gray-700 text-sm mb-2 font-medium">
+                            Point Title <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={point.title}
+                            onChange={(e) =>
+                              handlePointChange(
+                                index,
+                                pointIndex,
+                                "title",
+                                e.target.value
+                              )
+                            }
+                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Point title"
+                            required
+                          />
+                        </div>
 
-    {(!section.points || section.points.length === 0) && (
-      <p className="text-center text-gray-500 py-4 bg-white rounded-md border border-dashed">
-        No points added yet
-      </p>
-    )}
-  </div>
-</div>
+                        <div>
+                          <label className="block text-gray-700 text-sm mb-2 font-medium">
+                            Point Description <span className="text-red-500">*</span>
+                          </label>
+                          <textarea
+                            value={point.description}
+                            onChange={(e) =>
+                              handlePointChange(
+                                index,
+                                pointIndex,
+                                "description",
+                                e.target.value
+                              )
+                            }
+                            rows="2"
+                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Point description"
+                            required
+                          />
+                        </div>
+                      </div>
+                    ))}
+
+                    {(!section.points || section.points.length === 0) && (
+                      <p className="text-center text-gray-500 py-4 bg-gray-50 rounded-md border border-dashed">
+                        No points added yet
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -510,7 +930,8 @@ export default function EditKnowledgeBase() {
             value={formData.conclusion}
             onChange={handleChange}
             rows="4"
-            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Write a conclusion for your article"
             required
           />
         </div>
@@ -519,10 +940,10 @@ export default function EditKnowledgeBase() {
         <div>
           <label className="block text-gray-700 font-medium mb-2">Tags</label>
           <div className="flex flex-wrap gap-2 mb-3">
-            {formData.tags.map((tag, index) => (
+            {ensureArray(formData.tags).map((tag, index) => (
               <span
                 key={index}
-                className="inline-flex items-center bg-primary/10 text-primary px-3 py-1 rounded-full text-sm"
+                className="inline-flex items-center bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm"
               >
                 {tag}
                 <button
@@ -534,6 +955,9 @@ export default function EditKnowledgeBase() {
                 </button>
               </span>
             ))}
+            {ensureArray(formData.tags).length === 0 && (
+              <span className="text-gray-400 text-sm">No tags added yet</span>
+            )}
           </div>
           <div className="space-y-2">
             <div className="flex gap-2">
@@ -541,13 +965,13 @@ export default function EditKnowledgeBase() {
                 type="text"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
-                className="flex-1 p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="flex-1 p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Add a tag"
               />
               <button
                 type="button"
                 onClick={handleTagAdd}
-                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               >
                 Add
               </button>
@@ -560,42 +984,284 @@ export default function EditKnowledgeBase() {
 
         {/* Related Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
+          {/* Related Services */}
+          <div className="dropdown-container">
             <label className="block text-gray-700 font-medium mb-2">
-              Related Service
+              Related Services
             </label>
-            <select
-              name="relatedServices"
-              value={formData.relatedServices}
-              onChange={handleChange}
-              className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-            >
-              <option value="">Select a service</option>
-              {services.map((service) => (
-                <option key={service._id} value={service._id}>
-                  {service.Title}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <button
+                type="button"
+                className="w-full p-3 border rounded-md bg-white flex justify-between items-center focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onClick={() => setDropdownOpen(prev => ({ ...prev, services: !prev.services }))}
+              >
+                <span className="text-gray-500">
+                  {ensureArray(formData.relatedServices).length ? `${ensureArray(formData.relatedServices).length} service(s) selected` : 'Select services...'}
+                </span>
+                <ChevronDown size={18} className={`transition-transform ${dropdownOpen.services ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {dropdownOpen.services && (
+                <div className="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg">
+                  {services.length > 0 ? (
+                    <div className="py-1">
+                      {services.map(service => (
+                        <div
+                          key={service._id}
+                          className={`px-4 py-2 cursor-pointer flex items-center justify-between hover:bg-gray-100 ${
+                            ensureArray(formData.relatedServices).includes(service._id) ? 'bg-blue-50' : ''
+                          }`}
+                          onClick={() => toggleItemSelection(service._id, 'relatedServices')}
+                        >
+                          <span>{service.Title}</span>
+                          {ensureArray(formData.relatedServices).includes(service._id) && (
+                            <Check size={16} className="text-blue-600" />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="px-4 py-2 text-gray-500">No services available</div>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            {/* Selected Services Tags */}
+            <div className="mt-2 flex flex-wrap gap-2">
+              {ensureArray(formData.relatedServices).length > 0 ? (
+                ensureArray(formData.relatedServices).map(id => {
+                  const service = services.find(s => s._id === id);
+                  return service ? (
+                    <span
+                      key={id}
+                      className="inline-flex items-center bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm"
+                    >
+                      {service.Title}
+                      <button
+                        type="button"
+                        onClick={() => removeRelatedItem(id, 'relatedServices')}
+                        className="ml-2 hover:text-red-500"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ) : null;
+                })
+              ) : (
+                <span className="text-gray-400 text-sm">No services selected</span>
+              )}
+            </div>
           </div>
 
-          <div>
+          {/* Related Industries */}
+          <div className="dropdown-container">
             <label className="block text-gray-700 font-medium mb-2">
-              Related Industry
+              Related Industries
             </label>
-            <select
-              name="relatedIndustries"
-              value={formData.relatedIndustries}
-              onChange={handleChange}
-              className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-            >
-              <option value="">Select an industry</option>
-              {industries.map((industry) => (
-                <option key={industry._id} value={industry._id}>
-                  {industry.title}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <button
+                type="button"
+                className="w-full p-3 border rounded-md bg-white flex justify-between items-center focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onClick={() => setDropdownOpen(prev => ({ ...prev, industries: !prev.industries }))}
+              >
+                <span className="text-gray-500">
+                  {ensureArray(formData.relatedIndustries).length ? `${ensureArray(formData.relatedIndustries).length} industry/industries selected` : 'Select industries...'}
+                </span>
+                <ChevronDown size={18} className={`transition-transform ${dropdownOpen.industries ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {dropdownOpen.industries && (
+                <div className="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg">
+                  {industries.length > 0 ? (
+                    <div className="py-1">
+                      {industries.map(industry => (
+                        <div
+                          key={industry._id}
+                          className={`px-4 py-2 cursor-pointer flex items-center justify-between hover:bg-gray-100 ${
+                            ensureArray(formData.relatedIndustries).includes(industry._id) ? 'bg-blue-50' : ''
+                          }`}
+                          onClick={() => toggleItemSelection(industry._id, 'relatedIndustries')}
+                        >
+                          <span>{industry.title || industry.Title}</span>
+                          {ensureArray(formData.relatedIndustries).includes(industry._id) && (
+                            <Check size={16} className="text-blue-600" />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="px-4 py-2 text-gray-500">No industries available</div>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            {/* Selected Industries Tags */}
+            <div className="mt-2 flex flex-wrap gap-2">
+              {ensureArray(formData.relatedIndustries).length > 0 ? (
+                ensureArray(formData.relatedIndustries).map(id => {
+                  const industry = industries.find(i => i._id === id);
+                  return industry ? (
+                    <span
+                      key={id}
+                      className="inline-flex items-center bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm"
+                    >
+                      {industry.title || industry.Title}
+                      <button
+                        type="button"
+                        onClick={() => removeRelatedItem(id, 'relatedIndustries')}
+                        className="ml-2 hover:text-red-500"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ) : null;
+                })
+              ) : (
+                <span className="text-gray-400 text-sm">No industries selected</span>
+              )}
+            </div>
+          </div>
+
+          {/* Related Products */}
+          <div className="dropdown-container">
+            <label className="block text-gray-700 font-medium mb-2">
+              Related Products
+            </label>
+            <div className="relative">
+              <button
+                type="button"
+                className="w-full p-3 border rounded-md bg-white flex justify-between items-center focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onClick={() => setDropdownOpen(prev => ({ ...prev, products: !prev.products }))}
+              >
+                <span className="text-gray-500">
+                  {ensureArray(formData.relatedProducts).length ? `${ensureArray(formData.relatedProducts).length} product(s) selected` : 'Select products...'}
+                </span>
+                <ChevronDown size={18} className={`transition-transform ${dropdownOpen.products ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {dropdownOpen.products && (
+                <div className="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg">
+                  {products.length > 0 ? (
+                    <div className="py-1">
+                      {products.map(product => (
+                        <div
+                          key={product._id}
+                          className={`px-4 py-2 cursor-pointer flex items-center justify-between hover:bg-gray-100 ${
+                            ensureArray(formData.relatedProducts).includes(product._id) ? 'bg-blue-50' : ''
+                          }`}
+                          onClick={() => toggleItemSelection(product._id, 'relatedProducts')}
+                        >
+                          <span>{product.Title}</span>
+                          {ensureArray(formData.relatedProducts).includes(product._id) && (
+                            <Check size={16} className="text-blue-600" />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="px-4 py-2 text-gray-500">No products available</div>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            {/* Selected Products Tags */}
+            <div className="mt-2 flex flex-wrap gap-2">
+              {ensureArray(formData.relatedProducts).length > 0 ? (
+                ensureArray(formData.relatedProducts).map(id => {
+                  const product = products.find(p => p._id === id);
+                  return product ? (
+                    <span
+                      key={id}
+                      className="inline-flex items-center bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm"
+                    >
+                      {product.Title}
+                      <button
+                        type="button"
+                        onClick={() => removeRelatedItem(id, 'relatedProducts')}
+                        className="ml-2 hover:text-red-500"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ) : null;
+                })
+              ) : (
+                <span className="text-gray-400 text-sm">No products selected</span>
+              )}
+            </div>
+          </div>
+
+          {/* Related Child Services */}
+          <div className="dropdown-container">
+            <label className="block text-gray-700 font-medium mb-2">
+              Related Child Services
+            </label>
+            <div className="relative">
+              <button
+                type="button"
+                className="w-full p-3 border rounded-md bg-white flex justify-between items-center focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onClick={() => setDropdownOpen(prev => ({ ...prev, childServices: !prev.childServices }))}
+              >
+                <span className="text-gray-500">
+                  {ensureArray(formData.relatedChikfdServices).length ? `${ensureArray(formData.relatedChikfdServices).length} child service(s) selected` : 'Select child services...'}
+                </span>
+                <ChevronDown size={18} className={`transition-transform ${dropdownOpen.childServices ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {dropdownOpen.childServices && (
+                <div className="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg">
+                  {childServices.length > 0 ? (
+                    <div className="py-1">
+                      {childServices.map(childService => (
+                        <div
+                          key={childService._id}
+                          className={`px-4 py-2 cursor-pointer flex items-center justify-between hover:bg-gray-100 ${
+                            ensureArray(formData.relatedChikfdServices).includes(childService._id) ? 'bg-blue-50' : ''
+                          }`}
+                          onClick={() => toggleItemSelection(childService._id, 'relatedChikfdServices')}
+                        >
+                          <span>{childService.Title}</span>
+                          {ensureArray(formData.relatedChikfdServices).includes(childService._id) && (
+                            <Check size={16} className="text-blue-600" />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="px-4 py-2 text-gray-500">No child services available</div>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            {/* Selected Child Services Tags */}
+            <div className="mt-2 flex flex-wrap gap-2">
+              {ensureArray(formData.relatedChikfdServices).length > 0 ? (
+                ensureArray(formData.relatedChikfdServices).map(id => {
+                  const childService = childServices.find(cs => cs._id === id);
+                  return childService ? (
+                    <span
+                      key={id}
+                      className="inline-flex items-center bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm"
+                    >
+                      {childService.Title}
+                      <button
+                        type="button"
+                        onClick={() => removeRelatedItem(id, 'relatedChikfdServices')}
+                        className="ml-2 hover:text-red-500"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ) : null;
+                })
+              ) : (
+                <span className="text-gray-400 text-sm">No child services selected</span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -606,7 +1272,7 @@ export default function EditKnowledgeBase() {
             name="status"
             value={formData.status}
             onChange={handleChange}
-            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
@@ -621,6 +1287,8 @@ export default function EditKnowledgeBase() {
             onClick={() => {
               setSelectedArticle(null);
               setFormData(null);
+              setImageFile(null);
+              setImagePreview(null);
             }}
             className="px-6 py-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
           >
@@ -628,10 +1296,10 @@ export default function EditKnowledgeBase() {
           </button>
           <button
             type="submit"
-            disabled={loading}
-            className="px-6 py-3 bg-primary text-white rounded-md hover:bg-primary/90 flex items-center gap-2 disabled:opacity-50"
+            disabled={submitting}
+            className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50"
           >
-            {loading ? (
+            {submitting ? (
               <>
                 <Loader2 size={18} className="animate-spin" />
                 <span>Updating...</span>

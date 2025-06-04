@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import EastIcon from "@mui/icons-material/East";
 import {
   motion,
@@ -26,6 +27,7 @@ const Advertiser = ({ data }: any) => {
   const [currentItems, setCurrentItems] = useState<any>([]);
   const [currentTitle, setCurrentTitle] = useState<string>("");
   const [isAnimating, setIsAnimating] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     // Only proceed if we have valid data
@@ -105,7 +107,7 @@ const Advertiser = ({ data }: any) => {
               <motion.div
                 key={index}
                 data-index={index}
-                className={` scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block`}
+                className={` scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block cursor-pointer`}
                 initial={{
                   opacity: 0,
                   scale: 0.8,
@@ -114,6 +116,9 @@ const Advertiser = ({ data }: any) => {
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
                 transition={{ duration: 0.4, delay: index * 0.2 }}
+                onClick={() => {
+                  router.push(`/customer-success-stories/${item?.slug? item?.slug : ""}`);
+                }}
               >
                 <div
                   className={`max-w-80 bg-white ${
@@ -191,7 +196,7 @@ const Advertiser = ({ data }: any) => {
               <motion.div
                 key={index}
                 data-index={index}
-                className={` scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block`}
+                className={` scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block cursor-pointer`}
                 initial={{
                   opacity: 0,
                   scale: 0.8,
@@ -200,6 +205,9 @@ const Advertiser = ({ data }: any) => {
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
                 transition={{ duration: 0.4, delay: index * 0.2 }}
+                onClick={() => {
+                  router.push(`/details/projects/${item?.slug ? item?.slug : item?.Title }`);
+                }}
               >
                 <div
                   className={`max-w-80 ${
@@ -269,7 +277,7 @@ const Advertiser = ({ data }: any) => {
               <motion.div
                 key={index}
                 data-index={index}
-                className="scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block"
+                className="scroller-item min-w-max px-4 py-2 flex-shrink-0 inline-block cursor-pointer"
                 initial={{
                   opacity: 0,
                   scale: 0.8,
@@ -278,6 +286,16 @@ const Advertiser = ({ data }: any) => {
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
                 transition={{ duration: 0.4, delay: index * 0.2 }}
+                onClick={() => {
+                  if(item?.masterTitle === "Our Services"){
+                    router.push(`/${item?.slug ? item?.slug : item?.Title }`);
+                  }else if(item?.masterTitle === "Industries"){
+                    router.push(`/industries/${item?.slug ? item?.slug : item?.Title.toLowerCase() }`);
+
+                  }
+                  // console.log(item)
+                  // router.push(`/details/services/${item?.slug ? item?.slug : item?.title }`);
+                }}
               >
                 <Image
                   width={400}

@@ -2,54 +2,114 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Box, TextField, Button, Typography, Paper, IconButton,
-  FormControl, InputLabel, Select, MenuItem, CircularProgress
+  FormControl, InputLabel, Select, MenuItem, CircularProgress,
+  Checkbox, ListItemText, Chip, OutlinedInput, Divider,
+  Card, CardContent, Tooltip, Fade, alpha
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
+import { styled } from '@mui/material/styles';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import TitleIcon from '@mui/icons-material/Title';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import LinkIcon from '@mui/icons-material/Link';
+import SaveIcon from '@mui/icons-material/Save';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+
+// Theme colors
+const themeColors = {
+  primary: '#446E6D',
+  primaryLight: '#76B4B1',
+  primaryDark: '#1a2928',
+  accent: '#37c0bd',
+};
+
+// Styled components
+const StyledCard = styled(Card)(({ theme }) => ({
+  border: `1px solid ${theme.palette.divider}`,
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    boxShadow: theme.shadows[4],
+    borderColor: themeColors.primaryLight,
+  },
+  marginBottom: theme.spacing(3),
+  position: 'relative',
+}));
+
+const QuestionNumberBadge = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: '-12px',
+  left: '-12px',
+  width: '32px',
+  height: '32px',
+  borderRadius: '50%',
+  backgroundColor: themeColors.primary,
+  color: '#FFFFFF',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontWeight: 'bold',
+  zIndex: 1,
+  boxShadow: theme.shadows[2],
+}));
+
+const SectionTitle = styled(Typography)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  marginBottom: theme.spacing(3),
+  paddingBottom: theme.spacing(1),
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  '& svg': {
+    marginRight: theme.spacing(1),
+    color: themeColors.primary,
+  }
+}));
 
 export default function CreateFaq() {
   // Form state
   const [formData, setFormData] = useState({
     title: '',
     questions: [{ question: '', answer: '' }],
-    relatedServices: '',
-    relatedIndustries: ''
+    relatedProducts: [],
+    relatedChikfdServices: []
   });
 
-  // Services and Industries lists
-  const [services, setServices] = useState([]);
-  const [industries, setIndustries] = useState([]);
+  // Data lists
+  const [products, setProducts] = useState([]);
+  const [childServices, setChildServices] = useState([]);
 
   // Loading and submission states
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // Fetch services and industries on component mount
+  // Fetch products and child services on component mount
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Fetch services
-        const servicesRes = await axios.get('/api/service/getservice', {
+        // Fetch products
+        const productsRes = await axios.get('/api/product/get', {
           withCredentials: true
         });
-        if (servicesRes.data.success) {
-          setServices(servicesRes.data.services || []);
+        if (productsRes.data.success) {
+          setProducts(productsRes.data.products || []);
         }
 
-        // Fetch industries
-        const industriesRes = await axios.get('/api/industry/get', {
+        // Fetch child services
+        const childServicesRes = await axios.get('/api/child/get', {
           withCredentials: true
         });
-        if (industriesRes.data.success) {
-          setIndustries(industriesRes.data.industries || []);
+        if (childServicesRes.data.success) {
+          setChildServices(childServicesRes.data.products || []);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
-        // toast.error("Failed to load services and industries");
+        toast.error("Failed to load products and services");
       } finally {
         setLoading(false);
       }
@@ -58,8 +118,17 @@ export default function CreateFaq() {
     fetchData();
   }, []);
 
-  // Handle input change for title and dropdowns
+  // Handle input change for title
   const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle multi-select changes
+  const handleMultiSelectChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -104,15 +173,10 @@ export default function CreateFaq() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(formData)
-    // return
+
     // Basic validation
     if (!formData.title.trim()) {
       return toast.error("Title is required");
-    }
-
-    if (!formData.relatedIndustries) {
-      return toast.error("Please select a related industry");
     }
 
     // Validate all questions have both question and answer
@@ -130,8 +194,8 @@ export default function CreateFaq() {
       const response = await axios.post('/api/faq/create', {
         title: formData.title,
         questions: formData.questions,
-        relatedServices: formData.relatedServices,
-        relatedIndustries: formData.relatedIndustries || null
+        relatedProducts: formData.relatedProducts,
+        relatedChikfdServices: formData.relatedChikfdServices
       });
 
       if (response.data.success) {
@@ -142,8 +206,8 @@ export default function CreateFaq() {
         setFormData({
           title: '',
           questions: [{ question: '', answer: '' }],
-          relatedServices: '',
-          relatedIndustries: ''
+          relatedProducts: [],
+          relatedChikfdServices: []
         });
       } else {
         toast.error(response.data.message || "Failed to create FAQ");
@@ -163,157 +227,451 @@ export default function CreateFaq() {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-        <CircularProgress />
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        height: '400px' 
+      }}>
+        <CircularProgress sx={{ color: themeColors.primary }} size={60} thickness={4} />
+        <Typography variant="h6" sx={{ mt: 3, color: 'text.secondary' }}>
+          Loading resources...
+        </Typography>
       </Box>
     );
   }
 
   if (success) {
     return (
-      <Paper elevation={3} sx={{ p: 4, maxWidth: 800, mx: 'auto', mt: 4 }}>
-        <Typography variant="h5" sx={{ mb: 2, color: 'success.main' }}>
-          <span className='text-green-500 font-semibold'>
-
-            FAQ Created Successfully!
-          </span>
+      <Paper 
+        component={motion.div}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        elevation={3} 
+        sx={{ 
+          p: 5, 
+          maxWidth: 900, 
+          mx: 'auto', 
+          mt: 4,
+          textAlign: 'center',
+          borderRadius: 2
+        }}
+      >
+        <CheckCircleOutlineIcon 
+          sx={{ fontSize: 80, mb: 2, color: themeColors.accent }} 
+        />
+        <Typography variant="h4" sx={{ mb: 2, color: themeColors.primary, fontWeight: 'bold' }}>
+          FAQ Created Successfully!
         </Typography>
-        <Button
-          variant="contained"
-          onClick={handleAddAnother}
-          sx={{ mr: 2 }}
-        >
-          Add Another FAQ
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() => window.location.href = '/admin/faqs'}
-        >
-          View All FAQs
-        </Button>
+        <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary', maxWidth: '600px', mx: 'auto' }}>
+          Your FAQ has been created and is now available in the system. You can add another FAQ or view all existing FAQs.
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<AddCircleOutlineIcon />}
+            onClick={handleAddAnother}
+            sx={{ 
+              bgcolor: themeColors.primary,
+              '&:hover': { bgcolor: themeColors.accent }
+            }}
+          >
+            Create Another FAQ
+          </Button>
+          <Button
+            variant="outlined"
+            size="large"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => window.location.href = '/admin/faqs'}
+            sx={{ 
+              color: themeColors.primary,
+              borderColor: themeColors.primary,
+              '&:hover': { 
+                borderColor: themeColors.accent,
+                color: themeColors.accent
+              } 
+            }}
+          >
+            View All FAQs
+          </Button>
+        </Box>
       </Paper>
     );
   }
 
   return (
-    <Paper elevation={3} sx={{ p: 6, }}>
-      <Typography variant="h5" sx={{ mb: 4 }} className=' font-semibold'>Create New FAQ</Typography>
+    <Paper 
+      component={motion.div}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      elevation={3} 
+      sx={{ 
+        p: { xs: 3, md: 6 }, 
+        borderRadius: 2,
+        maxWidth: '1100px',
+        mx: 'auto'
+      }}
+    >
+      <Typography 
+        variant="h4" 
+        sx={{ 
+          mb: 4, 
+          fontWeight: 600,
+          color: themeColors.primary,
+          borderBottom: '2px solid',
+          borderColor: themeColors.primaryLight,
+          pb: 1,
+          display: 'inline-block'
+        }}
+      >
+        Create New FAQ
+      </Typography>
 
       <form onSubmit={handleSubmit}>
-        {/* FAQ Title */}
-        <TextField
-          label="FAQ Title"
-          name="title"
-          value={formData.title}
-          onChange={handleInputChange}
-          fullWidth
-          required
-          margin="normal"
-        />
-
-        {/* Service Selection */}
-        {/* <FormControl fullWidth margin="normal" required>
-          <InputLabel>Related Service</InputLabel>
-          <Select
-            name="relatedServices"
-            value={formData.relatedServices}
+        {/* Basic Information Section */}
+        <Box sx={{ mb: 5 }}>
+          <SectionTitle variant="h5" gutterBottom>
+            <TitleIcon />
+            Basic Information
+          </SectionTitle>
+          
+          <TextField
+            label="FAQ Title"
+            name="title"
+            value={formData.title}
             onChange={handleInputChange}
-            label="Related Service"
-          >
-            {services.map(service => (
-              <MenuItem key={service._id} value={service._id}>
-                {service.Title}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl> */}
-
-        {/* Industry Selection (Optional) */}
-        <FormControl fullWidth margin="normal">
-          <InputLabel>Related Industry </InputLabel>
-          <Select
-            name="relatedIndustries"
-            value={formData.relatedIndustries}
-            onChange={handleInputChange}
-            label="Related Industry (Optional)"
-          >
-            <MenuItem value="">None</MenuItem>
-            {industries.map(industry => (
-              <MenuItem key={industry._id} value={industry._id}>
-                {industry.Title}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        {/* Questions and Answers */}
-        <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
-          Questions & Answers
-        </Typography>
-
-        {formData.questions.map((qa, index) => (
-          <Box
-            key={index}
+            fullWidth
+            required
+            margin="normal"
+            variant="outlined"
+            placeholder="Enter a descriptive title for this FAQ"
+            InputProps={{
+              sx: { borderRadius: 1.5 }
+            }}
             sx={{
-              mt: 3,
-              p: 2,
-              border: '1px solid #e0e0e0',
-              borderRadius: 1,
-              position: 'relative'
+              '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: themeColors.primary,
+              },
+              '& .MuiInputLabel-root.Mui-focused': {
+                color: themeColors.primary,
+              },
+            }}
+            helperText="A clear title helps users find this FAQ"
+          />
+        </Box>
+
+        {/* Related Items Section */}
+        <Box sx={{ mb: 5 }}>
+          <SectionTitle variant="h5" gutterBottom>
+            <LinkIcon />
+            Related Items
+          </SectionTitle>
+          
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
+            {/* Related Products Multi-Select */}
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="related-products-label" sx={{ 
+                '&.Mui-focused': { color: themeColors.primary } 
+              }}>
+                Related Products
+              </InputLabel>
+              <Select
+                labelId="related-products-label"
+                multiple
+                name="relatedProducts"
+                value={formData.relatedProducts}
+                onChange={handleMultiSelectChange}
+                input={
+                  <OutlinedInput 
+                    label="Related Products" 
+                    sx={{ 
+                      borderRadius: 1.5,
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: themeColors.primary,
+                      },
+                    }} 
+                  />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => {
+                      const product = products.find(p => p._id === value);
+                      return (
+                        <Chip 
+                          key={value} 
+                          label={product ? product.Title : value} 
+                          size="small"
+                          sx={{ 
+                            fontWeight: 500,
+                            backgroundColor: alpha(themeColors.primary, 0.1),
+                            '& .MuiChip-label': { color: themeColors.primary }
+                          }}
+                        />
+                      );
+                    })}
+                  </Box>
+                )}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: 300
+                    }
+                  }
+                }}
+              >
+                {products.map((product) => (
+                  <MenuItem key={product._id} value={product._id}>
+                    <Checkbox 
+                      checked={formData.relatedProducts.indexOf(product._id) > -1} 
+                      sx={{ 
+                        color: themeColors.primaryLight,
+                        '&.Mui-checked': {
+                          color: themeColors.primary,
+                        },
+                      }}
+                    />
+                    <ListItemText 
+                      primary={product.Title} 
+                      secondary={product.detail?.substring(0, 60) + (product.detail?.length > 60 ? '...' : '')}
+                      primaryTypographyProps={{ fontWeight: 500 }}
+                      secondaryTypographyProps={{ fontSize: '0.75rem' }}
+                    />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {/* Related Child Services Multi-Select */}
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="related-child-services-label" sx={{ 
+                '&.Mui-focused': { color: themeColors.primary } 
+              }}>
+                Related Child Services
+              </InputLabel>
+              <Select
+                labelId="related-child-services-label"
+                multiple
+                name="relatedChikfdServices"
+                value={formData.relatedChikfdServices}
+                onChange={handleMultiSelectChange}
+                input={
+                  <OutlinedInput 
+                    label="Related Child Services" 
+                    sx={{ 
+                      borderRadius: 1.5,
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: themeColors.primary,
+                      },
+                    }} 
+                  />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => {
+                      const service = childServices.find(s => s._id === value);
+                      return (
+                        <Chip 
+                          key={value} 
+                          label={service ? service.Title : value} 
+                          size="small"
+                          sx={{ 
+                            fontWeight: 500,
+                            backgroundColor: alpha(themeColors.accent, 0.1),
+                            '& .MuiChip-label': { color: themeColors.accent }
+                          }}
+                        />
+                      );
+                    })}
+                  </Box>
+                )}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: 300
+                    }
+                  }
+                }}
+              >
+                {childServices.map((service) => (
+                  <MenuItem key={service._id} value={service._id}>
+                    <Checkbox 
+                      checked={formData.relatedChikfdServices.indexOf(service._id) > -1} 
+                      sx={{ 
+                        color: themeColors.primaryLight,
+                        '&.Mui-checked': {
+                          color: themeColors.accent,
+                        },
+                      }}
+                    />
+                    <ListItemText 
+                      primary={service.Title} 
+                      secondary={service.detail?.substring(0, 60) + (service.detail?.length > 60 ? '...' : '')}
+                      primaryTypographyProps={{ fontWeight: 500 }}
+                      secondaryTypographyProps={{ fontSize: '0.75rem' }}
+                    />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </Box>
+
+        {/* Questions and Answers Section */}
+        <Box sx={{ mb: 5 }}>
+          <SectionTitle variant="h5" gutterBottom>
+            <QuestionAnswerIcon />
+            Questions & Answers
+          </SectionTitle>
+
+          <AnimatePresence>
+            {formData.questions.map((qa, index) => (
+              <StyledCard
+                component={motion.div}
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.3 }}
+                elevation={0}
+              >
+                <QuestionNumberBadge>
+                  {index + 1}
+                </QuestionNumberBadge>
+                
+                <CardContent sx={{ pt: 3 }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'space-between',
+                    mb: 2 
+                  }}>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center',
+                      color: 'text.secondary'
+                    }}>
+                      <DragIndicatorIcon sx={{ mr: 1 }} />
+                      <Typography variant="subtitle1" fontWeight={500}>
+                        Question {index + 1}
+                      </Typography>
+                    </Box>
+                    
+                    <Tooltip title="Remove question" placement="top" TransitionComponent={Fade}>
+                      <IconButton
+                        color="error"
+                        size="small"
+                        onClick={() => removeQuestion(index)}
+                        sx={{ 
+                          '&:hover': { 
+                            backgroundColor: alpha('#f44336', 0.1) 
+                          } 
+                        }}
+                      >
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+
+                  <TextField
+                    label="Question"
+                    value={qa.question}
+                    onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
+                    fullWidth
+                    required
+                    margin="normal"
+                    variant="outlined"
+                    placeholder="Enter the question"
+                    InputProps={{
+                      sx: { borderRadius: 1.5 }
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: themeColors.primary,
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: themeColors.primary,
+                      },
+                    }}
+                  />
+
+                  <TextField
+                    label="Answer"
+                    value={qa.answer}
+                    onChange={(e) => handleQuestionChange(index, 'answer', e.target.value)}
+                    fullWidth
+                    required
+                    margin="normal"
+                    variant="outlined"
+                    multiline
+                    rows={3}
+                    placeholder="Provide a detailed answer to the question"
+                    InputProps={{
+                      sx: { borderRadius: 1.5 }
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: themeColors.primary,
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: themeColors.primary,
+                      },
+                    }}
+                    helperText="Clear and concise answers help users the most"
+                  />
+                </CardContent>
+              </StyledCard>
+            ))}
+          </AnimatePresence>
+
+          {/* Add Question Button */}
+          <Button
+            variant="outlined"
+            startIcon={<AddCircleOutlineIcon />}
+            onClick={addQuestion}
+            sx={{ 
+              mt: 2, 
+              borderRadius: 1.5,
+              borderStyle: 'dashed',
+              py: 1.5,
+              px: 3,
+              fontWeight: 500,
+              color: themeColors.primary,
+              borderColor: themeColors.primary,
+              '&:hover': {
+                borderColor: themeColors.accent,
+                color: themeColors.accent
+              }
             }}
           >
-            <Typography variant="subtitle1" sx={{ mb: 2 }}>
-              Question {index + 1}
-            </Typography>
-
-            <TextField
-              label="Question"
-              value={qa.question}
-              onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
-              fullWidth
-              required
-              margin="normal"
-            />
-
-            <TextField
-              label="Answer"
-              value={qa.answer}
-              onChange={(e) => handleQuestionChange(index, 'answer', e.target.value)}
-              fullWidth
-              required
-              margin="normal"
-              multiline
-              rows={3}
-            />
-
-            <IconButton
-              color="error"
-              sx={{ position: 'absolute', top: 10, right: 10 }}
-              onClick={() => removeQuestion(index)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Box>
-        ))}
-
-        {/* Add Question Button */}
-        <Button
-          startIcon={<AddIcon />}
-          onClick={addQuestion}
-          sx={{ mt: 2 }}
-        >
-          Add Question
-        </Button>
+            Add Another Question
+          </Button>
+        </Box>
 
         {/* Submit Button */}
-        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+        <Divider sx={{ my: 4 }} />
+        
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button
             type="submit"
             variant="contained"
-            color="primary"
             disabled={submitting}
+            startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
+            size="large"
+            sx={{ 
+              bgcolor: themeColors.primary,
+              '&:hover': { bgcolor: themeColors.accent },
+              borderRadius: 1.5,
+              py: 1.5,
+              px: 4,
+              fontWeight: 600,
+              boxShadow: 4
+            }}
           >
-            {submitting ? <CircularProgress size={24} /> : "Create FAQ"}
+            {submitting ? "Creating..." : "Create FAQ"}
           </Button>
         </Box>
       </form>
