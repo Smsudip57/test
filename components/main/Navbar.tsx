@@ -48,7 +48,7 @@ const Navbar = () => {
   ];
   const slider = useRef(null);
   const [anchorE2, setAnchorE2] = React.useState(null);
-  const [anchorE3, setAnchorE3] = React.useState(null);
+  const [anchorE3, setAnchorE3] = React.useState<HTMLElement | null>(null);
   // const [isAdminPath, setIsAdminPath] = useState(false);
   const [loaded, setloaded] = useState(false);
   const [profileopen, setprofileopen] = useState(false);
