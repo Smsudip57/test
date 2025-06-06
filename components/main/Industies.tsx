@@ -3,7 +3,11 @@ import axios from "axios";
 import React,{useState, useEffect } from "react";
 
 
-const Projects = () => {
+const Projects = ({parent, child, product}:{
+  parent?: string;
+  child?: string;
+  product?: string;
+}) => {
   const [industries, setIndustries] = useState([]);
 
 
@@ -11,8 +15,17 @@ const Projects = () => {
     const fetchIndustries = async () => {
       try {
         const response = await axios.get('/api/industry/get');
-        setIndustries(response.data.industries);
-        console.log(response.data.industries);
+        //  if (parent || child || product) {
+        //           const filteredItems = response.data.industries.filter(
+        //             (item: Testimonial) =>
+        //               (parent && item.relatedService?._id === parent) ||
+        //               (child && item.relatedProduct?._id === child) ||
+        //               (product && item.relatedChild?._id === product)
+        //           );
+        //           setTestimonials(filteredItems);
+        //         } else {
+        //         }
+        setIndustries(response.data.industries);;
       } catch (error) {
         console.error('Failed to fetch industries:', error);
       }

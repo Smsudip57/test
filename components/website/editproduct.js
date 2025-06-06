@@ -49,10 +49,47 @@ export default function EditProductList() {
     Title: '',
     detail: '',
     moreDetail: '',
+    slug: '', // Adding slug field
     category: '',
     image: null,
     sections: []
   });
+
+  // Validate image dimensions (16:9 aspect ratio with 0.1% tolerance)
+  const validateImageDimensions = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const width = this.width;
+          const height = this.height;
+          const aspectRatio = width / height;
+          const targetRatio = 16 / 9;
+          const tolerance = 0.001; // 0.1% tolerance
+          
+          if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
+            resolve({ width, height, aspectRatio });
+          } else {
+            reject({ 
+              message: `Image must have a 16:9 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
+              dimensions: { width, height, aspectRatio }
+            });
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Generate slug from title
+  const generateSlug = (title) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
 
   // Fetch products and services
   const fetchProductsAndServices = async () => {
@@ -130,6 +167,7 @@ export default function EditProductList() {
       Title: product.Title,
       detail: product.detail,
       moreDetail: product.moreDetail || '',
+      slug: product.slug || generateSlug(product.Title),
       category: product.category,
       image: product.image,
       sections: product.sections || []
@@ -140,32 +178,50 @@ export default function EditProductList() {
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setProductData(prev => ({ ...prev, [name]: value }));
+    
+    // Auto-generate slug when title changes
+    if (name === 'Title') {
+      setProductData(prev => ({ ...prev, slug: generateSlug(value) }));
+    }
   }, []);
 
-  // Handle main image upload
-  const handleMainImageChange = useCallback((e) => {
+  // Handle main image upload with 16:9 validation
+  const handleMainImageChange = useCallback(async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     
-    if (!file.type.match(/image\/(jpeg|jpg|png|gif)/i)) {
+    if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
       setError('Only image files are allowed!');
+      customToast({ success: false, message: 'Only image files are allowed!' });
       return;
     }
     
-    // If there's an existing image, mark it for deletion
-    if (typeof productData.image === 'string') {
-      setImagesToDelete(prev => [...prev, productData.image]);
+    try {
+      // Validate image dimensions (16:9)
+      await validateImageDimensions(file);
+      
+      // If there's an existing image, mark it for deletion
+      if (typeof productData.image === 'string') {
+        setImagesToDelete(prev => [...prev, productData.image]);
+      }
+      
+      setProductData(prev => ({ ...prev, image: file }));
+      
+      // Create image preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMainImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      setError(err.message);
+      customToast({ 
+        success: false, 
+        message: 'Image must have a 16:9 aspect ratio' 
+      });
+      e.target.value = '';
     }
-    
-    setProductData(prev => ({ ...prev, image: file }));
-    
-    // Create image preview
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setMainImagePreview(reader.result);
-    };
-    reader.readAsDataURL(file);
-  }, [productData.image]);
+  }, [productData.image, customToast]);
 
   // Section management
   const addSection = useCallback(() => {
@@ -216,43 +272,57 @@ export default function EditProductList() {
     });
   }, []);
 
-  const handleSectionImageChange = useCallback((sectionIndex, e) => {
+  // Handle section image change with 16:9 validation
+  const handleSectionImageChange = useCallback(async (sectionIndex, e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.match(/image\/(jpeg|jpg|png|gif)/i)) {
+    if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
       setError('Only image files are allowed!');
+      customToast({ success: false, message: 'Only image files are allowed!' });
       return;
     }
 
-    setProductData(prev => {
-      const updatedSections = [...prev.sections];
-      const section = updatedSections[sectionIndex];
+    try {
+      // Validate image dimensions (16:9)
+      await validateImageDimensions(file);
       
-      // If there's an existing image URL, mark it for deletion
-      if (typeof section.image === 'string') {
-        setImagesToDelete(prev => [...prev, section.image]);
-      }
-      
-      // Create preview using FileReader
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProductData(prevData => {
-          const sections = [...prevData.sections];
-          sections[sectionIndex] = {
-            ...sections[sectionIndex],
-            image: file,
-            imagePreview: reader.result,
-            useUploadedImage: true
-          };
-          return { ...prevData, sections };
-        });
-      };
-      reader.readAsDataURL(file);
-      
-      return prev; // Return unchanged state, will be updated in reader.onloadend
-    });
-  }, []);
+      setProductData(prev => {
+        const updatedSections = [...prev.sections];
+        const section = updatedSections[sectionIndex];
+        
+        // If there's an existing image URL, mark it for deletion
+        if (typeof section.image === 'string') {
+          setImagesToDelete(prev => [...prev, section.image]);
+        }
+        
+        // Create preview using FileReader
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setProductData(prevData => {
+            const sections = [...prevData.sections];
+            sections[sectionIndex] = {
+              ...sections[sectionIndex],
+              image: file,
+              imagePreview: reader.result,
+              useUploadedImage: true
+            };
+            return { ...prevData, sections };
+          });
+        };
+        reader.readAsDataURL(file);
+        
+        return prev; // Return unchanged state, will be updated in reader.onloadend
+      });
+    } catch (err) {
+      setError(err.message);
+      customToast({ 
+        success: false, 
+        message: 'Image must have a 16:9 aspect ratio' 
+      });
+      e.target.value = '';
+    }
+  }, [customToast]);
   
   const moveSection = useCallback((fromIndex, toIndex) => {
     setProductData(prev => {
@@ -310,21 +380,32 @@ export default function EditProductList() {
     });
   }, []);
 
-  // Form validation
+  // Form validation including slug validation
   const validateForm = useCallback(() => {
     // Check main product fields
     if (!productData.Title || !productData.Title.trim()) {
-      setError('Child Service title is required');
+      setError('Product title is required');
       return false;
     }
     
     if (!productData.detail || !productData.detail.trim()) {
-      setError('Child Service detail is required');
+      setError('Product detail is required');
       return false;
     }
     
     if (!productData.moreDetail || !productData.moreDetail.trim()) {
-      setError('Child Service more detail is required');
+      setError('Product more detail is required');
+      return false;
+    }
+    
+    if (!productData.slug || !productData.slug.trim()) {
+      setError('Slug is required');
+      return false;
+    }
+    
+    // Validate slug format
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(productData.slug)) {
+      setError('Slug must be lowercase, containing only letters, numbers, and hyphens');
       return false;
     }
     
@@ -334,7 +415,7 @@ export default function EditProductList() {
     }
     
     if (!productData.category) {
-      setError('Child Service is required');
+      setError('Service is required');
       return false;
     }
     
@@ -386,6 +467,7 @@ export default function EditProductList() {
       Title: '',
       detail: '',
       moreDetail: '',
+      slug: '',
       category: '',
       image: null,
       sections: []
@@ -411,6 +493,7 @@ export default function EditProductList() {
         formData.append('Title', productData.Title);
         formData.append('detail', productData.detail);
         formData.append('moreDetail', productData.moreDetail);
+        formData.append('slug', productData.slug);
         formData.append('category', productData.category);
         
         // Add images to delete
@@ -454,7 +537,7 @@ export default function EditProductList() {
           withCredentials: true
         });
         
-        customToast({ success: true, message: 'Child Service updated successfully!' });
+        customToast({ success: true, message: 'Product updated successfully!' });
         
         // Refresh data and exit edit mode
         await fetchProductsAndServices();
@@ -481,10 +564,10 @@ export default function EditProductList() {
       {!editingProduct && (
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-xl shadow-md">
-            <h1 className="text-2xl font-bold mb-6 text-gray-800">Edit Child Service</h1>
+            <h1 className="text-2xl font-bold mb-6 text-gray-800">Edit Products</h1>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Child Service Selection */}
+              {/* Service Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Filter by Parent Service
@@ -493,12 +576,12 @@ export default function EditProductList() {
                   <select
                     value={selectedService}
                     onChange={(e) => handleServiceChange(e.target.value)}
-                    className="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white appearance-none"
+                    className="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D] bg-white appearance-none"
                   >
                     <option value="">Select a Parent Service</option>
                     {services.map((service) => (
                       <option key={service._id} value={service._id}>
-                        {service.Title} ({service.category})
+                        {service.Title}
                       </option>
                     ))}
                   </select>
@@ -513,7 +596,7 @@ export default function EditProductList() {
               {/* Search */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Search Child Service
+                  Search Products
                 </label>
                 <div className="flex">
                   <input
@@ -521,14 +604,14 @@ export default function EditProductList() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search by title or description"
-                    className="flex-1 pl-4 pr-10 py-3 rounded-l-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="flex-1 pl-4 pr-10 py-3 rounded-l-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                     disabled={!selectedService}
                   />
                   <button
                     type="button"
                     onClick={handleSearch}
                     disabled={!selectedService}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-lg transition-colors disabled:bg-blue-300"
+                    className="bg-[#446E6D] hover:bg-[#375857] text-white px-4 rounded-r-lg transition-colors disabled:bg-[#446E6D]/50"
                   >
                     <Search size={20} />
                   </button>
@@ -539,7 +622,7 @@ export default function EditProductList() {
           
           {loading ? (
             <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#446E6D]"></div>
             </div>
           ) : error ? (
             <div className="bg-red-50 border-l-4 border-red-500 p-4 my-6">
@@ -551,8 +634,8 @@ export default function EditProductList() {
           ) : filteredProducts.length > 0 ? (
             <div className="bg-white p-6 rounded-xl shadow-md">
               <h2 className="text-lg font-semibold mb-4 flex items-center">
-                <Filter size={18} className="mr-2 text-blue-600" />
-                Child Service ({filteredProducts.length})
+                <Filter size={18} className="mr-2 text-[#446E6D]" />
+                Products ({filteredProducts.length})
               </h2>
               <div className="divide-y divide-gray-200">
                 {filteredProducts.map((product) => (
@@ -580,12 +663,17 @@ export default function EditProductList() {
                       <h3 className="font-medium text-lg">{product.Title}</h3>
                       <p className="text-gray-600 text-sm line-clamp-1">{product.detail}</p>
                       <div className="flex items-center mt-1">
-                        <span className="text-xs bg-blue-100 text-blue-700 rounded-full px-2 py-0.5">
+                        <span className="text-xs bg-[#446E6D]/10 text-[#446E6D] rounded-full px-2 py-0.5">
                           {product.sections?.length || 0} sections
                         </span>
                         {services.find(s => s._id === product.category) && (
                           <span className="text-xs bg-gray-100 text-gray-700 rounded-full px-2 py-0.5 ml-2">
                             {services.find(s => s._id === product.category).Title}
+                          </span>
+                        )}
+                        {product.slug && (
+                          <span className="text-xs bg-gray-100 text-gray-700 rounded-full px-2 py-0.5 ml-2 truncate max-w-[120px]">
+                            {product.slug}
                           </span>
                         )}
                       </div>
@@ -594,7 +682,7 @@ export default function EditProductList() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleEditClick(product)}
-                      className="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors"
+                      className="ml-4 bg-[#446E6D] hover:bg-[#375857] text-white px-4 py-2 rounded-lg flex items-center transition-colors"
                     >
                       <Pencil size={16} className="mr-2" />
                       Edit
@@ -605,10 +693,10 @@ export default function EditProductList() {
             </div>
           ) : (
             selectedService && (
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+              <div className="bg-[#446E6D]/5 border-l-4 border-[#446E6D] p-4 rounded-r-lg">
                 <div className="flex items-center">
-                  <Info size={24} className="text-blue-500 mr-3" />
-                  <p className="text-blue-700">No products found for this service.</p>
+                  <Info size={24} className="text-[#446E6D] mr-3" />
+                  <p className="text-[#446E6D]">No products found for this service.</p>
                 </div>
               </div>
             )
@@ -625,13 +713,13 @@ export default function EditProductList() {
               <div className="max-w-7xl mx-auto flex items-center justify-between">
                 <button
                   onClick={cancelEdit}
-                  className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
+                  className="flex items-center text-gray-600 hover:text-[#446E6D] transition-colors"
                 >
                   <ChevronLeft size={20} className="mr-1" />
-                  <span>Back to Child Service</span>
+                  <span>Back to Products</span>
                 </button>
                 
-                <h1 className="text-2xl font-bold text-center text-gray-800">Edit Child Service</h1>
+                <h1 className="text-2xl font-bold text-center text-gray-800">Edit Product</h1>
                 
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -639,7 +727,7 @@ export default function EditProductList() {
                   onClick={handleSave}
                   disabled={saving}
                   className={`flex items-center px-4 py-2 rounded-lg ${
-                    saving ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                    saving ? 'bg-[#446E6D]/70' : 'bg-[#446E6D] hover:bg-[#375857]'
                   } text-white transition-colors`}
                 >
                   {saving ? (
@@ -676,7 +764,7 @@ export default function EditProductList() {
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="p-6 border-b border-gray-200">
                   <h2 className="text-xl font-semibold text-gray-800">
-                    Basic Child Service Information
+                    Basic Product Information
                   </h2>
                 </div>
                 
@@ -685,7 +773,7 @@ export default function EditProductList() {
                     {/* Left column - Image */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Child Service Image*
+                        Product Image* <span className="text-xs text-gray-500">(16:9 ratio required)</span>
                       </label>
                       <div className="relative">
                         <input
@@ -702,7 +790,7 @@ export default function EditProductList() {
                           <div className="relative rounded-lg overflow-hidden border border-gray-200">
                             <img 
                               src={mainImagePreview}
-                              alt="Child Service preview" 
+                              alt="Product preview" 
                               className="w-full h-64 object-cover" 
                             />
                             <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
@@ -718,30 +806,30 @@ export default function EditProductList() {
                         ) : (
                           <div 
                             onClick={() => mainImageRef.current?.click()}
-                            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 transition-colors"
+                            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-[#446E6D] transition-colors"
                           >
                             <Upload size={36} className="mx-auto text-gray-400 mb-2" />
-                            <p className="text-sm text-gray-500">Click to upload product image</p>
+                            <p className="text-sm text-gray-500">Click to upload product image (16:9)</p>
                             <p className="text-xs text-gray-400 mt-1">PNG, JPG or GIF (max 10MB)</p>
                           </div>
                         )}
                       </div>
 
-                      {/* Child Service Selection */}
+                      {/* Service Selection */}
                       <div className="mt-6">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Child Service Category*
+                          Service Category*
                         </label>
                         <select
                           name="category"
                           value={productData.category}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                         >
-                          <option value="">Select a Child Service</option>
+                          <option value="">Select a Service</option>
                           {services.map((service) => (
                             <option key={service._id} value={service._id}>
-                              {service.Title} ({service.category})
+                              {service.Title}
                             </option>
                           ))}
                         </select>
@@ -752,7 +840,7 @@ export default function EditProductList() {
                     <div className="space-y-5">
                       <div>
                         <label htmlFor="Title" className="block text-sm font-medium text-gray-700 mb-1">
-                          Child Service Title*
+                          Product Title*
                         </label>
                         <input
                           id="Title"
@@ -760,9 +848,28 @@ export default function EditProductList() {
                           type="text"
                           value={productData.Title}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                           placeholder="Enter product title"
                         />
+                      </div>
+                      
+                      {/* Slug field */}
+                      <div>
+                        <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">
+                          Slug* <span className="text-xs text-gray-500">(URL-friendly name)</span>
+                        </label>
+                        <input
+                          id="slug"
+                          name="slug"
+                          type="text"
+                          value={productData.slug}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                          placeholder="product-name-example"
+                        />
+                        <p className="mt-1 text-xs text-gray-500">
+                          Only lowercase letters, numbers, and hyphens. Used in URLs: /product/{productData.slug || 'example-slug'}
+                        </p>
                       </div>
                       
                       <div>
@@ -775,7 +882,7 @@ export default function EditProductList() {
                           value={productData.detail}
                           onChange={handleInputChange}
                           rows={2}
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                           placeholder="Brief description of the product"
                         />
                       </div>
@@ -790,7 +897,7 @@ export default function EditProductList() {
                           value={productData.moreDetail}
                           onChange={handleInputChange}
                           rows={4}
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                           placeholder="Detailed description of the product"
                         />
                       </div>
@@ -803,17 +910,17 @@ export default function EditProductList() {
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="p-6 border-b border-gray-200 flex justify-between items-center">
                   <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-                    <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">
+                    <span className="bg-[#446E6D]/10 text-[#446E6D] w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">
                       {productData.sections.length}
                     </span>
-                    Child Service Sections
+                    Product Sections
                   </h2>
                   
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={addSection}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors"
+                    className="bg-[#446E6D] hover:bg-[#375857] text-white px-4 py-2 rounded-lg flex items-center transition-colors"
                   >
                     <Plus size={18} className="mr-2" />
                     Add Section
@@ -891,7 +998,7 @@ const SectionItem = React.memo(({
       exit={{ opacity: 0, y: -20 }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
       className={`relative rounded-xl ${
-        isDragging ? 'border-2 border-blue-500 shadow-lg' : 'border border-gray-200'
+        isDragging ? 'border-2 border-[#446E6D] shadow-lg' : 'border border-gray-200'
       } bg-white shadow-sm overflow-hidden`}
       style={{ 
         opacity: isDragging ? 0.7 : 1,
@@ -900,7 +1007,7 @@ const SectionItem = React.memo(({
     >
       {/* Section Header */}
       <div className="flex items-center bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
-        <div className="cursor-move mr-3 text-blue-600 hover:text-blue-800 transition-colors">
+        <div className="cursor-move mr-3 text-[#446E6D] hover:text-[#375857] transition-colors">
           <GripVertical size={20} />
         </div>
         <h3 className="text-lg font-semibold text-gray-800">
@@ -934,7 +1041,7 @@ const SectionItem = React.memo(({
               type="text"
               value={section.title}
               onChange={(e) => handleSectionChange(index, 'title', e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D] shadow-sm"
               placeholder="Enter section title"
             />
           </div>
@@ -942,7 +1049,7 @@ const SectionItem = React.memo(({
           {/* Right Column - Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Section Image*
+              Section Image* <span className="text-xs text-gray-500">(16:9 ratio required)</span>
             </label>
             <div className="relative">
               <input
@@ -957,11 +1064,11 @@ const SectionItem = React.memo(({
               {!section.imagePreview && !section.image ? (
                 <div 
                   onClick={() => sectionImageRef.current?.click()}
-                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition-colors"
+                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#446E6D] transition-colors"
                 >
                   <div className="flex flex-col items-center justify-center py-4">
                     <ImageIcon className="text-gray-400 mb-2" size={32} />
-                    <p className="text-sm font-medium text-gray-600">Click to upload section image</p>
+                    <p className="text-sm font-medium text-gray-600">Click to upload section image (16:9)</p>
                   </div>
                 </div>
               ) : (
@@ -1001,7 +1108,7 @@ const SectionItem = React.memo(({
         <div className="mt-8 border-t border-gray-100 pt-5">
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-base font-medium text-gray-700 flex items-center">
-              <span className="bg-blue-50 text-blue-600 w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">
+              <span className="bg-[#446E6D]/10 text-[#446E6D] w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">
                 {section.points?.length || 0}
               </span>
               Key Points
@@ -1010,7 +1117,7 @@ const SectionItem = React.memo(({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => addPoint(index)}
-              className="inline-flex items-center px-3 py-1.5 rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all duration-200"
+              className="inline-flex items-center px-3 py-1.5 rounded-md bg-[#446E6D]/10 text-[#446E6D] hover:bg-[#446E6D]/20 transition-all duration-200"
             >
               <Plus size={16} className="mr-1" />
               Add Point
@@ -1026,7 +1133,7 @@ const SectionItem = React.memo(({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg bg-gray-50 border border-gray-100 hover:border-blue-100 transition-colors"
+                  className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg bg-gray-50 border border-gray-100 hover:border-[#446E6D]/30 transition-colors"
                 >
                   <div>
                     <label htmlFor={`point-title-${index}-${pointIndex}`} className="block text-xs font-medium text-gray-700 mb-1">
@@ -1037,7 +1144,7 @@ const SectionItem = React.memo(({
                       type="text"
                       value={point.title}
                       onChange={(e) => handlePointChange(index, pointIndex, 'title', e.target.value)}
-                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                       placeholder="Enter point title"
                     />
                   </div>
@@ -1062,7 +1169,7 @@ const SectionItem = React.memo(({
                       id={`point-detail-${index}-${pointIndex}`}
                       value={point.detail}
                       onChange={(e) => handlePointChange(index, pointIndex, 'detail', e.target.value)}
-                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                       rows={2}
                       placeholder="Enter point detail"
                     />
@@ -1075,9 +1182,9 @@ const SectionItem = React.memo(({
       </div>
       
       {/* Section Footer */}
-      <div className="bg-blue-50 p-3 text-xs text-blue-600 flex items-start">
+      <div className="bg-[#446E6D]/5 p-3 text-xs text-[#446E6D] flex items-start">
         <Info size={14} className="mr-1.5 flex-shrink-0 mt-0.5" />
-        <span>Drag to reorder. Each section requires a title, image and at least one point.</span>
+        <span>Drag to reorder. Each section requires a title, image (16:9 ratio) and at least one point.</span>
       </div>
     </motion.div>
   );

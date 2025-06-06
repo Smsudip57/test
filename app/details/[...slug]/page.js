@@ -46,7 +46,7 @@ export default async function AdminPage({params}) {
   const checkService = (name) => {
     const Name = decodeURIComponent(name);
     if (products && products.length > 0 && Name) {
-      const Product = products.find((product) => product?.Title === Name);
+      const Product = products.find((product) => product?.slug === Name || product?.Title === Name);
       return Product
     }else{
       return false;
@@ -55,7 +55,7 @@ export default async function AdminPage({params}) {
   const checkChild = (name) => {
     const Name = decodeURIComponent(name);
     if (childs && childs.length > 0 && Name) {
-      const Product = childs.find((product) => product?.Title === Name);
+      const Product = childs.find((product) => product?.slug === Name || product?.Title === Name);
       return Product
     }else{
       return false;

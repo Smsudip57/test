@@ -26,16 +26,16 @@ import {
   Filter
 } from 'lucide-react';
 
-export default function EditProductList() {
+export default function EditChildServiceList() {
   const router = useRouter();
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [childServices, setChildServices] = useState([]);
+  const [filteredChildServices, setFilteredChildServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [editingProduct, setEditingProduct] = useState(null);
+  const [editingChildService, setEditingChildService] = useState(null);
   const [mainImagePreview, setMainImagePreview] = useState(null);
-  const [services, setServices] = useState([]);
-  const [selectedService, setSelectedService] = useState('');
+  const [parentServices, setParentServices] = useState([]);
+  const [selectedParentService, setSelectedParentService] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const { setShowConfirm, setConfirmFunction, customToast } = useContext(MyContext);
   const [saving, setSaving] = useState(false);
@@ -45,31 +45,68 @@ export default function EditProductList() {
   const [imagesToDelete, setImagesToDelete] = useState([]);
   
   // Form state for editing
-  const [productData, setProductData] = useState({
+  const [childServiceData, setChildServiceData] = useState({
     Title: '',
     detail: '',
     moreDetail: '',
+    slug: '',
     category: '',
     image: null,
     sections: []
   });
 
-  // Fetch products and services
-  const fetchProductsAndServices = async () => {
+  // Validate image dimensions (16:9 aspect ratio with 0.1% tolerance)
+  const validateImageDimensions = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const width = this.width;
+          const height = this.height;
+          const aspectRatio = width / height;
+          const targetRatio = 16 / 9;
+          const tolerance = 0.001; // 0.1% tolerance
+          
+          if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
+            resolve({ width, height, aspectRatio });
+          } else {
+            reject({ 
+              message: `Image must have a 16:9 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
+              dimensions: { width, height, aspectRatio }
+            });
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Generate slug from title
+  const generateSlug = (title) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
+
+  // Fetch child services and parent services
+  const fetchServicesData = async () => {
     try {
       setLoading(true);
-      const productsResponse = await axios.get('/api/child/get', { withCredentials: true });
-      const servicesResponse = await axios.get('/api/product/get', { withCredentials: true });
+      const childResponse = await axios.get('/api/child/get', { withCredentials: true });
+      const parentResponse = await axios.get('/api/product/get', { withCredentials: true });
 
-      setProducts(productsResponse.data.products || []);
-      setServices(servicesResponse.data.products || []);
+      setChildServices(childResponse.data.products || []);
+      setParentServices(parentResponse.data.products || []);
       
-      // If there's already a selected service, update the filtered products
-      if (selectedService) {
-        const filtered = productsResponse.data.products?.filter(product => 
-          product.category === selectedService
+      // If there's already a selected parent service, update the filtered child services
+      if (selectedParentService) {
+        const filtered = childResponse.data.products?.filter(child => 
+          child.category === selectedParentService
         ) || [];
-        setFilteredProducts(filtered);
+        setFilteredChildServices(filtered);
       }
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -80,96 +117,115 @@ export default function EditProductList() {
   };
 
   useEffect(() => {
-    fetchProductsAndServices();
+    fetchServicesData();
   }, []);
 
-  // Handle service selection change
-  const handleServiceChange = useCallback((serviceId) => {
-    setSelectedService(serviceId);
+  // Handle parent service selection change
+  const handleParentServiceChange = useCallback((serviceId) => {
+    setSelectedParentService(serviceId);
     
-    // Filter products based on the selected service's _id
-    const filtered = products.filter(product => product.category === serviceId);
-    setFilteredProducts(filtered);
-  }, [products]);
+    // Filter child services based on the selected parent service's _id
+    const filtered = childServices.filter(child => child.category === serviceId);
+    setFilteredChildServices(filtered);
+  }, [childServices]);
 
   // Search functionality
   const handleSearch = useCallback(() => {
-    if (!selectedService) {
+    if (!selectedParentService) {
       customToast({ 
         success: false, 
-        message: 'Please select a service first' 
+        message: 'Please select a parent service first' 
       });
       return;
     }
 
     const term = searchTerm.toLowerCase().trim();
     if (!term) {
-      // If search term is empty, show all products for the selected service
-      const filtered = products.filter(product => product.category === selectedService);
-      setFilteredProducts(filtered);
+      // If search term is empty, show all child services for the selected parent service
+      const filtered = childServices.filter(child => child.category === selectedParentService);
+      setFilteredChildServices(filtered);
       return;
     }
 
-    // Filter by search term within the selected service
-    const filtered = products.filter(product => 
-      product.category === selectedService && 
-      (product.Title.toLowerCase().includes(term) || 
-       product.detail.toLowerCase().includes(term))
+    // Filter by search term within the selected parent service
+    const filtered = childServices.filter(child => 
+      child.category === selectedParentService && 
+      (child.Title.toLowerCase().includes(term) || 
+       child.detail.toLowerCase().includes(term))
     );
-    setFilteredProducts(filtered);
-  }, [products, selectedService, searchTerm, customToast]);
+    setFilteredChildServices(filtered);
+  }, [childServices, selectedParentService, searchTerm, customToast]);
 
   // Open edit mode with pre-filled values
-  const handleEditClick = useCallback((product) => {
-    setEditingProduct(product._id);
-    setMainImagePreview(product.image);
+  const handleEditClick = useCallback((childService) => {
+    setEditingChildService(childService._id);
+    setMainImagePreview(childService.image);
     setImagesToDelete([]);
     
-    // Transform the product data to match our form structure
-    setProductData({
-      Title: product.Title,
-      detail: product.detail,
-      moreDetail: product.moreDetail || '',
-      category: product.category,
-      image: product.image,
-      sections: product.sections || []
+    // Transform the child service data to match our form structure
+    setChildServiceData({
+      Title: childService.Title,
+      detail: childService.detail,
+      moreDetail: childService.moreDetail || '',
+      slug: childService.slug || generateSlug(childService.Title),
+      category: childService.category,
+      image: childService.image,
+      sections: childService.sections || []
     });
   }, []);
 
-  // Handle input changes for main product fields
+  // Handle input changes for main child service fields
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
-    setProductData(prev => ({ ...prev, [name]: value }));
+    setChildServiceData(prev => ({ ...prev, [name]: value }));
+    
+    // Auto-generate slug when title changes
+    if (name === 'Title') {
+      setChildServiceData(prev => ({ ...prev, slug: generateSlug(value) }));
+    }
   }, []);
 
-  // Handle main image upload
-  const handleMainImageChange = useCallback((e) => {
+  // Handle main image upload with dimension validation
+  const handleMainImageChange = useCallback(async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     
-    if (!file.type.match(/image\/(jpeg|jpg|png|gif)/i)) {
+    if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
       setError('Only image files are allowed!');
+      customToast({ success: false, message: 'Only image files are allowed!' });
       return;
     }
     
-    // If there's an existing image, mark it for deletion
-    if (typeof productData.image === 'string') {
-      setImagesToDelete(prev => [...prev, productData.image]);
+    try {
+      // Validate image dimensions (16:9)
+      await validateImageDimensions(file);
+      
+      // If there's an existing image, mark it for deletion
+      if (typeof childServiceData.image === 'string') {
+        setImagesToDelete(prev => [...prev, childServiceData.image]);
+      }
+      
+      setChildServiceData(prev => ({ ...prev, image: file }));
+      
+      // Create image preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMainImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      setError(err.message);
+      customToast({ 
+        success: false, 
+        message: 'Image must have a 16:9 aspect ratio' 
+      });
+      e.target.value = '';
     }
-    
-    setProductData(prev => ({ ...prev, image: file }));
-    
-    // Create image preview
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setMainImagePreview(reader.result);
-    };
-    reader.readAsDataURL(file);
-  }, [productData.image]);
+  }, [childServiceData.image, customToast]);
 
   // Section management
   const addSection = useCallback(() => {
-    setProductData(prev => ({
+    setChildServiceData(prev => ({
       ...prev,
       sections: [
         ...prev.sections,
@@ -184,7 +240,7 @@ export default function EditProductList() {
   }, []);
 
   const removeSection = useCallback((index) => {
-    setProductData(prev => {
+    setChildServiceData(prev => {
       if (prev.sections.length <= 1) {
         setError('At least one section is required');
         return prev;
@@ -206,7 +262,7 @@ export default function EditProductList() {
   }, []);
 
   const handleSectionChange = useCallback((sectionIndex, field, value) => {
-    setProductData(prev => {
+    setChildServiceData(prev => {
       const updatedSections = [...prev.sections];
       updatedSections[sectionIndex] = {
         ...updatedSections[sectionIndex],
@@ -216,46 +272,59 @@ export default function EditProductList() {
     });
   }, []);
 
-  const handleSectionImageChange = useCallback((sectionIndex, e) => {
+  const handleSectionImageChange = useCallback(async (sectionIndex, e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.match(/image\/(jpeg|jpg|png|gif)/i)) {
+    if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
       setError('Only image files are allowed!');
+      customToast({ success: false, message: 'Only image files are allowed!' });
       return;
     }
 
-    setProductData(prev => {
-      const updatedSections = [...prev.sections];
-      const section = updatedSections[sectionIndex];
+    try {
+      // Validate image dimensions (16:9)
+      await validateImageDimensions(file);
       
-      // If there's an existing image URL, mark it for deletion
-      if (typeof section.image === 'string') {
-        setImagesToDelete(prev => [...prev, section.image]);
-      }
-      
-      // Create preview using FileReader
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProductData(prevData => {
-          const sections = [...prevData.sections];
-          sections[sectionIndex] = {
-            ...sections[sectionIndex],
-            image: file,
-            imagePreview: reader.result,
-            useUploadedImage: true
-          };
-          return { ...prevData, sections };
-        });
-      };
-      reader.readAsDataURL(file);
-      
-      return prev; // Return unchanged state, will be updated in reader.onloadend
-    });
-  }, []);
+      setChildServiceData(prev => {
+        const updatedSections = [...prev.sections];
+        const section = updatedSections[sectionIndex];
+        
+        // If there's an existing image URL, mark it for deletion
+        if (typeof section.image === 'string') {
+          setImagesToDelete(prev => [...prev, section.image]);
+        }
+        
+        // Create preview using FileReader
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setChildServiceData(prevData => {
+            const sections = [...prevData.sections];
+            sections[sectionIndex] = {
+              ...sections[sectionIndex],
+              image: file,
+              imagePreview: reader.result,
+              useUploadedImage: true
+            };
+            return { ...prevData, sections };
+          });
+        };
+        reader.readAsDataURL(file);
+        
+        return prev; // Return unchanged state, will be updated in reader.onloadend
+      });
+    } catch (err) {
+      setError(err.message);
+      customToast({ 
+        success: false, 
+        message: 'Image must have a 16:9 aspect ratio' 
+      });
+      e.target.value = '';
+    }
+  }, [customToast]);
   
   const moveSection = useCallback((fromIndex, toIndex) => {
-    setProductData(prev => {
+    setChildServiceData(prev => {
       const updatedSections = [...prev.sections];
       const [movedItem] = updatedSections.splice(fromIndex, 1);
       updatedSections.splice(toIndex, 0, movedItem);
@@ -265,7 +334,7 @@ export default function EditProductList() {
 
   // Point management
   const addPoint = useCallback((sectionIndex) => {
-    setProductData(prev => {
+    setChildServiceData(prev => {
       const updatedSections = [...prev.sections];
       updatedSections[sectionIndex] = {
         ...updatedSections[sectionIndex],
@@ -279,7 +348,7 @@ export default function EditProductList() {
   }, []);
 
   const removePoint = useCallback((sectionIndex, pointIndex) => {
-    setProductData(prev => {
+    setChildServiceData(prev => {
       const section = prev.sections[sectionIndex];
       
       if (section.points.length <= 1) {
@@ -298,7 +367,7 @@ export default function EditProductList() {
   }, []);
 
   const handlePointChange = useCallback((sectionIndex, pointIndex, field, value) => {
-    setProductData(prev => {
+    setChildServiceData(prev => {
       const updatedSections = [...prev.sections];
       updatedSections[sectionIndex] = {
         ...updatedSections[sectionIndex],
@@ -312,39 +381,50 @@ export default function EditProductList() {
 
   // Form validation
   const validateForm = useCallback(() => {
-    // Check main product fields
-    if (!productData.Title || !productData.Title.trim()) {
-      setError('Service title is required');
+    // Check main child service fields
+    if (!childServiceData.Title || !childServiceData.Title.trim()) {
+      setError('Child service title is required');
       return false;
     }
     
-    if (!productData.detail || !productData.detail.trim()) {
-      setError('Service detail is required');
+    if (!childServiceData.detail || !childServiceData.detail.trim()) {
+      setError('Child service detail is required');
       return false;
     }
     
-    if (!productData.moreDetail || !productData.moreDetail.trim()) {
-      setError('Service more detail is required');
+    if (!childServiceData.moreDetail || !childServiceData.moreDetail.trim()) {
+      setError('Child service more detail is required');
       return false;
     }
     
-    if (!productData.image) {
-      setError('Main product image is required');
+    if (!childServiceData.slug || !childServiceData.slug.trim()) {
+      setError('Slug is required');
       return false;
     }
     
-    if (!productData.category) {
-      setError('Service is required');
+    // Validate slug format
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(childServiceData.slug)) {
+      setError('Slug must be lowercase, containing only letters, numbers, and hyphens');
+      return false;
+    }
+    
+    if (!childServiceData.image) {
+      setError('Main image is required');
+      return false;
+    }
+    
+    if (!childServiceData.category) {
+      setError('Parent service is required');
       return false;
     }
     
     // Validate sections
-    if (productData.sections.length === 0) {
+    if (childServiceData.sections.length === 0) {
       setError('At least one section is required');
       return false;
     }
     
-    for (const [i, section] of productData.sections.entries()) {
+    for (const [i, section] of childServiceData.sections.entries()) {
       if (!section.title || !section.title.trim()) {
         setError(`Section ${i + 1} title is required`);
         return false;
@@ -376,16 +456,17 @@ export default function EditProductList() {
     
     setError('');
     return true;
-  }, [productData]);
+  }, [childServiceData]);
 
   // Cancel edit mode
   const cancelEdit = useCallback(() => {
-    setEditingProduct(null);
+    setEditingChildService(null);
     setMainImagePreview(null);
-    setProductData({
+    setChildServiceData({
       Title: '',
       detail: '',
       moreDetail: '',
+      slug: '',
       category: '',
       image: null,
       sections: []
@@ -394,9 +475,9 @@ export default function EditProductList() {
     setError('');
   }, []);
 
-  // Save edited product
+  // Save edited child service
   const handleSave = useCallback(() => {
-    const saveProduct = async () => {
+    const saveChildService = async () => {
       if (!validateForm()) {
         return;
       }
@@ -405,13 +486,14 @@ export default function EditProductList() {
       
       try {
         const formData = new FormData();
-        formData.append('productId', editingProduct);
+        formData.append('productId', editingChildService);
         
-        // Add basic product fields
-        formData.append('Title', productData.Title);
-        formData.append('detail', productData.detail);
-        formData.append('moreDetail', productData.moreDetail);
-        formData.append('category', productData.category);
+        // Add basic child service fields
+        formData.append('Title', childServiceData.Title);
+        formData.append('detail', childServiceData.detail);
+        formData.append('moreDetail', childServiceData.moreDetail);
+        formData.append('slug', childServiceData.slug);
+        formData.append('category', childServiceData.category);
         
         // Add images to delete
         if (imagesToDelete.length > 0) {
@@ -419,12 +501,12 @@ export default function EditProductList() {
         }
         
         // Add main image if it's a File object
-        if (productData.image instanceof File) {
-          formData.append('mainImage', productData.image);
+        if (childServiceData.image instanceof File) {
+          formData.append('mainImage', childServiceData.image);
         }
         
         // Prepare sections data
-        const sectionsData = productData.sections.map(section => {
+        const sectionsData = childServiceData.sections.map(section => {
           // Determine image handling
           let sectionImage = section.image;
           const useUploadedImage = section.image instanceof File;
@@ -440,7 +522,7 @@ export default function EditProductList() {
         formData.append('sections', JSON.stringify(sectionsData));
         
         // Append all section images that are Files
-        productData.sections.forEach((section, index) => {
+        childServiceData.sections.forEach((section, index) => {
           if (section.image instanceof File) {
             formData.append('sectionImages', section.image);
           }
@@ -454,49 +536,49 @@ export default function EditProductList() {
           withCredentials: true
         });
         
-        customToast({ success: true, message: 'Service updated successfully!' });
+        customToast({ success: true, message: 'Child service updated successfully!' });
         
         // Refresh data and exit edit mode
-        await fetchProductsAndServices();
+        await fetchServicesData();
         cancelEdit();
         
       } catch (error) {
-        console.error('Error updating product:', error);
+        console.error('Error updating child service:', error);
         customToast({ 
           success: false, 
-          message: error.response?.data?.message || 'Failed to update product' 
+          message: error.response?.data?.message || 'Failed to update child service' 
         });
       } finally {
         setSaving(false);
       }
     };
     
-    setShowConfirm('Are you sure you want to update this product?');
-    setConfirmFunction(() => saveProduct);
-  }, [editingProduct, productData, imagesToDelete, validateForm, cancelEdit, customToast, setShowConfirm, setConfirmFunction, fetchProductsAndServices]);
+    setShowConfirm('Are you sure you want to update this child service?');
+    setConfirmFunction(() => saveChildService);
+  }, [editingChildService, childServiceData, imagesToDelete, validateForm, cancelEdit, customToast, setShowConfirm, setConfirmFunction, fetchServicesData]);
 
   return (
     <div className="w-full mx-auto">
       {/* List view */}
-      {!editingProduct && (
+      {!editingChildService && (
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-xl shadow-md">
-            <h1 className="text-2xl font-bold mb-6 text-gray-800">Edit Products</h1>
+            <h1 className="text-2xl font-bold mb-6 text-gray-800">Edit Child Services</h1>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Service Selection */}
+              {/* Parent Service Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Filter by Child Service
                 </label>
                 <div className="relative">
                   <select
-                    value={selectedService}
-                    onChange={(e) => handleServiceChange(e.target.value)}
-                    className="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white appearance-none"
+                    value={selectedParentService}
+                    onChange={(e) => handleParentServiceChange(e.target.value)}
+                    className="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D] bg-white appearance-none"
                   >
-                    <option value="">Select a Service</option>
-                    {services.map((service) => (
+                    <option value="">Select a Child Service</option>
+                    {parentServices.map((service) => (
                       <option key={service._id} value={service._id}>
                         {service.Title}
                       </option>
@@ -513,7 +595,7 @@ export default function EditProductList() {
               {/* Search */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Search Products
+                  Search Child Services
                 </label>
                 <div className="flex">
                   <input
@@ -521,14 +603,14 @@ export default function EditProductList() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search by title or description"
-                    className="flex-1 pl-4 pr-10 py-3 rounded-l-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    disabled={!selectedService}
+                    className="flex-1 pl-4 pr-10 py-3 rounded-l-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                    disabled={!selectedParentService}
                   />
                   <button
                     type="button"
                     onClick={handleSearch}
-                    disabled={!selectedService}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-lg transition-colors disabled:bg-blue-300"
+                    disabled={!selectedParentService}
+                    className="bg-[#446E6D] hover:bg-[#375857] text-white px-4 rounded-r-lg transition-colors disabled:bg-[#446E6D]/50"
                   >
                     <Search size={20} />
                   </button>
@@ -539,7 +621,7 @@ export default function EditProductList() {
           
           {loading ? (
             <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#446E6D]"></div>
             </div>
           ) : error ? (
             <div className="bg-red-50 border-l-4 border-red-500 p-4 my-6">
@@ -548,26 +630,26 @@ export default function EditProductList() {
                 <p className="text-red-700">{error}</p>
               </div>
             </div>
-          ) : filteredProducts.length > 0 ? (
+          ) : filteredChildServices.length > 0 ? (
             <div className="bg-white p-6 rounded-xl shadow-md">
               <h2 className="text-lg font-semibold mb-4 flex items-center">
-                <Filter size={18} className="mr-2 text-blue-600" />
-                Products ({filteredProducts.length})
+                <Filter size={18} className="mr-2 text-[#446E6D]" />
+                Child Services ({filteredChildServices.length})
               </h2>
               <div className="divide-y divide-gray-200">
-                {filteredProducts.map((product) => (
+                {filteredChildServices.map((childService) => (
                   <motion.div
-                    key={product._id}
+                    key={childService._id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
                     className="flex items-center py-4 px-2 hover:bg-gray-50 rounded-lg"
                   >
                     <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0 border border-gray-200">
-                      {product.image ? (
+                      {childService.image ? (
                         <img 
-                          src={product.image} 
-                          alt={product.Title} 
+                          src={childService.image} 
+                          alt={childService.Title} 
                           className="w-full h-full object-cover" 
                         />
                       ) : (
@@ -577,15 +659,20 @@ export default function EditProductList() {
                       )}
                     </div>
                     <div className="ml-4 flex-1">
-                      <h3 className="font-medium text-lg">{product.Title}</h3>
-                      <p className="text-gray-600 text-sm line-clamp-1">{product.detail}</p>
+                      <h3 className="font-medium text-lg">{childService.Title}</h3>
+                      <p className="text-gray-600 text-sm line-clamp-1">{childService.detail}</p>
                       <div className="flex items-center mt-1">
-                        <span className="text-xs bg-blue-100 text-blue-700 rounded-full px-2 py-0.5">
-                          {product.sections?.length || 0} sections
+                        <span className="text-xs bg-[#446E6D]/10 text-[#446E6D] rounded-full px-2 py-0.5">
+                          {childService.sections?.length || 0} sections
                         </span>
-                        {services.find(s => s._id === product.category) && (
+                        {parentServices.find(s => s._id === childService.category) && (
                           <span className="text-xs bg-gray-100 text-gray-700 rounded-full px-2 py-0.5 ml-2">
-                            {services.find(s => s._id === product.category).Title}
+                            {parentServices.find(s => s._id === childService.category).Title}
+                          </span>
+                        )}
+                        {childService.slug && (
+                          <span className="text-xs bg-gray-100 text-gray-700 rounded-full px-2 py-0.5 ml-2 truncate max-w-[120px]">
+                            {childService.slug}
                           </span>
                         )}
                       </div>
@@ -593,8 +680,8 @@ export default function EditProductList() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => handleEditClick(product)}
-                      className="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors"
+                      onClick={() => handleEditClick(childService)}
+                      className="ml-4 bg-[#446E6D] hover:bg-[#375857] text-white px-4 py-2 rounded-lg flex items-center transition-colors"
                     >
                       <Pencil size={16} className="mr-2" />
                       Edit
@@ -604,11 +691,11 @@ export default function EditProductList() {
               </div>
             </div>
           ) : (
-            selectedService && (
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+            selectedParentService && (
+              <div className="bg-[#446E6D]/5 border-l-4 border-[#446E6D] p-4 rounded-r-lg">
                 <div className="flex items-center">
-                  <Info size={24} className="text-blue-500 mr-3" />
-                  <p className="text-blue-700">No products found for this service.</p>
+                  <Info size={24} className="text-[#446E6D] mr-3" />
+                  <p className="text-[#446E6D]">No child services found for this parent service.</p>
                 </div>
               </div>
             )
@@ -617,7 +704,7 @@ export default function EditProductList() {
       )}
       
       {/* Edit view */}
-      {editingProduct && (
+      {editingChildService && (
         <DndProvider backend={HTML5Backend}>
           <div className="bg-gray-50 min-h-screen pb-12">
             {/* Header */}
@@ -625,13 +712,13 @@ export default function EditProductList() {
               <div className="max-w-7xl mx-auto flex items-center justify-between">
                 <button
                   onClick={cancelEdit}
-                  className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
+                  className="flex items-center text-gray-600 hover:text-[#446E6D] transition-colors"
                 >
                   <ChevronLeft size={20} className="mr-1" />
-                  <span>Back to Products</span>
+                  <span>Back to Child Services</span>
                 </button>
                 
-                <h1 className="text-2xl font-bold text-center text-gray-800">Edit Service</h1>
+                <h1 className="text-2xl font-bold text-center text-gray-800">Edit Child Service</h1>
                 
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -639,7 +726,7 @@ export default function EditProductList() {
                   onClick={handleSave}
                   disabled={saving}
                   className={`flex items-center px-4 py-2 rounded-lg ${
-                    saving ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                    saving ? 'bg-[#446E6D]/70' : 'bg-[#446E6D] hover:bg-[#375857]'
                   } text-white transition-colors`}
                 >
                   {saving ? (
@@ -672,11 +759,11 @@ export default function EditProductList() {
                 </div>
               )}
               
-              {/* Main product info */}
+              {/* Main child service info */}
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="p-6 border-b border-gray-200">
                   <h2 className="text-xl font-semibold text-gray-800">
-                    Basic Service Information
+                    Basic Child Service Information
                   </h2>
                 </div>
                 
@@ -685,7 +772,7 @@ export default function EditProductList() {
                     {/* Left column - Image */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Service Image*
+                        Child Service Image* <span className="text-xs text-gray-500">(16:9 ratio required)</span>
                       </label>
                       <div className="relative">
                         <input
@@ -702,7 +789,7 @@ export default function EditProductList() {
                           <div className="relative rounded-lg overflow-hidden border border-gray-200">
                             <img 
                               src={mainImagePreview}
-                              alt="Service preview" 
+                              alt="Child service preview" 
                               className="w-full h-64 object-cover" 
                             />
                             <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
@@ -718,30 +805,30 @@ export default function EditProductList() {
                         ) : (
                           <div 
                             onClick={() => mainImageRef.current?.click()}
-                            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 transition-colors"
+                            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-[#446E6D] transition-colors"
                           >
                             <Upload size={36} className="mx-auto text-gray-400 mb-2" />
-                            <p className="text-sm text-gray-500">Click to upload product image</p>
-                            <p className="text-xs text-gray-400 mt-1">PNG, JPG or GIF (max 10MB)</p>
+                            <p className="text-sm text-gray-500">Click to upload image (16:9 ratio)</p>
+                            <p className="text-xs text-gray-400 mt-1">PNG, JPG, GIF or WEBP (max 10MB)</p>
                           </div>
                         )}
                       </div>
 
-                      {/* Service Selection */}
+                      {/* Parent Service Selection */}
                       <div className="mt-6">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Service Category*
+                          Parent Service*
                         </label>
                         <select
                           name="category"
-                          value={productData.category}
+                          value={childServiceData.category}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                         >
-                          <option value="">Select a Service</option>
-                          {services?.map((category) => (
-                          <option key={category?._id} value={category?._id}>
-                            {category?.Title}
+                          <option value="">Select a Parent Service</option>
+                          {parentServices?.map((service) => (
+                          <option key={service?._id} value={service?._id}>
+                            {service?.Title}
                           </option>
                         ))}
                         </select>
@@ -752,17 +839,36 @@ export default function EditProductList() {
                     <div className="space-y-5">
                       <div>
                         <label htmlFor="Title" className="block text-sm font-medium text-gray-700 mb-1">
-                          Service Title*
+                          Child Service Title*
                         </label>
                         <input
                           id="Title"
                           name="Title"
                           type="text"
-                          value={productData.Title}
+                          value={childServiceData.Title}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="Enter product title"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                          placeholder="Enter child service title"
                         />
+                      </div>
+                      
+                      {/* Slug field */}
+                      <div>
+                        <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">
+                          Slug* <span className="text-xs text-gray-500">(URL-friendly name)</span>
+                        </label>
+                        <input
+                          id="slug"
+                          name="slug"
+                          type="text"
+                          value={childServiceData.slug}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                          placeholder="child-service-name-example"
+                        />
+                        <p className="mt-1 text-xs text-gray-500">
+                          Only lowercase letters, numbers, and hyphens. Used in URLs: /child-service/{childServiceData.slug || 'example-slug'}
+                        </p>
                       </div>
                       
                       <div>
@@ -772,11 +878,11 @@ export default function EditProductList() {
                         <textarea
                           id="detail"
                           name="detail"
-                          value={productData.detail}
+                          value={childServiceData.detail}
                           onChange={handleInputChange}
                           rows={2}
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="Brief description of the product"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                          placeholder="Brief description of the child service"
                         />
                       </div>
                       
@@ -787,11 +893,11 @@ export default function EditProductList() {
                         <textarea
                           id="moreDetail"
                           name="moreDetail"
-                          value={productData.moreDetail}
+                          value={childServiceData.moreDetail}
                           onChange={handleInputChange}
                           rows={4}
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="Detailed description of the product"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                          placeholder="Detailed description of the child service"
                         />
                       </div>
                     </div>
@@ -803,17 +909,17 @@ export default function EditProductList() {
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="p-6 border-b border-gray-200 flex justify-between items-center">
                   <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-                    <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">
-                      {productData.sections.length}
+                    <span className="bg-[#446E6D]/10 text-[#446E6D] w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">
+                      {childServiceData.sections.length}
                     </span>
-                    Service Sections
+                    Child Service Sections
                   </h2>
                   
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={addSection}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors"
+                    className="bg-[#446E6D] hover:bg-[#375857] text-white px-4 py-2 rounded-lg flex items-center transition-colors"
                   >
                     <Plus size={18} className="mr-2" />
                     Add Section
@@ -823,7 +929,7 @@ export default function EditProductList() {
                 <div className="p-6">
                   <div className="space-y-6">
                     <AnimatePresence>
-                      {productData.sections.map((section, sectionIndex) => (
+                      {childServiceData.sections.map((section, sectionIndex) => (
                         <SectionItem
                           key={sectionIndex}
                           section={section}
@@ -835,7 +941,7 @@ export default function EditProductList() {
                           removePoint={removePoint}
                           removeSection={removeSection}
                           moveSection={moveSection}
-                          totalSections={productData.sections.length}
+                          totalSections={childServiceData.sections.length}
                         />
                       ))}
                     </AnimatePresence>
@@ -891,7 +997,7 @@ const SectionItem = React.memo(({
       exit={{ opacity: 0, y: -20 }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
       className={`relative rounded-xl ${
-        isDragging ? 'border-2 border-blue-500 shadow-lg' : 'border border-gray-200'
+        isDragging ? 'border-2 border-[#446E6D] shadow-lg' : 'border border-gray-200'
       } bg-white shadow-sm overflow-hidden`}
       style={{ 
         opacity: isDragging ? 0.7 : 1,
@@ -900,7 +1006,7 @@ const SectionItem = React.memo(({
     >
       {/* Section Header */}
       <div className="flex items-center bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
-        <div className="cursor-move mr-3 text-blue-600 hover:text-blue-800 transition-colors">
+        <div className="cursor-move mr-3 text-[#446E6D] hover:text-[#375857] transition-colors">
           <GripVertical size={20} />
         </div>
         <h3 className="text-lg font-semibold text-gray-800">
@@ -934,7 +1040,7 @@ const SectionItem = React.memo(({
               type="text"
               value={section.title}
               onChange={(e) => handleSectionChange(index, 'title', e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D] shadow-sm"
               placeholder="Enter section title"
             />
           </div>
@@ -942,7 +1048,7 @@ const SectionItem = React.memo(({
           {/* Right Column - Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Section Image*
+              Section Image* <span className="text-xs text-gray-500">(16:9 ratio required)</span>
             </label>
             <div className="relative">
               <input
@@ -957,11 +1063,11 @@ const SectionItem = React.memo(({
               {!section.imagePreview && !section.image ? (
                 <div 
                   onClick={() => sectionImageRef.current?.click()}
-                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition-colors"
+                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#446E6D] transition-colors"
                 >
                   <div className="flex flex-col items-center justify-center py-4">
                     <ImageIcon className="text-gray-400 mb-2" size={32} />
-                    <p className="text-sm font-medium text-gray-600">Click to upload section image</p>
+                    <p className="text-sm font-medium text-gray-600">Click to upload section image (16:9)</p>
                   </div>
                 </div>
               ) : (
@@ -1001,7 +1107,7 @@ const SectionItem = React.memo(({
         <div className="mt-8 border-t border-gray-100 pt-5">
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-base font-medium text-gray-700 flex items-center">
-              <span className="bg-blue-50 text-blue-600 w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">
+              <span className="bg-[#446E6D]/10 text-[#446E6D] w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">
                 {section.points?.length || 0}
               </span>
               Key Points
@@ -1010,7 +1116,7 @@ const SectionItem = React.memo(({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => addPoint(index)}
-              className="inline-flex items-center px-3 py-1.5 rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all duration-200"
+              className="inline-flex items-center px-3 py-1.5 rounded-md bg-[#446E6D]/10 text-[#446E6D] hover:bg-[#446E6D]/20 transition-all duration-200"
             >
               <Plus size={16} className="mr-1" />
               Add Point
@@ -1026,7 +1132,7 @@ const SectionItem = React.memo(({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg bg-gray-50 border border-gray-100 hover:border-blue-100 transition-colors"
+                  className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg bg-gray-50 border border-gray-100 hover:border-[#446E6D]/30 transition-colors"
                 >
                   <div>
                     <label htmlFor={`point-title-${index}-${pointIndex}`} className="block text-xs font-medium text-gray-700 mb-1">
@@ -1037,7 +1143,7 @@ const SectionItem = React.memo(({
                       type="text"
                       value={point.title}
                       onChange={(e) => handlePointChange(index, pointIndex, 'title', e.target.value)}
-                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                       placeholder="Enter point title"
                     />
                   </div>
@@ -1062,7 +1168,7 @@ const SectionItem = React.memo(({
                       id={`point-detail-${index}-${pointIndex}`}
                       value={point.detail}
                       onChange={(e) => handlePointChange(index, pointIndex, 'detail', e.target.value)}
-                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                       rows={2}
                       placeholder="Enter point detail"
                     />
@@ -1075,9 +1181,9 @@ const SectionItem = React.memo(({
       </div>
       
       {/* Section Footer */}
-      <div className="bg-blue-50 p-3 text-xs text-blue-600 flex items-start">
+      <div className="bg-[#446E6D]/5 p-3 text-xs text-[#446E6D] flex items-start">
         <Info size={14} className="mr-1.5 flex-shrink-0 mt-0.5" />
-        <span>Drag to reorder. Each section requires a title, image and at least one point.</span>
+        <span>Drag to reorder. Each section requires a title, image (16:9 ratio) and at least one point.</span>
       </div>
     </motion.div>
   );

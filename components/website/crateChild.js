@@ -14,7 +14,7 @@ import {
   X, 
   Plus, 
   ArrowLeft, 
-  GripVertical, // Changed from DragVertical to GripVertical which exists in lucide-react
+  GripVertical,
   Image as ImageIcon, 
   CheckCircle, 
   AlertCircle,
@@ -34,10 +34,12 @@ export default function CreateProduct() {
   const mainImageRef = useRef(null);
   const { setShowConfirm, setConfirmFunction, customToast } = useContext(MyContext);
   
+  // Updated state with slug field
   const [productData, setProductData] = useState({
     Title: '',
     detail: '',
     moreDetail: '',
+    slug: '',
     category: '',
     image: null,
     sections: [
@@ -69,11 +71,24 @@ export default function CreateProduct() {
     fetchServices();
   }, []);
 
+  // Generate slug from title
+  const generateSlug = (title) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
+
   // Handle main form input changes
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     
     setProductData(prev => ({ ...prev, [name]: value }));
+
+    // Auto-generate slug when title changes
+    if (name === 'Title') {
+      setProductData(prev => ({ ...prev, slug: generateSlug(value) }));
+    }
 
     if (name === 'category') {
       const filtered = services.filter(service => service.category === value);
@@ -87,8 +102,36 @@ export default function CreateProduct() {
     }
   }, [services]);
 
-  // Handle main image upload
-  const handleMainImageChange = useCallback((e) => {
+  // Validate image dimensions (16:9 aspect ratio with 0.1% tolerance)
+  const validateImageDimensions = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const width = this.width;
+          const height = this.height;
+          const aspectRatio = width / height;
+          const targetRatio = 16 / 9;
+          const tolerance = 0.001; // 0.1% tolerance
+          
+          if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
+            resolve({ width, height, aspectRatio });
+          } else {
+            reject({ 
+              message: `Image must have a 16:9 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
+              dimensions: { width, height, aspectRatio }
+            });
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Handle main image upload with dimension validation
+  const handleMainImageChange = useCallback(async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     
@@ -97,15 +140,24 @@ export default function CreateProduct() {
       return;
     }
     
-    setProductData(prev => ({ ...prev, image: file }));
-    
-    // Create image preview
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setMainImagePreview(reader.result);
-    };
-    reader.readAsDataURL(file);
-  }, []);
+    try {
+      // Validate image dimensions (16:9)
+      await validateImageDimensions(file);
+      
+      setProductData(prev => ({ ...prev, image: file }));
+      
+      // Create image preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMainImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      setError(err.message);
+      customToast({ success: false, message: 'Image must have a 16:9 aspect ratio' });
+      e.target.value = '';
+    }
+  }, [customToast]);
 
   // Section management
   const addSection = useCallback(() => {
@@ -146,7 +198,8 @@ export default function CreateProduct() {
     });
   }, []);
 
-  const handleSectionImageChange = useCallback((sectionIndex, e) => {
+  // Handle section image change with dimension validation
+  const handleSectionImageChange = useCallback(async (sectionIndex, e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -155,21 +208,30 @@ export default function CreateProduct() {
       return;
     }
 
-    // Create preview and update state
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setProductData(prev => {
-        const updatedSections = [...prev.sections];
-        updatedSections[sectionIndex] = {
-          ...updatedSections[sectionIndex],
-          image: file,
-          imagePreview: reader.result
-        };
-        return { ...prev, sections: updatedSections };
-      });
-    };
-    reader.readAsDataURL(file);
-  }, []);
+    try {
+      // Validate image dimensions (16:9)
+      await validateImageDimensions(file);
+      
+      // Create preview and update state
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProductData(prev => {
+          const updatedSections = [...prev.sections];
+          updatedSections[sectionIndex] = {
+            ...updatedSections[sectionIndex],
+            image: file,
+            imagePreview: reader.result
+          };
+          return { ...prev, sections: updatedSections };
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      setError(err.message);
+      customToast({ success: false, message: 'Image must have a 16:9 aspect ratio' });
+      e.target.value = '';
+    }
+  }, [customToast]);
   
   const moveSection = useCallback((fromIndex, toIndex) => {
     setProductData(prev => {
@@ -227,7 +289,7 @@ export default function CreateProduct() {
     });
   }, []);
 
-  // Form validation
+  // Updated form validation including slug check
   const validateForm = useCallback(() => {
     // Check main Product fields
     if (!productData.Title || !productData.Title.trim()) {
@@ -242,6 +304,17 @@ export default function CreateProduct() {
     
     if (!productData.moreDetail || !productData.moreDetail.trim()) {
       setError('Product more detail is required');
+      return false;
+    }
+    
+    if (!productData.slug || !productData.slug.trim()) {
+      setError('Slug is required');
+      return false;
+    }
+    
+    // Validate slug format
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(productData.slug)) {
+      setError('Slug must be lowercase, containing only letters, numbers, and hyphens');
       return false;
     }
     
@@ -304,6 +377,7 @@ export default function CreateProduct() {
         submitFormData.append('Title', productData.Title);
         submitFormData.append('detail', productData.detail);
         submitFormData.append('moreDetail', productData.moreDetail);
+        submitFormData.append('slug', productData.slug); // Added slug field
         submitFormData.append('category', productData.category);
         
         // Add main image
@@ -371,11 +445,11 @@ export default function CreateProduct() {
             <div className="flex items-center">
               <button 
                 onClick={() => router.back()}
-                className="mr-4 p-2 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition-all"
+                className="mr-4 p-2 rounded-full bg-[#446E6D]/10 hover:bg-[#446E6D]/20 text-[#446E6D] transition-all"
               >
                 <ArrowLeft size={20} />
               </button>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold text-[#446E6D]">
                 Create New Product
               </h1>
             </div>
@@ -387,7 +461,7 @@ export default function CreateProduct() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               className={`flex items-center px-6 py-3 rounded-lg text-white font-medium ${
-                loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                loading ? 'bg-[#446E6D]/70' : 'bg-[#446E6D] hover:bg-[#446E6D]/90'
               } transition-all duration-200 shadow-md hover:shadow-lg`}
             >
               {loading ? (
@@ -428,11 +502,11 @@ export default function CreateProduct() {
                     {!mainImagePreview ? (
                       <div 
                         onClick={() => mainImageRef.current?.click()}
-                        className="flex flex-col items-center justify-center w-full h-72 border-2 border-dashed border-blue-300 rounded-xl cursor-pointer bg-blue-50 hover:bg-blue-100 transition-colors"
+                        className="flex flex-col items-center justify-center w-full h-72 border-2 border-dashed border-[#446E6D]/30 rounded-xl cursor-pointer bg-[#446E6D]/5 hover:bg-[#446E6D]/10 transition-colors"
                       >
                         <div className="flex flex-col items-center justify-center py-8">
-                          <Upload className="text-blue-500 mb-3" size={48} />
-                          <p className="text-base font-medium text-blue-600 mb-1">Click to upload Product image</p>
+                          <Upload className="text-[#446E6D] mb-3" size={48} />
+                          <p className="text-base font-medium text-[#446E6D] mb-1">Click to upload Product image (16:9)</p>
                           <p className="text-sm text-gray-500">PNG, JPG or GIF (Max 10MB)</p>
                         </div>
                       </div>
@@ -469,7 +543,7 @@ export default function CreateProduct() {
                         name="category"
                         value={productData.category}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D] bg-white shadow-sm"
                       >
                         <option value="">Select a child service</option>
                         {services?.map((category) => (
@@ -497,9 +571,28 @@ export default function CreateProduct() {
                       type="text"
                       value={productData.Title}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D] shadow-sm"
                       placeholder="Enter Product title"
                     />
+                  </div>
+                  
+                  {/* Slug field - NEW */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="slug">
+                      Slug* <span className="text-xs text-gray-500">(URL-friendly name, auto-generated but editable)</span>
+                    </label>
+                    <input
+                      id="slug"
+                      name="slug"
+                      type="text"
+                      value={productData.slug}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D] shadow-sm"
+                      placeholder="product-name-example"
+                    />
+                    <p className="mt-1 text-xs text-gray-500">
+                      Only lowercase letters, numbers, and hyphens. Used in URLs: /product/{productData.slug || 'example-slug'}
+                    </p>
                   </div>
                   
                   <div>
@@ -512,7 +605,7 @@ export default function CreateProduct() {
                       value={productData.detail}
                       onChange={handleInputChange}
                       rows={3}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D] shadow-sm"
                       placeholder="Brief description of the Product"
                     />
                   </div>
@@ -527,7 +620,7 @@ export default function CreateProduct() {
                       value={productData.moreDetail}
                       onChange={handleInputChange}
                       rows={5}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D] shadow-sm"
                       placeholder="Detailed description of the Product"
                     />
                   </div>
@@ -538,7 +631,7 @@ export default function CreateProduct() {
               <div className="pt-8 border-t border-gray-200">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-                    <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">
+                    <span className="bg-[#446E6D]/10 text-[#446E6D] w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">
                       <span>{productData.sections.length}</span>
                     </span>
                     Product Sections
@@ -548,7 +641,7 @@ export default function CreateProduct() {
                     onClick={addSection}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="inline-flex items-center px-5 py-2.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200 font-medium shadow-sm"
+                    className="inline-flex items-center px-5 py-2.5 rounded-lg bg-[#446E6D] text-white hover:bg-[#446E6D]/90 transition-all duration-200 font-medium shadow-sm"
                   >
                     <Plus size={18} className="mr-2" />
                     Add Section
@@ -623,7 +716,7 @@ const SectionItem = React.memo(({
       exit={{ opacity: 0, y: -20 }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
       className={`relative rounded-xl ${
-        isDragging ? 'border-2 border-blue-500 shadow-lg' : 'border border-gray-200'
+        isDragging ? 'border-2 border-[#446E6D] shadow-lg' : 'border border-gray-200'
       } bg-white shadow-sm overflow-hidden`}
       style={{ 
         opacity: isDragging ? 0.7 : 1,
@@ -632,7 +725,7 @@ const SectionItem = React.memo(({
     >
       {/* Section Header */}
       <div className="flex items-center bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
-        <div className="cursor-move mr-3 text-blue-600 hover:text-blue-800 transition-colors">
+        <div className="cursor-move mr-3 text-[#446E6D] hover:text-[#446E6D]/80 transition-colors">
           <GripVertical size={20} />
         </div>
         <h3 className="text-lg font-semibold text-gray-800">
@@ -667,7 +760,7 @@ const SectionItem = React.memo(({
               type="text"
               value={section.title}
               onChange={(e) => handleSectionChange(index, 'title', e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D] shadow-sm"
               placeholder="Enter section title"
             />
           </div>
@@ -675,7 +768,7 @@ const SectionItem = React.memo(({
           {/* Right Column - Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Section Image*
+              Section Image* <span className="text-xs text-gray-500">(16:9 ratio required)</span>
             </label>
             <div className="relative">
               <input
@@ -690,11 +783,11 @@ const SectionItem = React.memo(({
               {!section.imagePreview ? (
                 <div 
                   onClick={() => sectionImageRef.current?.click()}
-                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-blue-300 rounded-lg cursor-pointer bg-blue-50 hover:bg-blue-100 transition-colors"
+                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-[#446E6D]/30 rounded-lg cursor-pointer bg-[#446E6D]/5 hover:bg-[#446E6D]/10 transition-colors"
                 >
                   <div className="flex flex-col items-center justify-center py-4">
-                    <ImageIcon className="text-blue-500 mb-2" size={32} />
-                    <p className="text-sm font-medium text-blue-600">Click to upload section image</p>
+                    <ImageIcon className="text-[#446E6D] mb-2" size={32} />
+                    <p className="text-sm font-medium text-[#446E6D]">Click to upload section image (16:9)</p>
                   </div>
                 </div>
               ) : (
@@ -725,7 +818,7 @@ const SectionItem = React.memo(({
         <div className="mt-8 border-t border-gray-100 pt-5">
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-base font-medium text-gray-700 flex items-center">
-              <span className="bg-blue-50 text-blue-600 w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">
+              <span className="bg-[#446E6D]/10 text-[#446E6D] w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">
                 {section.points.length}
               </span>
               Key Points
@@ -735,7 +828,7 @@ const SectionItem = React.memo(({
               onClick={() => addPoint(index)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center px-3 py-1.5 rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all duration-200"
+              className="inline-flex items-center px-3 py-1.5 rounded-md bg-[#446E6D]/10 text-[#446E6D] hover:bg-[#446E6D]/20 transition-all duration-200"
             >
               <Plus size={16} className="mr-1" />
               Add Point
@@ -751,7 +844,7 @@ const SectionItem = React.memo(({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg bg-gray-50 border border-gray-100 hover:border-blue-100 transition-colors"
+                  className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg bg-gray-50 border border-gray-100 hover:border-[#446E6D]/30 transition-colors"
                 >
                   <div>
                     <label htmlFor={`point-title-${index}-${pointIndex}`} className="block text-xs font-medium text-gray-700 mb-1">
@@ -762,7 +855,7 @@ const SectionItem = React.memo(({
                       type="text"
                       value={point.title}
                       onChange={(e) => handlePointChange(index, pointIndex, 'title', e.target.value)}
-                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                       placeholder="Enter point title"
                     />
                   </div>
@@ -786,7 +879,7 @@ const SectionItem = React.memo(({
                       id={`point-detail-${index}-${pointIndex}`}
                       value={point.detail}
                       onChange={(e) => handlePointChange(index, pointIndex, 'detail', e.target.value)}
-                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                       rows={2}
                       placeholder="Enter point detail"
                     />
@@ -799,9 +892,9 @@ const SectionItem = React.memo(({
       </div>
       
       {/* Section Footer */}
-      <div className="bg-blue-50 p-3 text-xs text-blue-600 flex items-start">
+      <div className="bg-[#446E6D]/5 p-3 text-xs text-[#446E6D] flex items-start">
         <Info size={14} className="mr-1.5 flex-shrink-0 mt-0.5" />
-        <span>Drag to reorder. Each section requires a title, image and at least one point.</span>
+        <span>Drag to reorder. Each section requires a title, image (16:9 ratio) and at least one point.</span>
       </div>
     </motion.div>
   );

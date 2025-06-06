@@ -22,13 +22,13 @@ export default async function Home() {
 
   return (
     <main className="h-full ">
-      <div className="flex flex-col gap-20 bg-[url('/hero-bg.svg')] bg-no-repeat bg-cover">
-        <div className="lg:w-[90%] w-full mx-auto overflow-hidden bg-[url('/hero-bg.svg')] bg-cover max-w-[1920px] ">
+      <div className="flex flex-col gap-20 bg-[url('/hero-bg.svg')] bg-no-repeat bg-cover relative z-20">
+        <div className="lg:w-[90%] w-full mx-auto bg-[url('/hero-bg.svg')] bg-cover max-w-[1920px] ">
           <Hero />
         </div>
       </div>
       <div className="flex flex-col gap-20 w-[95%] lg:w-[90%]   max-w-[1920px] mx-auto overflow-hidden ">
-        <div className="bg-[rgba(231,247,246,1)] z-20">
+        <div className="bg-[rgba(231,247,246,1)] z-10">
           {/* Pass the service prop to the Webme component */}
           <Webme service={service.data} />
         </div>

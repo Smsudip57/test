@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { useRouter, usePathname } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation";
 import path from "path";
 import { MyContext } from "@/context/context";
 
@@ -10,12 +10,13 @@ const Footer = () => {
   const context = React.useContext(MyContext);
 
   // const [isAdminPath, setIsAdminPath] = useState(false);
-  const [loaded, setloaded] = useState(false)
+  const [loaded, setloaded] = useState(false);
 
-  if (pathname.includes('/admin') ||
-    pathname.includes('/signin') ||
-    pathname.includes('/signup') ||
-    pathname.includes('/forgot-password')
+  if (
+    pathname.includes("/admin") ||
+    pathname.includes("/signin") ||
+    pathname.includes("/signup") ||
+    pathname.includes("/forgot-password")
   ) {
     return null;
   }
@@ -36,12 +37,19 @@ const Footer = () => {
               src="/logo_1.svg"
             />
             <p className="font-graphik font-normal leading-5 text-[14px]">
-              WEBME Information Technology, Your trusted IT Consultancy Provider. With a passion for technology and a commitment to excellence, WEBME is here to guide your business through every step of its IT journey, ensuring seamless operations and transformative growth. WEBME mission is to bridge the gap between businesses and technology.
+              WEBME Information Technology, Your trusted IT Consultancy
+              Provider. With a passion for technology and a commitment to
+              excellence, WEBME is here to guide your business through every
+              step of its IT journey, ensuring seamless operations and
+              transformative growth. WEBME mission is to bridge the gap between
+              businesses and technology.
             </p>
           </div>
           <div className="hidden md:flex items-center sm:justify-center w-[33%]">
             <div className="flex flex-col gap-5">
-              <h2 className="font-inter text-[14px] leading-4 font-semibold uppercase">Company</h2>
+              <h2 className="font-inter text-[14px] leading-4 font-semibold uppercase">
+                Company
+              </h2>
               <div className="flex flex-col gap-4">
                 <a href="/about/about-webme">
                   <p className="font-normal">About Us</p>
@@ -102,22 +110,41 @@ const Footer = () => {
         </div>
         <div className="flex flex-col sm:flex-row gap-5 justify-between border-t border-[#7C7C7C] py-5 items-center">
           <div className="flex gap-2 sm:gap-5 md:gap-10 font-inter font-medium text-[14px] leading-4">
-            <a href="https://www.linkedin.com/in/webmedigital" target="_blank">Instagram</a>
-            <a href="https://x.com/webmedigital" target="_blank">Twitter</a>
-            <a href="https://www.facebook.com/webmestore/" target="_blank">Facebook</a>
-            <a href="https://www.instagram.com/webmestore/" target="_blank">LinkedIn</a>
+            <a href="https://www.instagram.com/webmestore/" target="_blank">
+              {" "}
+              Instagram
+            </a>
+            <a href="https://x.com/webmedigital" target="_blank">
+              Twitter
+            </a>
+            <a href="https://www.facebook.com/webmestore/" target="_blank">
+              Facebook
+            </a>
+            <a href="https://www.linkedin.com/in/webmedigital" target="_blank">
+              LinkedIn
+            </a>
           </div>
           <div className="flex items-center gap-3 font-inter font-normal text-xs">
             <span>© 2024 WebMe</span>
             <span className="hidden sm:inline">•</span>
-            <a href="/about/terms-&-conditions" className="hover:underline sm:hidden md:inline">Terms & Conditions</a>
+            <a
+              href="/about/terms-&-conditions"
+              className="hover:underline sm:hidden md:inline"
+            >
+              Terms & Conditions
+            </a>
             <span className="hidden md:inline">•</span>
-            <a href="/about/privacy-policy" className="hover:underline sm:hidden md:inline">Privacy Policy</a>
+            <a
+              href="/about/privacy-policy"
+              className="hover:underline sm:hidden md:inline"
+            >
+              Privacy Policy
+            </a>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

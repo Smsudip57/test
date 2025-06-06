@@ -19,6 +19,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import CategoryIcon from '@mui/icons-material/Category';
+import BusinessIcon from '@mui/icons-material/Business';
 
 // Theme colors
 const themeColors = {
@@ -70,15 +72,19 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
 }));
 
 export default function CreateFaq() {
-  // Form state
+  // Form state - updated to have all related fields as arrays
   const [formData, setFormData] = useState({
     title: '',
     questions: [{ question: '', answer: '' }],
-    relatedProducts: [],
-    relatedChikfdServices: []
+    relatedServices: [],      // Now an array instead of single value
+    relatedIndustries: [],    // Now an array instead of single value
+    relatedProducts: [],      // Already an array
+    relatedChikfdServices: [] // Already an array
   });
 
   // Data lists
+  const [services, setServices] = useState([]);
+  const [industries, setIndustries] = useState([]);
   const [products, setProducts] = useState([]);
   const [childServices, setChildServices] = useState([]);
 
@@ -87,11 +93,27 @@ export default function CreateFaq() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // Fetch products and child services on component mount
+  // Fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        // Fetch services
+        const servicesRes = await axios.get('/api/service/getservice', {
+          withCredentials: true
+        });
+        if (servicesRes.data.success) {
+          setServices(servicesRes.data.services || []);
+        }
+
+        // Fetch industries
+        const industriesRes = await axios.get('/api/industry/get', {
+          withCredentials: true
+        });
+        if (industriesRes.data.success) {
+          setIndustries(industriesRes.data.industries || []);
+        }
+
         // Fetch products
         const productsRes = await axios.get('/api/product/get', {
           withCredentials: true
@@ -109,7 +131,7 @@ export default function CreateFaq() {
         }
       } catch (error) {
         console.error("Error fetching data:", error);
-        toast.error("Failed to load products and services");
+        toast.error("Failed to load reference data");
       } finally {
         setLoading(false);
       }
@@ -118,13 +140,23 @@ export default function CreateFaq() {
     fetchData();
   }, []);
 
-  // Handle input change for title
+  // All inputs now use handleMultiSelectChange since all related fields are arrays
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // For relatedServices and relatedIndustries, we need special handling 
+    // since they've changed from single values to arrays
+    if (name === 'relatedServices' || name === 'relatedIndustries') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value ? [value] : [] // Convert single value to array
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   // Handle multi-select changes
@@ -170,7 +202,7 @@ export default function CreateFaq() {
     }));
   };
 
-  // Handle form submission
+  // Handle form submission - updated to send all related fields as arrays
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -194,6 +226,8 @@ export default function CreateFaq() {
       const response = await axios.post('/api/faq/create', {
         title: formData.title,
         questions: formData.questions,
+        relatedServices: formData.relatedServices,      // Now sending as array
+        relatedIndustries: formData.relatedIndustries,  // Now sending as array
         relatedProducts: formData.relatedProducts,
         relatedChikfdServices: formData.relatedChikfdServices
       });
@@ -202,10 +236,12 @@ export default function CreateFaq() {
         toast.success("FAQ created successfully");
         setSuccess(true);
 
-        // Reset form
+        // Reset form - all related fields are now arrays
         setFormData({
           title: '',
           questions: [{ question: '', answer: '' }],
+          relatedServices: [],
+          relatedIndustries: [],
           relatedProducts: [],
           relatedChikfdServices: []
         });
@@ -371,8 +407,156 @@ export default function CreateFaq() {
             Related Items
           </SectionTitle>
           
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3, mb: 3 }}>
+            {/* Related Services - Updated to multiple select */}
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="related-service-label" sx={{ 
+                '&.Mui-focused': { color: themeColors.primary } 
+              }}>
+                Related Services
+              </InputLabel>
+              <Select
+                labelId="related-service-label"
+                multiple
+                name="relatedServices"
+                value={formData.relatedServices}
+                onChange={handleMultiSelectChange}
+                input={
+                  <OutlinedInput 
+                    label="Related Services" 
+                    sx={{ 
+                      borderRadius: 1.5,
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: themeColors.primary,
+                      },
+                    }} 
+                  />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => {
+                      const service = services.find(s => s._id === value);
+                      return (
+                        <Chip 
+                          key={value} 
+                          label={service ? service.Title : value} 
+                          size="small"
+                          sx={{ 
+                            fontWeight: 500,
+                            backgroundColor: alpha(themeColors.primary, 0.1),
+                            '& .MuiChip-label': { color: themeColors.primary }
+                          }}
+                        />
+                      );
+                    })}
+                  </Box>
+                )}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: 300
+                    }
+                  }
+                }}
+              >
+                {services.map((service) => (
+                  <MenuItem key={service._id} value={service._id}>
+                    <Checkbox 
+                      checked={formData.relatedServices.indexOf(service._id) > -1} 
+                      sx={{ 
+                        color: themeColors.primaryLight,
+                        '&.Mui-checked': {
+                          color: themeColors.primary,
+                        },
+                      }}
+                    />
+                    <ListItemText 
+                      primary={service.Title} 
+                      secondary={service.detail?.substring(0, 60) + (service.detail?.length > 60 ? '...' : '')}
+                      primaryTypographyProps={{ fontWeight: 500 }}
+                      secondaryTypographyProps={{ fontSize: '0.75rem' }}
+                    />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {/* Related Industries - Updated to multiple select */}
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="related-industry-label" sx={{ 
+                '&.Mui-focused': { color: themeColors.primary } 
+              }}>
+                Related Industries
+              </InputLabel>
+              <Select
+                labelId="related-industry-label"
+                multiple
+                name="relatedIndustries"
+                value={formData.relatedIndustries}
+                onChange={handleMultiSelectChange}
+                input={
+                  <OutlinedInput 
+                    label="Related Industries" 
+                    sx={{ 
+                      borderRadius: 1.5,
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: themeColors.primary,
+                      },
+                    }} 
+                  />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => {
+                      const industry = industries.find(i => i._id === value);
+                      return (
+                        <Chip 
+                          key={value} 
+                          label={industry ? industry.Title : value} 
+                          size="small"
+                          sx={{ 
+                            fontWeight: 500,
+                            backgroundColor: alpha(themeColors.primaryDark, 0.1),
+                            '& .MuiChip-label': { color: themeColors.primaryDark }
+                          }}
+                        />
+                      );
+                    })}
+                  </Box>
+                )}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: 300
+                    }
+                  }
+                }}
+              >
+                {industries.map((industry) => (
+                  <MenuItem key={industry._id} value={industry._id}>
+                    <Checkbox 
+                      checked={formData.relatedIndustries.indexOf(industry._id) > -1} 
+                      sx={{ 
+                        color: themeColors.primaryLight,
+                        '&.Mui-checked': {
+                          color: themeColors.primaryDark,
+                        },
+                      }}
+                    />
+                    <ListItemText 
+                      primary={industry.Title} 
+                      secondary={industry.detail?.substring(0, 60) + (industry.detail?.length > 60 ? '...' : '')}
+                      primaryTypographyProps={{ fontWeight: 500 }}
+                      secondaryTypographyProps={{ fontSize: '0.75rem' }}
+                    />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          
           <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
-            {/* Related Products Multi-Select */}
+            {/* Related Products Multi-Select - Already configured correctly */}
             <FormControl fullWidth margin="normal">
               <InputLabel id="related-products-label" sx={{ 
                 '&.Mui-focused': { color: themeColors.primary } 
@@ -445,7 +629,7 @@ export default function CreateFaq() {
               </Select>
             </FormControl>
 
-            {/* Related Child Services Multi-Select */}
+            {/* Related Child Services Multi-Select - Already configured correctly */}
             <FormControl fullWidth margin="normal">
               <InputLabel id="related-child-services-label" sx={{ 
                 '&.Mui-focused': { color: themeColors.primary } 

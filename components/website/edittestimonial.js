@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+'use client';
+import { useEffect, useState, useContext, useRef } from "react";
 import axios from "axios";
-import { UploadCloud } from "lucide-react";
+import { Loader2, UploadCloud, X, Video, Image as ImageIcon, AlertCircle, ArrowLeft, Save, Edit } from "lucide-react";
+import { MyContext } from '@/context/context';
+import { motion } from "framer-motion";
 
-export default function Testimonials() {
+export default function EditTestimonial() {
   const [testimonials, setTestimonials] = useState([]);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({
@@ -13,18 +16,54 @@ export default function Testimonials() {
     video: null,
     relatedService: "",
     relatedIndustries: "",
+    relatedProduct: "", // Added related product field
   });
+  
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const [services, setServices] = useState([]);
   const [industries, setIndustries] = useState([]);
+  const [products, setProducts] = useState([]); // Added products state
+  const { customToast } = useContext(MyContext);
+  
+  const imageInputRef = useRef(null);
+  const videoInputRef = useRef(null);
 
   useEffect(() => {
     fetchTestimonials();
     fetchData();
   }, []);
+
+  // Validate image dimensions (16:9 aspect ratio with 0.1% tolerance)
+  const validateImageDimensions = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const width = this.width;
+          const height = this.height;
+          const aspectRatio = width / height;
+          const targetRatio = 16 / 9;
+          const tolerance = 0.001; // 0.1% tolerance
+          
+          if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
+            resolve({ width, height, aspectRatio });
+          } else {
+            reject({ 
+              message: `Image must have a 16:9 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
+              dimensions: { width, height, aspectRatio }
+            });
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
 
   const fetchTestimonials = async () => {
     try {
@@ -32,7 +71,12 @@ export default function Testimonials() {
       const res = await axios.get("/api/testimonial/get");
       if (res.data.success) setTestimonials(res.data.testimonials);
     } catch (err) {
+      console.error("Error fetching testimonials:", err);
       setError("Failed to fetch testimonials. Please try again.");
+      customToast({ 
+        success: false, 
+        message: "Failed to fetch testimonials" 
+      });
     } finally {
       setLoading(false);
     }
@@ -40,14 +84,22 @@ export default function Testimonials() {
 
   const fetchData = async () => {
     try {
-      const [serviceRes, industryRes] = await Promise.all([
+      // Fetch services, industries, and products in parallel
+      const [serviceRes, industryRes, productRes] = await Promise.all([
         axios.get("/api/service/getservice"),
         axios.get("/api/industry/get"),
+        axios.get("/api/product/get") // Added product fetch
       ]);
+      
       setServices(serviceRes.data.services || []);
       setIndustries(industryRes.data.industries || []);
+      setProducts(productRes.data.products || []); // Set products
     } catch (error) {
       console.error("Error fetching data:", error);
+      customToast({ 
+        success: false, 
+        message: "Failed to load dropdown options" 
+      });
     }
   };
 
@@ -55,11 +107,14 @@ export default function Testimonials() {
     setEditing(testimonial._id);
     setForm({
       ...testimonial,
-      relatedService: testimonial.relatedService?._id || "",
-      relatedIndustries: testimonial.relatedIndustries?._id || "",
+      // Map relation IDs properly, handling possible nulls
+      relatedService: testimonial.relatedService?._id || testimonial.relatedService || "",
+      relatedIndustries: testimonial.relatedIndustries?._id || testimonial.relatedIndustries || "",
+      relatedProduct: testimonial.relatedProduct?._id || testimonial.relatedProduct || "",
     });
     setImagePreview(testimonial.image);
     setVideoPreview(testimonial.video);
+    setError(null); // Clear any existing errors
   };
 
   const handleChange = (e) => {
@@ -67,203 +122,528 @@ export default function Testimonials() {
     setForm({ ...form, [name]: value });
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     const { name } = e.target;
+    
     if (!file) return;
+    
+    // File type validation
     if (name === "image") {
-      setImagePreview(URL.createObjectURL(file));
+      if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
+        customToast({
+          success: false,
+          message: 'Only image files are allowed!'
+        });
+        e.target.value = '';
+        return;
+      }
+      
+      try {
+        // Validate image dimensions (16:9)
+        await validateImageDimensions(file);
+        
+        // Revoke previous objectURL to prevent memory leaks
+        if (imagePreview && imagePreview.startsWith('blob:')) {
+          URL.revokeObjectURL(imagePreview);
+        }
+        
+        setImagePreview(URL.createObjectURL(file));
+        setForm((prev) => ({ ...prev, [name]: file }));
+      } catch (err) {
+        console.error("Image validation error:", err);
+        customToast({
+          success: false,
+          message: `Image must have a 16:9 aspect ratio. Current ratio is ${err.dimensions?.aspectRatio.toFixed(2)}:1`
+        });
+        e.target.value = '';
+        return;
+      }
     } else if (name === "video") {
+      if (!file.type.match(/video\/(mp4|webm|ogg|quicktime)/i)) {
+        customToast({
+          success: false,
+          message: 'Only video files are allowed!'
+        });
+        e.target.value = '';
+        return;
+      }
+      
+      // Revoke previous objectURL to prevent memory leaks
+      if (videoPreview && videoPreview.startsWith('blob:')) {
+        URL.revokeObjectURL(videoPreview);
+      }
+      
       setVideoPreview(URL.createObjectURL(file));
+      setForm((prev) => ({ ...prev, [name]: file }));
     }
-    setForm((prev) => ({ ...prev, [name]: file }));
+  };
+
+  const clearFilePreview = (fieldName) => {
+    if (fieldName === 'image') {
+      if (imagePreview && imagePreview.startsWith('blob:')) {
+        URL.revokeObjectURL(imagePreview);
+      }
+      setImagePreview(null);
+      setForm(prev => ({ ...prev, image: null }));
+      if (imageInputRef.current) imageInputRef.current.value = '';
+    } else if (fieldName === 'video') {
+      if (videoPreview && videoPreview.startsWith('blob:')) {
+        URL.revokeObjectURL(videoPreview);
+      }
+      setVideoPreview(null);
+      setForm(prev => ({ ...prev, video: null }));
+      if (videoInputRef.current) videoInputRef.current.value = '';
+    }
+  };
+
+  const validateForm = () => {
+    if (!form.Testimonial || !form.Testimonial.trim()) {
+      setError("Testimonial text is required");
+      return false;
+    }
+    
+    if (!form.postedBy || !form.postedBy.trim()) {
+      setError("Author name is required");
+      return false;
+    }
+    
+    if (!form.role || !form.role.trim()) {
+      setError("Author role is required");
+      return false;
+    }
+    
+    if (!imagePreview) {
+      setError("Image is required");
+      return false;
+    }
+    
+    if (!videoPreview) {
+      setError("Video is required");
+      return false;
+    }
+    
+    setError(null);
+    return true;
   };
 
   const handleSave = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const formData = new FormData();
-      Object.keys(form).forEach((key) => {
-        formData.append(key, form[key]);
+    if (!validateForm()) {
+      customToast({
+        success: false,
+        message: error
       });
+      return;
+    }
+    
+    try {
+      setSaving(true);
+      setError(null);
+      
+      const formData = new FormData();
+      
+      // Append all form fields
+      Object.keys(form).forEach((key) => {
+        // Don't append null/undefined values except for image/video which are handled separately
+        if (form[key] !== null && form[key] !== undefined && key !== 'image' && key !== 'video') {
+          formData.append(key, form[key]);
+        }
+      });
+      
+      // Only append image and video if they're File objects (have been changed)
+      if (form.image instanceof File) {
+        formData.append("image", form.image);
+      }
+      
+      if (form.video instanceof File) {
+        formData.append("video", form.video);
+      }
+      
       formData.append("testimonialId", form._id);
+      
       const res = await axios.post("/api/testimonial/edit", formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true,
       });
+      
       if (res.data.success) {
-        setTestimonials((prev) =>
-          prev.map((t) => (t._id === form._id ? { ...form } : t))
-        );
+        // Update local state to reflect changes
+        await fetchTestimonials(); // Refetch to get updated data with proper relations
+        
         setEditing(null); // Close the edit form after saving
+        
+        customToast({
+          success: true,
+          message: "Testimonial updated successfully"
+        });
       } else {
         setError("Failed to save changes. Please try again.");
+        customToast({
+          success: false,
+          message: res.data.message || "Failed to save changes"
+        });
       }
     } catch (err) {
+      console.error("Error updating testimonial:", err);
       setError("An error occurred while saving. Please try again.");
+      customToast({
+        success: false,
+        message: err.response?.data?.message || "An error occurred while saving"
+      });
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
+  const cancelEdit = () => {
+    // Clean up any blob URLs
+    if (imagePreview && imagePreview.startsWith('blob:')) {
+      URL.revokeObjectURL(imagePreview);
+    }
+    if (videoPreview && videoPreview.startsWith('blob:')) {
+      URL.revokeObjectURL(videoPreview);
+    }
+    
+    setEditing(null);
+    setForm({
+      Testimonial: "",
+      postedBy: "",
+      role: "",
+      image: null,
+      video: null,
+      relatedService: "",
+      relatedIndustries: "",
+      relatedProduct: "",
+    });
+    setImagePreview(null);
+    setVideoPreview(null);
+    setError(null);
+  };
+
   return (
-    <div className="max-w-full mx-auto p-8 bg-white rounded-lg shadow-lg border">
+    <div className="max-w-full mx-auto p-6 md:p-8 bg-white rounded-lg shadow-lg">
       {editing ? (
         <div>
-          <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
-            Edit Testimonial
-          </h1>
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={cancelEdit}
+              className="flex items-center text-gray-600 hover:text-[#446E6D] transition-colors"
+            >
+              <ArrowLeft size={20} className="mr-1" />
+              <span>Back to Testimonials</span>
+            </button>
+            
+            <h1 className="text-2xl font-bold text-center text-[#446E6D]">
+              Edit Testimonial
+            </h1>
+            
+            <div className="w-24"></div> {/* Spacer for centering the title */}
+          </div>
 
-          {error && <p className="text-red-500 text-center">{error}</p>}
-          {loading && <p className="text-center">Loading...</p>}
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-md flex items-start">
+              <AlertCircle className="text-red-500 mr-3 flex-shrink-0 mt-0.5" />
+              <p className="text-red-700">{error}</p>
+            </div>
+          )}
 
-          <form onSubmit={(e) => e.preventDefault()} className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Image Upload */}
-            <div className="flex gap-4 items-center">
-              <div className="relative max-w-64 w-full border rounded-lg">
-                <img
-                  src={imagePreview || form.image}
-                  alt="Preview"
-                  className="w-full aspect-square object-cover rounded-lg"
-                />
-                <label className="absolute inset-0 flex items-center justify-center bg-black/30 cursor-pointer">
-                  <UploadCloud className="h-12 w-12 text-white" />
+          <form onSubmit={(e) => e.preventDefault()} className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Left Column - Media Uploads */}
+            <div className="space-y-6">
+              {/* Image Upload with Preview */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Testimonial Image*</label>
+                <div className="relative border-2 border-dashed border-[#446E6D]/30 rounded-lg p-4 text-center hover:bg-[#446E6D]/5 transition-colors">
+                  {imagePreview ? (
+                    <div className="relative">
+                      <img src={imagePreview} alt="Preview" className="w-full h-64 object-cover rounded-lg" />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
+                        <button
+                          type="button" 
+                          onClick={() => imageInputRef.current?.click()}
+                          className="bg-white rounded-full p-2 m-1 shadow-md"
+                        >
+                          <UploadCloud size={16} className="text-gray-700" />
+                        </button>
+                        <button
+                          type="button" 
+                          onClick={() => clearFilePreview('image')}
+                          className="bg-white rounded-full p-2 m-1 shadow-md text-red-500"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center h-64 cursor-pointer">
+                      <ImageIcon className="h-12 w-12 text-[#446E6D]" />
+                      <p className="mt-2 text-sm font-medium text-[#446E6D]">Click to upload an image</p>
+                      <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB (16:9 ratio required)</p>
+                    </label>
+                  )}
                   <input
+                    ref={imageInputRef}
                     type="file"
                     accept="image/*"
                     name="image"
                     onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0"
+                    className="hidden"
                   />
-                </label>
+                </div>
               </div>
 
-              <div className="relative w-full h-max border rounded-lg">
-                <video src={videoPreview || form.video} controls className="w-full h-48 object-cover rounded-lg" />
-                <label className="absolute inset-0 flex items-center justify-center bg-black/30 cursor-pointer">
-                  <UploadCloud className="h-12 w-12 text-white" />
+              {/* Video Upload with Preview */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Testimonial Video*</label>
+                <div className="relative border-2 border-dashed border-[#446E6D]/30 rounded-lg p-4 text-center hover:bg-[#446E6D]/5 transition-colors">
+                  {videoPreview ? (
+                    <div className="relative">
+                      <video 
+                        src={videoPreview} 
+                        controls 
+                        className="w-full aspect-video object-cover rounded-lg"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
+                        <button
+                          type="button" 
+                          onClick={() => videoInputRef.current?.click()}
+                          className="bg-white rounded-full p-2 m-1 shadow-md"
+                        >
+                          <UploadCloud size={16} className="text-gray-700" />
+                        </button>
+                        <button
+                          type="button" 
+                          onClick={() => clearFilePreview('video')}
+                          className="bg-white rounded-full p-2 m-1 shadow-md text-red-500"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center h-64 cursor-pointer">
+                      <Video className="h-12 w-12 text-[#446E6D]" />
+                      <p className="mt-2 text-sm font-medium text-[#446E6D]">Click to upload a video</p>
+                      <p className="text-xs text-gray-500 mt-1">MP4, WebM up to 50MB</p>
+                    </label>
+                  )}
                   <input
+                    ref={videoInputRef}
                     type="file"
                     accept="video/*"
                     name="video"
                     onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0"
+                    className="hidden"
                   />
-                </label>
+                </div>
               </div>
             </div>
 
-            <div className="flex flex-col gap-4">
+            {/* Right Column - Text Fields */}
+            <div className="space-y-6">
+              {/* Testimonial Text */}
               <div>
-
-              
-            <label className="font-medium"> Testimonial</label>
-              <textarea
-                name="Testimonial"
-                value={form.Testimonial}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg  mt-2"
-                rows="4"
-                required
-              /></div>
-              <div className="flex gap-4">
-                
-                <div>
-                <label className="font-medium"> Posted By</label>
-                <input
-                  type="text"
-                  name="postedBy"
-                  value={form.postedBy}
+                <label className="block text-sm font-medium text-gray-700 mb-2">Testimonial Text*</label>
+                <textarea
+                  name="Testimonial"
+                  value={form.Testimonial}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-lg mt-2"
-                  required
-                /></div><div>
-                <label className="font-medium"> Role</label>
-                <input
-                  type="text"
-                  name="role"
-                  value={form.role}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-lg mt-2"
-                  required
-                /></div>
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                  rows="4"
+                  placeholder="Enter the testimonial content..."
+                />
               </div>
 
-              {/* Fix Dropdowns */}
-              <div className="grid grid-cols-2 gap-4">
-                
+              {/* Author Information */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                <label className="font-medium"> Related Service</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Posted By*</label>
+                  <input
+                    type="text"
+                    name="postedBy"
+                    value={form.postedBy}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                    placeholder="Author's name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Role*</label>
+                  <input
+                    type="text"
+                    name="role"
+                    value={form.role}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                    placeholder="Author's position or role"
+                  />
+                </div>
+              </div>
+
+              {/* Related Entities */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Related Parent Service</label>
                 <select
                   name="relatedService"
                   value={form.relatedService}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-lg  mt-2"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                 >
-                  <option value="">Select a Service</option>
+                  <option value="">Select a Parent Service (Optional)</option>
                   {services.map((service) => (
                     <option key={service._id} value={service._id}>
                       {service.Title}
                     </option>
                   ))}
-                </select></div><div>
+                </select>
+              </div>
 
-                <label className="font-medium pb-6 ml-1"> Related Industry</label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Related Industry</label>
                 <select
                   name="relatedIndustries"
                   value={form.relatedIndustries}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-lg mt-2"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                 >
-                  <option value="">Select an Industry</option>
+                  <option value="">Select an Industry (Optional)</option>
                   {industries.map((industry) => (
                     <option key={industry._id} value={industry._id}>
                       {industry.Title}
                     </option>
                   ))}
-                </select></div>
+                </select>
+              </div>
+
+              {/* Added Product Selection Dropdown */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Related Child</label>
+                <select
+                  name="relatedProduct"
+                  value={form.relatedProduct}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                >
+                  <option value="">Select a Child (Optional)</option>
+                  {products.map((product) => (
+                    <option key={product._id} value={product._id}>
+                      {product.Title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Submit Button */}
+              <div className="pt-4">
+                <motion.button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={saving}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={`w-full py-3 px-4 rounded-lg text-white font-medium ${
+                    saving 
+                      ? 'bg-[#446E6D]/70 cursor-not-allowed' 
+                      : 'bg-[#446E6D] hover:bg-[#375857] transition-colors'
+                  } shadow-md flex items-center justify-center`}
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 className="animate-spin -ml-1 mr-2 h-5 w-5" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="mr-2" size={20} />
+                      Save Changes
+                    </>
+                  )}
+                </motion.button>
               </div>
             </div>
           </form>
-
-          <button
-            onClick={handleSave}
-            className="bg-blue-500 text-white p-2 rounded w-full mt-4"
-          >
-            Save Testimonial
-          </button>
         </div>
       ) : (
         <div>
           {/* Display Testimonials List */}
-          <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Testimonials</h1>
+          <h1 className="text-3xl font-bold mb-6 text-center text-[#446E6D]">Testimonials</h1>
+          
           {loading ? (
-            <p>Loading...</p>
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="h-12 w-12 animate-spin text-[#446E6D]" />
+            </div>
           ) : error ? (
-            <p className="text-red-500 text-center">{error}</p>
+            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-md flex items-start">
+              <AlertCircle className="text-red-500 mr-3 flex-shrink-0 mt-0.5" />
+              <p className="text-red-700">{error}</p>
+            </div>
+          ) : testimonials.length === 0 ? (
+            <div className="text-center py-8 bg-gray-50 rounded-lg border border-gray-200">
+              <p className="text-gray-500">No testimonials found.</p>
+            </div>
           ) : (
-            <div className="grid  gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {testimonials.map((testimonial) => (
-                <div
+                <motion.div
                   key={testimonial._id}
-                  className="flex items-center gap-4 p-4 border rounded-lg shadow-sm bg-gray-50"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-6 border rounded-lg shadow-sm bg-white hover:shadow-md transition-shadow"
                 >
-                  <img
-                    src={testimonial.image}
-                    alt="Testimonial"
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
-                  <div className="flex-1">
-                    <p className="text-lg font-semibold">{testimonial.Testimonial}</p>
-                    <p className="text-gray-600">{testimonial.postedBy} - {testimonial.role}</p>
+                  <div className="flex-shrink-0">
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.postedBy}
+                      className="w-20 h-20 rounded-full object-cover border-2 border-[#446E6D]/20"
+                    />
                   </div>
-                  <button
-                    onClick={() => handleEdit(testimonial)}
-                    className="px-4 py-2 bg-green-500 text-white rounded"
-                  >
-                    Edit
-                  </button>
-                </div>
+                  
+                  <div className="flex-1">
+                    <p className="text-lg font-medium line-clamp-2 text-gray-800">{testimonial.Testimonial}</p>
+                    <p className="text-[#446E6D] font-semibold mt-1">{testimonial.postedBy}</p>
+                    <p className="text-gray-600 text-sm">{testimonial.role}</p>
+                    
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {testimonial.relatedService && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                          {typeof testimonial.relatedService === 'object' 
+                            ? testimonial.relatedService?.Title || 'Service' 
+                            : 'Service'}
+                        </span>
+                      )}
+                      
+                      {testimonial.relatedIndustries && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          {typeof testimonial.relatedIndustries === 'object' 
+                            ? testimonial.relatedIndustries?.Title || 'Industry' 
+                            : 'Industry'}
+                        </span>
+                      )}
+                      
+                      {testimonial.relatedProduct && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          {typeof testimonial.relatedProduct === 'object' 
+                            ? testimonial.relatedProduct?.Title || 'Product' 
+                            : 'Product'}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex-shrink-0 mt-4 sm:mt-0">
+                    <motion.button
+                      onClick={() => handleEdit(testimonial)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 bg-[#446E6D] hover:bg-[#375857] text-white rounded-lg flex items-center shadow-sm transition-all"
+                    >
+                      <Edit size={16} className="mr-2" />
+                      Edit
+                    </motion.button>
+                  </div>
+                </motion.div>
               ))}
             </div>
           )}

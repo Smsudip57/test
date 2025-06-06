@@ -541,12 +541,12 @@ export default function Firewall({ services, products, slug, Mainservice, childs
 
           <section aria-labelledby="industries-heading" className="mt-16">
             <h2 id="industries-heading" className="sr-only">Industries We Serve</h2>
-            <Industies />
+            <Industies  parent={currentService?._id}/>
           </section>
 
           <section aria-labelledby="case-studies-heading" className="w-[90%] xl:w-full mx-auto mt-16">
             <h2 id="case-studies-heading" className="sr-only">Case Studies</h2>
-            <CaseStudy />
+            <CaseStudy parent={currentService?._id}/>
           </section>
         </div>
       </main>

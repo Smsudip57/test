@@ -81,7 +81,7 @@ const Advertiser = ({ data }: any) => {
   }, [data]); // Only depend on data
 
   return (
-    <div className="overflow-hidden relative w-full">
+    <div className="overflow-hidden relative w-full z-[50]">
       <motion.h2
         className="mx-auto w-max mb-4 text-primary text-2xl uppercase font-bold"
         key={currentTitle} // Key helps React identify when to animate

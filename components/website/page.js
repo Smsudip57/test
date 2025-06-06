@@ -20,6 +20,7 @@ import CreateTestimonial from './createtestimonial';
 import EditTestimonial from './edittestimonial';
 import Editwebsite from './editwebsite';
 import CreateChildService from './crateChild'
+import EditFaq from "./editfaq"
 
 
 
