@@ -154,7 +154,7 @@ const Webme: React.FC<WebmeProps> = ({ service: apiservice }) => {
                       src={item.media.url}
                       themeColor="#446E6D"
                       controls={true}
-                      onPlay={handleVideoClick}
+                      // onPlay={handleVideoClick}
                     />
                     <a 
                       href={`/details/projects/${item?.slug ? item.slug : item.Title}`}
