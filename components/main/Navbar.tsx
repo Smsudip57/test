@@ -306,8 +306,9 @@ const Navbar = () => {
                     open={Boolean(anchorE3)}
                     onClose={handleClose3}
                   >
+                    <div style={{ maxHeight: "300px" , overflowY: "auto" }}>
                     {industries.map((item: any, i: number) => (
-                      <MenuItem
+                      <div
                         key={i}
                         onClick={() => {
                           window.location.href = `/industries/${item
@@ -316,17 +317,17 @@ const Navbar = () => {
                             .toLowerCase()}`;
                         }}
                         // Force visibility with explicit styles
-                        style={{
-                          display: "block",
-                          visibility: "visible",
-                          padding: "10px 16px",
-                          whiteSpace: "nowrap",
-                        }}
+                        className="w-full p-2 max-h-[300px] overflow-y-auto"
+                        
                       >
+                        <li className="text-base text-nowrap font-semibold flex items-center text-[#747474] cursor-pointer hover:text-[#265353] pl-2 rounded-md py-1 hover:bg-[#e7f7f68f] justify-start gap-3 box-border opani">
+
                         {item}
-                      </MenuItem>
+                        </li>
+                      </div>
                     ))}
                     This is a test
+                    </div>
                   </Menu>
                 </MenuItem>
                 <MenuItem>
