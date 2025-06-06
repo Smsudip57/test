@@ -305,27 +305,37 @@ const Navbar = () => {
                     anchorEl={anchorE3}
                     open={Boolean(anchorE3)}
                     onClose={handleClose3}
-                    // Add these crucial mobile-specific props
+                    // Updated mobile-specific props
                     PaperProps={{
                       style: {
                         width: "300px",
-                        height: "300px",
+                        maxHeight: "300px", // Use maxHeight instead of fixed height
                         overflowY: "auto",
-                        display: "block", // Force display
-                        visibility: "visible", // Ensure visibility
+                        display: "block",
+                        visibility: "visible",
+                        zIndex: 9999, // Higher z-index to ensure visibility
+                        backgroundColor: "white", // Explicitly set background
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.15)", // More visible shadow
                       },
                     }}
-                    // Force the menu to appear in the viewport
+                    // Keep these positioning settings
                     transformOrigin={{
                       vertical: "top",
                       horizontal: "left",
                     }}
-                    // Position properly on mobile
                     anchorOrigin={{
                       vertical: "bottom",
                       horizontal: "left",
                     }}
-                    // Additional properties for mobile compatibility
+                    // Important additional properties
+                    MenuListProps={{
+                      style: {
+                        padding: "8px 0",
+                        display: "block",
+                        width: "100%",
+                      },
+                    }}
+                    // Other settings
                     variant="menu"
                     transitionDuration={100}
                   >
@@ -338,12 +348,18 @@ const Navbar = () => {
                             .join("-")
                             .toLowerCase()}`;
                         }}
-                        // Add explicit styling to ensure visibility on mobile
+                        // Enhanced styling for mobile visibility
                         style={{
                           display: "block",
-                          padding: "10px 16px",
+                          padding: "12px 16px", // Larger padding for touch
                           width: "100%",
                           textAlign: "left",
+                          color: "black",
+                          backgroundColor: "white", // Force background color
+                          opacity: 1, // Force opacity
+                          fontSize: "16px", // Larger font for mobile
+                          fontWeight: 400,
+                          margin: "2px 0",
                         }}
                       >
                         {item}
