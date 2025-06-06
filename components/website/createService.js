@@ -9,6 +9,7 @@ import { useContext } from 'react';
 export default function ServiceForm() {
   const [formData, setFormData] = useState({
     Title: '',
+    Name: '', // Added the Name field
     slug: '',
     detail: '',
     moreDetail: '',
@@ -82,7 +83,7 @@ export default function ServiceForm() {
     
     const Delete = async () => {
       // Ensure all required fields are filled
-      if (!formData.Title || !formData.detail || !formData.moreDetail || 
+      if (!formData.Title || !formData.Name || !formData.detail || !formData.moreDetail || 
           !formData.category || !formData.image || !formData.slug) {
         setErrorMessage('All fields are required!');
         return;
@@ -102,6 +103,7 @@ export default function ServiceForm() {
       // Prepare form data
       const data = new FormData();
       data.append('Title', formData.Title);
+      data.append('Name', formData.Name); // Add the Name field to form data
       data.append('slug', formData.slug);
       data.append('detail', formData.detail);
       data.append('moreDetail', formData.moreDetail);
@@ -119,6 +121,7 @@ export default function ServiceForm() {
         context.customToast(response.data)
         setFormData({
           Title: '',
+          Name: '',
           slug: '',
           detail: '',
           moreDetail: '',
@@ -190,6 +193,22 @@ export default function ServiceForm() {
               onChange={handleChange}
               className="w-full p-2 border rounded"
               placeholder="Enter the title"
+            />
+          </div>
+
+          {/* Added Name field */}
+          <div className="mb-4">
+            <label htmlFor="Name" className="block font-semibold mb-3">
+              Name
+            </label>
+            <input
+              type="text"
+              id="Name"
+              name="Name"
+              value={formData.Name}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              placeholder="Enter the name"
             />
           </div>
 

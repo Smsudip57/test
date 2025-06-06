@@ -6,7 +6,7 @@ import CaseStudy from "@/components/main/CaseStudy";
 import BlogSection from "@/components/shaerd/Blog";
 import FaqSection from "@/components/shaerd/Faqs";
 import KnowledgeBase from "@/components/shaerd/Knowledgebase";
-import Webme from "@/components/main/Webme";
+import Showcase from "@/components/shaerd/industryshowcase";
 
 const service = [
   {
@@ -63,6 +63,12 @@ const service = [
 
 // Main Component (Default Export)
 export default function FacultyManagement({ industry }) {
+  const [services, setServices] = useState(industry?.relatedService);
+  useEffect(() => {
+    if (industry?.relatedService) {
+      setServices({ services: industry?.relatedService });
+    }
+  }, [industry]);
   return (
     <div className="w-full h-full pt-[65px] lg:pt-0 relative z-20">
       <div className="w-full lg:w-4/5 mx-auto min-h-screen">
@@ -169,26 +175,7 @@ export default function FacultyManagement({ industry }) {
         <div className="w-[90%]  mx-auto">
           {industry?.relatedService &&
             Array.isArray(industry?.relatedService) && (
-              <Webme
-                service={{
-                  services: industry.relatedService.map((service) => {
-                    if (typeof service === "object" && service !== null) {
-                      return {
-                        ...service,
-                        category: service.category || "digital",
-                        image: service.image || "/placeholder.jpg",
-                      };
-                    } else {
-                      return {
-                        Title: "Service",
-                        category: "digital",
-                        image: "/placeholder.jpg",
-                        slug: "service",
-                      };
-                    }
-                  }),
-                }}
-              />
+              <Showcase service={industry?.relatedService} />
             )}
         </div>
       </div>

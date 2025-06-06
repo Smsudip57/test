@@ -311,8 +311,8 @@ const Navbar = () => {
                         key={i}
                         onClick={() => {
                           window.location.href = `/industries/${item
-                            .split(" ")
-                            .join("-")
+                            // .split(" ")
+                            // .join("-")
                             .toLowerCase()}`;
                         }}
                       >

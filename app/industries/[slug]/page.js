@@ -28,6 +28,7 @@ export default async function Page({params}) {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/industry/get`);
     if (response.data.success) {
       industry = response.data.industries.find((industry) => industry?.Title.toLowerCase() === decodeURIComponent(slug).toLowerCase());
+      // console.log(industry)
     }
   } catch (error) {
     industry = null

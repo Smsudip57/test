@@ -13,6 +13,7 @@ export default function EditServiceList() {
   const [editingService, setEditingService] = useState(null);
   const [formValues, setFormValues] = useState({
     Title: '',
+    Name: '', // Added Name field
     slug: '',
     deltail: '',
     moreDetail: '',
@@ -85,6 +86,7 @@ export default function EditServiceList() {
     setEditingService(service._id);
     setFormValues({
       Title: service.Title,
+      Name: service.Name || '', // Include Name field
       slug: service.slug || generateSlug(service.Title),
       deltail: service.deltail,
       category: service.category,
@@ -100,6 +102,7 @@ export default function EditServiceList() {
     setEditingService(null);
     setFormValues({ 
       Title: '', 
+      Name: '', // Include Name field
       slug: '', 
       deltail: '', 
       category: '', 
@@ -141,6 +144,12 @@ export default function EditServiceList() {
   // Save edited service
   const handleSave = async () => {
     const Save = async () => {
+      // Validate required fields
+      if (!formValues.Title || !formValues.Name || !formValues.deltail || !formValues.moreDetail || !formValues.category) {
+        customToast({ success: false, message: 'All fields are required.' });
+        return;
+      }
+      
       // Validate slug format
       if (!validateSlug(formValues.slug)) {
         setSlugError('Slug must be lowercase, containing only letters, numbers, and hyphens');
@@ -151,6 +160,7 @@ export default function EditServiceList() {
       const formData = new FormData();
       formData.append('serviceId', editingService);
       formData.append('Title', formValues.Title);
+      formData.append('Name', formValues.Name); // Include Name field
       formData.append('slug', formValues.slug);
       formData.append('deltail', formValues.deltail);
       formData.append('category', formValues.category);
@@ -235,6 +245,7 @@ export default function EditServiceList() {
               )}
               <div className="flex-1">
                 <h2 className="text-lg font-semibold">{service.Title}</h2>
+                <p className="text-sm text-gray-800">{service.Name}</p> {/* Display Name field */}
                 <p className="text-gray-600">{service.deltail}</p>
                 <p className="text-gray-500 text-sm">{service.category}</p>
               </div>
@@ -315,6 +326,21 @@ export default function EditServiceList() {
                     onChange={handleInputChange}
                     className="w-full p-2 border rounded"
                     placeholder="Enter the title"
+                    />
+                </div>
+
+                {/* Add Name field */}
+                <div className="mb-4">
+                  <label htmlFor="Name" className="block font-semibold mb-3">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    name="Name"
+                    value={formValues.Name}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded"
+                    placeholder="Enter the name"
                     />
                 </div>
 

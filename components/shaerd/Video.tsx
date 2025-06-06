@@ -15,6 +15,7 @@ interface VideoPlayerProps {
   controls?: boolean; // Whether to show native controls
   onEnd?: () => void;
   playsInline?: boolean;
+  onPlay?: () => void; // Optional click handler for the video
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -29,6 +30,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   controls = false,
   onEnd,
   playsInline = true,
+  onPlay
 }) => {
   const [isPlaying, setIsPlaying] = useState(autoPlay);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -79,7 +81,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       {!isPlaying && (
         <div 
           className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center cursor-pointer transition-opacity duration-300 hover:bg-opacity-20"
-          onClick={togglePlay}
+          onClick={(e)=>{
+            e.preventDefault();
+            e.stopPropagation();
+            togglePlay();
+            if (onPlay) onPlay();
+          }}
         >
           <div 
             className="w-20 h-20 rounded-full flex items-center justify-center shadow-lg"
@@ -94,7 +101,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       {isPlaying && (
         <div 
           className="absolute bottom-4 right-4 opacity-70 hover:opacity-100 transition-opacity duration-300"
-          onClick={togglePlay}
+          onClick={(e)=>{ e.preventDefault();
+            e.stopPropagation();
+            togglePlay();
+            if (onPlay) onPlay();
+          }}
         >
           <div 
             className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg cursor-pointer"
