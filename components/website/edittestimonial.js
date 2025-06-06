@@ -39,7 +39,7 @@ export default function EditTestimonial() {
     fetchData();
   }, []);
 
-  // Validate image dimensions (16:9 aspect ratio with 0.1% tolerance)
+  // Validate image dimensions (1:1 aspect ratio with 0.1% tolerance)
   const validateImageDimensions = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -49,14 +49,14 @@ export default function EditTestimonial() {
           const width = this.width;
           const height = this.height;
           const aspectRatio = width / height;
-          const targetRatio = 16 / 9;
-          const tolerance = 0.001; // 0.1% tolerance
+          const targetRatio = 1/ 1;
+          const tolerance = 0.1; // 0.1% tolerance
           
           if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
             resolve({ width, height, aspectRatio });
           } else {
             reject({ 
-              message: `Image must have a 16:9 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
+              message: `Image must have a 1:1 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
               dimensions: { width, height, aspectRatio }
             });
           }
@@ -145,7 +145,7 @@ export default function EditTestimonial() {
       }
       
       try {
-        // Validate image dimensions (16:9)
+        // Validate image dimensions (1:1)
         await validateImageDimensions(file);
         
         // Revoke previous objectURL to prevent memory leaks
@@ -159,7 +159,7 @@ export default function EditTestimonial() {
         console.error("Image validation error:", err);
         customToast({
           success: false,
-          message: `Image must have a 16:9 aspect ratio. Current ratio is ${err.dimensions?.aspectRatio.toFixed(2)}:1`
+          message: `Image must have a 1:1 aspect ratio. Current ratio is ${err.dimensions?.aspectRatio.toFixed(2)}:1`
         });
         e.target.value = '';
         return;
@@ -385,7 +385,7 @@ export default function EditTestimonial() {
                     <label className="flex flex-col items-center justify-center h-64 cursor-pointer">
                       <ImageIcon className="h-12 w-12 text-[#446E6D]" />
                       <p className="mt-2 text-sm font-medium text-[#446E6D]">Click to upload an image</p>
-                      <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB (16:9 ratio required)</p>
+                      <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB (1:1 ratio required)</p>
                     </label>
                   )}
                   <input

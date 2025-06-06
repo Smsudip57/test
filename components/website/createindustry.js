@@ -21,7 +21,7 @@ const CreateIndustry = () => {
     Efficiency: 0,
     costSaving: 0,
     customerSatisfaction: 0,
-    relatedProduct: [],
+    relatedService: [],
   });
 
   const [image, setImage] = useState(null);
@@ -30,7 +30,7 @@ const CreateIndustry = () => {
   const [logoPreview, setLogoPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [products, setProducts] = useState([]);
+  const [services, setServices] = useState([]);
   const [success, setSuccess] = useState(false);
 
   const { customToast } = useContext(MyContext) || {
@@ -40,23 +40,23 @@ const CreateIndustry = () => {
   const imageInputRef = useRef(null);
   const logoInputRef = useRef(null);
 
-  // Fetch products on component mount
+  // Fetch services on component mount
   useEffect(() => {
-    fetchProducts();
+    fetchServices();
   }, []);
 
-  // Fetch products for the dropdown
-  const fetchProducts = async () => {
+  // Fetch services for the dropdown
+  const fetchServices = async () => {
     try {
-      const res = await axios.get("/api/product/get");
+      const res = await axios.get("/api/service/getservice");
       if (res.data.success) {
-        setProducts(res.data.products || []);
+        setServices(res.data.services || []);
       }
     } catch (err) {
-      console.error("Error fetching products:", err);
+      console.error("Error fetching services:", err);
       customToast({
         success: false,
-        message: "Failed to load products for selection",
+        message: "Failed to load services for selection",
       });
     }
   };
@@ -78,14 +78,14 @@ const CreateIndustry = () => {
     }
   };
 
-  const handleProductSelection = (e) => {
+  const handleServiceSelection = (e) => {
     const selectedOptions = Array.from(
       e.target.selectedOptions,
       (option) => option.value
     );
     setFormData((prev) => ({
       ...prev,
-      relatedProduct: selectedOptions,
+      relatedService: selectedOptions,
     }));
   };
 
@@ -192,10 +192,10 @@ const CreateIndustry = () => {
 
     // Append all form fields
     Object.keys(formData).forEach((key) => {
-      if (key === "relatedProduct" && formData[key].length > 0) {
-        // Handle array of related products
-        formData[key].forEach((productId) => {
-          data.append("relatedProduct", productId);
+      if (key === "relatedService" && formData[key].length > 0) {
+        // Handle array of related services
+        formData[key].forEach((serviceId) => {
+          data.append("relatedService", serviceId);
         });
       } else {
         data.append(key, formData[key]);
@@ -227,7 +227,7 @@ const CreateIndustry = () => {
           Efficiency: 0,
           costSaving: 0,
           customerSatisfaction: 0,
-          relatedProduct: [],
+          relatedService: [],
         });
 
         clearImage("image");
@@ -325,26 +325,26 @@ const CreateIndustry = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Related Child Services
+              Related Services
             </label>
             <div className="mb-3">
-              {formData.relatedProduct.length > 0 && (
+              {formData.relatedService.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-3">
-                  {formData.relatedProduct.map((productId) => {
-                    const product = products.find((p) => p._id === productId);
+                  {formData.relatedService.map((serviceId) => {
+                    const service = services.find((s) => s._id === serviceId);
                     return (
                       <span
-                        key={productId}
+                        key={serviceId}
                         className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-100 text-blue-800"
                       >
-                        {product?.Title || "Product"}
+                        {service?.Title || "Service"}
                         <button
                           type="button"
                           onClick={() => {
                             setFormData((prev) => ({
                               ...prev,
-                              relatedProduct: prev.relatedProduct.filter(
-                                (id) => id !== productId
+                              relatedService: prev.relatedService.filter(
+                                (id) => id !== serviceId
                               ),
                             }));
                           }}
@@ -361,36 +361,36 @@ const CreateIndustry = () => {
                 <div className="mb-2">
                   <input
                     type="text"
-                    placeholder="Search products..."
+                    placeholder="Search services..."
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                     onChange={(e) => {
                       const searchTerm = e.target.value.toLowerCase();
-                      // You can implement product filtering here if needed
+                      // You can implement service filtering here if needed
                     }}
                   />
                 </div>
                 <div className="space-y-2">
-                  {products.map((product) => (
-                    <div key={product._id} className="flex items-center">
+                  {services.map((service) => (
+                    <div key={service._id} className="flex items-center">
                       <input
                         type="checkbox"
-                        id={`product-${product._id}`}
-                        checked={formData.relatedProduct.includes(product._id)}
+                        id={`service-${service._id}`}
+                        checked={formData.relatedService.includes(service._id)}
                         onChange={() => {
                           setFormData((prev) => {
-                            if (prev.relatedProduct.includes(product._id)) {
+                            if (prev.relatedService.includes(service._id)) {
                               return {
                                 ...prev,
-                                relatedProduct: prev.relatedProduct.filter(
-                                  (id) => id !== product._id
+                                relatedService: prev.relatedService.filter(
+                                  (id) => id !== service._id
                                 ),
                               };
                             } else {
                               return {
                                 ...prev,
-                                relatedProduct: [
-                                  ...prev.relatedProduct,
-                                  product._id,
+                                relatedService: [
+                                  ...prev.relatedService,
+                                  service._id,
                                 ],
                               };
                             }
@@ -399,10 +399,10 @@ const CreateIndustry = () => {
                         className="h-4 w-4 text-[#446E6D] border-gray-300 rounded focus:ring-[#446E6D]"
                       />
                       <label
-                        htmlFor={`product-${product._id}`}
+                        htmlFor={`service-${service._id}`}
                         className="ml-2 block text-sm text-gray-700 cursor-pointer hover:text-[#446E6D]"
                       >
-                        {product.Title}
+                        {service.Title}
                       </label>
                     </div>
                   ))}
@@ -410,10 +410,10 @@ const CreateIndustry = () => {
               </div>
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              {formData.relatedProduct.length === 0
-                ? "No products selected"
-                : `${formData.relatedProduct.length} product${
-                    formData.relatedProduct.length > 1 ? "s" : ""
+              {formData.relatedService.length === 0
+                ? "No services selected"
+                : `${formData.relatedService.length} service${
+                    formData.relatedService.length > 1 ? "s" : ""
                   } selected`}
             </p>
           </div>

@@ -27,7 +27,7 @@ const EditIndustry = () => {
     Efficiency: 0,
     costSaving: 0,
     customerSatisfaction: 0,
-    relatedProduct: [],
+    relatedService: [],
   });
 
   const [image, setImage] = useState(null);
@@ -37,7 +37,7 @@ const EditIndustry = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
-  const [products, setProducts] = useState([]);
+  const [services, setServices] = useState([]);
 
   const { customToast } = useContext(MyContext) || {
     customToast: (msg) => console.log(msg),
@@ -46,22 +46,22 @@ const EditIndustry = () => {
   const imageInputRef = useRef(null);
   const logoInputRef = useRef(null);
 
-  // Fetch industries and products on load
+  // Fetch industries and services on load
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [industriesRes, productsRes] = await Promise.all([
+        const [industriesRes, servicesRes] = await Promise.all([
           axios.get("/api/industry/get"),
-          axios.get("/api/product/get"),
+          axios.get("/api/service/getservice"),
         ]);
 
         setIndustries(industriesRes.data.industries || []);
         setFilteredIndustries(industriesRes.data.industries || []);
-        setProducts(productsRes.data.products || []);
+        setServices(servicesRes.data.services || []);
       } catch (error) {
         console.error("Failed to fetch data:", error);
         setError(
-          "Failed to load industries and products. Please refresh the page."
+          "Failed to load industries and services. Please refresh the page."
         );
         customToast({
           success: false,
@@ -99,15 +99,15 @@ const EditIndustry = () => {
       Efficiency: industry.Efficiency || 0,
       costSaving: industry.costSaving || 0,
       customerSatisfaction: industry.customerSatisfaction || 0,
-      relatedProduct: Array.isArray(industry.relatedProduct)
-        ? industry.relatedProduct.map((product) =>
-            typeof product === "object" ? product._id : product
+      relatedService: Array.isArray(industry.relatedService)
+        ? industry.relatedService.map((service) =>
+            typeof service === "object" ? service._id : service
           )
-        : industry.relatedProduct
+        : industry.relatedService
         ? [
-            typeof industry.relatedProduct === "object"
-              ? industry.relatedProduct._id
-              : industry.relatedProduct,
+            typeof industry.relatedService === "object"
+              ? industry.relatedService._id
+              : industry.relatedService,
           ]
         : [],
     });
@@ -139,15 +139,15 @@ const EditIndustry = () => {
     }
   };
 
-  // Handle product selection (multi-select)
-  const handleProductSelection = (e) => {
+  // Handle service selection (multi-select)
+  const handleServiceSelection = (e) => {
     const selectedOptions = Array.from(
       e.target.selectedOptions,
       (option) => option.value
     );
     setFormData((prev) => ({
       ...prev,
-      relatedProduct: selectedOptions,
+      relatedService: selectedOptions,
     }));
   };
 
@@ -265,10 +265,10 @@ const EditIndustry = () => {
     data.append("costSaving", formData.costSaving || 0);
     data.append("customerSatisfaction", formData.customerSatisfaction || 0);
 
-    // Append related products (can be multiple)
-    if (formData.relatedProduct && formData.relatedProduct.length > 0) {
-      formData.relatedProduct.forEach((productId) => {
-        data.append("relatedProduct", productId);
+    // Append related services (can be multiple)
+    if (formData.relatedService && formData.relatedService.length > 0) {
+      formData.relatedService.forEach((serviceId) => {
+        data.append("relatedService", serviceId);
       });
     }
 
@@ -421,28 +421,28 @@ const EditIndustry = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Related Child Services
+                  Related Services
                 </label>
                 <div className="mb-3">
-                  {formData.relatedProduct.length > 0 && (
+                  {formData.relatedService.length > 0 && (
                     <div className="flex flex-wrap gap-2 mb-3">
-                      {formData.relatedProduct.map((productId) => {
-                        const product = products.find(
-                          (p) => p._id === productId
+                      {formData.relatedService.map((serviceId) => {
+                        const service = services.find(
+                          (s) => s._id === serviceId
                         );
                         return (
                           <span
-                            key={productId}
+                            key={serviceId}
                             className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-100 text-blue-800"
                           >
-                            {product?.Title || "Product"}
+                            {service?.Title || "Service"}
                             <button
                               type="button"
                               onClick={() => {
                                 setFormData((prev) => ({
                                   ...prev,
-                                  relatedProduct: prev.relatedProduct.filter(
-                                    (id) => id !== productId
+                                  relatedService: prev.relatedService.filter(
+                                    (id) => id !== serviceId
                                   ),
                                 }));
                               }}
@@ -459,38 +459,38 @@ const EditIndustry = () => {
                     <div className="mb-2">
                       <input
                         type="text"
-                        placeholder="Search products..."
+                        placeholder="Search services..."
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                         onChange={(e) => {
                           const searchTerm = e.target.value.toLowerCase();
-                          // You can implement product filtering here if needed
+                          // You can implement service filtering here if needed
                         }}
                       />
                     </div>
                     <div className="space-y-2">
-                      {products.map((product) => (
-                        <div key={product._id} className="flex items-center">
+                      {services.map((service) => (
+                        <div key={service._id} className="flex items-center">
                           <input
                             type="checkbox"
-                            id={`product-${product._id}`}
-                            checked={formData.relatedProduct.includes(
-                              product._id
+                            id={`service-${service._id}`}
+                            checked={formData.relatedService.includes(
+                              service._id
                             )}
                             onChange={() => {
                               setFormData((prev) => {
-                                if (prev.relatedProduct.includes(product._id)) {
+                                if (prev.relatedService.includes(service._id)) {
                                   return {
                                     ...prev,
-                                    relatedProduct: prev.relatedProduct.filter(
-                                      (id) => id !== product._id
+                                    relatedService: prev.relatedService.filter(
+                                      (id) => id !== service._id
                                     ),
                                   };
                                 } else {
                                   return {
                                     ...prev,
-                                    relatedProduct: [
-                                      ...prev.relatedProduct,
-                                      product._id,
+                                    relatedService: [
+                                      ...prev.relatedService,
+                                      service._id,
                                     ],
                                   };
                                 }
@@ -499,10 +499,10 @@ const EditIndustry = () => {
                             className="h-4 w-4 text-[#446E6D] border-gray-300 rounded focus:ring-[#446E6D]"
                           />
                           <label
-                            htmlFor={`product-${product._id}`}
+                            htmlFor={`service-${service._id}`}
                             className="ml-2 block text-sm text-gray-700 cursor-pointer hover:text-[#446E6D]"
                           >
-                            {product.Title}
+                            {service.Title}
                           </label>
                         </div>
                       ))}
@@ -510,10 +510,10 @@ const EditIndustry = () => {
                   </div>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
-                  {formData.relatedProduct.length === 0
-                    ? "No products selected"
-                    : `${formData.relatedProduct.length} product${
-                        formData.relatedProduct.length > 1 ? "s" : ""
+                  {formData.relatedService.length === 0
+                    ? "No services selected"
+                    : `${formData.relatedService.length} service${
+                        formData.relatedService.length > 1 ? "s" : ""
                       } selected`}
                 </p>
               </div>
@@ -759,25 +759,25 @@ const EditIndustry = () => {
                     </p>
 
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {industry.relatedProduct &&
-                        Array.isArray(industry.relatedProduct) &&
-                        industry.relatedProduct.length > 0 && (
+                      {industry.relatedService &&
+                        Array.isArray(industry.relatedService) &&
+                        industry.relatedService.length > 0 && (
                           <div className="flex flex-wrap gap-1">
-                            {industry.relatedProduct
+                            {industry.relatedService
                               .slice(0, 2)
-                              .map((product, idx) => (
+                              .map((service, idx) => (
                                 <span
                                   key={idx}
                                   className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
                                 >
-                                  {typeof product === "object" && product.Title
-                                    ? product.Title
-                                    : "Product"}
+                                  {typeof service === "object" && service.Title
+                                    ? service.Title
+                                    : "Service"}
                                 </span>
                               ))}
-                            {industry.relatedProduct.length > 2 && (
+                            {industry.relatedService.length > 2 && (
                               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                +{industry.relatedProduct.length - 2} more
+                                +{industry.relatedService.length - 2} more
                               </span>
                             )}
                           </div>

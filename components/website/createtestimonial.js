@@ -29,7 +29,7 @@ const CreateTestimonial = () => {
   const [error, setError] = useState('');
   const { customToast } = useContext(MyContext);
 
-  // Validate image dimensions (16:9 aspect ratio with 0.1% tolerance)
+  // Validate image dimensions (1:1 aspect ratio with 0.1% tolerance)
   const validateImageDimensions = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -39,14 +39,14 @@ const CreateTestimonial = () => {
           const width = this.width;
           const height = this.height;
           const aspectRatio = width / height;
-          const targetRatio = 16 / 9;
-          const tolerance = 0.001; // 0.1% tolerance
+          const targetRatio = 1/1;
+          const tolerance = 0.1; // 0.1% tolerance
           
           if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
             resolve({ width, height, aspectRatio });
           } else {
             reject({ 
-              message: `Image must have a 16:9 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
+              message: `Image must have a 1:1 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
               dimensions: { width, height, aspectRatio }
             });
           }
@@ -103,7 +103,7 @@ const CreateTestimonial = () => {
       }
       
       try {
-        // Validate image dimensions (16:9)
+        // Validate image dimensions (1:1)
         await validateImageDimensions(file);
         
         // If previous preview exists, revoke its URL
@@ -115,7 +115,7 @@ const CreateTestimonial = () => {
         console.error("Image validation error:", err);
         customToast({
           success: false,
-          message: `Image must have a 16:9 aspect ratio. Current ratio is ${err.dimensions?.aspectRatio.toFixed(2)}:1`
+          message: `Image must have a 1:1 aspect ratio. Current ratio is ${err.dimensions?.aspectRatio.toFixed(2)}:1`
         });
         e.target.value = '';
         return;
@@ -244,7 +244,7 @@ const CreateTestimonial = () => {
           {/* Image Upload with Preview */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Testimonial Image* <span className="text-xs text-gray-500">(16:9 ratio required)</span>
+              Testimonial Image* <span className="text-xs text-gray-500">(1:1 ratio required)</span>
             </label>
             <div className="relative border-2 border-dashed border-[#446E6D]/30 rounded-lg p-4 text-center hover:bg-[#446E6D]/5 transition-colors">
               {imagePreview ? (
@@ -262,7 +262,7 @@ const CreateTestimonial = () => {
                 <label className="flex flex-col items-center justify-center h-64 cursor-pointer">
                   <ImageIcon className="h-12 w-12 text-[#446E6D]" />
                   <p className="mt-2 text-sm font-medium text-[#446E6D]">Click to upload an image</p>
-                  <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB (16:9 ratio required)</p>
+                  <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB (1:1 ratio required)</p>
                   <input
                     type="file"
                     accept="image/*"
