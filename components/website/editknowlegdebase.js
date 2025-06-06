@@ -1127,7 +1127,7 @@ export default function EditKnowledgeBase() {
           {/* Related Products */}
           <div className="dropdown-container">
             <label className="block text-gray-700 font-medium mb-2">
-              Related Products
+              Related Child Services
             </label>
             <div className="relative">
               <button
@@ -1136,7 +1136,7 @@ export default function EditKnowledgeBase() {
                 onClick={() => setDropdownOpen(prev => ({ ...prev, products: !prev.products }))}
               >
                 <span className="text-gray-500">
-                  {ensureArray(formData.relatedProducts).length ? `${ensureArray(formData.relatedProducts).length} product(s) selected` : 'Select products...'}
+                  {ensureArray(formData.relatedProducts).length ? `${ensureArray(formData.relatedProducts).length} Child(s) selected` : 'Select products...'}
                 </span>
                 <ChevronDown size={18} className={`transition-transform ${dropdownOpen.products ? 'rotate-180' : ''}`} />
               </button>
@@ -1197,7 +1197,7 @@ export default function EditKnowledgeBase() {
           {/* Related Child Services */}
           <div className="dropdown-container">
             <label className="block text-gray-700 font-medium mb-2">
-              Related Child Services
+              Related Products
             </label>
             <div className="relative">
               <button
@@ -1206,7 +1206,7 @@ export default function EditKnowledgeBase() {
                 onClick={() => setDropdownOpen(prev => ({ ...prev, childServices: !prev.childServices }))}
               >
                 <span className="text-gray-500">
-                  {ensureArray(formData.relatedChikfdServices).length ? `${ensureArray(formData.relatedChikfdServices).length} child service(s) selected` : 'Select child services...'}
+                  {ensureArray(formData.relatedChikfdServices).length ? `${ensureArray(formData.relatedChikfdServices).length} Products(s) selected` : 'Select child services...'}
                 </span>
                 <ChevronDown size={18} className={`transition-transform ${dropdownOpen.childServices ? 'rotate-180' : ''}`} />
               </button>

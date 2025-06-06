@@ -16,7 +16,8 @@ export default function EditTestimonial() {
     video: null,
     relatedService: "",
     relatedIndustries: "",
-    relatedProduct: "", // Added related product field
+    relatedProduct: "",
+    relatedChikfdServices: "", // Added relatedChikfdServices field
   });
   
   const [loading, setLoading] = useState(false);
@@ -26,7 +27,8 @@ export default function EditTestimonial() {
   const [videoPreview, setVideoPreview] = useState(null);
   const [services, setServices] = useState([]);
   const [industries, setIndustries] = useState([]);
-  const [products, setProducts] = useState([]); // Added products state
+  const [products, setProducts] = useState([]);
+  const [childServices, setChildServices] = useState([]); // Added childServices state
   const { customToast } = useContext(MyContext);
   
   const imageInputRef = useRef(null);
@@ -84,16 +86,18 @@ export default function EditTestimonial() {
 
   const fetchData = async () => {
     try {
-      // Fetch services, industries, and products in parallel
-      const [serviceRes, industryRes, productRes] = await Promise.all([
+      // Fetch services, industries, products, and child services in parallel
+      const [serviceRes, industryRes, productRes, childServiceRes] = await Promise.all([
         axios.get("/api/service/getservice"),
         axios.get("/api/industry/get"),
-        axios.get("/api/product/get") // Added product fetch
+        axios.get("/api/product/get"),
+        axios.get("/api/child/get") // Correct endpoint for child services
       ]);
       
       setServices(serviceRes.data.services || []);
       setIndustries(industryRes.data.industries || []);
-      setProducts(productRes.data.products || []); // Set products
+      setProducts(productRes.data.products || []);
+      setChildServices(childServiceRes.data.products || []); // API returns child services in 'products' field
     } catch (error) {
       console.error("Error fetching data:", error);
       customToast({ 
@@ -111,6 +115,7 @@ export default function EditTestimonial() {
       relatedService: testimonial.relatedService?._id || testimonial.relatedService || "",
       relatedIndustries: testimonial.relatedIndustries?._id || testimonial.relatedIndustries || "",
       relatedProduct: testimonial.relatedProduct?._id || testimonial.relatedProduct || "",
+      relatedChikfdServices: testimonial.relatedChikfdServices?._id || testimonial.relatedChikfdServices || "",
     });
     setImagePreview(testimonial.image);
     setVideoPreview(testimonial.video);
@@ -314,6 +319,7 @@ export default function EditTestimonial() {
       relatedService: "",
       relatedIndustries: "",
       relatedProduct: "",
+      relatedChikfdServices: "", // Reset child services field too
     });
     setImagePreview(null);
     setVideoPreview(null);
@@ -516,19 +522,37 @@ export default function EditTestimonial() {
                 </select>
               </div>
 
-              {/* Added Product Selection Dropdown */}
+              {/* Product Selection Dropdown */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Related Child</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Related Child Service</label>
                 <select
                   name="relatedProduct"
                   value={form.relatedProduct}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
                 >
-                  <option value="">Select a Child (Optional)</option>
+                  <option value="">Select a Child Service (Optional)</option>
                   {products.map((product) => (
                     <option key={product._id} value={product._id}>
                       {product.Title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Child Services Selection Dropdown - Added */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Related Product</label>
+                <select
+                  name="relatedChikfdServices"
+                  value={form.relatedChikfdServices}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                >
+                  <option value="">Select a Product (Optional)</option>
+                  {childServices.map((childService) => (
+                    <option key={childService._id} value={childService._id}>
+                      {childService.Title}
                     </option>
                   ))}
                 </select>
@@ -627,6 +651,15 @@ export default function EditTestimonial() {
                           {typeof testimonial.relatedProduct === 'object' 
                             ? testimonial.relatedProduct?.Title || 'Product' 
                             : 'Product'}
+                        </span>
+                      )}
+                      
+                      {/* Added Child Service Label */}
+                      {testimonial.relatedChikfdServices && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                          {typeof testimonial.relatedChikfdServices === 'object' 
+                            ? testimonial.relatedChikfdServices?.Title || 'Child Service' 
+                            : 'Child Service'}
                         </span>
                       )}
                     </div>

@@ -32,7 +32,12 @@ interface FaqSectionProps {
   product?: string;
 }
 
-const FaqItem: React.FC<FaqItemProps> = ({ question, answer, isOpen, toggleOpen }) => {
+const FaqItem: React.FC<FaqItemProps> = ({
+  question,
+  answer,
+  isOpen,
+  toggleOpen,
+}) => {
   return (
     <div
       className={`w-full border-b-2 border-[#446e6d44]`}
@@ -78,7 +83,7 @@ const FaqItem: React.FC<FaqItemProps> = ({ question, answer, isOpen, toggleOpen 
           )}
         </span>
       </button>
-      <p className={`${isOpen ? "block" : "hidden"} mb-6`}>{answer}</p>
+      <p className={`${isOpen ? "block" : "hidden"} mb-6 text-left`}>{answer}</p>
     </div>
   );
 };
@@ -108,35 +113,76 @@ const defaultFaqs: QuestionAnswer[] = [
 ];
 
 // Internal FAQ Section Component
-const FaqSection: React.FC<FaqSectionProps> = ({ industry, child, product }) => {
+const FaqSection: React.FC<FaqSectionProps> = ({
+  industry,
+  child,
+  product,
+}) => {
   const [faqs, setFaqs] = useState<FaqData[]>([]);
   const [openFaqs, setOpenFaqs] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const fetchFaqs = async () => {
+      console.log(child);
       try {
         // Only append industry param if it exists
-        const queryParam = industry ? `?industry=${industry}` : '';
-        const response = await axios.get<{ faqs: FaqData[] }>(`/api/faq/get${queryParam}`);
-        
+        const queryParam = industry ? `?industry=${industry}` : "";
+        const response = await axios.get<{ faqs: FaqData[] }>(
+          `/api/faq/get${queryParam}`
+        );
         if (industry || child || product) {
           // Filter by related fields if provided
-          const filteredArticles = response.data.faqs.filter((item: FaqData) => {
-            // Check if any of the relationships match
-            const matchesIndustry = industry && Array.isArray(item.relatedIndustries) 
-              ? item.relatedIndustries.includes(industry)
-              : item.relatedIndustries === industry;
-              
-            const matchesChild = child && Array.isArray(item.relatedProducts) 
-              ? item.relatedProducts.includes(child)
-              : item.relatedProducts === child;
-              
-            const matchesProduct = product && Array.isArray(item.relatedChikfdServices) 
-              ? item.relatedChikfdServices.includes(product)
-              : item.relatedChikfdServices === product;
-              
-            return matchesIndustry || matchesChild || matchesProduct;
-          });
+          const filteredArticles = response.data.faqs.filter(
+            (item: FaqData) => {
+              // Check if any of the relationships match
+              let matchesIndustry = false;
+              let matchesChild = false;
+              let matchesProduct = false;
+
+              // Check industry match
+              if (industry && item.relatedIndustries) {
+                if (Array.isArray(item.relatedIndustries)) {
+                  // Check if populated (objects with _id) or just ID strings
+                  matchesIndustry = item.relatedIndustries.some((ind:any) =>
+                    typeof ind === "object"
+                      ? ind._id === industry
+                      : ind === industry
+                  );
+                } else {
+                  matchesIndustry = item.relatedIndustries === industry;
+                }
+              }
+
+              // Check child service match (stored in relatedProducts)
+              if (child && item.relatedProducts) {
+                if (Array.isArray(item.relatedProducts)) {
+                  matchesChild = item.relatedProducts.some((prod:any) =>
+                    typeof prod === "object"
+                      ? prod._id === child
+                      : prod === child
+                  );
+                } else {
+                  matchesChild = item.relatedProducts === child;
+                }
+              }
+
+              // Check product match (stored in relatedChikfdServices)
+              if (product && item.relatedChikfdServices) {
+                if (Array.isArray(item.relatedChikfdServices)) {
+                  matchesProduct = item.relatedChikfdServices.some(
+                    (childServ:any) =>
+                      typeof childServ === "object"
+                        ? childServ._id === product
+                        : childServ === product
+                  );
+                } else {
+                  matchesProduct = item.relatedChikfdServices === product;
+                }
+              }
+
+              return matchesIndustry || matchesChild || matchesProduct;
+            }
+          );
 
           setFaqs(filteredArticles);
         } else {
@@ -146,7 +192,7 @@ const FaqSection: React.FC<FaqSectionProps> = ({ industry, child, product }) => 
         console.error("Error fetching FAQs:", error);
       }
     };
-    
+
     fetchFaqs();
   }, [industry, child, product]);
 

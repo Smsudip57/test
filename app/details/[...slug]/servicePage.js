@@ -113,7 +113,7 @@ export default function Page({ details: Service }) {
       ))}
 
       <div className="w-[90%] mx-auto lg:w-full">
-        <CaseStudy />
+        <CaseStudy  child={Service?._id}/>
       </div>
 
       <div className="mx-auto min-h-screen flex justify-center items-center">
@@ -121,7 +121,7 @@ export default function Page({ details: Service }) {
       </div>
 
       {/* FAQ Section Component */}
-      <FaqSection child={Service} product={Service?._id} />
+      <FaqSection child={Service?._id} product={Service?._id} />
     </div>
   );
 }

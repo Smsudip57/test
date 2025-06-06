@@ -1,177 +1,606 @@
-'use client';
-import React, { useState } from 'react';
-import axios from 'axios';
+"use client";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import axios from "axios";
+import {
+  Upload,
+  X,
+  Image as ImageIcon,
+  AlertCircle,
+  Loader2,
+  Save,
+  CheckCircle2,
+} from "lucide-react";
+import { motion } from "framer-motion";
+import { MyContext } from "@/context/context";
 
 const CreateIndustry = () => {
   const [formData, setFormData] = useState({
-    Title: '',
-    Heading: '',
-    detail: '',
-    Efficiency: '',
-    costSaving: '',
-    customerSatisfaction: '',
+    Title: "",
+    Heading: "",
+    detail: "",
+    Efficiency: 0,
+    costSaving: 0,
+    customerSatisfaction: 0,
+    relatedProduct: [],
   });
+
   const [image, setImage] = useState(null);
   const [logo, setLogo] = useState(null);
-  const [message, setMessage] = useState('');
+  const [imagePreview, setImagePreview] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [success, setSuccess] = useState(false);
+
+  const { customToast } = useContext(MyContext) || {
+    customToast: (msg) => console.log(msg),
+  };
+
+  const imageInputRef = useRef(null);
+  const logoInputRef = useRef(null);
+
+  // Fetch products on component mount
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  // Fetch products for the dropdown
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get("/api/product/get");
+      if (res.data.success) {
+        setProducts(res.data.products || []);
+      }
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      customToast({
+        success: false,
+        message: "Failed to load products for selection",
+      });
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Handle numeric inputs
+    if (
+      name === "Efficiency" ||
+      name === "costSaving" ||
+      name === "customerSatisfaction"
+    ) {
+      // Ensure value is between 0 and 100
+      const numValue = Math.min(Math.max(0, Number(value)), 100);
+      setFormData((prev) => ({ ...prev, [name]: numValue }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleProductSelection = (e) => {
+    const selectedOptions = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setFormData((prev) => ({
+      ...prev,
+      relatedProduct: selectedOptions,
+    }));
   };
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
+      setError("Please select a valid image file");
+      return;
+    }
+
+    // Revoke previous objectURL to prevent memory leaks
+    if (imagePreview && imagePreview.startsWith("blob:")) {
+      URL.revokeObjectURL(imagePreview);
+    }
+
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
+    setError(null);
+  };
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
+      setError("Please select a valid image file for the logo");
+      return;
+    }
+
+    // Revoke previous objectURL to prevent memory leaks
+    if (logoPreview && logoPreview.startsWith("blob:")) {
+      URL.revokeObjectURL(logoPreview);
+    }
+
+    setLogo(file);
+    setLogoPreview(URL.createObjectURL(file));
+    setError(null);
+  };
+
+  const clearImage = (type) => {
+    if (type === "image") {
+      if (imagePreview && imagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview);
+      }
+      setImage(null);
+      setImagePreview(null);
+      if (imageInputRef.current) imageInputRef.current.value = "";
+    } else if (type === "logo") {
+      if (logoPreview && logoPreview.startsWith("blob:")) {
+        URL.revokeObjectURL(logoPreview);
+      }
+      setLogo(null);
+      setLogoPreview(null);
+      if (logoInputRef.current) logoInputRef.current.value = "";
+    }
+  };
+
+  const validateForm = () => {
+    if (!formData.Title.trim()) {
+      setError("Title is required");
+      return false;
+    }
+
+    if (!formData.Heading.trim()) {
+      setError("Heading is required");
+      return false;
+    }
+
+    if (!formData.detail.trim()) {
+      setError("Detail is required");
+      return false;
+    }
+
+    if (!image) {
+      setError("Industry image is required");
+      return false;
+    }
+
+    if (!logo) {
+      setError("Industry logo is required");
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Ensure required fields are filled
-    if (!formData.Title || !formData.Heading || !formData.detail || !image || !logo) {
-      setMessage('Please fill all required fields and upload images.');
+    if (!validateForm()) {
+      customToast({
+        success: false,
+        message: error,
+      });
       return;
     }
 
+    setLoading(true);
+    setError(null);
+
     const data = new FormData();
-    data.append('Title', formData.Title);
-    data.append('Heading', formData.Heading);
-    data.append('detail', formData.detail);
-    data.append('Efficiency', formData.Efficiency || 0); // Defaults to 0 if not provided
-    data.append('costSaving', formData.costSaving || 0); // Defaults to 0 if not provided
-    data.append('customerSatisfaction', formData.customerSatisfaction || 0); // Defaults to 0 if not provided
-    data.append('image', image);
-    data.append('logo', logo);
+
+    // Append all form fields
+    Object.keys(formData).forEach((key) => {
+      if (key === "relatedProduct" && formData[key].length > 0) {
+        // Handle array of related products
+        formData[key].forEach((productId) => {
+          data.append("relatedProduct", productId);
+        });
+      } else {
+        data.append(key, formData[key]);
+      }
+    });
+
+    // Append files
+    data.append("image", image);
+    data.append("logo", logo);
 
     try {
-      const response = await axios.post('/api/industry/create', data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        withCredentials: true
+      const response = await axios.post("/api/industry/create", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
       });
 
       if (response.status === 201) {
-        setMessage('Industry created successfully!');
-        setFormData({
-          Title: '',
-          Heading: '',
-          detail: '',
-          Efficiency: '',
-          costSaving: '',
-          customerSatisfaction: '',
+        setSuccess(true);
+        customToast({
+          success: true,
+          message: "Industry created successfully!",
         });
-        setImage(null);
+
+        // Reset form after successful submission
+        setFormData({
+          Title: "",
+          Heading: "",
+          detail: "",
+          Efficiency: 0,
+          costSaving: 0,
+          customerSatisfaction: 0,
+          relatedProduct: [],
+        });
+
+        clearImage("image");
+        clearImage("logo");
+
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          setSuccess(false);
+        }, 3000);
       }
     } catch (error) {
-      console.error(error);
-      setMessage('Failed to create industry. Please try again.');
+      console.error("Error creating industry:", error);
+      setError(
+        error.response?.data?.message ||
+          "Failed to create industry. Please try again."
+      );
+      customToast({
+        success: false,
+        message: error.response?.data?.message || "Failed to create industry",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-bold text-center mb-6">Create Industry</h2>
-      <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-6">
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Title:</label>
-          <input
-            type="text"
-            name="Title"
-            value={formData.Title}
-            onChange={handleInputChange}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
-            required
-          />
+    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold text-center mb-6 text-[#446E6D]">
+        Create New Industry
+      </h2>
+
+      {/* Error message */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-md flex items-start">
+          <AlertCircle className="text-red-500 mr-3 flex-shrink-0 mt-0.5" />
+          <p className="text-red-700">{error}</p>
         </div>
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Heading:</label>
-          <input
-            type="text"
-            name="Heading"
-            value={formData.Heading}
-            onChange={handleInputChange}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Detail:</label>
-          <textarea
-            name="detail"
-            value={formData.detail}
-            onChange={handleInputChange}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
-            rows="4"
-            required
-          ></textarea>
-        </div>
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Efficiency (optional):</label>
-          <input
-            type="number"
-            name="Efficiency"
-            value={formData.Efficiency}
-            onChange={handleInputChange}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Cost Saving (optional):</label>
-          <input
-            type="number"
-            name="costSaving"
-            value={formData.costSaving}
-            onChange={handleInputChange}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Customer Satisfaction (optional):</label>
-          <input
-            type="number"
-            name="customerSatisfaction"
-            value={formData.customerSatisfaction}
-            onChange={handleInputChange}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Image:</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Logo (Homepage):</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setLogo(e.target.files[0])}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
-        >
-          Create Industry
-        </button>
-      </form>
-      {message && (
-        <p
-          className={`mt-4 text-center font-medium ${
-            message.includes('successfully')
-              ? 'text-green-600'
-              : 'text-red-600'
-          }`}
-        >
-          {message}
-        </p>
       )}
+
+      {/* Success message */}
+      {success && (
+        <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-md flex items-start">
+          <CheckCircle2 className="text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+          <p className="text-green-700">Industry created successfully!</p>
+        </div>
+      )}
+
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
+        {/* Left Column - Text Inputs */}
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Title *
+            </label>
+            <input
+              type="text"
+              name="Title"
+              value={formData.Title}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+              placeholder="Enter industry title"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Heading *
+            </label>
+            <input
+              type="text"
+              name="Heading"
+              value={formData.Heading}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+              placeholder="Enter industry heading"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Detail *
+            </label>
+            <textarea
+              name="detail"
+              value={formData.detail}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+              rows="5"
+              placeholder="Enter industry details"
+              required
+            ></textarea>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Related Child Services
+            </label>
+            <div className="mb-3">
+              {formData.relatedProduct.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {formData.relatedProduct.map((productId) => {
+                    const product = products.find((p) => p._id === productId);
+                    return (
+                      <span
+                        key={productId}
+                        className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-100 text-blue-800"
+                      >
+                        {product?.Title || "Product"}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData((prev) => ({
+                              ...prev,
+                              relatedProduct: prev.relatedProduct.filter(
+                                (id) => id !== productId
+                              ),
+                            }));
+                          }}
+                          className="ml-2 inline-flex text-blue-500 hover:text-blue-700"
+                        >
+                          <X size={16} />
+                        </button>
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+              <div className="border border-gray-300 rounded-lg p-3 max-h-60 overflow-y-auto bg-white">
+                <div className="mb-2">
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+                    onChange={(e) => {
+                      const searchTerm = e.target.value.toLowerCase();
+                      // You can implement product filtering here if needed
+                    }}
+                  />
+                </div>
+                <div className="space-y-2">
+                  {products.map((product) => (
+                    <div key={product._id} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`product-${product._id}`}
+                        checked={formData.relatedProduct.includes(product._id)}
+                        onChange={() => {
+                          setFormData((prev) => {
+                            if (prev.relatedProduct.includes(product._id)) {
+                              return {
+                                ...prev,
+                                relatedProduct: prev.relatedProduct.filter(
+                                  (id) => id !== product._id
+                                ),
+                              };
+                            } else {
+                              return {
+                                ...prev,
+                                relatedProduct: [
+                                  ...prev.relatedProduct,
+                                  product._id,
+                                ],
+                              };
+                            }
+                          });
+                        }}
+                        className="h-4 w-4 text-[#446E6D] border-gray-300 rounded focus:ring-[#446E6D]"
+                      />
+                      <label
+                        htmlFor={`product-${product._id}`}
+                        className="ml-2 block text-sm text-gray-700 cursor-pointer hover:text-[#446E6D]"
+                      >
+                        {product.Title}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              {formData.relatedProduct.length === 0
+                ? "No products selected"
+                : `${formData.relatedProduct.length} product${
+                    formData.relatedProduct.length > 1 ? "s" : ""
+                  } selected`}
+            </p>
+          </div>
+        </div>
+
+        {/* Right Column - Images and Metrics */}
+        <div className="space-y-6">
+          {/* Image Upload with Preview */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Industry Image *
+            </label>
+            <div className="relative border-2 border-dashed border-[#446E6D]/30 rounded-lg p-4 text-center hover:bg-[#446E6D]/5 transition-colors">
+              {imagePreview ? (
+                <div className="relative">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-full h-40 object-cover rounded-lg"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
+                    <button
+                      type="button"
+                      onClick={() => imageInputRef.current?.click()}
+                      className="bg-white rounded-full p-2 m-1 shadow-md"
+                    >
+                      <Upload size={16} className="text-gray-700" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => clearImage("image")}
+                      className="bg-white rounded-full p-2 m-1 shadow-md text-red-500"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center h-40 cursor-pointer">
+                  <ImageIcon className="h-12 w-12 text-[#446E6D]" />
+                  <p className="mt-2 text-sm font-medium text-[#446E6D]">
+                    Click to upload an image
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    PNG, JPG, GIF up to 10MB
+                  </p>
+                </label>
+              )}
+              <input
+                ref={imageInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Logo Upload with Preview */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Industry Logo *
+            </label>
+            <div className="relative border-2 border-dashed border-[#446E6D]/30 rounded-lg p-4 text-center hover:bg-[#446E6D]/5 transition-colors">
+              {logoPreview ? (
+                <div className="relative">
+                  <img
+                    src={logoPreview}
+                    alt="Logo Preview"
+                    className="w-full h-40 object-contain rounded-lg"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
+                    <button
+                      type="button"
+                      onClick={() => logoInputRef.current?.click()}
+                      className="bg-white rounded-full p-2 m-1 shadow-md"
+                    >
+                      <Upload size={16} className="text-gray-700" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => clearImage("logo")}
+                      className="bg-white rounded-full p-2 m-1 shadow-md text-red-500"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center h-40 cursor-pointer">
+                  <ImageIcon className="h-12 w-12 text-[#446E6D]" />
+                  <p className="mt-2 text-sm font-medium text-[#446E6D]">
+                    Click to upload a logo
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    PNG, JPG, GIF up to 10MB
+                  </p>
+                </label>
+              )}
+              <input
+                ref={logoInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleLogoChange}
+                className="hidden"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Metrics Inputs */}
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Efficiency ({formData.Efficiency}%)
+              </label>
+              <input
+                type="range"
+                name="Efficiency"
+                min="0"
+                max="100"
+                value={formData.Efficiency}
+                onChange={handleInputChange}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#446E6D]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Cost Saving ({formData.costSaving}%)
+              </label>
+              <input
+                type="range"
+                name="costSaving"
+                min="0"
+                max="100"
+                value={formData.costSaving}
+                onChange={handleInputChange}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#446E6D]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Customer Satisfaction ({formData.customerSatisfaction}%)
+              </label>
+              <input
+                type="range"
+                name="customerSatisfaction"
+                min="0"
+                max="100"
+                value={formData.customerSatisfaction}
+                onChange={handleInputChange}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#446E6D]"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Submit Button - Full Width */}
+        <div className="col-span-1 md:col-span-2 mt-6">
+          <motion.button
+            type="submit"
+            disabled={loading}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={`w-full py-3 px-4 rounded-lg text-white font-medium ${
+              loading
+                ? "bg-[#446E6D]/70 cursor-not-allowed"
+                : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
+            } shadow-md flex items-center justify-center`}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin -ml-1 mr-2 h-5 w-5" />
+                Creating Industry...
+              </>
+            ) : (
+              <>
+                <Save className="mr-2" size={20} />
+                Create Industry
+              </>
+            )}
+          </motion.button>
+        </div>
+      </form>
     </div>
   );
 };

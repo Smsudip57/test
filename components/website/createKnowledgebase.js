@@ -949,7 +949,7 @@ export default function CreateKnowledgebase() {
           {/* Related Products */}
           <div className="dropdown-container">
             <label className="block text-gray-700 font-medium mb-2">
-              Related Products
+              Related Child Services
             </label>
             <div className="relative">
               <button
@@ -958,7 +958,7 @@ export default function CreateKnowledgebase() {
                 onClick={() => setDropdownOpen(prev => ({ ...prev, products: !prev.products }))}
               >
                 <span className="text-gray-500">
-                  {formData.relatedProducts.length ? `${formData.relatedProducts.length} product(s) selected` : 'Select products...'}
+                  {formData.relatedProducts.length ? `${formData.relatedProducts.length} Child Service(s) selected` : 'Select Child Services...'}
                 </span>
                 <ChevronDown size={18} className={`transition-transform ${dropdownOpen.products ? 'rotate-180' : ''}`} />
               </button>
@@ -1019,7 +1019,7 @@ export default function CreateKnowledgebase() {
           {/* Related Child Services */}
           <div className="dropdown-container">
             <label className="block text-gray-700 font-medium mb-2">
-              Related Child Services
+              Related Products
             </label>
             <div className="relative">
               <button
@@ -1028,7 +1028,7 @@ export default function CreateKnowledgebase() {
                 onClick={() => setDropdownOpen(prev => ({ ...prev, childServices: !prev.childServices }))}
               >
                 <span className="text-gray-500">
-                  {formData.relatedChikfdServices.length ? `${formData.relatedChikfdServices.length} child service(s) selected` : 'Select child services...'}
+                  {formData.relatedChikfdServices.length ? `${formData.relatedChikfdServices.length} Product(s) selected` : 'Select Products...'}
                 </span>
                 <ChevronDown size={18} className={`transition-transform ${dropdownOpen.childServices ? 'rotate-180' : ''}`} />
               </button>

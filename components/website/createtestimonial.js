@@ -13,12 +13,14 @@ const CreateTestimonial = () => {
     role: '',
     relatedService: '',
     relatedIndustries: '',
-    relatedProduct: '', // Added new field for product relation
+    relatedProduct: '',
+    relatedChikfdServices: '', // Added new field for child services relation
   });
 
   const [services, setServices] = useState([]);
   const [industries, setIndustries] = useState([]);
-  const [products, setProducts] = useState([]); // Added state for products
+  const [products, setProducts] = useState([]);
+  const [childServices, setChildServices] = useState([]); // Added state for child services
   const [message, setMessage] = useState('');
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -58,16 +60,18 @@ const CreateTestimonial = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch services, industries, and products in parallel
-        const [serviceRes, industryRes, productRes] = await Promise.all([
+        // Fetch services, industries, products, and child services in parallel
+        const [serviceRes, industryRes, productRes, childServiceRes] = await Promise.all([
           axios.get('/api/service/getservice'),
           axios.get('/api/industry/get'),
-          axios.get('/api/product/get') // Fetch products
+          axios.get('/api/product/get'),
+          axios.get('/api/child/get') // Fetch child services
         ]);
         
         setServices(serviceRes.data.services || []);
         setIndustries(industryRes.data.industries || []);
-        setProducts(productRes.data.products || []); // Set products data
+        setProducts(productRes.data.products || []);
+        setChildServices(childServiceRes.data.products || []); // Set child services data
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Failed to load required data. Please refresh the page.');
@@ -196,6 +200,7 @@ const CreateTestimonial = () => {
           relatedService: '',
           relatedIndustries: '',
           relatedProduct: '',
+          relatedChikfdServices: '',
         });
         
         customToast(response.data);
@@ -383,19 +388,37 @@ const CreateTestimonial = () => {
             </select>
           </div>
 
-          {/* New Product Selection Dropdown */}
+          {/* Product Selection Dropdown */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Related Child</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Related Child Service</label>
             <select
               name="relatedProduct"
               value={formData.relatedProduct}
               onChange={handleInputChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
             >
-              <option value="">Select a Child (Optional)</option>
+              <option value="">Select a Child Service (Optional)</option>
               {products.map((product) => (
                 <option key={product._id} value={product._id}>
                   {product.Title}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Child Services Selection Dropdown */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Related Product</label>
+            <select
+              name="relatedChikfdServices"
+              value={formData.relatedChikfdServices}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
+            >
+              <option value="">Select a Product (Optional)</option>
+              {childServices.map((childService) => (
+                <option key={childService._id} value={childService._id}>
+                  {childService.Title}
                 </option>
               ))}
             </select>

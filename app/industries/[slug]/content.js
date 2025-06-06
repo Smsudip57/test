@@ -6,6 +6,7 @@ import CaseStudy from "@/components/main/CaseStudy";
 import BlogSection from "@/components/shaerd/Blog";
 import FaqSection from "@/components/shaerd/Faqs";
 import KnowledgeBase from "@/components/shaerd/Knowledgebase";
+import Showcase from "@/components/shaerd/industryshowcase";
 
 const service = [
   {
@@ -99,7 +100,11 @@ export default function FacultyManagement({ industry }) {
           </div>
         </div>
       </div>
-
+      <div className="w-full  min-h-screen flex justify-center items-center">
+        <div className="w-[90%]  mx-auto">
+          <Showcase service={industry?.relatedProduct} />
+        </div>
+      </div>
       <div className="w-full">
         <div className="flex justify-center pt-[65px]">
           <div className="mx-auto text-center w-[90%] lg:w-4/5 xl:w-[1280px] z-20">

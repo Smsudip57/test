@@ -70,7 +70,7 @@ const Navbar = () => {
     const fetchIndustries = async () => {
       try {
         const response = await axios.get("/api/industry/get");
-        console.log(response?.data?.industries);
+        // console.log(response?.data?.industries);
         if (response?.data?.success) {
           const industries = response?.data?.industries?.map((element: any) => {
             const title = element?.Title;

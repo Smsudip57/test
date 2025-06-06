@@ -33,6 +33,7 @@ export default function CaseStudy({ parent, child, product, industry }: {
 
   useEffect(() => {
     const fetchTestimonials = async () => {
+      console.log(child)
       try {
         const res = await axios.get("/api/testimonial/get");
         if (parent || child || product || industry) {
