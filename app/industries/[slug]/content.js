@@ -107,7 +107,7 @@ export default function FacultyManagement({ industry }) {
             <div className="w-full xl:w-[1000px] mx-auto">
               <span className="text-2xl lg:text-3xl text-[#446E6D]">
                 <strong>
-                  Facility Management Companies Achieve Outstanding Results with
+                 {industry?.Title || "100+"} Companies Achieve Outstanding Results with
                   WEBME
                 </strong>
               </span>
