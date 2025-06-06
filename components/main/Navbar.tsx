@@ -298,74 +298,53 @@ const Navbar = () => {
                 </MenuItem>
 
                 <MenuItem>
-                  <span onClick={handleOpen3} className="w-full">
-                    Industries <KeyboardArrowDownIcon fontSize="inherit" />
-                  </span>
-                  <Menu
-                    anchorEl={anchorE3}
-                    open={Boolean(anchorE3)}
-                    onClose={handleClose3}
-                    // Updated mobile-specific props
-                    PaperProps={{
-                      style: {
-                        width: "300px",
-                        maxHeight: "300px", // Use maxHeight instead of fixed height
-                        overflowY: "auto",
-                        display: "block",
-                        visibility: "visible",
-                        zIndex: 9999, // Higher z-index to ensure visibility
-                        backgroundColor: "white", // Explicitly set background
-                        boxShadow: "0 4px 20px rgba(0,0,0,0.15)", // More visible shadow
-                      },
-                    }}
-                    // Keep these positioning settings
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "left",
-                    }}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "left",
-                    }}
-                    // Important additional properties
-                    MenuListProps={{
-                      style: {
-                        padding: "8px 0",
-                        display: "block",
-                        width: "100%",
-                      },
-                    }}
-                    // Other settings
-                    variant="menu"
-                    transitionDuration={100}
-                  >
-                    {industries.map((item: any, i: number) => (
-                      <MenuItem
-                        key={i}
-                        onClick={() => {
-                          window.location.href = `/industries/${item
-                            .split(" ")
-                            .join("-")
-                            .toLowerCase()}`;
-                        }}
-                        // Enhanced styling for mobile visibility
+                  <div className="relative w-full">
+                    {/* Dropdown trigger */}
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setAnchorE3(anchorE3 ? null : e.currentTarget);
+                      }}
+                      className="w-full flex items-center justify-between cursor-pointer"
+                    >
+                      Industries <KeyboardArrowDownIcon fontSize="inherit" />
+                    </span>
+
+                    {/* Custom dropdown menu */}
+                    {Boolean(anchorE3) && (
+                      <div
+                        className="absolute left-0 top-full mt-1 bg-white rounded-lg shadow-lg z-[9999] w-[250px] max-h-[300px] overflow-y-auto"
                         style={{
-                          display: "block",
-                          padding: "12px 16px", // Larger padding for touch
-                          width: "100%",
-                          textAlign: "left",
-                          color: "black",
-                          backgroundColor: "white", // Force background color
-                          opacity: 1, // Force opacity
-                          fontSize: "16px", // Larger font for mobile
-                          fontWeight: 400,
-                          margin: "2px 0",
+                          boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
                         }}
                       >
-                        {item}
-                      </MenuItem>
-                    ))}
-                  </Menu>
+                        <div className="py-2">
+                          {industries.map((item: any, i: number) => (
+                            <div
+                              key={i}
+                              className="px-4 py-3 hover:bg-gray-50 text-black text-base font-normal cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.location.href = `/industries/${item
+                                  .split(" ")
+                                  .join("-")
+                                  .toLowerCase()}`;
+                              }}
+                            >
+                              {item}
+                            </div>
+                          ))}
+
+                          {/* Show message if no industries */}
+                          {industries.length === 0 && (
+                            <div className="px-4 py-3 text-gray-500 text-center">
+                              No industries available
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </MenuItem>
                 <MenuItem>
                   <a href="/#projects">Projects</a>
