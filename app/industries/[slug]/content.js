@@ -167,7 +167,7 @@ export default function FacultyManagement({ industry }) {
       </div>
       <div className="w-full  min-h-screen flex justify-center items-center">
         <div className="w-[90%]  mx-auto">
-          <Webme service={industry?.relatedService} />
+          <Webme service={{services:industry?.relatedService}} />
         </div>
       </div>
       <div className="w-[90%] mx-auto lg:w-full">

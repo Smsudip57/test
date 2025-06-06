@@ -7,7 +7,7 @@ const Webme = ({service :apiservice}:any) => {
  
 
   useEffect(() => {
-    console.log(active);
+    console.log(apiservice);
   }, [active]);
 
 
