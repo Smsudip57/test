@@ -146,7 +146,7 @@ const Navbar = () => {
   ) {
     return null;
   }
-console.log("Sdsd",industries)
+
   return (
     <div className="w-full relative xl:block ">
       <div
@@ -306,9 +306,8 @@ console.log("Sdsd",industries)
                     open={Boolean(anchorE3)}
                     onClose={handleClose3}
                   >
-                    <div style={{ maxHeight: "300px" , overflowY: "auto" }}>
                     {industries.map((item: any, i: number) => (
-                      <div
+                      <MenuItem
                         key={i}
                         onClick={() => {
                           window.location.href = `/industries/${item
@@ -316,18 +315,10 @@ console.log("Sdsd",industries)
                             .join("-")
                             .toLowerCase()}`;
                         }}
-                        // Force visibility with explicit styles
-                        className="w-full p-2 max-h-[300px] overflow-y-auto"
-                        
                       >
-                        <li className="text-base text-nowrap font-semibold flex items-center text-[#747474] cursor-pointer hover:text-[#265353] pl-2 rounded-md py-1 hover:bg-[#e7f7f68f] justify-start gap-3 box-border opani">
-
                         {item}
-                        </li>
-                      </div>
+                      </MenuItem>
                     ))}
-                    This is a test
-                    </div>
                   </Menu>
                 </MenuItem>
                 <MenuItem>
@@ -338,9 +329,7 @@ console.log("Sdsd",industries)
                   <a href="/#pricing">Pricing</a>
                 </MenuItem>
                 <MenuItem>
-                  <a href="https://store.webmedigital.com/" target="_blank">
-                    Store
-                  </a>
+                  <a href="https://store.webmedigital.com/" target="_blank">Store</a>
                 </MenuItem>
               </Menu>
             </div>
