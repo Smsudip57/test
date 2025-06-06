@@ -305,6 +305,11 @@ const Navbar = () => {
                         e.stopPropagation();
                         setAnchorE3(anchorE3 ? null : e.currentTarget);
                       }}
+                      onTouchStart={(e) => {
+                        // For mobile touch devices
+                        e.stopPropagation();
+                        setAnchorE3(anchorE3 ? null : e.currentTarget);
+                      }}
                       className="w-full flex items-center justify-between cursor-pointer"
                     >
                       Industries <KeyboardArrowDownIcon fontSize="inherit" />
