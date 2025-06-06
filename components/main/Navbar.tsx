@@ -315,6 +315,13 @@ const Navbar = () => {
                             .join("-")
                             .toLowerCase()}`;
                         }}
+                        // Force visibility with explicit styles
+                        style={{
+                          display: "block",
+                          visibility: "visible",
+                          padding: "10px 16px",
+                          whiteSpace: "nowrap",
+                        }}
                       >
                         {item}
                       </MenuItem>
@@ -330,7 +337,9 @@ const Navbar = () => {
                   <a href="/#pricing">Pricing</a>
                 </MenuItem>
                 <MenuItem>
-                  <a href="https://store.webmedigital.com/" target="_blank">Store</a>
+                  <a href="https://store.webmedigital.com/" target="_blank">
+                    Store
+                  </a>
                 </MenuItem>
               </Menu>
             </div>
