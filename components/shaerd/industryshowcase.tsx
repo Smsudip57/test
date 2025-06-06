@@ -23,7 +23,7 @@ const Webme = ({ service: apiservice }: any) => {
           signal: signal,
         });
         setProjects(response.data.data);
-      } catch (error) {
+      } catch (error:any) {
         if (error.name !== "CanceledError") {
           // Axios uses 'CanceledError' instead of 'AbortError'
           console.error("Error fetching projects:", error);
