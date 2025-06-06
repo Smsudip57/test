@@ -63,7 +63,11 @@ const Navbar = () => {
     setAnchorE2(event.currentTarget);
   };
   const handleOpen3 = (event: any) => {
+    event.stopPropagation();
     setAnchorE3(event.currentTarget);
+    
+    setTimeout(() => {
+    }, 10);
   };
 
   useEffect(() => {
@@ -298,18 +302,38 @@ const Navbar = () => {
                 </MenuItem>
 
                 <MenuItem>
-                  <span onClick={handleOpen3} className="w-full">
-                    Industries <KeyboardArrowDownIcon fontSize="inherit" />
+                  <span
+                    onClick={handleOpen3}
+                    onTouchStart={(e) => {
+                      e.preventDefault(); // Prevent default touch behavior
+                      handleOpen3(e);
+                    }}
+                    className="w-full flex items-center justify-between"
+                  >
+                    <span>Industries</span>{" "}
+                    <KeyboardArrowDownIcon fontSize="inherit" />
                   </span>
                   <Menu
                     anchorEl={anchorE3}
                     open={Boolean(anchorE3)}
                     onClose={handleClose3}
+                    // Add these properties to improve mobile compatibility
+                    keepMounted
+                    disableScrollLock={false}
+                    transformOrigin={{ vertical: "top", horizontal: "left" }}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
                   >
                     {industries.map((item: any, i: number) => (
                       <MenuItem
                         key={i}
                         onClick={() => {
+                          window.location.href = `/industries/${item
+                            .split(" ")
+                            .join("-")
+                            .toLowerCase()}`;
+                        }}
+                        // Add touch event handler for mobile
+                        onTouchEnd={() => {
                           window.location.href = `/industries/${item
                             .split(" ")
                             .join("-")
@@ -329,7 +353,9 @@ const Navbar = () => {
                   <a href="/#pricing">Pricing</a>
                 </MenuItem>
                 <MenuItem>
-                  <a href="https://store.webmedigital.com/" target="_blank">Store</a>
+                  <a href="https://store.webmedigital.com/" target="_blank">
+                    Store
+                  </a>
                 </MenuItem>
               </Menu>
             </div>
