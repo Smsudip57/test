@@ -48,7 +48,7 @@ const Navbar = () => {
   ];
   const slider = useRef(null);
   const [anchorE2, setAnchorE2] = React.useState(null);
-  const [anchorE3, setAnchorE3] = React.useState<HTMLElement | null>(null);
+  const [anchorE3, setAnchorE3] = React.useState(null);
   // const [isAdminPath, setIsAdminPath] = useState(false);
   const [loaded, setloaded] = useState(false);
   const [profileopen, setprofileopen] = useState(false);
@@ -298,58 +298,29 @@ const Navbar = () => {
                 </MenuItem>
 
                 <MenuItem>
-                  <div className="relative w-full">
-                    {/* Dropdown trigger */}
-                    <span
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setAnchorE3(anchorE3 ? null : e.currentTarget);
-                      }}
-                      onTouchStart={(e) => {
-                        // For mobile touch devices
-                        e.stopPropagation();
-                        setAnchorE3(anchorE3 ? null : e.currentTarget);
-                      }}
-                      className="w-full flex items-center justify-between cursor-pointer"
-                    >
-                      Industries <KeyboardArrowDownIcon fontSize="inherit" />
-                    </span>
-
-                    {/* Custom dropdown menu */}
-                    {Boolean(anchorE3) && (
-                      <div
-                        className="absolute left-0 top-full mt-1 bg-white rounded-lg shadow-lg z-[9999] w-[250px] max-h-[300px] overflow-y-auto"
-                        style={{
-                          boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+                  <span onClick={handleOpen3} className="w-full">
+                    Industries <KeyboardArrowDownIcon fontSize="inherit" />
+                  </span>
+                  <Menu
+                    anchorEl={anchorE3}
+                    open={Boolean(anchorE3)}
+                    onClose={handleClose3}
+                  >
+                    {industries.map((item: any, i: number) => (
+                      <MenuItem
+                        key={i}
+                        onClick={() => {
+                          window.location.href = `/industries/${item
+                            .split(" ")
+                            .join("-")
+                            .toLowerCase()}`;
                         }}
                       >
-                        <div className="py-2">
-                          {industries.map((item: any, i: number) => (
-                            <div
-                              key={i}
-                              className="px-4 py-3 hover:bg-gray-50 text-black text-base font-normal cursor-pointer"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                window.location.href = `/industries/${item
-                                  .split(" ")
-                                  .join("-")
-                                  .toLowerCase()}`;
-                              }}
-                            >
-                              {item}
-                            </div>
-                          ))}
-
-                          {/* Show message if no industries */}
-                          {industries.length === 0 && (
-                            <div className="px-4 py-3 text-gray-500 text-center">
-                              No industries available
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                        {item}
+                      </MenuItem>
+                    ))}
+                    This is a test
+                  </Menu>
                 </MenuItem>
                 <MenuItem>
                   <a href="/#projects">Projects</a>
@@ -359,9 +330,7 @@ const Navbar = () => {
                   <a href="/#pricing">Pricing</a>
                 </MenuItem>
                 <MenuItem>
-                  <a href="https://store.webmedigital.com/" target="_blank">
-                    Store
-                  </a>
+                  <a href="https://store.webmedigital.com/" target="_blank">Store</a>
                 </MenuItem>
               </Menu>
             </div>
