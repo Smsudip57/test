@@ -63,11 +63,7 @@ const Navbar = () => {
     setAnchorE2(event.currentTarget);
   };
   const handleOpen3 = (event: any) => {
-    event.stopPropagation();
     setAnchorE3(event.currentTarget);
-    
-    setTimeout(() => {
-    }, 10);
   };
 
   useEffect(() => {
@@ -302,26 +298,36 @@ const Navbar = () => {
                 </MenuItem>
 
                 <MenuItem>
-                  <span
-                    onClick={handleOpen3}
-                    onTouchStart={(e) => {
-                      e.preventDefault(); // Prevent default touch behavior
-                      handleOpen3(e);
-                    }}
-                    className="w-full flex items-center justify-between"
-                  >
-                    <span>Industries</span>{" "}
-                    <KeyboardArrowDownIcon fontSize="inherit" />
+                  <span onClick={handleOpen3} className="w-full">
+                    Industries <KeyboardArrowDownIcon fontSize="inherit" />
                   </span>
                   <Menu
                     anchorEl={anchorE3}
                     open={Boolean(anchorE3)}
                     onClose={handleClose3}
-                    // Add these properties to improve mobile compatibility
-                    keepMounted
-                    disableScrollLock={false}
-                    transformOrigin={{ vertical: "top", horizontal: "left" }}
-                    anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                    // Add these crucial mobile-specific props
+                    PaperProps={{
+                      style: {
+                        width: "300px",
+                        maxHeight: "300px",
+                        overflowY: "auto",
+                        display: "block", // Force display
+                        visibility: "visible", // Ensure visibility
+                      },
+                    }}
+                    // Force the menu to appear in the viewport
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    // Position properly on mobile
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "left",
+                    }}
+                    // Additional properties for mobile compatibility
+                    variant="menu"
+                    transitionDuration={100}
                   >
                     {industries.map((item: any, i: number) => (
                       <MenuItem
@@ -332,12 +338,12 @@ const Navbar = () => {
                             .join("-")
                             .toLowerCase()}`;
                         }}
-                        // Add touch event handler for mobile
-                        onTouchEnd={() => {
-                          window.location.href = `/industries/${item
-                            .split(" ")
-                            .join("-")
-                            .toLowerCase()}`;
+                        // Add explicit styling to ensure visibility on mobile
+                        style={{
+                          display: "block",
+                          padding: "10px 16px",
+                          width: "100%",
+                          textAlign: "left",
                         }}
                       >
                         {item}
