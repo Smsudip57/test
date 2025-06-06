@@ -100,15 +100,15 @@ export default function FacultyManagement({ industry }) {
           </div>
         </div>
       </div>
-      
+
       <div className="w-full">
         <div className="flex justify-center pt-[65px]">
           <div className="mx-auto text-center w-[90%] lg:w-4/5 xl:w-[1280px] z-20">
             <div className="w-full xl:w-[1000px] mx-auto">
               <span className="text-2xl lg:text-3xl text-[#446E6D]">
                 <strong>
-                 {industry?.Title || "100+"} Companies Achieve Outstanding Results with
-                  WEBME
+                  {industry?.Title || "100+"} Companies Achieve Outstanding
+                  Results with WEBME
                 </strong>
               </span>
             </div>
@@ -167,7 +167,29 @@ export default function FacultyManagement({ industry }) {
       </div>
       <div className="w-full  min-h-screen flex justify-center items-center">
         <div className="w-[90%]  mx-auto">
-          <Webme service={{services:industry?.relatedService}} />
+          {industry?.relatedService &&
+            Array.isArray(industry?.relatedService) && (
+              <Webme
+                service={{
+                  services: industry.relatedService.map((service) => {
+                    if (typeof service === "object" && service !== null) {
+                      return {
+                        ...service,
+                        category: service.category || "digital",
+                        image: service.image || "/placeholder.jpg",
+                      };
+                    } else {
+                      return {
+                        Title: "Service",
+                        category: "digital",
+                        image: "/placeholder.jpg",
+                        slug: "service",
+                      };
+                    }
+                  }),
+                }}
+              />
+            )}
         </div>
       </div>
       <div className="w-[90%] mx-auto lg:w-full">
