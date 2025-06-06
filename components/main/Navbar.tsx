@@ -309,7 +309,7 @@ const Navbar = () => {
                     PaperProps={{
                       style: {
                         width: "300px",
-                        maxHeight: "300px",
+                        height: "300px",
                         overflowY: "auto",
                         display: "block", // Force display
                         visibility: "visible", // Ensure visibility
