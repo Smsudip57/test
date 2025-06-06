@@ -146,7 +146,7 @@ const Navbar = () => {
   ) {
     return null;
   }
-
+console.log("Sdsd",industries)
   return (
     <div className="w-full relative xl:block ">
       <div
