@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Head from "next/head";
 import axios from "axios";
@@ -113,7 +113,7 @@ export default function Page({ details: Service }) {
       ))}
 
       <div className="w-[90%] mx-auto lg:w-full">
-        <CaseStudy  child={Service?._id}/>
+        <CaseStudy child={Service?._id} />
       </div>
 
       <div className="mx-auto min-h-screen flex justify-center items-center">
@@ -126,69 +126,84 @@ export default function Page({ details: Service }) {
   );
 }
 
-// const PointComp = ({ points }) => {
-//   const [open, setopen] = useState(0);
-
-//   return (
-//     <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
-//       {points.map((item, index) => (
-//         <div
-//           key={index}
-//           className={`w-full border-l-4 pl-6 cursor-pointer ${
-//             open === index ? "border-l-[#446E6D]" : "border-l-white"
-//           }`}
-//           onClick={() => setopen(index)}
-//         >
-//           <h3 className="text-2xl font-semibold text-[#446E6D]">
-//             {item?.title}
-//           </h3>
-//           <p
-//             className={`text-lg font-sans mt-4 text-stone-700 ${
-//               open === index ? "block" : "hidden"
-//             }`}
-//           >
-//             {item?.detail}
-//           </p>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
+// Main PointComp component
 const PointComp = ({ points }) => {
-  // Initialize with all points open (array of true values matching points length)
-  const [openStates, setOpenStates] = useState(() => points.map(() => true));
-
-  const togglePoint = (index) => {
-    setOpenStates((prev) => {
-      const newStates = [...prev];
-      newStates[index] = !newStates[index]; // Toggle the clicked point
-      return newStates;
-    });
-  };
-
   return (
     <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
       {points.map((item, index) => (
-        <div
-          key={index}
-          className={`w-full border-l-4 pl-6 cursor-pointer ${
-            openStates[index] ? "border-l-[#446E6D]" : "border-l-white"
-          }`}
-          onClick={() => togglePoint(index)}
-        >
-          <h3 className="text-2xl font-semibold text-[#446E6D]">
-            {item?.title}
-          </h3>
-          <p
-            className={`text-lg font-sans mt-4 text-stone-700 ${
-              openStates[index] ? "block" : "hidden"
-            }`}
-          >
-            {item?.detail}
-          </p>
-        </div>
+        <PointItem key={index} item={item} index={index} />
       ))}
+    </div>
+  );
+};
+
+// Individual PointItem component with improved viewport detection
+const PointItem = ({ item, index }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    const currentElement = elementRef.current;
+    if (!currentElement) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // When element enters viewport, open it
+          if (entry.isIntersecting) {
+            // Add a small delay so users can see the opening animation
+            setTimeout(() => {
+              setIsOpen(true);
+            }, 200 + index * 100); // Stagger the animations by index
+          } else {
+            // When element leaves viewport, close it immediately
+            setIsOpen(false);
+          }
+        });
+      },
+      {
+        threshold: 0.3, // Trigger when 30% of the element is visible
+        rootMargin: "0px 0px -100px 0px", // Only trigger when element is well into viewport
+      }
+    );
+
+    // Start observing this element
+    observer.observe(currentElement);
+
+    // Cleanup function
+    return () => {
+      if (currentElement) {
+        observer.unobserve(currentElement);
+      }
+      observer.disconnect();
+    };
+  }, [index]); // Include index in dependencies
+
+  // Toggle open/closed state manually when clicked
+  const toggleOpen = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  return (
+    <div
+      ref={elementRef}
+      className={`w-full border-l-4 pl-6 cursor-pointer transition-all duration-700 ease-in-out ${
+        isOpen ? "border-l-[#446E6D]" : "border-l-white"
+      }`}
+      onClick={toggleOpen}
+    >
+      <h3 className="text-2xl font-semibold text-[#446E6D] transition-all duration-300">
+        {item?.title}
+      </h3>
+      <p
+        className={`text-lg font-sans mt-4 text-stone-700 transition-all duration-700 ease-in-out ${
+          isOpen
+            ? "block opacity-100 max-h-[500px] transform translate-y-0"
+            : "max-h-0 opacity-0 overflow-hidden transform -translate-y-2"
+        }`}
+      >
+        {item?.detail}
+      </p>
     </div>
   );
 };
