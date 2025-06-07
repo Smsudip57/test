@@ -14,6 +14,9 @@ import {
   FileText,
   ChevronDown,
   Check,
+  ListOrdered,
+  List,
+  Type,
 } from "lucide-react";
 import { MyContext } from "@/context/context";
 import { toast } from "react-toastify";
@@ -26,8 +29,10 @@ export default function CreateKnowledgebase() {
     mainSections: [
       {
         title: "",
-        content: "",
-        points: [], // Add points array to each section
+        explanationType: "article",
+        article: "",
+        bullets: [],
+        image: null,
       },
     ],
     conclusion: "",
@@ -51,6 +56,8 @@ export default function CreateKnowledgebase() {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const imageInputRef = useRef(null);
+  const [uploadingPointImages, setUploadingPointImages] = useState(false);
+  const [sectionImagePreviews, setSectionImagePreviews] = useState({});
   
   // Dropdown states
   const [dropdownOpen, setDropdownOpen] = useState({
@@ -74,10 +81,7 @@ export default function CreateKnowledgebase() {
         setServices(servicesRes.data.services || []);
         setIndustries(industriesRes.data.industries || []);
         setProducts(productsRes.data.products || []);
-        // FIX: Change from childServices to products to match the server response
         setChildServices(childServicesRes.data.products || []);
-        
-        console.log("Child Services:", childServicesRes.data); // Log to debug
       } catch (error) {
         console.error("Error fetching data:", error);
         customToast({
@@ -210,6 +214,139 @@ export default function CreateKnowledgebase() {
     }
   };
 
+  // Handle section image upload
+  const handleSectionImageChange = (sectionIndex, e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      customToast({
+        success: false,
+        message: "Please select only image files"
+      });
+      e.target.value = "";
+      return;
+    }
+
+    // Validate file size (10MB limit)
+    if (file.size > 10 * 1024 * 1024) {
+      customToast({
+        success: false,
+        message: `File ${file.name} is too large. Maximum size is 10MB.`
+      });
+      e.target.value = "";
+      return;
+    }
+
+    const updatedSections = [...formData.mainSections];
+    updatedSections[sectionIndex].imageFile = file;
+
+    setFormData(prev => ({
+      ...prev,
+      mainSections: updatedSections
+    }));
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setSectionImagePreviews(prev => ({
+        ...prev,
+        [sectionIndex]: reader.result
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Remove section image
+  const removeSectionImage = (sectionIndex) => {
+    const updatedSections = [...formData.mainSections];
+    updatedSections[sectionIndex].image = null;
+    updatedSections[sectionIndex].imageFile = null;
+
+    setFormData(prev => ({
+      ...prev,
+      mainSections: updatedSections
+    }));
+
+    setSectionImagePreviews(prev => {
+      const updated = {...prev};
+      delete updated[sectionIndex];
+      return updated;
+    });
+  };
+
+  // Upload a single section image and return the URL
+  const uploadSectionImage = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      const response = await axios.post('/api/upload/image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
+      if (response.data.success) {
+        return response.data.imageUrl;
+      } else {
+        throw new Error(response.data.message || 'Failed to upload image');
+      }
+    } catch (error) {
+      console.error('Error uploading section image:', error);
+      throw error;
+    }
+  };
+
+  // Upload all section images before form submission
+  const uploadAllSectionImages = async () => {
+    const updatedSections = [...formData.mainSections];
+    let hasImagesToUpload = false;
+    
+    // Check if any sections have image files to upload
+    for (const section of updatedSections) {
+      if (section.imageFile) {
+        hasImagesToUpload = true;
+        break;
+      }
+    }
+    
+    if (!hasImagesToUpload) {
+      return updatedSections; // No images to upload, return sections as is
+    }
+    
+    setUploadingPointImages(true);
+    
+    try {
+      // Upload each section image and update the sections with the returned URLs
+      for (let i = 0; i < updatedSections.length; i++) {
+        const section = updatedSections[i];
+        
+        if (section.imageFile) {
+          // Upload the image and get the URL
+          const imageUrl = await uploadSectionImage(section.imageFile);
+          
+          // Update the section with the image URL
+          updatedSections[i] = {
+            ...section,
+            image: imageUrl,
+            imageFile: null // Clear the file object
+          };
+        }
+      }
+      
+      return updatedSections;
+    } catch (error) {
+      console.error('Error uploading section images:', error);
+      customToast({
+        success: false,
+        message: 'Failed to upload one or more section images'
+      });
+      throw error;
+    } finally {
+      setUploadingPointImages(false);
+    }
+  };
+
   // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -252,6 +389,26 @@ export default function CreateKnowledgebase() {
       ...updatedSections[index],
       [field]: value,
     };
+
+    // If changing explanationType, set up the appropriate structure
+    if (field === "explanationType") {
+      if (value === "article") {
+        updatedSections[index] = {
+          ...updatedSections[index],
+          article: updatedSections[index].article || "",
+          bullets: [], // Keep bullets array but it might not be used
+        };
+      } else if (value === "bullets") {
+        updatedSections[index] = {
+          ...updatedSections[index],
+          bullets: updatedSections[index].bullets?.length
+            ? updatedSections[index].bullets
+            : [{ style: "dot", content: "" }], // Initialize with one empty bullet
+          article: updatedSections[index].article || "", // Keep article field but it might not be used
+        };
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
       mainSections: updatedSections,
@@ -263,56 +420,15 @@ export default function CreateKnowledgebase() {
       ...prev,
       mainSections: [
         ...prev.mainSections, 
-        { title: "", content: "", points: [] }
+        { 
+          title: "", 
+          explanationType: "article", 
+          article: "", 
+          bullets: [],
+          image: null,
+          imageFile: null
+        }
       ],
-    }));
-  };
-
-  const handlePointChange = (sectionIndex, pointIndex, field, value) => {
-    const updatedSections = [...formData.mainSections];
-    const section = updatedSections[sectionIndex];
-
-    if (!section.points) {
-      section.points = [];
-    }
-
-    if (!section.points[pointIndex]) {
-      section.points[pointIndex] = { title: "", description: "" };
-    }
-
-    section.points[pointIndex][field] = value;
-
-    setFormData((prev) => ({
-      ...prev,
-      mainSections: updatedSections,
-    }));
-  };
-
-  const addPoint = (sectionIndex) => {
-    const updatedSections = [...formData.mainSections];
-    const section = updatedSections[sectionIndex];
-
-    if (!section.points) {
-      section.points = [];
-    }
-
-    section.points.push({ title: "", description: "" });
-
-    setFormData((prev) => ({
-      ...prev,
-      mainSections: updatedSections,
-    }));
-  };
-
-  const removePoint = (sectionIndex, pointIndex) => {
-    const updatedSections = [...formData.mainSections];
-    updatedSections[sectionIndex].points = updatedSections[
-      sectionIndex
-    ].points.filter((_, i) => i !== pointIndex);
-
-    setFormData((prev) => ({
-      ...prev,
-      mainSections: updatedSections,
     }));
   };
 
@@ -320,6 +436,68 @@ export default function CreateKnowledgebase() {
     setFormData((prev) => ({
       ...prev,
       mainSections: prev.mainSections.filter((_, i) => i !== index),
+    }));
+
+    // Also remove the image preview
+    setSectionImagePreviews(prev => {
+      const updated = {...prev};
+      delete updated[index];
+      return updated;
+    });
+  };
+
+  // Bullet points management
+  const handleAddBullet = (sectionIndex) => {
+    const updatedSections = [...formData.mainSections];
+    
+    if (!updatedSections[sectionIndex].bullets) {
+      updatedSections[sectionIndex].bullets = [];
+    }
+    
+    updatedSections[sectionIndex].bullets.push({ 
+      style: "dot", 
+      content: "" 
+    });
+    
+    setFormData(prev => ({
+      ...prev,
+      mainSections: updatedSections
+    }));
+  };
+  
+  const handleBulletChange = (sectionIndex, bulletIndex, field, value) => {
+    const updatedSections = [...formData.mainSections];
+    
+    if (!updatedSections[sectionIndex].bullets) {
+      updatedSections[sectionIndex].bullets = [];
+    }
+    
+    if (!updatedSections[sectionIndex].bullets[bulletIndex]) {
+      updatedSections[sectionIndex].bullets[bulletIndex] = { style: "dot", content: "" };
+    }
+    
+    updatedSections[sectionIndex].bullets[bulletIndex][field] = value;
+    
+    setFormData(prev => ({
+      ...prev,
+      mainSections: updatedSections
+    }));
+  };
+  
+  const handleRemoveBullet = (sectionIndex, bulletIndex) => {
+    const updatedSections = [...formData.mainSections];
+    
+    if (!updatedSections[sectionIndex].bullets) {
+      return;
+    }
+    
+    updatedSections[sectionIndex].bullets = updatedSections[sectionIndex].bullets.filter(
+      (_, idx) => idx !== bulletIndex
+    );
+    
+    setFormData(prev => ({
+      ...prev,
+      mainSections: updatedSections
     }));
   };
 
@@ -401,29 +579,28 @@ export default function CreateKnowledgebase() {
         return false;
       }
 
-      if (!section.content.trim()) {
+      if (section.explanationType === 'article' && !section.article.trim()) {
         customToast({
           success: false,
-          message: `Content for section ${i + 1} is required`
+          message: `Article content for section ${i + 1} is required`
         });
         return false;
       }
 
-      // Validate points if they exist
-      if (section.points && section.points.length > 0) {
-        for (const [j, point] of section.points.entries()) {
-          if (!point.title.trim()) {
-            customToast({
-              success: false,
-              message: `Title for point ${j + 1} in section ${i + 1} is required`
-            });
-            return false;
-          }
+      if (section.explanationType === 'bullets') {
+        if (!section.bullets || section.bullets.length === 0) {
+          customToast({
+            success: false,
+            message: `At least one bullet point is required for section ${i + 1}`
+          });
+          return false;
+        }
 
-          if (!point.description.trim()) {
+        for (const [j, bullet] of section.bullets.entries()) {
+          if (!bullet.content.trim()) {
             customToast({
               success: false,
-              message: `Description for point ${j + 1} in section ${i + 1} is required`
+              message: `Content for bullet ${j + 1} in section ${i + 1} is required`
             });
             return false;
           }
@@ -444,7 +621,22 @@ export default function CreateKnowledgebase() {
     setLoading(true);
     
     try {
-      // Create FormData object to handle file upload
+      // Step 1: Upload any section images first
+      let updatedSections;
+      try {
+        updatedSections = await uploadAllSectionImages();
+        
+        // Update form data with the new sections that have image URLs
+        setFormData(prev => ({
+          ...prev,
+          mainSections: updatedSections
+        }));
+      } catch (error) {
+        setLoading(false);
+        return; // Stop if image uploads fail
+      }
+      
+      // Step 2: Create FormData object to handle file upload
       const formDataToSubmit = new FormData();
       
       // Append image file
@@ -454,7 +646,14 @@ export default function CreateKnowledgebase() {
       formDataToSubmit.append("title", formData.title);
       formDataToSubmit.append("introduction", formData.introduction);
       formDataToSubmit.append("conclusion", formData.conclusion);
-      formDataToSubmit.append("mainSections", JSON.stringify(formData.mainSections));
+      
+      // Prepare sections for submission - remove any imageFile properties
+      const sectionsForSubmission = updatedSections.map(section => {
+        const { imageFile, ...sectionWithoutImageFile } = section;
+        return sectionWithoutImageFile;
+      });
+      
+      formDataToSubmit.append("mainSections", JSON.stringify(sectionsForSubmission));
       formDataToSubmit.append("tags", JSON.stringify(formData.tags));
       formDataToSubmit.append("relatedServices", JSON.stringify(formData.relatedServices));
       formDataToSubmit.append("relatedIndustries", JSON.stringify(formData.relatedIndustries));
@@ -483,7 +682,13 @@ export default function CreateKnowledgebase() {
         setFormData({
           title: "",
           introduction: "",
-          mainSections: [{ title: "", content: "", points: [] }],
+          mainSections: [{ 
+            title: "", 
+            explanationType: "article", 
+            article: "", 
+            bullets: [],
+            image: null 
+          }],
           conclusion: "",
           tags: [],
           relatedServices: [],
@@ -496,6 +701,7 @@ export default function CreateKnowledgebase() {
         setTagError("");
         setImageFile(null);
         setImagePreview(null);
+        setSectionImagePreviews({});
         if (imageInputRef.current) {
           imageInputRef.current.value = "";
         }
@@ -521,6 +727,15 @@ export default function CreateKnowledgebase() {
           Share your expertise with comprehensive documentation
         </p>
       </div>
+
+      {(loading || uploadingPointImages) && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex flex-col justify-center items-center z-50">
+          <Loader2 className="h-12 w-12 animate-spin text-white mb-4" />
+          <p className="text-white font-medium">
+            {uploadingPointImages ? "Uploading images..." : "Creating article..."}
+          </p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Featured Image */}
@@ -632,111 +847,164 @@ export default function CreateKnowledgebase() {
                   <input
                     type="text"
                     value={section.title}
-                    onChange={(e) =>
-                      handleSectionChange(index, "title", e.target.value)
-                    }
+                    onChange={(e) => handleSectionChange(index, "title", e.target.value)}
                     className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                     placeholder="Section title"
                     required
                   />
                 </div>
 
+                {/* Section Image (Optional) */}
                 <div className="mb-4">
                   <label className="block text-gray-700 mb-2 font-medium">
-                    Section Content <span className="text-red-500">*</span>
+                    Section Image (Optional)
                   </label>
-                  <textarea
-                    value={section.content}
-                    onChange={(e) =>
-                      handleSectionChange(index, "content", e.target.value)
-                    }
-                    rows="4"
-                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Section content"
-                    required
-                  />
+                  
+                  {sectionImagePreviews[index] ? (
+                    <div className="relative rounded-lg overflow-hidden border border-gray-200 mb-4">
+                      <img 
+                        src={sectionImagePreviews[index]} 
+                        alt={`Section ${index + 1} image preview`} 
+                        className="w-full h-auto object-cover max-h-[200px]" 
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeSectionImage(index)}
+                        className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md text-red-500 hover:text-red-700"
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center w-full">
+                      <label 
+                        className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                      >
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <Upload className="w-8 h-8 mb-3 text-gray-400" />
+                          <p className="mb-2 text-sm text-gray-500">Click to upload an image</p>
+                          <p className="text-xs text-gray-500">PNG, JPG, WebP up to 10MB</p>
+                        </div>
+                        <input 
+                          type="file" 
+                          className="hidden" 
+                          accept="image/*"
+                          onChange={(e) => handleSectionImageChange(index, e)}
+                        />
+                      </label>
+                    </div>
+                  )}
                 </div>
 
-                {/* Points Section */}
-                <div className="mt-6 bg-white p-4 rounded-md border border-gray-100">
-                  <div className="flex justify-between items-center mb-4">
-                    <label className="block text-gray-700 font-medium">
-                      Section Points
+                {/* Explanation Type */}
+                <div className="mb-4">
+                  <label className="block text-gray-700 mb-2 font-medium">
+                    Explanation Type <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex space-x-4">
+                    <label className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        className="form-radio h-4 w-4 text-blue-600"
+                        checked={section.explanationType === "article"}
+                        onChange={() => handleSectionChange(index, "explanationType", "article")}
+                      />
+                      <span className="ml-2 flex items-center">
+                        <Type size={16} className="mr-1" /> Article
+                      </span>
                     </label>
-                    <button
-                      type="button"
-                      onClick={() => addPoint(index)}
-                      className="inline-flex items-center text-blue-600 bg-blue-50 px-2 py-1 rounded-md hover:bg-blue-100"
-                    >
-                      <Plus size={16} className="mr-1" /> Add Point
-                    </button>
+                    <label className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        className="form-radio h-4 w-4 text-blue-600"
+                        checked={section.explanationType === "bullets"}
+                        onChange={() => handleSectionChange(index, "explanationType", "bullets")}
+                      />
+                      <span className="ml-2 flex items-center">
+                        <ListOrdered size={16} className="mr-1" /> Bullet Points
+                      </span>
+                    </label>
                   </div>
+                </div>
 
-                  <div className="space-y-4">
-                    {section.points?.map((point, pointIndex) => (
-                      <div
-                        key={pointIndex}
-                        className="p-4 bg-gray-50 rounded-md border border-gray-200 relative"
+                {section.explanationType === "article" ? (
+                  // Article Content
+                  <div className="mb-4">
+                    <label className="block text-gray-700 mb-2 font-medium">
+                      Article Content <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      value={section.article}
+                      onChange={(e) => handleSectionChange(index, "article", e.target.value)}
+                      rows="6"
+                      className="w-full p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent whitespace-pre-wrap"
+                      placeholder="Write your article content here (preserves spaces and new lines)"
+                      required
+                    ></textarea>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Use new lines and spaces for formatting. They will be preserved when displayed.
+                    </p>
+                  </div>
+                ) : (
+                  // Bullet Points
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-3">
+                      <label className="block text-gray-700 font-medium">
+                        Bullet Points <span className="text-red-500">*</span>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => handleAddBullet(index)}
+                        className="inline-flex items-center text-blue-600 bg-blue-50 px-2 py-1 rounded hover:bg-blue-100"
                       >
-                        <button
-                          type="button"
-                          onClick={() => removePoint(index, pointIndex)}
-                          className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-
-                        <div className="mb-3">
-                          <label className="block text-gray-700 text-sm mb-2 font-medium">
-                            Point Title <span className="text-red-500">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            value={point.title}
-                            onChange={(e) =>
-                              handlePointChange(
-                                index,
-                                pointIndex,
-                                "title",
-                                e.target.value
-                              )
-                            }
-                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                            placeholder="Point title"
-                            required
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-gray-700 text-sm mb-2 font-medium">
-                            Point Description <span className="text-red-500">*</span>
-                          </label>
-                          <textarea
-                            value={point.description}
-                            onChange={(e) =>
-                              handlePointChange(
-                                index,
-                                pointIndex,
-                                "description",
-                                e.target.value
-                              )
-                            }
-                            rows="2"
-                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                            placeholder="Point description"
-                            required
-                          />
-                        </div>
+                        <Plus size={16} className="mr-1" /> Add Bullet
+                      </button>
+                    </div>
+                    
+                    {(!section.bullets || section.bullets.length === 0) ? (
+                      <div className="text-center py-4 bg-white border border-dashed rounded-md">
+                        <p className="text-gray-500 text-sm">No bullets added yet. Click "Add Bullet" to begin.</p>
                       </div>
-                    ))}
-
-                    {(!section.points || section.points.length === 0) && (
-                      <p className="text-center text-gray-500 py-4 bg-gray-50 rounded-md border border-dashed">
-                        No points added yet
-                      </p>
+                    ) : (
+                      <div className="space-y-3">
+                        {section.bullets.map((bullet, bulletIndex) => (
+                          <div key={bulletIndex} className="flex gap-2 items-start">
+                            <div className="w-24 flex-shrink-0">
+                              <select
+                                value={bullet.style}
+                                onChange={(e) => handleBulletChange(index, bulletIndex, "style", e.target.value)}
+                                className="w-full p-2 border rounded-md text-sm"
+                              >
+                                <option value="dot">Dot</option>
+                                <option value="number">Number</option>
+                                <option value="roman">Roman</option>
+                              </select>
+                            </div>
+                            <div className="flex-grow">
+                              <input
+                                type="text"
+                                value={bullet.content}
+                                onChange={(e) => handleBulletChange(index, bulletIndex, "content", e.target.value)}
+                                className="w-full p-2 border rounded-md"
+                                placeholder="Bullet content"
+                                required
+                              />
+                            </div>
+                            {section.bullets.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveBullet(index, bulletIndex)}
+                                className="text-red-500 p-2 hover:bg-red-50 rounded-full"
+                              >
+                                <X size={16} />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
-                </div>
+                )}
               </div>
             ))}
           </div>
@@ -946,7 +1214,7 @@ export default function CreateKnowledgebase() {
             </div>
           </div>
 
-          {/* Related Products */}
+          {/* Related Child Services */}
           <div className="dropdown-container">
             <label className="block text-gray-700 font-medium mb-2">
               Related Child Services
@@ -955,80 +1223,10 @@ export default function CreateKnowledgebase() {
               <button
                 type="button"
                 className="w-full p-3 border rounded-md bg-white flex justify-between items-center focus:ring-2 focus:ring-primary focus:border-transparent"
-                onClick={() => setDropdownOpen(prev => ({ ...prev, products: !prev.products }))}
-              >
-                <span className="text-gray-500">
-                  {formData.relatedProducts.length ? `${formData.relatedProducts.length} Child Service(s) selected` : 'Select Child Services...'}
-                </span>
-                <ChevronDown size={18} className={`transition-transform ${dropdownOpen.products ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {dropdownOpen.products && (
-                <div className="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg">
-                  {products.length > 0 ? (
-                    <div className="py-1">
-                      {products.map(product => (
-                        <div
-                          key={product._id}
-                          className={`px-4 py-2 cursor-pointer flex items-center justify-between hover:bg-gray-100 ${
-                            formData.relatedProducts.includes(product._id) ? 'bg-blue-50' : ''
-                          }`}
-                          onClick={() => toggleItemSelection(product._id, 'relatedProducts')}
-                        >
-                          <span>{product.Title}</span>
-                          {formData.relatedProducts.includes(product._id) && (
-                            <Check size={16} className="text-blue-600" />
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="px-4 py-2 text-gray-500">No products available</div>
-                  )}
-                </div>
-              )}
-            </div>
-            
-            {/* Selected Products Tags */}
-            <div className="mt-2 flex flex-wrap gap-2">
-              {formData.relatedProducts.length > 0 ? (
-                formData.relatedProducts.map(id => {
-                  const product = products.find(p => p._id === id);
-                  return product ? (
-                    <span
-                      key={id}
-                      className="inline-flex items-center bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm"
-                    >
-                      {product.Title}
-                      <button
-                        type="button"
-                        onClick={() => removeRelatedItem(id, 'relatedProducts')}
-                        className="ml-2 hover:text-red-500"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ) : null;
-                })
-              ) : (
-                <span className="text-gray-400 text-sm">No products selected</span>
-              )}
-            </div>
-          </div>
-
-          {/* Related Child Services */}
-          <div className="dropdown-container">
-            <label className="block text-gray-700 font-medium mb-2">
-              Related Products
-            </label>
-            <div className="relative">
-              <button
-                type="button"
-                className="w-full p-3 border rounded-md bg-white flex justify-between items-center focus:ring-2 focus:ring-primary focus:border-transparent"
                 onClick={() => setDropdownOpen(prev => ({ ...prev, childServices: !prev.childServices }))}
               >
                 <span className="text-gray-500">
-                  {formData.relatedChikfdServices.length ? `${formData.relatedChikfdServices.length} Product(s) selected` : 'Select Products...'}
+                  {formData.relatedChikfdServices.length ? `${formData.relatedChikfdServices.length} Child Services selected` : 'Select Child Services...'}
                 </span>
                 <ChevronDown size={18} className={`transition-transform ${dropdownOpen.childServices ? 'rotate-180' : ''}`} />
               </button>
@@ -1085,6 +1283,76 @@ export default function CreateKnowledgebase() {
               )}
             </div>
           </div>
+
+          {/* Related Products */}
+          <div className="dropdown-container">
+            <label className="block text-gray-700 font-medium mb-2">
+              Related Products
+            </label>
+            <div className="relative">
+              <button
+                type="button"
+                className="w-full p-3 border rounded-md bg-white flex justify-between items-center focus:ring-2 focus:ring-primary focus:border-transparent"
+                onClick={() => setDropdownOpen(prev => ({ ...prev, products: !prev.products }))}
+              >
+                <span className="text-gray-500">
+                  {formData.relatedProducts.length ? `${formData.relatedProducts.length} Product(s) selected` : 'Select Products...'}
+                </span>
+                <ChevronDown size={18} className={`transition-transform ${dropdownOpen.products ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {dropdownOpen.products && (
+                <div className="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg">
+                  {products.length > 0 ? (
+                    <div className="py-1">
+                      {products.map(product => (
+                        <div
+                          key={product._id}
+                          className={`px-4 py-2 cursor-pointer flex items-center justify-between hover:bg-gray-100 ${
+                            formData.relatedProducts.includes(product._id) ? 'bg-blue-50' : ''
+                          }`}
+                          onClick={() => toggleItemSelection(product._id, 'relatedProducts')}
+                        >
+                          <span>{product.Title}</span>
+                          {formData.relatedProducts.includes(product._id) && (
+                            <Check size={16} className="text-blue-600" />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="px-4 py-2 text-gray-500">No products available</div>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            {/* Selected Products Tags */}
+            <div className="mt-2 flex flex-wrap gap-2">
+              {formData.relatedProducts.length > 0 ? (
+                formData.relatedProducts.map(id => {
+                  const product = products.find(p => p._id === id);
+                  return product ? (
+                    <span
+                      key={id}
+                      className="inline-flex items-center bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm"
+                    >
+                      {product.Title}
+                      <button
+                        type="button"
+                        onClick={() => removeRelatedItem(id, 'relatedProducts')}
+                        className="ml-2 hover:text-red-500"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ) : null;
+                })
+              ) : (
+                <span className="text-gray-400 text-sm">No products selected</span>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Status */}
@@ -1106,13 +1374,13 @@ export default function CreateKnowledgebase() {
         <div className="flex justify-end">
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || uploadingPointImages}
             className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50"
           >
-            {loading ? (
+            {loading || uploadingPointImages ? (
               <>
                 <Loader2 size={18} className="animate-spin" />
-                <span>Creating...</span>
+                <span>{uploadingPointImages ? "Uploading Images..." : "Creating..."}</span>
               </>
             ) : (
               <>

@@ -4,29 +4,30 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Head from "next/head";
 import axios from "axios";
 
-export default function Page({ details:Service }) {
-  const [details, setdetails] = useState([])
+export default function Page({ details: Service }) {
+  const [details, setdetails] = useState([]);
   const [f1, setf1] = useState(false);
   const [f2, setf2] = useState(false);
   const [f3, setf3] = useState(false);
   const [f4, setf4] = useState(false);
 
-
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const response = await axios.get("/api/servicedetails/get")
+        const response = await axios.get("/api/servicedetails/get");
         if (response?.data) {
           // console.log(response?.data?.servicedetails)
           // console.log(Service)
-          setdetails(response?.data?.servicedetails?.find((item) => item?.relatedServices?._id === Service?._id))
+          setdetails(
+            response?.data?.servicedetails?.find(
+              (item) => item?.relatedServices?._id === Service?._id
+            )
+          );
         }
-      } catch (error) {
-
-      }
-    }
-    fetchdata()
-  }, [])
+      } catch (error) {}
+    };
+    fetchdata();
+  }, []);
 
   return (
     <div className="min-h-screen min-w-screen text-center relative font-sans">
@@ -88,14 +89,16 @@ export default function Page({ details:Service }) {
         <section key={index} className={`${index % 2 === 0 ? "my-24" : ""}`}>
           <div className="w-4/5 mx-auto flex justify-between gap-[15%]">
             <div
-              className={`basis-1/2 w-full h-full pt-[10%] ${index % 2 === 0 ? "order-1" : "order-2"
-                }`}
+              className={`basis-1/2 w-full h-full pt-[10%] ${
+                index % 2 === 0 ? "order-1" : "order-2"
+              }`}
             >
               <img src={item?.image} alt={item?.title} className="w-full" />
             </div>
             <div
-              className={`basis-1/2 h-full pt-16 items-start text-start ${index % 2 === 0 ? "order-2" : "order-1"
-                }`}
+              className={`basis-1/2 h-full pt-16 items-start text-start ${
+                index % 2 === 0 ? "order-2" : "order-1"
+              }`}
             >
               <h2 className="text-5xl font-semibold text-[#446E6D]">
                 {item?.title}
@@ -676,35 +679,72 @@ export default function Page({ details:Service }) {
   );
 }
 
+// const PointComp = ({ points }) => {
+//   const [open, setopen] = useState(0)
+
+//   return <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
+//     {
+//       points.map((item, index) => (
+//         <div
+//           key={index}
+//           className={`w-full border-l-4 pl-6 cursor-pointer ${open === index
+//             ? "border-l-[#446E6D]"
+//             : "border-l-white"
+//             }`}
+//           onClick={() =>
+//             setopen(index)
+//           }
+//         >
+//           <h3 className="text-2xl font-semibold text-[#446E6D]">
+//             {item?.title}
+//           </h3>
+//           <p
+//             className={`text-lg font-sans mt-4 text-stone-700 ${open === index ? "block" : "hidden"
+//               }`}
+//           >
+//             {item?.detail}
+//           </p>
+//         </div>
+//       ))
+//     }
+//   </div>
+
+// }
 
 const PointComp = ({ points }) => {
-  const [open, setopen] = useState(0)
+  // Initialize with all points open (array of true values matching points length)
+  const [openStates, setOpenStates] = useState(() => points.map(() => true));
 
-  return <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
-    {
-      points.map((item, index) => (
+  const togglePoint = (index) => {
+    setOpenStates((prev) => {
+      const newStates = [...prev];
+      newStates[index] = !newStates[index]; // Toggle the clicked point
+      return newStates;
+    });
+  };
+
+  return (
+    <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
+      {points.map((item, index) => (
         <div
           key={index}
-          className={`w-full border-l-4 pl-6 cursor-pointer ${open === index
-            ? "border-l-[#446E6D]"
-            : "border-l-white"
-            }`}
-          onClick={() =>
-            setopen(index)
-          }
+          className={`w-full border-l-4 pl-6 cursor-pointer ${
+            openStates[index] ? "border-l-[#446E6D]" : "border-l-white"
+          }`}
+          onClick={() => togglePoint(index)}
         >
           <h3 className="text-2xl font-semibold text-[#446E6D]">
             {item?.title}
           </h3>
           <p
-            className={`text-lg font-sans mt-4 text-stone-700 ${open === index ? "block" : "hidden"
-              }`}
+            className={`text-lg font-sans mt-4 text-stone-700 ${
+              openStates[index] ? "block" : "hidden"
+            }`}
           >
             {item?.detail}
           </p>
         </div>
-      ))
-    }
-  </div>
-
-}
+      ))}
+    </div>
+  );
+};

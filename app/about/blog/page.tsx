@@ -13,9 +13,18 @@ import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 
+interface Bullet {
+  style: "number" | "dot" | "roman";
+  content: string;
+}
+
 interface Point {
   title: string;
-  explanation: string;
+  explanationType: 'article' | 'bullets';
+  article?: string;
+  explanation?: string;
+  bullets?: Bullet[];
+  image?: string | null;
 }
 
 interface BlogPost {
@@ -78,10 +87,23 @@ export default function Page() {
     return new Date(dateString).toLocaleDateString('en-GB', options);
   };
   
-  const getReadingTime = (content: string) => {
+  // Updated to handle new content structure
+  const getReadingTime = (content: string, points: Point[]) => {
     const wordsPerMinute = 200;
-    const wordCount = content.trim().split(/\s+/).length;
-    const readingTime = Math.ceil(wordCount / wordsPerMinute);
+    let totalWordCount = content.trim().split(/\s+/).length;
+    
+    // Add words from points
+    points.forEach(point => {
+      if (point.explanationType === 'article' && point.article) {
+        totalWordCount += point.article.trim().split(/\s+/).length;
+      } else if (point.explanationType === 'bullets' && point.bullets) {
+        point.bullets.forEach(bullet => {
+          totalWordCount += bullet.content.trim().split(/\s+/).length;
+        });
+      }
+    });
+    
+    const readingTime = Math.ceil(totalWordCount / wordsPerMinute);
     return `${readingTime} min read`;
   };
 
@@ -135,6 +157,38 @@ export default function Page() {
     } else {
       return blogData.slice(0, 4);
     }
+  };
+
+  // Helper function to render bullet points with proper styling
+  const renderBullets = (bullets: Bullet[]) => {
+    return (
+      <ul className="space-y-2 mt-3 ml-6">
+        {bullets.map((bullet, idx) => {
+          let bulletStyle = "";
+          
+          if (bullet.style === "number") {
+            return (
+              <li key={idx} className="list-decimal">
+                {bullet.content}
+              </li>
+            );
+          } else if (bullet.style === "roman") {
+            // Using CSS counter for roman numerals
+            return (
+              <li key={idx} className="list-[lower-roman]">
+                {bullet.content}
+              </li>
+            );
+          } else { // dot style
+            return (
+              <li key={idx} className="list-disc">
+                {bullet.content}
+              </li>
+            );
+          }
+        })}
+      </ul>
+    );
   };
 
   return (
@@ -301,7 +355,7 @@ export default function Page() {
                                   </span>
                                   <span className="flex items-center gap-1">
                                     <AccessTimeIcon fontSize="inherit" />
-                                    {getReadingTime(post.description)}
+                                    {getReadingTime(post.description, post.points)}
                                   </span>
                                 </div>
                                 
@@ -443,7 +497,7 @@ export default function Page() {
                                       </span>
                                       <span className="flex items-center gap-1">
                                         <AccessTimeIcon fontSize="inherit" />
-                                        {getReadingTime(post.description)}
+                                        {getReadingTime(post.description, post.points)}
                                       </span>
                                     </div>
                                     
@@ -515,7 +569,7 @@ export default function Page() {
                         </span>
                         <span className="flex items-center gap-1">
                           <AccessTimeIcon fontSize="inherit" />
-                          {getReadingTime(single.description + single.points.map(p => p.explanation).join(' '))}
+                          {getReadingTime(single.description, single.points)}
                         </span>
                       </div>
                       
@@ -524,19 +578,36 @@ export default function Page() {
                       </h1>
                       
                       <div className="prose prose-lg max-w-none">
-                        <p className="text-gray-700 mb-8 leading-relaxed">
+                        <p className="text-gray-700 mb-8 leading-relaxed whitespace-pre-line">
                           {single.description}
                         </p>
                         
-                        <div className="space-y-8 mt-10">
+                        <div className="space-y-10 mt-10">
                           {single.points.map((point, index) => (
                             <div key={index} className="bg-gray-50 p-6 rounded-lg border-l-4 border-[#446E6D]">
                               <h2 className="text-xl font-bold text-gray-800 mb-4">
                                 {index + 1}. {point.title}
                               </h2>
-                              <p className="text-gray-700 leading-relaxed">
-                                {point.explanation}
-                              </p>
+                              
+                              {point.image && (
+                                <div className="mb-4 mt-2">
+                                  <img 
+                                    src={point.image} 
+                                    alt={`Illustration for ${point.title}`}
+                                    className="rounded-lg w-full max-h-80 object-contain"
+                                  />
+                                </div>
+                              )}
+
+                              {point.explanationType === 'article' ? (
+                                // Article content with preserved whitespace
+                                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                                  {point?.article ? point.article : point?.explanation}
+                                </p>
+                              ) : (
+                                // Bullet points with different styles
+                                renderBullets(point.bullets || [])
+                              )}
                             </div>
                           ))}
                         </div>

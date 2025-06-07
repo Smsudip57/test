@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import VideoPlayer from '@/components/shaerd/Video';
+import VideoPlayer from "@/components/shaerd/Video";
 
 // Define interfaces for type safety
 interface ServiceType {
@@ -13,7 +13,7 @@ interface ServiceType {
 }
 
 interface MediaType {
-  type: 'image' | 'video';
+  type: "image" | "video";
   url: string;
 }
 
@@ -36,7 +36,7 @@ interface WebmeProps {
 
 const Webme: React.FC<WebmeProps> = ({ service: apiservice }) => {
   const [active, setActive] = useState<string>("");
-  const [projects, setProjects] = useState<ProjectType[]>(); 
+  const [projects, setProjects] = useState<ProjectType[]>();
   const [related, setRelated] = useState<EnhancedProjectType[]>();
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const Webme: React.FC<WebmeProps> = ({ service: apiservice }) => {
 
   useEffect(() => {
     if (!projects || !apiservice) return;
-    
+
     const relatedProjects = projects
       .filter((project) => {
         return apiservice.some(
@@ -82,23 +82,19 @@ const Webme: React.FC<WebmeProps> = ({ service: apiservice }) => {
           key: found?.Name ? found.Name : found?.Title,
         } as EnhancedProjectType;
       });
-      
+
     setRelated(relatedProjects);
   }, [projects, apiservice]);
 
   // Reorder list: bring related items to the top
-  const sortedServices = Array.isArray(related) ? [...related].sort((a, b) => {
-    if (!active) return 0; // No sorting if no active hover
-    if (a.key === active && b.key !== active) return -1; // Move related items up
-    if (b.key === active && a.key !== active) return 1; // Move unrelated items down
-    return 0; // Keep original order for others
-  }) : [];
-
-  // Function to handle video click, prevents default behavior
-  const handleVideoClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
+  const sortedServices = Array.isArray(related)
+    ? [...related].sort((a, b) => {
+        if (!active) return 0; // No sorting if no active hover
+        if (a.key === active && b.key !== active) return -1; // Move related items up
+        if (b.key === active && a.key !== active) return 1; // Move unrelated items down
+        return 0; // Keep original order for others
+      })
+    : [];
 
   return (
     <section
@@ -112,7 +108,7 @@ const Webme: React.FC<WebmeProps> = ({ service: apiservice }) => {
           <React.Fragment key={item._id}>
             <li
               className="py-0 hover:opacity-60 text-nowrap"
-              onClick={() => setActive(item?.Name? item.Name : item.Title)}
+              onClick={() => setActive(item?.Name ? item.Name : item.Title)}
             >
               {item?.Name ? item.Name : item.Title}
             </li>
@@ -148,23 +144,27 @@ const Webme: React.FC<WebmeProps> = ({ service: apiservice }) => {
                 }}
                 className="sm:basis-1/3 lg:basis-1/4 aspect-[16/9]"
               >
-                {item?.media?.type === 'video' ? (
-                  <div className="w-full aspect-video rounded-lg overflow-hidden" onClick={handleVideoClick}>
-                    <VideoPlayer
-                      src={item.media.url}
-                      themeColor="#446E6D"
-                      controls={true}
-                      // onPlay={handleVideoClick}
-                    />
-                    <a 
-                      href={`/details/projects/${item?.slug ? item.slug : item.Title}`}
-                      className="mt-2 block text-sm text-[#446E6D] hover:underline"
+                {item?.media?.type === "video" ? (
+                  <div className="w-full aspect-video rounded-lg overflow-hidden cursor-pointer">
+                    <a
+                      href={`/details/projects/${
+                        item?.slug ? item.slug : item.Title
+                      }`}
+                      className=""
                     >
-                      View Project Details
+                      <VideoPlayer
+                        src={item.media.url}
+                        themeColor="#446E6D"
+                        controls={true}
+                      />
                     </a>
                   </div>
                 ) : (
-                  <a href={`/details/projects/${item?.slug ? item.slug : item.Title}`}>
+                  <a
+                    href={`/details/projects/${
+                      item?.slug ? item.slug : item.Title
+                    }`}
+                  >
                     <img
                       src={item.media.url}
                       alt={item.Title}

@@ -48,6 +48,7 @@
     "react-top-loading-bar": "^2.3.1",
     "socket.io-client": "^4.8.1",
     "swiper": "^11.1.4",
+    "tinymce": "^7.9.1",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
