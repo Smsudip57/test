@@ -126,8 +126,46 @@ export default function Page({ details: Service }) {
   );
 }
 
+// const PointComp = ({ points }) => {
+//   const [open, setopen] = useState(0);
+
+//   return (
+//     <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
+//       {points.map((item, index) => (
+//         <div
+//           key={index}
+//           className={`w-full border-l-4 pl-6 cursor-pointer ${
+//             open === index ? "border-l-[#446E6D]" : "border-l-white"
+//           }`}
+//           onClick={() => setopen(index)}
+//         >
+//           <h3 className="text-2xl font-semibold text-[#446E6D]">
+//             {item?.title}
+//           </h3>
+//           <p
+//             className={`text-lg font-sans mt-4 text-stone-700 ${
+//               open === index ? "block" : "hidden"
+//             }`}
+//           >
+//             {item?.detail}
+//           </p>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
 const PointComp = ({ points }) => {
-  const [open, setopen] = useState(0);
+  // Initialize with all points open (array of true values matching points length)
+  const [openStates, setOpenStates] = useState(() => points.map(() => true));
+
+  const togglePoint = (index) => {
+    setOpenStates((prev) => {
+      const newStates = [...prev];
+      newStates[index] = !newStates[index]; // Toggle the clicked point
+      return newStates;
+    });
+  };
 
   return (
     <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
@@ -135,16 +173,16 @@ const PointComp = ({ points }) => {
         <div
           key={index}
           className={`w-full border-l-4 pl-6 cursor-pointer ${
-            open === index ? "border-l-[#446E6D]" : "border-l-white"
+            openStates[index] ? "border-l-[#446E6D]" : "border-l-white"
           }`}
-          onClick={() => setopen(index)}
+          onClick={() => togglePoint(index)}
         >
           <h3 className="text-2xl font-semibold text-[#446E6D]">
             {item?.title}
           </h3>
           <p
             className={`text-lg font-sans mt-4 text-stone-700 ${
-              open === index ? "block" : "hidden"
+              openStates[index] ? "block" : "hidden"
             }`}
           >
             {item?.detail}
