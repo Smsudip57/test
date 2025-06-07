@@ -997,7 +997,7 @@ const BlogManager = () => {
                       {(!point.bullets || point.bullets.length === 0) && (
                         <div className="text-center py-4 bg-white border border-dashed rounded-lg mb-3">
                           <p className="text-gray-500 text-sm">
-                            No bullets added yet. Click "Add Bullet" to begin.
+                            No bullets added yet. Click &quot;Add Bullet&quot; to begin.
                           </p>
                         </div>
                       )}
@@ -1111,7 +1111,7 @@ const BlogManager = () => {
               {formData.points.length === 0 && (
                 <div className="text-center py-8 bg-gray-50 border border-dashed rounded-lg">
                   <p className="text-gray-500">
-                    No points added yet. Click "Add Point" to begin.
+                    No points added yet. Click &quot;Add Point&quot; to begin.
                   </p>
                 </div>
               )}

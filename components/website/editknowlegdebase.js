@@ -1123,7 +1123,7 @@ export default function EditKnowledgeBase() {
                       {!section.bullets || section.bullets.length === 0 ? (
                         <div className="text-center py-4 bg-white border border-dashed rounded-md">
                           <p className="text-gray-500 text-sm">
-                            No bullets added yet. Click "Add Bullet" to begin.
+                            No bullets added yet. Click &quot;Add Bullet&quot; to begin.
                           </p>
                         </div>
                       ) : (
