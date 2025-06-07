@@ -7,6 +7,7 @@ import CaseStudy from "@/components/main/CaseStudy";
 import BlogSection from "@/components/shaerd/Blog";
 import FaqSection from "@/components/shaerd/Faqs";
 import KnowledgeBase from "@/components/shaerd/Knowledgebase";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Page({ details: Service }) {
   const [f1, setf1] = useState(false);
@@ -137,7 +138,7 @@ const PointComp = ({ points }) => {
   );
 };
 
-// Individual PointItem component with improved viewport detection
+// Individual PointItem component with improved viewport detection and motion animations
 const PointItem = ({ item, index }) => {
   const [isOpen, setIsOpen] = useState(false);
   const elementRef = useRef(null);
@@ -162,7 +163,7 @@ const PointItem = ({ item, index }) => {
         });
       },
       {
-        threshold: 1, // Trigger when 100% of the element is visible
+        threshold: 0.7, // Trigger when 30% of the element is visible
         rootMargin: "0px 0px -100px 0px", // Only trigger when element is well into viewport
       }
     );
@@ -177,7 +178,7 @@ const PointItem = ({ item, index }) => {
       }
       observer.disconnect();
     };
-  }, [index]); // Include index in dependencies
+  }, [index]);
 
   // Toggle open/closed state manually when clicked
   const toggleOpen = () => {
@@ -185,25 +186,68 @@ const PointItem = ({ item, index }) => {
   };
 
   return (
-    <div
+    <motion.div
       ref={elementRef}
-      className={`w-full border-l-4 pl-6 cursor-pointer transition-all duration-700 ease-in-out ${
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className={`w-full border-l-4 pl-6 cursor-pointer transition-all duration-300 ease-in-out ${
         isOpen ? "border-l-[#446E6D]" : "border-l-white"
       }`}
       onClick={toggleOpen}
+      whileHover={{ scale: 1.02, x: 5 }}
+      whileTap={{ scale: 0.98 }}
     >
-      <h3 className="text-2xl font-semibold text-[#446E6D] transition-all duration-300">
-        {item?.title}
-      </h3>
-      <p
-        className={`text-lg font-sans mt-4 text-stone-700 transition-all duration-700 ease-in-out ${
-          isOpen
-            ? "block opacity-100 max-h-[500px] transform translate-y-0"
-            : "max-h-0 opacity-0 overflow-hidden transform -translate-y-2"
-        }`}
+      <motion.h3
+        className="text-2xl font-semibold text-[#446E6D]"
+        animate={{
+          color: isOpen ? "#446E6D" : "#666666",
+          scale: isOpen ? 1.05 : 1,
+        }}
+        transition={{ duration: 0.3 }}
       >
-        {item?.detail}
-      </p>
-    </div>
+        {item?.title}
+      </motion.h3>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{
+              height: 0,
+              opacity: 0,
+              y: -10,
+              scale: 0.95,
+            }}
+            animate={{
+              height: "auto",
+              opacity: 1,
+              y: 0,
+              scale: 1,
+            }}
+            exit={{
+              height: 0,
+              opacity: 0,
+              y: -10,
+              scale: 0.95,
+            }}
+            transition={{
+              duration: 0.5,
+              ease: [0.04, 0.62, 0.23, 0.98], // Custom easing for smooth feel
+            }}
+            className="overflow-hidden"
+          >
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="text-lg font-sans mt-4 text-stone-700"
+            >
+              {item?.detail}
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
