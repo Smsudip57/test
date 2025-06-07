@@ -162,7 +162,7 @@ const PointItem = ({ item, index }) => {
         });
       },
       {
-        threshold: 0.3, // Trigger when 30% of the element is visible
+        threshold: 1, // Trigger when 100% of the element is visible
         rootMargin: "0px 0px -100px 0px", // Only trigger when element is well into viewport
       }
     );
