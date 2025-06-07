@@ -90,8 +90,8 @@ export default function Firewall({ services, products, slug, Mainservice, childs
     const fetchChildData = async () => {
       try {
         const promises = filteredChildren.map(child =>
-          axios.get(process.env.NEXT_PUBLIC_API_URL || "https://server.webmedigital.com/api/products/catName", {
-            params: { catName: child?.Title },
+          axios.get(process.env.NEXT_PUBLIC_API_URL || "https://server.webmedigital.com/api/products/getbytag", {
+            params: { tag: child?.itemsTag },
             timeout: 5000
           })
             .then(res => ({
@@ -458,7 +458,7 @@ export default function Firewall({ services, products, slug, Mainservice, childs
 
                     return (
                       <div className="w-full flex flex-col max-h-[500px] overflow-y-auto pr-2">
-                        {productsForChild.products.map((product) => (
+                        {productsForChild?.slice(0, 3)?.products.map((product) => (
                           <div
                             key={product._id}
                             className="group min-w-full rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-all duration-300"
@@ -519,7 +519,7 @@ export default function Firewall({ services, products, slug, Mainservice, childs
                   })()}
 
                   {/* View all button */}
-                  <div className="w-full flex justify-center mt-4">
+                  {/* <div className="w-full flex justify-center mt-4">
                     <Link
                       href={`/products/${childData.Title}`}
                       className="text-sm hover:bg-[#446E6D] hover:text-white border border-[#446E6D] text-[#446E6D] px-4 py-2 rounded flex items-center transition-colors duration-300"
@@ -527,7 +527,7 @@ export default function Firewall({ services, products, slug, Mainservice, childs
                       View All Products
                       <EastIcon fontSize="small" className="ml-1" />
                     </Link>
-                  </div>
+                  </div> */}
                 </motion.div>
               </AnimatePresence>
             )}

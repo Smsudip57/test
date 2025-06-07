@@ -36,10 +36,7 @@ export default function Page() {
             <div className="mt-16 lg:mt-10 flex flex-col lg:pr-28">
               <span className="text-[#446E6D] mb-2 text-xl">About</span>
 
-              {/* Main Title */}
-              <h1 className="text-5xl lg:text-6xl mb-10 font-bold text-gray-800">
-                The Soul of WEBME
-              </h1>
+              
 
               <div className="text-gray-700 text-lg">
                 {/* Section 1 */}
@@ -59,10 +56,7 @@ export default function Page() {
                   operations to driving innovation, WEBME ensures seamless
                   functionality and transformative growth.
                 </p>
-                <p className="mb-5">
-                  WEBME — your virtual companion in the digital world and your
-                  trusted IT consultancy provider.
-                </p>
+             
                 <p className="mb-8">
                   We&apos;re not just about solving problems. We&apos;re about building
                   futures powered by smart technology and guided expertise.
