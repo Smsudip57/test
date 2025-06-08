@@ -361,12 +361,12 @@ export default function Firewall({
                         className="w-full cursor-pointer block relative aspect-[4/3]"
                         aria-label={`View details of ${currentService?.Title}`}
                       >
-                        <Image
+                        <img
                           src={currentService.image}
                           alt={`${currentService?.Title} service illustration`}
                           className="w-full rounded-md object-cover hover:opacity-80 transition-opacity duration-300"
-                          width={100}
-                          height={100}
+                          // width={100}
+                          // height={100}
                         />
                       </a>
                     </div>
