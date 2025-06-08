@@ -531,68 +531,175 @@ export default function Firewall({
                     return (
                       <div className="w-full flex flex-col max-h-[500px] overflow-y-auto pr-2">
                         {productsForChild.products
-                          ?.slice(0, 3)
+                          ?.slice(0, 1)
                           ?.map((product) => (
                             <div
                               key={product._id}
-                              className="group min-w-full rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-all duration-300"
+                              className="group w-full rounded-xl overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
                             >
                               <Link
                                 href={`https://store.webmedigital.com/product/${product._id}`}
                                 target="_blank"
+                                className="block"
                               >
-                                {/* Image container with fixed aspect ratio */}
-                                <div className="w-full aspect-[4/3] relative overflow-hidden">
+                                {/* Image container with badges */}
+                                <div className="relative w-full aspect-[4/3] overflow-hidden">
                                   {product.images && product.images[0] ? (
                                     <Image
                                       src={product.images[0]}
                                       alt={product.name}
-                                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                                      className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700"
                                       fill
                                       sizes="(max-width: 768px) 50vw, 33vw"
                                       placeholder="blur"
                                       blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiLz4="
                                     />
                                   ) : (
-                                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                      <span className="text-gray-400">
-                                        No image
+                                    <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                                      <div className="text-center">
+                                        <div className="w-16 h-16 mx-auto mb-2 bg-gray-300 rounded-full flex items-center justify-center">
+                                          <svg
+                                            className="w-8 h-8 text-gray-400"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                          >
+                                            <path
+                                              fillRule="evenodd"
+                                              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                              clipRule="evenodd"
+                                            />
+                                          </svg>
+                                        </div>
+                                        <span className="text-sm text-gray-400 font-medium">
+                                          No Image Available
+                                        </span>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Discount badge */}
+                                  {product.discount > 0 && (
+                                    <div className="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg z-10">
+                                      <span className="drop-shadow-sm">
+                                        {product.discount}% OFF
                                       </span>
                                     </div>
                                   )}
 
-                                  {/* Simple discount badge */}
-                                  {product.discount > 0 && (
-                                    <div className="absolute top-2 right-2 bg-[#446E6D] text-white text-xs font-bold px-2 py-1 rounded z-10">
-                                      {product.discount}% OFF
+                                  {/* Rating badge */}
+                                  {(product?.rating ||
+                                    product?.rating === 0) && (
+                                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-2 py-1 rounded-full shadow-md z-10 flex items-center gap-1">
+                                      <Star className="text-yellow-500 w-3 h-3 fill-current" />
+                                      <span>{product.rating}</span>
                                     </div>
                                   )}
+
+                                  {/* Hover overlay */}
+                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
                                 </div>
 
-                                {/* Clean, minimal product information */}
-                                <div className="p-3">
-                                  <h3 className="font-medium text-sm text-gray-800 line-clamp-1 mb-1">
+                                {/* Product content */}
+                                <div className="p-5">
+                                  {/* Product title */}
+                                  <h3 className="font-bold text-lg text-gray-900 line-clamp-2 mb-3 leading-tight group-hover:text-[#446E6D] transition-colors duration-200">
                                     {product.name}
                                   </h3>
 
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-1.5">
-                                      <span className="font-bold text-[#446E6D]">
-                                        RS {product.price}
+                                  {/* Product description */}
+                                  {product.description && (
+                                    <div className="mb-4">
+                                      <div className="relative">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#446E6D] to-[#37c0bd] rounded-full"></div>
+                                        <div className="pl-4 pr-2">
+                                          <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 italic">
+                                            "{product.description}"
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Price and rating section */}
+                                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                                    {/* Price section */}
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xl font-bold text-[#446E6D]">
+                                        RS {product.price.toLocaleString()}
                                       </span>
                                       {product.oldPrice > product.price && (
-                                        <span className="text-gray-400 line-through text-xs">
-                                          ${product.oldPrice}
+                                        <span className="text-sm text-gray-400 line-through">
+                                          RS {product.oldPrice.toLocaleString()}
                                         </span>
                                       )}
                                     </div>
 
-                                    {(product?.rating|| product?.rating===0) && (
-                                      <div className="text-xs text-gray-600">
-                                        <Star className="text-yellow-500 w-3 h-3 fill-current inline" />{" "}
-                                        {product.rating}/5
+                                    {/* Call to action */}
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                      <span className="text-xs text-green-600 font-medium">
+                                        Available
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  {/* Additional product features */}
+                                  {product.features &&
+                                    product.features.length > 0 && (
+                                      <div className="mt-4 pt-3 border-t border-gray-50">
+                                        <div className="flex flex-wrap gap-1">
+                                          {product.features
+                                            .slice(0, 3)
+                                            .map((feature, index) => (
+                                              <span
+                                                key={index}
+                                                className="inline-block px-2 py-1 bg-[#446E6D]/10 text-[#446E6D] text-xs rounded-md font-medium"
+                                              >
+                                                {feature}
+                                              </span>
+                                            ))}
+                                          {product.features.length > 3 && (
+                                            <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md font-medium">
+                                              +{product.features.length - 3}{" "}
+                                              more
+                                            </span>
+                                          )}
+                                        </div>
                                       </div>
                                     )}
+                                </div>
+
+                                {/* Hover action bar */}
+                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#446E6D] to-[#446E6D]/90 text-white p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                      <svg
+                                        className="w-4 h-4"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                      >
+                                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                                      </svg>
+                                      <span className="text-sm font-medium">
+                                        View Product
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-xs opacity-90">
+                                        Visit Store
+                                      </span>
+                                      <svg
+                                        className="w-3 h-3"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                                          clipRule="evenodd"
+                                        />
+                                      </svg>
+                                    </div>
                                   </div>
                                 </div>
                               </Link>
