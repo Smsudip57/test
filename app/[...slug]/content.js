@@ -613,7 +613,7 @@ export default function Firewall({
                                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#446E6D] to-[#37c0bd] rounded-full"></div>
                                         <div className="pl-4 pr-2">
                                           <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 italic">
-                                            "{product.description}"
+                                           &quot;{product.description}&quot;
                                           </p>
                                         </div>
                                       </div>
