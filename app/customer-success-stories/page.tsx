@@ -6,7 +6,6 @@ import { Loader2, Play } from "lucide-react";
 import Link from "next/link";
 import Video from "@/components/shaerd/Video";
 
-
 interface Testimonial {
   _id: string;
   Testimonial: string;
@@ -23,7 +22,7 @@ interface Testimonial {
 interface Service {
   _id: string;
   Title: string;
-  Name: string; 
+  Name: string;
   category: string;
 }
 
@@ -36,13 +35,12 @@ interface Product {
 interface ChildService {
   _id: string;
   Title: string;
-  category: string; 
+  category: string;
 }
 
 interface CategoryMap {
   [key: string]: Testimonial[];
 }
-
 
 const hashCode = (str: string): number => {
   let hash = 0;
@@ -51,14 +49,13 @@ const hashCode = (str: string): number => {
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
     hash = (hash << 5) - hash + char;
-    hash = hash & hash; 
+    hash = hash & hash;
   }
   return Math.abs(hash);
 };
 
 const generateStableRandomWithHash = (length: number): number => {
   if (length === 0) return 0;
-
 
   const seedString = `testimonials_${length}_stable_seed`;
   const hash = hashCode(seedString);
@@ -73,7 +70,7 @@ export default function CustomerSuccessStories() {
     useState<CategoryMap>({});
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
-  const [allTestimonials, setAllTestimonials] = useState<Testimonial[]>([]); 
+  const [allTestimonials, setAllTestimonials] = useState<Testimonial[]>([]);
   const [random, setRandom] = useState<number>(0);
 
   useEffect(() => {
@@ -260,16 +257,51 @@ export default function CustomerSuccessStories() {
               ? allTestimonials[random].Testimonial
               : "Discover how WEBME transforms challenges into success stories. Our clients' testimonials showcase the impact of our innovative IT solutions and dedicated support."}
           </p>
+
+          {/* Client Information Section */}
+          {allTestimonials[random] && (
+            <div className="mt-8 p-6 bg-white/80 backdrop-blur-sm rounded-xl border-[1px] border-gray-200 ">
+              <div className="flex items-center gap-4">
+                {/* Company Logo */}
+                <div className="flex-shrink-0">
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#446E6D] bg-white p-1">
+                    <img
+                      src={allTestimonials[random].image}
+                      alt={`${allTestimonials[random].postedBy} company logo`}
+                      className="w-full h-full object-contain rounded-full"
+                      onError={(e) => {
+                        // Fallback if image fails to load
+                        e.currentTarget.src = "/placeholder-logo.png";
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Client Details */}
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-gray-900 mb-1">
+                    {allTestimonials[random].postedBy}
+                  </h3>
+                  <p className="text-sm text-[#446E6D] font-medium">
+                    {allTestimonials[random].role}
+                  </p>
+
+                  {/* Success Story Tag */}
+                  
+                </div>
+              </div>
+            </div>
+          )}
         </div>
+
         <div className="basis-1/2 rounded-2xl overflow-hidden z-20 xl:order-2 order-1">
           <Video
             src={allTestimonials[random]?.video}
-            // poster={allTestimonials[random]?.image}
+            poster={allTestimonials[random]?.image}
             // title="Customer Success"
           />
         </div>
       </div>
-
 
       {availableCategories.map((category) => {
         if (
