@@ -529,7 +529,7 @@ export default function Firewall({
                     }
 
                     return (
-                      <div className="w-full flex flex-col max-h-[500px] overflow-y-auto pr-2">
+                      <div className="w-full flex flex-col max-h-content overflow-y-auto pr-2">
                         {productsForChild.products
                           ?.slice(0, 1)
                           ?.map((product) => (
@@ -612,7 +612,7 @@ export default function Firewall({
                                       <div className="relative">
                                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#446E6D] to-[#37c0bd] rounded-full"></div>
                                         <div className="pl-4 pr-2">
-                                          <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 italic">
+                                          <p className="text-sm text-gray-600 leading-relaxed line-clamp-10 italic">
                                            &quot;{product.description}&quot;
                                           </p>
                                         </div>

@@ -68,7 +68,7 @@ export default function Page() {
           
         </div>
         <div>
-            <div className="border-t border-b border-gray-200 my-8 py-1"></div>
+            <div className="border-t border-b border-gray-200 my-8 py-1 flex flex-col items-center"></div>
 
                 {/* Section 2 */}
                 <h2 className="font-bold text-2xl lg:text-3xl mb-4 text-[#446E6D]">
