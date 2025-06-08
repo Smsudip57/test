@@ -265,7 +265,7 @@ export default function CustomerSuccessStories() {
           <Video
             src={allTestimonials[random]?.video}
             // poster={allTestimonials[random]?.image}
-            title="Customer Success"
+            // title="Customer Success"
           />
         </div>
       </div>
