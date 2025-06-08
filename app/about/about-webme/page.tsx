@@ -67,8 +67,8 @@ export default function Page() {
           </div>
           
         </div>
-        <div>
-            <div className="border-t border-b border-gray-200 my-8 py-1 flex flex-col items-center"></div>
+        <div className="items-center relative z-40 max-w-4xl mx-auto">
+            <div className="border-t border-b border-gray-200 my-8 py-1  "></div>
 
                 {/* Section 2 */}
                 <h2 className="font-bold text-2xl lg:text-3xl mb-4 text-[#446E6D]">
@@ -181,7 +181,7 @@ export default function Page() {
                 </p>
               </div>
 
-              <button className="bg-[#446E6D] text-white flex items-center rounded-md font-semibold gap-2 cursor-pointer w-max mt-8 text-lg hover:bg-[#385b5a] transition-colors">
+              <button className="bg-[#446E6D] text-white flex items-center rounded-md font-semibold gap-2 cursor-pointer w-max mt-8 text-lg hover:bg-[#385b5a] transition-colors justify-center mx-auto">
                 {context.user && !context.loading ? (
                    <button
                    className="lg:flex bg-[#446E6D] rounded py-3 px-7 font-semibold text-white text-sm"

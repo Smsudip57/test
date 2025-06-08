@@ -406,7 +406,7 @@ export default function Firewall({
                           fill
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           placeholder="blur"
-                          blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiLz4="
+                          blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiLz4="
                         />
                       </div>
                     )}
@@ -529,18 +529,18 @@ export default function Firewall({
                     }
 
                     return (
-                      <div className="w-full flex flex-col max-h-content overflow-y-auto pr-2">
+                      <div className="w-full flex flex-col min-h-full overflow-y-auto pr-2">
                         {productsForChild.products
                           ?.slice(0, 1)
                           ?.map((product) => (
                             <div
                               key={product._id}
-                              className="group w-full rounded-xl overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+                              className="group w-full rounded-xl overflow-hidden bg-whitetransition-all duration-300  flex flex-col h-full"
                             >
                               <Link
                                 href={`https://store.webmedigital.com/product/${product._id}`}
                                 target="_blank"
-                                className="block"
+                                className="block flex-1 flex flex-col"
                               >
                                 {/* Image container with badges */}
                                 <div className="relative w-full aspect-[4/3] overflow-hidden">
@@ -599,29 +599,56 @@ export default function Firewall({
                                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
                                 </div>
 
-                                {/* Product content */}
-                                <div className="p-5">
-                                  {/* Product title */}
-                                  <h3 className="font-bold text-lg text-gray-900 line-clamp-2 mb-3 leading-tight group-hover:text-[#446E6D] transition-colors duration-200">
-                                    {product.name}
-                                  </h3>
+                                {/* Product content - flex-1 to take available space */}
+                                <div className="p-5 flex flex-col flex-1">
+                                  {/* Main content area - grows to fill space */}
+                                  <div className="flex-1">
+                                    <h3 className="font-bold text-lg text-gray-900 line-clamp-2 mb-3 leading-tight group-hover:text-[#446E6D] transition-colors duration-200">
+                                      {product.name}
+                                    </h3>
 
-                                  {/* Product description */}
-                                  {product.description && (
-                                    <div className="mb-4">
-                                      <div className="relative">
-                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#446E6D] to-[#37c0bd] rounded-full"></div>
-                                        <div className="pl-4 pr-2">
-                                          <p className="text-sm text-gray-600 leading-relaxed line-clamp-10 italic">
-                                           &quot;{product.description}&quot;
-                                          </p>
+                                    {/* Product description */}
+                                    {product.description && (
+                                      <div className="mb-4">
+                                        <div className="relative">
+                                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#446E6D] to-[#37c0bd] rounded-full"></div>
+                                          <div className="pl-4 pr-2">
+                                            <p className=" text-gray-600 line-clamp-18 mt-6">
+                                              &quot;{product.description}&quot;
+                                            </p>
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  )}
+                                    )}
 
-                                  {/* Price and rating section */}
-                                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                                    {/* Additional product features */}
+                                    {product.features &&
+                                      product.features.length > 0 && (
+                                        <div className="mt-4">
+                                          <div className="flex flex-wrap gap-1">
+                                            {product.features
+                                              .slice(0, 3)
+                                              .map((feature, index) => (
+                                                <span
+                                                  key={index}
+                                                  className="inline-block px-2 py-1 bg-[#446E6D]/10 text-[#446E6D] text-xs rounded-md font-medium"
+                                                >
+                                                  {feature}
+                                                </span>
+                                              ))}
+                                            {product.features.length > 3 && (
+                                              <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md font-medium">
+                                                +{product.features.length - 3}{" "}
+                                                more
+                                              </span>
+                                            )}
+                                          </div>
+                                        </div>
+                                      )}
+                                  </div>
+
+                                  {/* Price section - Always at bottom */}
+                                  <div className="flex items-center justify-between pt-3 border-t border-gray-100 mt-4">
                                     {/* Price section */}
                                     <div className="flex items-center gap-2">
                                       <span className="text-xl font-bold text-[#446E6D]">
@@ -642,31 +669,6 @@ export default function Firewall({
                                       </span>
                                     </div>
                                   </div>
-
-                                  {/* Additional product features */}
-                                  {product.features &&
-                                    product.features.length > 0 && (
-                                      <div className="mt-4 pt-3 border-t border-gray-50">
-                                        <div className="flex flex-wrap gap-1">
-                                          {product.features
-                                            .slice(0, 3)
-                                            .map((feature, index) => (
-                                              <span
-                                                key={index}
-                                                className="inline-block px-2 py-1 bg-[#446E6D]/10 text-[#446E6D] text-xs rounded-md font-medium"
-                                              >
-                                                {feature}
-                                              </span>
-                                            ))}
-                                          {product.features.length > 3 && (
-                                            <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md font-medium">
-                                              +{product.features.length - 3}{" "}
-                                              more
-                                            </span>
-                                          )}
-                                        </div>
-                                      </div>
-                                    )}
                                 </div>
 
                                 {/* Hover action bar */}
