@@ -122,7 +122,7 @@ const Advertiser = ({ data }: any) => {
               >
                 <div
                   className={`max-w-80 bg-white ${
-                    item?.masterTitle === "Our Services"
+                    item?.masterTitle === "Services"
                       ? "aspect-[16/9]"
                       : "aspect-square  "
                   } p-3 px-6 rounded-lg  text-left relative`}
@@ -192,7 +192,7 @@ const Advertiser = ({ data }: any) => {
                   </div>
                 </div>
               </motion.div>
-            ) : item?.masterTitle === "Our Projects" ? (
+            ) : item?.masterTitle === "Projects" ? (
               <motion.div
                 key={index}
                 data-index={index}
@@ -219,7 +219,7 @@ const Advertiser = ({ data }: any) => {
                       ? "bg-[#E5EDFD]"
                       : "bg-[#FFF8BB]"
                   } ${
-                    item?.masterTitle === "Our Services"
+                    item?.masterTitle === "Services"
                       ? "aspect-[16/9]"
                       : "aspect-square  "
                   } p-3 rounded-lg  text-left relative`}
@@ -287,7 +287,7 @@ const Advertiser = ({ data }: any) => {
                 exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
                 transition={{ duration: 0.4, delay: index * 0.2 }}
                 onClick={() => {
-                  if(item?.masterTitle === "Our Services"){
+                  if(item?.masterTitle === "Services"){
                     router.push(`/${item?.slug ? item?.slug : item?.Title }`);
                   }else if(item?.masterTitle === "Industries"){
                     router.push(`/industries/${item?.slug ? item?.slug : item?.Title.toLowerCase() }`);
@@ -303,7 +303,7 @@ const Advertiser = ({ data }: any) => {
                   src={item?.image}
                   alt={item?.alt || "Service image"}
                   className={`w-80 ${
-                    item?.masterTitle === "Our Services"
+                    item?.masterTitle === "Services"
                       ? "aspect-[16/9]"
                       : "aspect-square  "
                   } object-cover rounded-lg shadow-lg bg-white`}
@@ -362,13 +362,13 @@ const HeroContent = () => {
         ]);
 
         const dataSources = [
-          { title: "Our Services", data: servicesResponse.data.services },
+          { title: "Services", data: servicesResponse.data.services },
           {
             title: "Customer Success Stories",
             data: testimonialsResponse.data.testimonials,
           },
           { title: "Industries", data: industriesResponse.data.industries },
-          { title: "Our Projects", data: projectsResponse.data.data },
+          { title: "Projects", data: projectsResponse.data.data },
         ];
 
         const formattedData = dataSources.reduce(

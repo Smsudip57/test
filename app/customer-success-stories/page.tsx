@@ -196,7 +196,8 @@ export default function CustomerSuccessStories() {
         const totalTestimonials = testimonials.length;
 
         // Generate stable random index
-        const stableIndex = generateStableRandomWithHash(totalTestimonials);
+        // const stableIndex = generateStableRandomWithHash(totalTestimonials);
+        const stableIndex = Math.floor(Math.random() * totalTestimonials);
         setRandom(stableIndex);
 
         setAvailableCategories(sortedCategories);

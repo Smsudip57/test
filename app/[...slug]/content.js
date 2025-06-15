@@ -19,6 +19,7 @@ import { MyContext } from "@/context/context";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { Star } from "lucide-react";
+import Contact from "@/components/main/Contact";
 
 // Helper component for content points
 const PointComp = ({ points }) => {
@@ -426,7 +427,7 @@ export default function Firewall({
                       Get it today!
                     </button>
                     <Link
-                      href={`/details/services/${productData?.Title}`}
+                      href={`/details/services/${productData?.slug ? productData.slug : productData?.Title}`}
                       className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     >
                       <span className="mr-1">Discover</span>
@@ -725,8 +726,16 @@ export default function Firewall({
               </AnimatePresence>
             )}
           </div>
-
           {/* Projects, Industries, and Case Studies sections */}
+          <section
+            aria-labelledby="case-studies-heading"
+            className="w-[90%] xl:w-full mx-auto mt-16"
+          >
+            <h2 id="case-studies-heading" className="sr-only">
+              Case Studies
+            </h2>
+            <CaseStudy parent={currentService?._id} />
+          </section>
           <section
             aria-labelledby="related-projects-heading"
             className="mt-20 relative z-30"
@@ -736,22 +745,14 @@ export default function Firewall({
             </h2>
             <Projects service={currentService?._id} />
           </section>
-
-          <section aria-labelledby="industries-heading" className="mt-16">
+          <section aria-labelledby="industries-heading" className="mt-16 relative z-20">
             <h2 id="industries-heading" className="sr-only">
               Industries We Serve
             </h2>
             <Industies parent={currentService?._id} />
           </section>
-
-          <section
-            aria-labelledby="case-studies-heading"
-            className="w-[90%] xl:w-full mx-auto mt-16"
-          >
-            <h2 id="case-studies-heading" className="sr-only">
-              Case Studies
-            </h2>
-            <CaseStudy parent={currentService?._id} />
+          <section aria-labelledby="industries-heading" className="mt-16">
+            <Contact />
           </section>
         </div>
       </main>
