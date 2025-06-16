@@ -20,7 +20,6 @@ const WebParticles = () => {
 
     const particlesLoaded = async (container?: Container) => {
         if (container) {
-            console.log(container);
         }
         return Promise.resolve();
     };

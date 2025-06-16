@@ -50,7 +50,6 @@ export default function Example() {
         signal: signal,  // Add the abort signal here
       });
       
-      console.log(response.data);
   
       if (response.data.user) {
         // If user data is returned, set it to the context state
@@ -67,7 +66,6 @@ export default function Example() {
       }
     } catch (err) {
       if (err.name === 'AbortError') {
-        console.log('Request was aborted');
       } else {
         customToast(err.response?.data || err.message);
       }

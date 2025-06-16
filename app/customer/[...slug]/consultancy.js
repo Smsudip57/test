@@ -111,7 +111,6 @@ export default function Page() {
         );
         if(response.data)
         {
-          console.log(response?.data)
           setSessionActive(response?.data.find((s)=> s.type === 'booking')?._id);
           setChatBoxOpen(true);
           setChatMessages(response?.data.find((s)=> s.type === 'booking')?.messages || []);
@@ -265,7 +264,6 @@ export default function Page() {
       const month = new Date(selectedDateTime).getMonth(); 
       if ( selectedDateTime !== '') {
         setDateTime(selectedDateTime);
-        console.log("Selected Date and Time:", selectedDateTime);
       } 
     };
     

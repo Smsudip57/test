@@ -386,7 +386,6 @@ const HeroContent = () => {
           },
           []
         );
-        console.log(formattedData);
         setServices(formattedData);
       } catch (error) {
         console.error("Error fetching data:", error);

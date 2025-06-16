@@ -54,7 +54,6 @@ const Projects = ({ industry = null, service = null }) => {
             }
           }
         } else {
-          console.log(response.data.message);
         }
       } catch (error) {
         if (axios.isCancel(error)) {

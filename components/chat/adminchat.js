@@ -72,7 +72,6 @@ const SupportChatting = () => {
           params: { email: user?.email }
         });
         if(response.data){
-            console.log(response.data[0])
             setSessions(response.data);
             setSessionActive(response.data[0]?._id);
             setChatMessages(response?.data?.find(session => session._id === response.data[0]?._id)?.messages || [])

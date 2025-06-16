@@ -41,7 +41,6 @@ export default async function Page({params}) {
         </div>
         )
     }
-    console.log(slug[0])
         
     switch (slug[0]) {
       case 'website':

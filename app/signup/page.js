@@ -66,7 +66,6 @@ export default function Signup() {
     } catch (err) {
       // Handle errors, including request cancellation
       if (err.name === 'AbortError') {
-        console.log('Request was aborted');
       } else {
         customToast(err.response?.data || { success: false, message: 'An error occurred' });
       }

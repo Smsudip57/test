@@ -16,7 +16,6 @@ export default function DeleteProject() {
       try {
         const response = await axios.get('/api/project/get', { withCredentials: true });
         if (response.data.success) {
-          console.log(response.data.data);
           setProjects(response.data.data);
         } else {
           setError('Failed to load projects');

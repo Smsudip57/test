@@ -41,7 +41,6 @@ export default function Adminnav({user, login}) {
           {withCredentials: true}
         );
         if(response?.data?.success){
-          console.log(true)
           router.push('/');
           setloginout(true);
           context?.setUser(null);

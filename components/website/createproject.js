@@ -208,7 +208,6 @@ export default function CreateProject() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
   
-    console.log(`Processing ${files.length} files for section ${sectionIndex}`);
   
     // Create new arrays by copying the old ones to avoid reference issues
     const newImages = [...sectionImages];
@@ -225,7 +224,6 @@ export default function CreateProject() {
       // Process all selected files
       for (let i = 0; i < fileArray.length; i++) {
         const file = fileArray[i];
-        console.log(`Processing file: ${file.name}, type: ${file.type}, size: ${file.size}`);
         
         // Validate file type
         if (!file.type.startsWith("image/")) {
@@ -246,7 +244,6 @@ export default function CreateProject() {
         // Validate image dimensions (16:9 aspect ratio)
         try {
           const dimensions = await validateImageDimensions(file);
-          console.log(`Image ${file.name} dimensions validated:`, dimensions);
         } catch (dimensionError) {
           console.error(`Dimension validation failed for ${file.name}:`, dimensionError);
           
@@ -265,12 +262,10 @@ export default function CreateProject() {
   
         // Create and add preview URL
         const previewUrl = URL.createObjectURL(file);
-        console.log(`Created preview URL for ${file.name}: ${previewUrl}`);
         newPreviews[sectionIndex].push(previewUrl);
       }
   
-      console.log(`Section ${sectionIndex} - New images count: ${newImages[sectionIndex].length}`);
-      console.log(`Section ${sectionIndex} - New previews count: ${newPreviews[sectionIndex].length}`);
+     
   
       // Update state with the new arrays
       setSectionImages(newImages);
@@ -305,7 +300,6 @@ export default function CreateProject() {
     ) {
       try {
         URL.revokeObjectURL(previewUrl);
-        console.log(`Revoked URL: ${previewUrl}`);
       } catch (err) {
         console.error("Error revoking URL:", err);
       }
@@ -528,7 +522,6 @@ export default function CreateProject() {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
           );
-          console.log(`Upload progress: ${percentCompleted}%`);
         },
       });
 
@@ -902,10 +895,7 @@ export default function CreateProject() {
                                     "w-full h-24 bg-gray-200";
                                 }}
                                 onLoad={() => {
-                                  console.log(
-                                    "Image loaded successfully:",
-                                    sectionPreviews[sectionIndex]?.[imageIndex]
-                                  );
+                             
                                 }}
                               />
                               <button

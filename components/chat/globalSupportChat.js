@@ -69,7 +69,6 @@ export default function Page() {
               }
             )
             if(response?.data?.sessionId){
-              console.log(response.data.sessionId)
               setSessionActive(response?.data?.sessionId);
               setChatBoxOpen(true);
               if(response.status === 201 && socket){
@@ -141,7 +140,6 @@ export default function Page() {
     
         // Attach to the session room
         if (sessionActive) {
-          console.log('sudip')
           socketInstance.emit("attachSession", sessionActive);
         }
     
