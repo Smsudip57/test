@@ -33,11 +33,11 @@ interface ApiArticle {
   mainSections: MainSection[];
   conclusion: string;
   tags: string[];
-  relatedServices: {
+  relatedServices: Array<{
     _id: string;
     Title: string;
     [key: string]: any;
-  } | null;
+  }>;
   relatedIndustries: Array<{ _id: string; title: string; [key: string]: any }>;
   status: "draft" | "published" | "archived";
   createdAt: string;
@@ -118,10 +118,10 @@ export default function Page() {
     knowledgebases.forEach((article) => {
       if (article.status !== "published") return;
 
-      // Get the category name from relatedServices
+      // Get the category name from relatedServices (it's an array)
       let categoryName = "Uncategorized";
-      if (article.relatedServices && article.relatedServices.Title) {
-        categoryName = article.relatedServices.Title;
+      if (article.relatedServices && article.relatedServices.length > 0) {
+        categoryName = article.relatedServices[0].Title;
       }
 
       // Create category if it doesn't exist
@@ -182,32 +182,65 @@ export default function Page() {
   // Helper function to render bullet points
   const renderBulletPoints = (bullets: Bullet[]) => {
     return (
-      <ul className="space-y-2 ml-4">
+      <div className="space-y-2">
         {bullets.map((bullet, idx) => {
-          let listStyle = "";
+          let listComponent;
+
           switch (bullet.style) {
             case "number":
-              listStyle = "list-decimal";
+              listComponent = (
+                <div key={idx} className="flex items-start">
+                  <span className="text-[#446E6D] font-semibold mr-3 mt-1 min-w-[1.5rem]">
+                    {idx + 1}.
+                  </span>
+                  <span className="text-gray-700 leading-relaxed">
+                    {bullet.content}
+                  </span>
+                </div>
+              );
               break;
             case "roman":
-              listStyle = "list-roman";
+              const romanNumerals = [
+                "i",
+                "ii",
+                "iii",
+                "iv",
+                "v",
+                "vi",
+                "vii",
+                "viii",
+                "ix",
+                "x",
+              ];
+              listComponent = (
+                <div key={idx} className="flex items-start">
+                  <span className="text-[#446E6D] font-semibold mr-3 mt-1 min-w-[1.5rem]">
+                    {romanNumerals[idx] || `${idx + 1}.`}
+                  </span>
+                  <span className="text-gray-700 leading-relaxed">
+                    {bullet.content}
+                  </span>
+                </div>
+              );
               break;
             case "dot":
             default:
-              listStyle = "list-disc";
+              listComponent = (
+                <div key={idx} className="flex items-start">
+                  <span className="text-[#446E6D] mr-3 mt-2 text-xl leading-none">
+                    •
+                  </span>
+                  <span className="text-gray-700 leading-relaxed">
+                    {bullet.content}
+                  </span>
+                </div>
+              );
               break;
           }
 
-          return (
-            <li
-              key={idx}
-              className={`${listStyle} ml-4 text-gray-700 leading-relaxed`}
-            >
-              {bullet.content}
-            </li>
-          );
+          return listComponent;
         })}
-      </ul>
+      </div>
     );
   };
 
@@ -848,7 +881,7 @@ export default function Page() {
                             {section.explanationType === "bullets" &&
                               section.bullets &&
                               section.bullets.length > 0 && (
-                                <div className="mb-6">
+                                <div className="mb-6 ml-4">
                                   {renderBulletPoints(section.bullets)}
                                 </div>
                               )}
@@ -861,12 +894,12 @@ export default function Page() {
                                     <h2 className="text-2xl font-bold text-gray-800 mb-4">
                                       Conclusion
                                     </h2>
-                                    <p className="leading-relaxed">
+                                    <p className="leading-relaxed whitespace-pre-wrap">
                                       {section.explain}
                                     </p>
                                   </>
                                 ) : (
-                                  <p className="leading-relaxed">
+                                  <p className="leading-relaxed whitespace-pre-wrap">
                                     {section.explain}
                                   </p>
                                 )}
