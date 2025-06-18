@@ -483,7 +483,7 @@ export default function Firewall({
                       Get it today!
                     </button>
                     <Link
-                      href={`/details/childs/${childData.Title}`}
+                      href={`/details/childs/${childData.slug ? childData.slug : childData.Title}`}
                       className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     >
                       <span className="mr-1">Discover</span>

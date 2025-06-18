@@ -43,7 +43,7 @@ const Navbar = () => {
     "Blog",
     "Knowledgebase",
     "FAQ",
-    "Privary Policy",
+    "Privacy Policy",
     "Terms & Conditions",
   ];
   const slider = useRef(null);
