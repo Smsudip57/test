@@ -2,6 +2,12 @@ import { notFound } from "next/navigation";
 import axios from "axios";
 import Content from "./content";
 
+// Force dynamic rendering and disable all caching
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
+export const runtime = "nodejs";
+
 // Define metadata for better SEO
 export async function generateMetadata({ params }) {
   const slug = params?.slug || [];
@@ -124,7 +130,6 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const slug = params?.slug || [];
-  // First decode, then lowercase for consistency
   const mainSlug = slug[0] ? decodeURIComponent(slug[0]).toLowerCase() : "";
 
   // Predefined service categories with structured metadata
@@ -165,33 +170,47 @@ export default async function Page({ params }) {
 
   try {
     const timestamp = Date.now();
-    // Optimize API calls by combining them into a single Promise.all request
+    const randomParam = Math.random().toString(36).substring(7);
+
+    // Enhanced cache-busting with multiple strategies
     const [servicesRes, productsRes, childsRes] = await Promise.all([
       axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/service/getservice?_t=${timestamp}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/service/getservice?_t=${timestamp}&_r=${randomParam}`,
         {
           headers: {
-            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
             Pragma: "no-cache",
+            Expires: "0",
+            "If-Modified-Since": "0",
+            "If-None-Match": "no-match-for-this",
           },
+          timeout: 10000,
         }
       ),
       axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/product/get?_t=${timestamp}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/product/get?_t=${timestamp}&_r=${randomParam}`,
         {
           headers: {
-            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
             Pragma: "no-cache",
+            Expires: "0",
+            "If-Modified-Since": "0",
+            "If-None-Match": "no-match-for-this",
           },
+          timeout: 10000,
         }
       ),
       axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/child/get?_t=${timestamp}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/child/get?_t=${timestamp}&_r=${randomParam}`,
         {
           headers: {
-            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
             Pragma: "no-cache",
+            Expires: "0",
+            "If-Modified-Since": "0",
+            "If-None-Match": "no-match-for-this",
           },
+          timeout: 10000,
         }
       ),
     ]);
@@ -236,47 +255,13 @@ export default async function Page({ params }) {
       />
     );
   } catch (error) {
-    // console.error("Error fetching data:", error);
+    console.error("Error fetching data:", error);
     return notFound();
   }
 }
 
-// Generate static paths for better performance
+// Remove generateStaticParams or make it dynamic
 export async function generateStaticParams() {
-  try {
-    // Fetch services to generate paths for both categories and individual services
-    const servicesRes = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/service/getservice`
-    );
-    const services = servicesRes?.data?.services || [];
-
-    // Base categories
-    const categories = [
-      "branding",
-      "workfrom-anywhere",
-      "modern-workplace",
-      "digital",
-      "endless-support",
-    ];
-
-    // Get slugs from services
-    const serviceParams = services
-      .filter((service) => service.slug)
-      .map((service) => ({ slug: [service.slug] }));
-
-    // Combine both for complete path coverage
-    return [
-      ...categories.map((category) => ({ slug: [category] })),
-      ...serviceParams,
-    ];
-  } catch (error) {
-    // console.error("Error generating static params:", error);
-    return [
-      { slug: ["branding"] },
-      { slug: ["workfrom-anywhere"] },
-      { slug: ["modern-workplace"] },
-      { slug: ["digital"] },
-      { slug: ["endless-support"] },
-    ];
-  }
+  // Return empty array to disable static generation
+  return [];
 }
