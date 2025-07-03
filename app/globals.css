@@ -3,7 +3,34 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Modal animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out forwards;
+}
 
 .cursive {
   font-family: "Cedarville Cursive", cursive;
@@ -64,30 +91,31 @@
   display: none;
 }
 
-
-
 html {
   scroll-behavior: smooth;
 }
 
-.moving-item, .moving-item-2 {
+.moving-item,
+.moving-item-2 {
   animation-name: bounce;
   animation-duration: 3s;
 }
 .moving-item {
-  aspect-ratio: 16/9!important;
+  aspect-ratio: 16/9 !important;
   animation-iteration-count: infinite;
   animation-delay: -1s;
 }
 .moving-item-2 {
   animation-iteration-count: infinite;
-  animation-delay: -.5s;
+  animation-delay: -0.5s;
 }
-.moving-item, .moving-item-2 {
+.moving-item,
+.moving-item-2 {
   animation-name: bounce;
   animation-duration: 3s;
 }
-.moving-item-3, .moving-item-4 {
+.moving-item-3,
+.moving-item-4 {
   animation-name: bounce;
   animation-duration: 3s;
 }
@@ -99,7 +127,8 @@ html {
   animation-iteration-count: infinite;
   animation-delay: -1.5s;
 }
-.moving-item-3, .moving-item-4 {
+.moving-item-3,
+.moving-item-4 {
   animation-name: bounce;
   animation-duration: 3s;
 }
@@ -116,18 +145,17 @@ html {
   cursor: pointer;
 }
 
-
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(-10%);
-    animation-timing-function: cubic-bezier(.8,0,1,1);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
   50% {
     transform: translateY(0);
-    animation-timing-function: cubic-bezier(0,0,.2,1);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
 }
-  
 
 .custom-next,
 .custom-prev {
@@ -162,18 +190,30 @@ html {
 }
 
 @keyframes fadein {
-  0% { opacity: 0; }
-  75% { opacity: 1; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 @keyframes fadeout {
-  0% { opacity: 1; }
-  25% { opacity: 0; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
-.uni{
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 90%)!important;
+.uni {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 90%) !important;
 }
 
 @keyframes slide {
@@ -182,68 +222,60 @@ html {
   }
 }
 
-
-
 @keyframes leftslider1 {
-  0%{
+  0% {
     left: -30%;
   }
-  100%{
+  100% {
     left: 0;
   }
-  
 }
 @keyframes leftslider2 {
-  0%{
+  0% {
     left: 0;
   }
-  100%{
+  100% {
     left: -30%;
   }
-  
 }
 
-.opani:hover{
+.opani:hover {
   animation: opani0 0.5s ease-in-out forwards;
 }
 .opani:not(:hover) {
   animation: opani1 0.5s ease-in-out forwards;
 }
 @keyframes opani0 {
-  0%{
+  0% {
     opacity: 0.7;
     width: 70%;
     background-color: transparent;
   }
-  100%{
+  100% {
     opacity: 1;
     width: 90%;
     background-color: #e7f7f6a9;
   }
-  
 }
 @keyframes opani1 {
-  0%{
+  0% {
     opacity: 1;
     width: 90%;
     background-color: #e7f7f6a9;
   }
-  100%{
+  100% {
     opacity: 0.7;
     width: 70%;
   }
-  finally{
+  finally {
     background-color: transparent;
-
   }
-  
 }
 
 @keyframes slide2 {
   to {
     transform: translateX(-100%);
   }
-   
 }
 
 /* .serviceforce{
@@ -252,30 +284,38 @@ html {
   width: 317.81px;
 } */
 
-
-
 /* HTML: <div class="loader"></div> */
 .loader {
   width: 60px;
   aspect-ratio: 2;
-  --_g: no-repeat radial-gradient(circle closest-side,#446E6D 90%,#0000);
-  background: 
-    var(--_g) 0%   50%,
-    var(--_g) 50%  50%,
-    var(--_g) 100% 50%;
-  background-size: calc(100%/3) 50%;
+  --_g: no-repeat radial-gradient(circle closest-side, #446e6d 90%, #0000);
+  background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
+  background-size: calc(100% / 3) 50%;
   animation: l3 1s infinite linear;
 }
 @keyframes l3 {
-    20%{background-position:0%   0%, 50%  50%,100%  50%}
-    40%{background-position:0% 100%, 50%   0%,100%  50%}
-    60%{background-position:0%  50%, 50% 100%,100%   0%}
-    80%{background-position:0%  50%, 50%  50%,100% 100%}
+  20% {
+    background-position: 0% 0%, 50% 50%, 100% 50%;
+  }
+  40% {
+    background-position: 0% 100%, 50% 0%, 100% 50%;
+  }
+  60% {
+    background-position: 0% 50%, 50% 100%, 100% 0%;
+  }
+  80% {
+    background-position: 0% 50%, 50% 50%, 100% 100%;
+  }
 }
 
 @keyframes cursor-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 .animate-cursor-blink {

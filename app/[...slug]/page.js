@@ -2,10 +2,10 @@ import { notFound } from "next/navigation";
 import axios from "axios";
 import Content from "./content";
 
-// Force dynamic rendering and disable all caching
+// Keep dynamic for fresh data but optimize performance
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
+export const revalidate = false; // No ISR, always fresh
+export const fetchCache = "default-cache"; // Allow fetch caching for faster API calls
 export const runtime = "nodejs";
 
 // Define metadata for better SEO
@@ -243,9 +243,7 @@ export default async function Page({ params }) {
         };
       }
     }
-    // console.log("Current Main Service:", currentMainService);
-    // Pass required props to Content component
-    return (
+    return currentMainService ? (
       <Content
         services={services}
         products={products}
@@ -253,7 +251,7 @@ export default async function Page({ params }) {
         slug={slug}
         Mainservice={currentMainService}
       />
-    );
+    ):notFound();
   } catch (error) {
     console.error("Error fetching data:", error);
     return notFound();

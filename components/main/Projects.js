@@ -4,7 +4,7 @@ import Link from "next/link";
 import axios from "axios";
 import VideoPlayer from "@/components/shaerd/Video";
 
-const Projects = ({ industry = null, service = null }) => {
+const Projects = ({ product = null, service = null, child = null }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [empty, setEmpty] = useState(false);
@@ -29,12 +29,28 @@ const Projects = ({ industry = null, service = null }) => {
         });
 
         if (response.data.success) {
-          if (industry || service) {
-            const filteredProjects = response.data.data.filter(
-              (project) =>
-                (industry && project.relatedIndustries === industry) ||
-                (service && project?.relatedServices === service)
-            );
+          if (product || service || child) {
+            const filteredProjects = response.data.data.filter((project) => {
+              // Check if any of the project's related items match the provided filters
+              const matchesService =
+                service &&
+                Array.isArray(project.relatedServices) &&
+                project.relatedServices.includes(service);
+
+              const matchesProduct =
+                product &&
+                Array.isArray(project.relatedProducts) &&
+                project.relatedProducts.includes(product);
+
+              const matchesChild =
+                child &&
+                Array.isArray(project.relatedChikfdServices) &&
+                project.relatedChikfdServices.includes(child);
+
+              // Return true if any of the filters match
+              return matchesService || matchesProduct || matchesChild;
+            });
+
             setProjects(filteredProjects);
             if (filteredProjects.length === 0) {
               setTimeout(() => {
@@ -73,7 +89,7 @@ const Projects = ({ industry = null, service = null }) => {
     return () => {
       controller.abort();
     };
-  }, [industry, service]);
+  }, [product, service, child]);
 
   // Reset visible projects when projects change
   useEffect(() => {
@@ -307,7 +323,7 @@ const Projects = ({ industry = null, service = null }) => {
               No Projects Found
             </h3>
             <p className="text-gray-600 max-w-md mx-auto">
-              {industry || service
+              {product || service || child
                 ? "No projects match the selected criteria. Please try another category."
                 : "No projects have been added yet. Check back later for updates."}
             </p>

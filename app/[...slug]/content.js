@@ -18,8 +18,10 @@ import CaseStudy from "@/components/main/CaseStudy";
 import { MyContext } from "@/context/context";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import BlogSection from "@/components/shaerd/Blog";
 import { Star } from "lucide-react";
 import Contact from "@/components/main/Contact";
+import ERPConsultationPage from "@/components/shaerd/BookingPage";
 
 // Helper component for content points
 const PointComp = ({ points }) => {
@@ -197,10 +199,14 @@ export default function Firewall({
     };
   }, [servicebasedProducts, filteredChildren]);
 
+  // State for booking modal
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  
   // Handler for consultation button with memoization for performance
   const handleConsultation = useCallback(() => {
-    setChatBoxOpen(true);
-  }, [setChatBoxOpen]);
+    // Use the booking modal instead of chat box
+    setIsBookingModalOpen(true);
+  }, []);
 
   // Current service data for easier rendering
   const currentService = Mainservice?.serviceData || selectedService;
@@ -302,7 +308,8 @@ export default function Firewall({
           {JSON.stringify(structuredData)}
         </script>
       </Head>
-
+      {/* Booking Modal */}
+      <ERPConsultationPage isOpen={isBookingModalOpen} onClose={() => setIsBookingModalOpen(false)} />
       {/* Background elements */}
       <div
         className="min-h-[650px] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni z-[-10]"
@@ -483,7 +490,7 @@ export default function Firewall({
                       Get it today!
                     </button>
                     <Link
-                      href={`/details/childs/${childData.slug ? childData.slug : childData.Title}`}
+                      href={`/details/products/${childData.slug ? childData.slug : childData.Title}`}
                       className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     >
                       <span className="mr-1">Discover</span>
@@ -751,6 +758,9 @@ export default function Firewall({
             </h2>
             <Industies parent={currentService?._id} />
           </section>
+          <div className="mx-auto min-h-screen flex justify-center items-center">
+        <BlogSection parent={Mainservice?._id} />
+      </div>
           <section aria-labelledby="industries-heading" className="mt-16">
             <Contact />
           </section>

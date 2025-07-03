@@ -70,7 +70,7 @@ export default async function AdminPage({params}) {
         return notFound(); 
     }
   }
-  if(slug[0] === 'childs'){
+  if(slug[0] === 'products'){
     if(checkChild(slug[1])){
       const serviceWithProduct = checkChild(slug[1]);
       return <ServicePage details={serviceWithProduct} />;

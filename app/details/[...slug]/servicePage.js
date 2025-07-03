@@ -7,7 +7,11 @@ import CaseStudy from "@/components/main/CaseStudy";
 import BlogSection from "@/components/shaerd/Blog";
 import FaqSection from "@/components/shaerd/Faqs";
 import KnowledgeBase from "@/components/shaerd/Knowledgebase";
+import Projects from "@/components/main/Projects";
+import Industies from "@/components/main/Industies";
 import { motion, AnimatePresence } from "framer-motion";
+import Contact from "@/components/main/Contact";
+
 
 export default function Page({ details: Service }) {
   const [f1, setf1] = useState(false);
@@ -117,12 +121,31 @@ export default function Page({ details: Service }) {
         <CaseStudy child={Service?._id} />
       </div>
 
+       <div
+            aria-labelledby="related-projects-heading flex"
+            className="mt-20 relative z-30 text-left"
+          >
+            <h2 id="related-projects-heading" className="sr-only">
+              Related Projects
+            </h2>
+            <Projects product={Service?._id} child={Service?._id} />
+          </div>
+
       <div className="mx-auto min-h-screen flex justify-center items-center">
         <KnowledgeBase child={Service?._id} product={Service?._id} />
       </div>
 
       {/* FAQ Section Component */}
       <FaqSection child={Service?._id} product={Service?._id} />
+      <section aria-labelledby="industries-heading" className="mt-16 relative z-20">
+            <h2 id="industries-heading" className="sr-only">
+              Industries We Serve
+            </h2>
+            <Industies product={Service?._id} />
+          </section>
+          <section aria-labelledby="industries-heading" className="mt-16">
+            <Contact />
+          </section>
     </div>
   );
 }

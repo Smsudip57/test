@@ -15,8 +15,7 @@ import axios from "axios";
 export default async function Home() {
   // Fetch the service data server-side
   const serviceResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/service/getservice`, { 
-    cache: 'no-store',  // Disable caching
-    next: { revalidate: 0 } // Force revalidation on each request
+    next: { revalidate: 0 } 
   });
   const service = { data: await serviceResponse.json() };
 

@@ -256,6 +256,13 @@ const Navbar = () => {
             >
               Store
             </a>
+            <a
+              href="tel:+971567295834"
+              className="cursor-pointer hover:opacity-70  hidden lg:block"
+              title="Call us at +971 56 729 5834"
+            >
+              Call
+            </a>
             <div>
               <button onClick={handleOpen} className="lg:hidden text-[#446E6D]">
                 <span className="font-semibold">Let&apos;s Go</span>{" "}
@@ -331,12 +338,16 @@ const Navbar = () => {
                 <MenuItem>
                   <a href="https://store.webmedigital.com/" target="_blank">Store</a>
                 </MenuItem>
+                <MenuItem>
+                  <a href="tel:+971567295834"> Call</a>
+                </MenuItem>
               </Menu>
             </div>
             {/* </div> */}
           </div>
 
-          <div
+
+            <div
             className="w-auto cursor-pointer text-left relative"
             onClick={() => setprofileopen(!profileopen)}
             onAbort={() => setprofileopen(false)}

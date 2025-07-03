@@ -1,17 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
 
-const Webme = ({service :apiservice}:any) => {
+const Webme = ({ service: apiservice }: any) => {
   const [active, setActive] = useState("");
- 
 
   useEffect(() => {
     console.log(apiservice);
-  }, [active]);
-
-
-
+  }, [apiservice]);
 
   // List of services
   // const services = [
@@ -25,23 +23,26 @@ const Webme = ({service :apiservice}:any) => {
   //   { key: "d", img: "/iot.jpg", link: "/digital?search=iotsystems#details" },
   //   { key: "w", img: "/micro-t.jpg", link: "/workfrom anywhere?search=windowsvirtualdesktop#details" },
   // ];
-// console.log(apiservice);
-const services = apiservice?.services 
-  ? apiservice?.services?.map((service: any) => {
-      let link = `/${service?.slug ? service.slug : service?.Title?.toLowerCase()}#details`;
-      return {
-        key: service?.category?.trim()?.toLowerCase() === "endless support" ? "en" : service.category.charAt(0).toLowerCase(),
-        img: service.image,
-        link: link
-      };
-    }) 
-  : [];
+  // console.log(apiservice);
+  const services = apiservice?.services
+    ? apiservice?.services?.map((service: any) => {
+        let link = `/${
+          service?.slug ? service.slug : service?.Title?.toLowerCase()
+        }#details`;
+        return {
+          key:
+            service?.category?.trim()?.toLowerCase() === "endless support"
+              ? "en"
+              : service.category.charAt(0).toLowerCase(),
+          img: service.image,
+          link: link,
+        };
+      })
+    : [];
 
-  
   // console.log(services)
-  
+
   // console.log(services);
-  
 
   // Reorder list: bring related items to the top
   const sortedServices = [...services].sort((a, b) => {
@@ -52,7 +53,11 @@ const services = apiservice?.services
   });
 
   return (
-    <section className="" style={{ backgroundColor: "rgba(231,247,246,1)" }} id="services">
+    <section
+      className=""
+      style={{ backgroundColor: "rgba(231,247,246,1)" }}
+      id="services"
+    >
       {/* Navbar */}
       <div className="lg:w-full md:text-xl hidden lg:text-2xl text-[#282828] font-lora mb-10 font-extralight list-none lg:flex justify-around p-5 box-border uppercase cursor-pointer opacity-50 mt-6">
         {[
@@ -71,7 +76,9 @@ const services = apiservice?.services
             >
               {item.label}
             </li>
-            {index < 5 && <li className="border-[1px] border-[#446E6D] opacity-50"></li>}
+            {index < 5 && (
+              <li className="border-[1px] border-[#446E6D] opacity-50"></li>
+            )}
           </React.Fragment>
         ))}
       </div>
@@ -82,12 +89,48 @@ const services = apiservice?.services
           <div className="relative cursor-pointer">
             <div className="mx-auto w-full text-2xl md:text-xl lg:text-4xl text-[#446E6D] font-lora my-8 lg:my-0 lg:mb-16 font-bold flex justify-center items-center">
               <p className="upper">
-                <span className={`uppercase transition-all duration-300 ${active === "w" ? "text-[#D5E928]" : ""}`}>W</span>
-                <span className={`uppercase transition-all duration-300 ${active === "ex" ? "text-[#D5E928]" : ""}`}>E</span>
-                <span className={`uppercase transition-all duration-300 ${active === "b" ? "text-[#D5E928]" : ""}`}>B</span>
-                <span className={`uppercase transition-all duration-300 ${active === "m" ? "text-[#D5E928]" : ""}`}>M</span>
-                <span className={`uppercase transition-all duration-300 ${active === "en" ? "text-[#D5E928]" : ""}`}>E</span>
-                <span className={`transition-all duration-300 ${active === "d" ? "text-[#D5E928]" : ""}`}>DIGITAL</span>
+                <span
+                  className={`uppercase transition-all duration-300 ${
+                    active === "w" ? "text-[#D5E928]" : ""
+                  }`}
+                >
+                  W
+                </span>
+                <span
+                  className={`uppercase transition-all duration-300 ${
+                    active === "ex" ? "text-[#D5E928]" : ""
+                  }`}
+                >
+                  E
+                </span>
+                <span
+                  className={`uppercase transition-all duration-300 ${
+                    active === "b" ? "text-[#D5E928]" : ""
+                  }`}
+                >
+                  B
+                </span>
+                <span
+                  className={`uppercase transition-all duration-300 ${
+                    active === "m" ? "text-[#D5E928]" : ""
+                  }`}
+                >
+                  M
+                </span>
+                <span
+                  className={`uppercase transition-all duration-300 ${
+                    active === "en" ? "text-[#D5E928]" : ""
+                  }`}
+                >
+                  E
+                </span>
+                <span
+                  className={`transition-all duration-300 ${
+                    active === "d" ? "text-[#D5E928]" : ""
+                  }`}
+                >
+                  DIGITAL
+                </span>
               </p>
             </div>
           </div>
@@ -98,29 +141,40 @@ const services = apiservice?.services
           <AnimatePresence>
             {sortedServices.map((item, index) => (
               <motion.div
-              key={item.key + index}
-              layout // Enables smooth movement transition
-              initial={{ opacity: 1,  }}
-              animate={{
-                opacity: active === "" || active === item.key ? 1 : 0.1,
-                scale: active === "" || active === item.key ? 1 : 0.95, // Fade unrelated items
-                // y: 0,
-              }}
-              exit={{ opacity: 0,  }}
-              transition={{ type: "tween", duration: .5, ease: "easeInOut",
-                opacity: { duration: active === "" || active === item.key ? 0.5 : 0.5 }, // Longer fade for unrelated
-               }}
-              className="sm:basis-1/3 lg:basis-1/4 aspect-[16/9] "
-            >
-            
-                <a href={item.link}>
-                  <img
+                key={item.key + index}
+                layout // Enables smooth movement transition
+                initial={{ opacity: 1 }}
+                animate={{
+                  opacity: active === "" || active === item.key ? 1 : 0.1,
+                  scale: active === "" || active === item.key ? 1 : 0.95, // Fade unrelated items
+                  // y: 0,
+                }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  type: "tween",
+                  duration: 0.5,
+                  ease: "easeInOut",
+                  opacity: {
+                    duration: active === "" || active === item.key ? 0.5 : 0.5,
+                  }, // Longer fade for unrelated
+                }}
+                className="sm:basis-1/3 lg:basis-1/4 aspect-[16/9] "
+              >
+                <Link href={item.link} prefetch={false}>
+                  <Image
                     src={item.img}
+                    alt={`Service: ${item.key}`}
+                    width={400}
+                    height={225}
+                    priority={index < 4}
+                    unoptimized={true}
                     className={`w-full p-1 rounded-md overflow-hidden aspect-[16/9] border-[1px] shadow-md shadow-slate-500 transition-all duration-300 ${
-                      active === item.key ? "bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1" : "border-[#76b4b1d0]"
+                      active === item.key
+                        ? "bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1"
+                        : "border-[#76b4b1d0]"
                     }`}
                   />
-                </a>
+                </Link>
               </motion.div>
             ))}
           </AnimatePresence>

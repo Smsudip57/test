@@ -5,12 +5,14 @@ import axios from "axios";
 import { Upload, PlusCircle, X, Film, Image as ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { MyContext } from "@/context/context";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 export default function EditProject() {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [services, setServices] = useState([]);
+  const [products, setProducts] = useState([]); // Add state for products list
+  const [childServices, setChildServices] = useState([]); // Add state for child services list
   const [selectedProject, setSelectedProject] = useState(null);
   const [formValues, setFormValues] = useState({
     Title: "",
@@ -18,7 +20,9 @@ export default function EditProject() {
     detail: "",
     mediaType: "image",
     media: null,
-    relatedServices: "",
+    relatedServices: [], // Changed to array
+    relatedProducts: [], // Added
+    relatedChikfdServices: [], // Added
     sections: [],
   });
 
@@ -28,33 +32,50 @@ export default function EditProject() {
   const [success, setSuccess] = useState("");
   const [mediaPreview, setMediaPreview] = useState(null);
   const [videoKey, setVideoKey] = useState(0);
-  const { setUser, customToast } = useContext(MyContext); 
+  const { setUser, customToast } = useContext(MyContext);
   const [existingSectionImages, setExistingSectionImages] = useState([]);
   // 2. Newly uploaded images
   const [newSectionImages, setNewSectionImages] = useState([]);
   const [newSectionPreviews, setNewSectionPreviews] = useState([]);
 
-  // Fetch projects and services on component mount
+  // Fetch projects, services, products, and child services on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Fetch projects
-        const projectsResponse = await axios.get("/api/project/get", {
-          withCredentials: true,
-        });
+        // Fetch all data in parallel
+        const [
+          projectsResponse,
+          servicesResponse,
+          productsResponse,
+          childServicesResponse,
+        ] = await Promise.all([
+          axios.get("/api/project/get", { withCredentials: true }),
+          axios.get("/api/service/getservice", { withCredentials: true }),
+          axios.get("/api/product/get", { withCredentials: true }),
+          axios.get("/api/child/get", { withCredentials: true }),
+        ]);
+
+        // Handle projects
         if (projectsResponse.data.success) {
           setProjects(projectsResponse.data.data);
         } else {
           setError("Failed to load projects");
         }
 
-        // Fetch services for the dropdown
-        const servicesResponse = await axios.get("/api/service/getservice", {
-          withCredentials: true,
-        });
+        // Handle services
         if (servicesResponse.data.success) {
           setServices(servicesResponse.data.services || []);
+        }
+
+        // Handle products
+        if (productsResponse.data.success) {
+          setProducts(productsResponse.data.products || []);
+        }
+
+        // Handle child services
+        if (childServicesResponse.data.success) {
+          setChildServices(childServicesResponse.data.products || []);
         }
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -124,7 +145,17 @@ export default function EditProject() {
       detail: project.detail || "",
       mediaType: project.media?.type || "image",
       media: null, // We don't load the actual file, just the URL
-      relatedServices: project.relatedServices || "",
+      relatedServices: Array.isArray(project.relatedServices)
+        ? project.relatedServices
+        : project.relatedServices
+        ? [project.relatedServices]
+        : [],
+      relatedProducts: Array.isArray(project.relatedProducts)
+        ? project.relatedProducts
+        : [],
+      relatedChikfdServices: Array.isArray(project.relatedChikfdServices)
+        ? project.relatedChikfdServices
+        : [],
       sections:
         project.section?.map((section) => ({
           title: section.title || "",
@@ -155,6 +186,35 @@ export default function EditProject() {
     }
   };
 
+  // Handle multi-select changes for related items
+  const handleMultiSelectChange = (type, itemId) => {
+    setFormValues((prev) => {
+      const currentItems = prev[type] || [];
+      const isSelected = currentItems.includes(itemId);
+
+      return {
+        ...prev,
+        [type]: isSelected
+          ? currentItems.filter((id) => id !== itemId)
+          : [...currentItems, itemId],
+      };
+    });
+  };
+
+  // Handle select all / deselect all for multi-select
+  const handleSelectAll = (type, allItems) => {
+    setFormValues((prev) => {
+      const currentItems = prev[type] || [];
+      const allIds = allItems.map((item) => item._id);
+      const allSelected = allIds.every((id) => currentItems.includes(id));
+
+      return {
+        ...prev,
+        [type]: allSelected ? [] : allIds,
+      };
+    });
+  };
+
   // Handle media type change
   const handleMediaTypeChange = (type) => {
     setFormValues((prev) => ({ ...prev, mediaType: type }));
@@ -180,7 +240,7 @@ export default function EditProject() {
   const validateImageDimensions = (file) => {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      
+
       img.onload = () => {
         const aspectRatio = img.width / img.height;
         const targetAspectRatio = 16 / 9;
@@ -190,8 +250,12 @@ export default function EditProject() {
 
         if (Math.abs(aspectRatio - targetAspectRatio) > tolerance) {
           reject({
-            message: `Image must have a 16:9 aspect ratio. Current ratio is ${img.width}x${img.height} (${aspectRatio.toFixed(2)}:1). Please use an image with 16:9 dimensions like 1920x1080, 1600x900, etc.`,
-            dimensions: { width: img.width, height: img.height, aspectRatio }
+            message: `Image must have a 16:9 aspect ratio. Current ratio is ${
+              img.width
+            }x${img.height} (${aspectRatio.toFixed(
+              2
+            )}:1). Please use an image with 16:9 dimensions like 1920x1080, 1600x900, etc.`,
+            dimensions: { width: img.width, height: img.height, aspectRatio },
           });
         } else {
           resolve({ width: img.width, height: img.height, aspectRatio });
@@ -200,7 +264,9 @@ export default function EditProject() {
 
       img.onerror = () => {
         URL.revokeObjectURL(img.src);
-        reject({ message: "Failed to load image. Please select a valid image file." });
+        reject({
+          message: "Failed to load image. Please select a valid image file.",
+        });
       };
 
       const objectUrl = URL.createObjectURL(file);
@@ -233,8 +299,8 @@ export default function EditProject() {
         await validateImageDimensions(file);
       } catch (dimensionError) {
         setError(dimensionError.message);
-        toast.error('Image must have a 16:9 aspect ratio');
-        e.target.value = '';
+        toast.error("Image must have a 16:9 aspect ratio");
+        e.target.value = "";
         return;
       }
     }
@@ -275,7 +341,6 @@ export default function EditProject() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-
     // Create new arrays by copying the old ones to avoid reference issues
     const newImages = [...newSectionImages];
     const newPreviews = [...newSectionPreviews];
@@ -291,22 +356,26 @@ export default function EditProject() {
       // Process all selected files
       for (let i = 0; i < fileArray.length; i++) {
         const file = fileArray[i];
-        
+
         // Validate file type
         if (!file.type.startsWith("image/")) {
-          console.error(`Invalid file type: ${file.type} for file: ${file.name}`);
+          console.error(
+            `Invalid file type: ${file.type} for file: ${file.name}`
+          );
           setError("Please select only image files");
           toast.error("Please select only image files");
-          e.target.value = '';
+          e.target.value = "";
           return;
         }
 
         // Validate file size (10MB limit)
         if (file.size > 10 * 1024 * 1024) {
-          console.error(`File too large: ${file.size} bytes for file: ${file.name}`);
+          console.error(
+            `File too large: ${file.size} bytes for file: ${file.name}`
+          );
           setError(`File ${file.name} is too large. Maximum size is 10MB.`);
           toast.error(`File ${file.name} is too large. Maximum size is 10MB.`);
-          e.target.value = '';
+          e.target.value = "";
           return;
         }
 
@@ -314,10 +383,13 @@ export default function EditProject() {
         try {
           const dimensions = await validateImageDimensions(file);
         } catch (dimensionError) {
-          console.error(`Dimension validation failed for ${file.name}:`, dimensionError);
+          console.error(
+            `Dimension validation failed for ${file.name}:`,
+            dimensionError
+          );
           setError(`${file.name}: ${dimensionError.message}`);
-          toast.error('Image must have a 16:9 aspect ratio');
-          e.target.value = '';
+          toast.error("Image must have a 16:9 aspect ratio");
+          e.target.value = "";
           return;
         }
 
@@ -329,21 +401,24 @@ export default function EditProject() {
         newPreviews[sectionIndex].push(previewUrl);
       }
 
-
       // Update state with the new arrays
       setNewSectionImages(newImages);
       setNewSectionPreviews(newPreviews);
-      
+
       // Clear any previous error
       setError("");
-      
+
       // Clear the file input to allow re-uploading the same file
-      e.target.value = '';
+      e.target.value = "";
     } catch (error) {
-      console.error('Error processing images:', error);
-      setError('An error occurred while processing the images. Please try again.');
-      toast.error('An error occurred while processing the images. Please try again.');
-      e.target.value = '';
+      console.error("Error processing images:", error);
+      setError(
+        "An error occurred while processing the images. Please try again."
+      );
+      toast.error(
+        "An error occurred while processing the images. Please try again."
+      );
+      e.target.value = "";
     }
   };
 
@@ -488,13 +563,21 @@ export default function EditProject() {
 
   // Form validation
   const validateForm = () => {
-    if (
-      !formValues.Title ||
-      !formValues.detail ||
-      !formValues.slug ||
-      !formValues.relatedServices
-    ) {
-      setError("Please fill all required fields, including related service");
+    if (!formValues.Title || !formValues.detail || !formValues.slug) {
+      setError("Please fill all required fields");
+      return false;
+    }
+
+    // Validate that at least one related item is selected
+    const totalRelatedItems =
+      (formValues.relatedServices?.length || 0) +
+      (formValues.relatedProducts?.length || 0) +
+      (formValues.relatedChikfdServices?.length || 0);
+
+    if (totalRelatedItems === 0) {
+      setError(
+        "Please select at least one related service, product, or child service"
+      );
       return false;
     }
 
@@ -545,14 +628,27 @@ export default function EditProject() {
     setSaving(true);
 
     const formData = new FormData();
-    
+
     // Add project ID and basic fields
     formData.append("_id", selectedProject._id);
     formData.append("Title", formValues.Title);
     formData.append("detail", formValues.detail);
     formData.append("slug", formValues.slug);
     formData.append("mediaType", formValues.mediaType);
-    formData.append("relatedServices", formValues.relatedServices);
+
+    // Add related items as JSON arrays
+    formData.append(
+      "relatedServices",
+      JSON.stringify(formValues.relatedServices || [])
+    );
+    formData.append(
+      "relatedProducts",
+      JSON.stringify(formValues.relatedProducts || [])
+    );
+    formData.append(
+      "relatedChikfdServices",
+      JSON.stringify(formValues.relatedChikfdServices || [])
+    );
 
     // Add media file if provided
     if (formValues.media) {
@@ -563,39 +659,53 @@ export default function EditProject() {
     formValues.sections.forEach((section, sectionIndex) => {
       // Add section title
       formData.append(`section[${sectionIndex}][title]`, section.title);
-      
+
       // Add existing images to keep
-      if (existingSectionImages[sectionIndex] && existingSectionImages[sectionIndex].length > 0) {
+      if (
+        existingSectionImages[sectionIndex] &&
+        existingSectionImages[sectionIndex].length > 0
+      ) {
         existingSectionImages[sectionIndex].forEach((imageUrl) => {
           formData.append(`section[${sectionIndex}][keepImages]`, imageUrl);
         });
       }
-      
+
       // Add new section images
-      if (newSectionImages[sectionIndex] && newSectionImages[sectionIndex].length > 0) {
+      if (
+        newSectionImages[sectionIndex] &&
+        newSectionImages[sectionIndex].length > 0
+      ) {
         newSectionImages[sectionIndex].forEach((imageFile) => {
           formData.append(`section[${sectionIndex}][image]`, imageFile);
         });
       }
-      
+
       // Add section points
       section.points.forEach((point, pointIndex) => {
-        formData.append(`section[${sectionIndex}][points][${pointIndex}][title]`, point.title);
-        formData.append(`section[${sectionIndex}][points][${pointIndex}][detail]`, point.detail);
+        formData.append(
+          `section[${sectionIndex}][points][${pointIndex}][title]`,
+          point.title
+        );
+        formData.append(
+          `section[${sectionIndex}][points][${pointIndex}][detail]`,
+          point.detail
+        );
       });
     });
 
     try {
       const response = await axios.post("/api/project/edit", formData, {
-        headers: { 
-          "Content-Type": "multipart/form-data"
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
         timeout: 60000, // 60 seconds timeout
         maxContentLength: 100 * 1024 * 1024, // 100MB max content length
         onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        }
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+        },
       });
 
       if (response.data.success) {
@@ -612,9 +722,11 @@ export default function EditProject() {
       }
     } catch (err) {
       console.error("Error updating project:", err);
-      const errorMessage = err.response?.data?.message || 
-                          (err.message.includes("timeout") ? "Upload timed out. Your images may be too large." : 
-                          "Error updating project");
+      const errorMessage =
+        err.response?.data?.message ||
+        (err.message.includes("timeout")
+          ? "Upload timed out. Your images may be too large."
+          : "Error updating project");
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -716,29 +828,176 @@ export default function EditProject() {
                 </p>
               </div>
 
-              {/* Related Service Selection */}
+              {/* Related Services Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Related Service *
+                  Related Services *
+                  <span className="text-xs text-gray-500 ml-1">
+                    ({formValues.relatedServices?.length || 0} selected)
+                  </span>
                 </label>
-                <select
-                  name="relatedServices"
-                  value={formValues.relatedServices}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                  disabled={loading}
-                >
-                  <option value="">Select a related service</option>
-                  {services.map((service) => (
-                    <option key={service._id} value={service._id}>
-                      {service.Title}
-                    </option>
-                  ))}
-                </select>
+                <div className="border border-gray-300 rounded-md p-3 max-h-48 overflow-y-auto">
+                  <div className="flex justify-between items-center mb-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleSelectAll("relatedServices", services)
+                      }
+                      className="text-xs text-blue-600 hover:text-blue-800"
+                    >
+                      {services.length > 0 &&
+                      services.every((service) =>
+                        formValues.relatedServices?.includes(service._id)
+                      )
+                        ? "Deselect All"
+                        : "Select All"}
+                    </button>
+                  </div>
+                  <div className="space-y-1">
+                    {services.map((service) => (
+                      <label key={service._id} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={
+                            formValues.relatedServices?.includes(service._id) ||
+                            false
+                          }
+                          onChange={() =>
+                            handleMultiSelectChange(
+                              "relatedServices",
+                              service._id
+                            )
+                          }
+                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <span className="text-sm text-gray-700">
+                          {service.Title}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
                 {loading && (
                   <p className="text-xs text-gray-500 mt-1">
                     Loading services...
+                  </p>
+                )}
+              </div>
+
+              {/* Related Products Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Related Products
+                  <span className="text-xs text-gray-500 ml-1">
+                    ({formValues.relatedProducts?.length || 0} selected)
+                  </span>
+                </label>
+                <div className="border border-gray-300 rounded-md p-3 max-h-48 overflow-y-auto">
+                  <div className="flex justify-between items-center mb-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleSelectAll("relatedProducts", products)
+                      }
+                      className="text-xs text-blue-600 hover:text-blue-800"
+                    >
+                      {products.length > 0 &&
+                      products.every((product) =>
+                        formValues.relatedProducts?.includes(product._id)
+                      )
+                        ? "Deselect All"
+                        : "Select All"}
+                    </button>
+                  </div>
+                  <div className="space-y-1">
+                    {products.map((product) => (
+                      <label key={product._id} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={
+                            formValues.relatedProducts?.includes(product._id) ||
+                            false
+                          }
+                          onChange={() =>
+                            handleMultiSelectChange(
+                              "relatedProducts",
+                              product._id
+                            )
+                          }
+                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <span className="text-sm text-gray-700">
+                          {product.Title}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {products.length === 0 && !loading && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    No products available
+                  </p>
+                )}
+              </div>
+
+              {/* Related Child Services Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Related Child Services
+                  <span className="text-xs text-gray-500 ml-1">
+                    ({formValues.relatedChikfdServices?.length || 0} selected)
+                  </span>
+                </label>
+                <div className="border border-gray-300 rounded-md p-3 max-h-48 overflow-y-auto">
+                  <div className="flex justify-between items-center mb-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleSelectAll("relatedChikfdServices", childServices)
+                      }
+                      className="text-xs text-blue-600 hover:text-blue-800"
+                    >
+                      {childServices.length > 0 &&
+                      childServices.every((childService) =>
+                        formValues.relatedChikfdServices?.includes(
+                          childService._id
+                        )
+                      )
+                        ? "Deselect All"
+                        : "Select All"}
+                    </button>
+                  </div>
+                  <div className="space-y-1">
+                    {childServices.map((childService) => (
+                      <label
+                        key={childService._id}
+                        className="flex items-center"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={
+                            formValues.relatedChikfdServices?.includes(
+                              childService._id
+                            ) || false
+                          }
+                          onChange={() =>
+                            handleMultiSelectChange(
+                              "relatedChikfdServices",
+                              childService._id
+                            )
+                          }
+                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <span className="text-sm text-gray-700">
+                          {childService.Title}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                {childServices.length === 0 && !loading && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    No child services available
                   </p>
                 )}
               </div>
@@ -994,16 +1253,19 @@ export default function EditProject() {
                                   alt={`Section image ${imageIndex + 1}`}
                                   className="w-full h-24 object-cover"
                                   onError={(e) => {
-                                    console.error("Image load error for:", newSectionPreviews[sectionIndex]?.[imageIndex]);
+                                    console.error(
+                                      "Image load error for:",
+                                      newSectionPreviews[sectionIndex]?.[
+                                        imageIndex
+                                      ]
+                                    );
                                     e.target.onerror = null; // Prevent infinite loop
                                     e.target.src =
                                       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
                                     e.target.className =
                                       "w-full h-24 bg-gray-200";
                                   }}
-                                  onLoad={() => {
-                                  
-                                  }}
+                                  onLoad={() => {}}
                                 />
                                 <button
                                   type="button"

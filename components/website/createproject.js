@@ -4,8 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Upload, PlusCircle, X, Film, Image as ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { toast } from 'react-toastify';
-
+import { toast } from "react-toastify";
 
 export default function CreateProject() {
   const router = useRouter();
@@ -15,7 +14,9 @@ export default function CreateProject() {
     slug: "",
     mediaType: "image", // Default to image
     media: null,
-    relatedServices: "", // Add related service field
+    relatedServices: [], // Changed to array
+    relatedProducts: [], // Added
+    relatedChikfdServices: [], // Added
     sections: [
       {
         title: "",
@@ -30,30 +31,46 @@ export default function CreateProject() {
   const [mediaPreview, setMediaPreview] = useState(null);
   const [videoKey, setVideoKey] = useState(0); // Key to force video element to remount
   const [services, setServices] = useState([]); // Add state for services list
+  const [products, setProducts] = useState([]); // Add state for products list
+  const [childServices, setChildServices] = useState([]); // Add state for child services list
   const [loading, setLoading] = useState(false); // Add loading state for services
 
   // Arrays for section images - similar to editproject.js approach
   const [sectionImages, setSectionImages] = useState([[]]);
   const [sectionPreviews, setSectionPreviews] = useState([[]]);
 
-  // Fetch services when component mounts
+  // Fetch services, products, and child services when component mounts
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("/api/service/getservice");
-        if (response.data && response.data.success) {
-          setServices(response.data.services || []);
+        // Fetch all data in parallel
+        const [servicesRes, productsRes, childServicesRes] = await Promise.all([
+          axios.get("/api/service/getservice"),
+          axios.get("/api/product/get"),
+          axios.get("/api/child/get"),
+        ]);
+
+        if (servicesRes.data && servicesRes.data.success) {
+          setServices(servicesRes.data.services || []);
+        }
+
+        if (productsRes.data && productsRes.data.success) {
+          setProducts(productsRes.data.products || []);
+        }
+
+        if (childServicesRes.data && childServicesRes.data.success) {
+          setChildServices(childServicesRes.data.products || []);
         }
       } catch (err) {
-        console.error("Error fetching services:", err);
-        setError("Failed to load services");
+        console.error("Error fetching data:", err);
+        setError("Failed to load services, products, or child services");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchServices();
+    fetchData();
   }, []);
 
   // Clean up object URLs when component unmounts
@@ -106,6 +123,32 @@ export default function CreateProject() {
         setMediaPreview(null);
       }
     }
+  };
+
+  // Handle multi-select changes for related items
+  const handleMultiSelectChange = (field, value) => {
+    setFormValues((prev) => {
+      const currentValues = prev[field] || [];
+      const updatedValues = currentValues.includes(value)
+        ? currentValues.filter((item) => item !== value) // Remove if already selected
+        : [...currentValues, value]; // Add if not selected
+
+      return { ...prev, [field]: updatedValues };
+    });
+  };
+
+  // Handle select all / deselect all
+  const handleSelectAll = (field, allItems) => {
+    setFormValues((prev) => {
+      const currentValues = prev[field] || [];
+      const allIds = allItems.map((item) => item._id);
+      const isAllSelected = allIds.every((id) => currentValues.includes(id));
+
+      return {
+        ...prev,
+        [field]: isAllSelected ? [] : allIds,
+      };
+    });
   };
 
   // Helper function to validate image dimensions
@@ -207,78 +250,92 @@ export default function CreateProject() {
   const handleSectionImageChange = async (sectionIndex, e) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-  
-  
+
     // Create new arrays by copying the old ones to avoid reference issues
     const newImages = [...sectionImages];
     const newPreviews = [...sectionPreviews];
-  
+
     // Initialize arrays if they don't exist
     if (!newImages[sectionIndex]) newImages[sectionIndex] = [];
     if (!newPreviews[sectionIndex]) newPreviews[sectionIndex] = [];
-  
+
     // Convert FileList to Array for easier processing
     const fileArray = Array.from(files);
-  
+
     try {
       // Process all selected files
       for (let i = 0; i < fileArray.length; i++) {
         const file = fileArray[i];
-        
+
         // Validate file type
         if (!file.type.startsWith("image/")) {
-          console.error(`Invalid file type: ${file.type} for file: ${file.name}`);
+          console.error(
+            `Invalid file type: ${file.type} for file: ${file.name}`
+          );
           setError("Please select only image files");
           e.target.value = "";
           return;
         }
-  
+
         // Validate file size (10MB limit)
         if (file.size > 10 * 1024 * 1024) {
-          console.error(`File too large: ${file.size} bytes for file: ${file.name}`);
+          console.error(
+            `File too large: ${file.size} bytes for file: ${file.name}`
+          );
           setError(`File ${file.name} is too large. Maximum size is 10MB.`);
           e.target.value = "";
           return;
         }
-  
+
         // Validate image dimensions (16:9 aspect ratio)
         try {
           const dimensions = await validateImageDimensions(file);
         } catch (dimensionError) {
-          console.error(`Dimension validation failed for ${file.name}:`, dimensionError);
-          
+          console.error(
+            `Dimension validation failed for ${file.name}:`,
+            dimensionError
+          );
+
           // Set error message with clear 16:9 requirement
-          setError(`Image must have a 16:9 aspect ratio. Current ratio is ${dimensionError.dimensions?.width}x${dimensionError.dimensions?.height} (${dimensionError.dimensions?.aspectRatio.toFixed(2)}:1). Please use an image with 16:9 dimensions like 1920x1080, 1600x900, etc.`);
-          
+          setError(
+            `Image must have a 16:9 aspect ratio. Current ratio is ${
+              dimensionError.dimensions?.width
+            }x${
+              dimensionError.dimensions?.height
+            } (${dimensionError.dimensions?.aspectRatio.toFixed(
+              2
+            )}:1). Please use an image with 16:9 dimensions like 1920x1080, 1600x900, etc.`
+          );
+
           // If you have a toast notification system, uncomment the line below:
-          toast.error('Image must have a 16:9 aspect ratio');
-          
+          toast.error("Image must have a 16:9 aspect ratio");
+
           e.target.value = "";
           return;
         }
-  
+
         // Add file to the images array
         newImages[sectionIndex].push(file);
-  
+
         // Create and add preview URL
         const previewUrl = URL.createObjectURL(file);
         newPreviews[sectionIndex].push(previewUrl);
       }
-  
-     
-  
+
       // Update state with the new arrays
       setSectionImages(newImages);
       setSectionPreviews(newPreviews);
-  
+
       // Clear any previous error
       setError("");
-  
+
       // Clear the file input to allow re-uploading the same file
       e.target.value = "";
     } catch (error) {
       console.error("Error processing images:", error);
-      setError("An error occurred while processing the images. Please try again.");
+      setError(
+        "An error occurred while processing the images. Please try again."
+      );
       e.target.value = "";
     }
   };
@@ -405,8 +462,7 @@ export default function CreateProject() {
       !formValues.Title ||
       !formValues.detail ||
       !formValues.slug ||
-      !formValues.media ||
-      !formValues.relatedServices
+      !formValues.media
     ) {
       setError("Please fill all required fields and upload a media file");
       return false;
@@ -416,6 +472,18 @@ export default function CreateProject() {
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(formValues.slug)) {
       setError(
         "Slug must be lowercase, containing only letters, numbers, and hyphens"
+      );
+      return false;
+    }
+
+    // At least one related item should be selected
+    if (
+      formValues.relatedServices.length === 0 &&
+      formValues.relatedProducts.length === 0 &&
+      formValues.relatedChikfdServices.length === 0
+    ) {
+      setError(
+        "Please select at least one related service, product, or child service"
       );
       return false;
     }
@@ -483,7 +551,20 @@ export default function CreateProject() {
     formData.append("slug", formValues.slug);
     formData.append("mediaType", formValues.mediaType);
     formData.append("media", formValues.media);
-    formData.append("relatedServices", formValues.relatedServices);
+
+    // Send related items as JSON strings
+    formData.append(
+      "relatedServices",
+      JSON.stringify(formValues.relatedServices)
+    );
+    formData.append(
+      "relatedProducts",
+      JSON.stringify(formValues.relatedProducts)
+    );
+    formData.append(
+      "relatedChikfdServices",
+      JSON.stringify(formValues.relatedChikfdServices)
+    );
 
     // Add sections data
     formValues.sections.forEach((section, sectionIndex) => {
@@ -550,7 +631,9 @@ export default function CreateProject() {
           slug: "",
           mediaType: "image",
           media: null,
-          relatedServices: "",
+          relatedServices: [],
+          relatedProducts: [],
+          relatedChikfdServices: [],
           sections: [
             {
               title: "",
@@ -643,31 +726,187 @@ export default function CreateProject() {
               </p>
             </div>
 
-            {/* Related Service Selection */}
+            {/* Related Services Selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Related Service *
+                Related Services
+                <span className="text-xs text-gray-500 ml-1">
+                  ({formValues.relatedServices.length} selected)
+                </span>
               </label>
-              <select
-                name="relatedServices"
-                value={formValues.relatedServices}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-                disabled={loading}
-              >
-                <option value="">Select a related service</option>
-                {services.map((service) => (
-                  <option key={service._id} value={service._id}>
-                    {service.Title}
-                  </option>
-                ))}
-              </select>
-              {loading && (
-                <p className="text-xs text-gray-500 mt-1">
-                  Loading services...
-                </p>
-              )}
+              <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2 bg-gray-50">
+                {loading ? (
+                  <p className="text-xs text-gray-500">Loading services...</p>
+                ) : services.length > 0 ? (
+                  <>
+                    <div className="mb-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleSelectAll("relatedServices", services)
+                        }
+                        className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        {services.every((service) =>
+                          formValues.relatedServices.includes(service._id)
+                        )
+                          ? "Deselect All"
+                          : "Select All"}
+                      </button>
+                    </div>
+                    {services.map((service) => (
+                      <label
+                        key={service._id}
+                        className="flex items-center space-x-2 py-1 cursor-pointer hover:bg-gray-100 rounded px-1"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={formValues.relatedServices.includes(
+                            service._id
+                          )}
+                          onChange={() =>
+                            handleMultiSelectChange(
+                              "relatedServices",
+                              service._id
+                            )
+                          }
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-700">
+                          {service.Title}
+                        </span>
+                      </label>
+                    ))}
+                  </>
+                ) : (
+                  <p className="text-xs text-gray-500">No services available</p>
+                )}
+              </div>
+            </div>
+
+            {/* Related Products Selection */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Related Products
+                <span className="text-xs text-gray-500 ml-1">
+                  ({formValues.relatedProducts.length} selected)
+                </span>
+              </label>
+              <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2 bg-gray-50">
+                {loading ? (
+                  <p className="text-xs text-gray-500">Loading products...</p>
+                ) : products.length > 0 ? (
+                  <>
+                    <div className="mb-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleSelectAll("relatedProducts", products)
+                        }
+                        className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        {products.every((product) =>
+                          formValues.relatedProducts.includes(product._id)
+                        )
+                          ? "Deselect All"
+                          : "Select All"}
+                      </button>
+                    </div>
+                    {products.map((product) => (
+                      <label
+                        key={product._id}
+                        className="flex items-center space-x-2 py-1 cursor-pointer hover:bg-gray-100 rounded px-1"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={formValues.relatedProducts.includes(
+                            product._id
+                          )}
+                          onChange={() =>
+                            handleMultiSelectChange(
+                              "relatedProducts",
+                              product._id
+                            )
+                          }
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-700">
+                          {product.Title}
+                        </span>
+                      </label>
+                    ))}
+                  </>
+                ) : (
+                  <p className="text-xs text-gray-500">No products available</p>
+                )}
+              </div>
+            </div>
+
+            {/* Related Child Services Selection */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Related Child Services
+                <span className="text-xs text-gray-500 ml-1">
+                  ({formValues.relatedChikfdServices.length} selected)
+                </span>
+              </label>
+              <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2 bg-gray-50">
+                {loading ? (
+                  <p className="text-xs text-gray-500">
+                    Loading child services...
+                  </p>
+                ) : childServices.length > 0 ? (
+                  <>
+                    <div className="mb-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleSelectAll(
+                            "relatedChikfdServices",
+                            childServices
+                          )
+                        }
+                        className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        {childServices.every((childService) =>
+                          formValues.relatedChikfdServices.includes(
+                            childService._id
+                          )
+                        )
+                          ? "Deselect All"
+                          : "Select All"}
+                      </button>
+                    </div>
+                    {childServices.map((childService) => (
+                      <label
+                        key={childService._id}
+                        className="flex items-center space-x-2 py-1 cursor-pointer hover:bg-gray-100 rounded px-1"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={formValues.relatedChikfdServices.includes(
+                            childService._id
+                          )}
+                          onChange={() =>
+                            handleMultiSelectChange(
+                              "relatedChikfdServices",
+                              childService._id
+                            )
+                          }
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-700">
+                          {childService.Title}
+                        </span>
+                      </label>
+                    ))}
+                  </>
+                ) : (
+                  <p className="text-xs text-gray-500">
+                    No child services available
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Project Detail */}
@@ -894,9 +1133,7 @@ export default function CreateProject() {
                                   e.target.className =
                                     "w-full h-24 bg-gray-200";
                                 }}
-                                onLoad={() => {
-                             
-                                }}
+                                onLoad={() => {}}
                               />
                               <button
                                 type="button"

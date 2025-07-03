@@ -1,0 +1,86 @@
+{
+  "data": {
+    "success": true,
+    "services": [
+      {
+        "_id": "6771f2fcffeb4ca210c37025",
+        "Title": "ERP SYSTEMS: THE BRAIN OF YOUR BUSINESS OPERATIONS",
+        "deltail": "Connect, Automate & Accelerate Growth with One Unified Platform\r\n\r\nStruggling with messy spreadsheets, disconnected departments, and blind decision-making? An Enterprise Resource Planning (ERP) system acts as the central nervous system for your business—integrating finance, inventory, sales, HR, supply chain and all your departments into one intelligent platform.",
+        "moreDetail": "HOW ERP TRANSFORMS BUSINESSES:\r\n\r\n🔹 Eliminate Data Silos – Break down department barriers with real-time data flow\r\n🔹 Automate 60%+ Routine Tasks – From invoicing to inventory alerts\r\n🔹 Gain Live Business Insights – AI-powered dashboards for smarter decisions\r\n🔹 Scale Without Chaos – Adapt processes as you grow (startups to enterprises)",
+        "image": "https://api.webmedigital.com/1744770997263-ERP Service.png",
+        "category": "Digital",
+        "createdAt": "2024-12-30T01:10:20.220Z",
+        "updatedAt": "2025-06-18T03:11:08.620Z",
+        "__v": 0,
+        "slug": "erp-systems",
+        "Name": "ERP"
+      },
+      {
+        "_id": "6773b5b9c95fd1e08c99db8a",
+        "Title": "CYBERSECURITY: THE INVISIBLE BODYGUARD FOR YOUR COMPANY",
+        "deltail": "Always-On Protection Against Digital Threats You Can't See\r\n\r\nJust like elite security personnel protect VIPs, enterprise-grade cybersecurity silently shields your business from:\r\n\r\n🕵️♂️ Digital Pickpockets - Stealing customer data & intellectual property\r\n💣 Ransomware Bombs - Crippling operations until you pay up\r\n👥 Impersonators - Fake emails draining your accounts (BEC scams)\r\n🌐 Supply Chain Attacks - Hackers entering through vendors' weak spots",
+        "moreDetail": "Stay one step ahead of cyber threats with our cutting-edge network security services.\r\n\r\nFrom advanced firewall management to real-time intrusion detection and thorough vulnerability assessments, we ensure your digital assets are impenetrable. Protect your business with our robust, proactive security measures and enjoy peace of mind knowing your network is secure.",
+        "image": "https://api.webmedigital.com/1743480596575-cyber-security.jpg",
+        "category": "Workfrom Anywhere",
+        "createdAt": "2024-12-31T09:13:29.995Z",
+        "updatedAt": "2025-06-18T03:23:52.908Z",
+        "__v": 0,
+        "slug": "cybersecurity",
+        "Name": "CYBERSECURITY"
+      },
+      {
+        "_id": "6773b81fc95fd1e08c99db9d",
+        "Title": "MICROSOFT MODERN WORKPLACE: EMPOWERING THE FUTURE OF WORK",
+        "deltail": "Microsoft Modern Workplace is your gateway to a fully connected, secure, and intelligent business ecosystem — enabling your team to work smarter, collaborate better, and operate securely from any device, anywhere.\r\n\r\nPowered by the complete Microsoft technology stack — Microsoft 365, Azure, Dynamics 365, Power Platform, Teams, SharePoint, OneDrive, and more — this integrated solution transforms the way your organization communicates, manages data, and innovates at scale.\r\n\r\n✨ Streamline operations. Empower your workforce. Future-proof your business.",
+        "moreDetail": "With Modern Workplace, you get:\r\n\r\n✅ Unified communication and teamwork in real time\r\n✅ Enterprise-grade security and compliance\r\n✅ AI-driven productivity with Microsoft Copilot\r\n✅ Streamlined workflows and cloud-based mobility\r\n\r\nBreak down silos, boost productivity, and build a modern, agile business environment—with the workplace of tomorrow, today.",
+        "image": "https://api.webmedigital.com/1746331657370-Microsoft ModernWorkplace.png",
+        "category": "Modern Workplace",
+        "createdAt": "2024-12-31T09:23:43.707Z",
+        "updatedAt": "2025-06-18T03:22:03.700Z",
+        "__v": 0,
+        "Name": "MICROSOFT MODERN WORKPLACE",
+        "slug": "microsoft-modern-workplace"
+      },
+      {
+        "_id": "6773bb5fc95fd1e08c99dbd5",
+        "Title": "MOBILE and WEB APP : TURNING IDEAS INTO ENGAGING, FUTURE-READY APPS",
+        "deltail": "We believe a great app—whether mobile or web—is more than just functionality. It's about delivering a seamless, immersive experience that forges meaningful connections between your business and your audience. Our app development services are tailored to your unique goals, combining sleek, user-friendly interfaces with powerful performance, scalability, and top-tier security. Whether you're launching a mobile app, a web application, or both, we build solutions that elevate your digital presence and drive real results.",
+        "moreDetail": "We take a hands-on approach, beginning with a detailed analysis of your business goals and audience insights, followed by strategic planning and design. Our team of experts then builds a scalable, high-performance app that not only solves your problems but also empowers your users and accelerates growth. Whether you’re looking to improve customer engagement, streamline operations, or unlock new revenue streams, we provide comprehensive mobile app solutions that meet your vision.\r\n\r\nOur commitment doesn’t end at launch. We continually optimize, update, and refine your app to stay ahead of trends, ensuring it evolves with your business and technology advancements.",
+        "image": "https://api.webmedigital.com/1749115833930-Web and Mobile App.PNG",
+        "category": "Branding",
+        "createdAt": "2024-12-31T09:37:35.702Z",
+        "updatedAt": "2025-06-10T02:28:45.824Z",
+        "__v": 0,
+        "slug": "mobile-and-webapp",
+        "Name": "MOBILE and WEB APP"
+      },
+      {
+        "_id": "6773bbfcc95fd1e08c99dbd8",
+        "Title": "Smart Surveillance & Security : See It All. Secure It All",
+        "deltail": "AI-Driven Protection, Intelligent Access & Real-Time Response – Designed for Modern Businesses\r\n\r\nIn today’s hyper-connected world, security isn't just about cameras—it's about intelligent visibility, controlled access, and proactive protection. Our Smart Surveillance & Security solutions at webmedigital.com combine AI, automation, IoT, and best-in-class hardware to keep your business secure, efficient, and always one step ahead.",
+        "moreDetail": "In a world of evolving threats, traditional security just doesn’t cut it. Our Smart Surveillance & Security solutions bring the power of AI, automation, and IoT together to create a truly intelligent safety ecosystem for your business.",
+        "image": "https://api.webmedigital.com/1744199881951-Security Systems.jpeg",
+        "category": "Workfrom Anywhere",
+        "createdAt": "2024-12-31T09:40:12.278Z",
+        "updatedAt": "2025-06-18T03:21:54.783Z",
+        "__v": 0,
+        "slug": "smart-surveillance-security",
+        "Name": "Security Systems"
+      },
+      {
+        "_id": "6773bc1fc95fd1e08c99dbdb",
+        "Title": "Connect, Automate, and Innovate with IoT Systems",
+        "deltail": "Unlock the full potential of your business with our cutting-edge IoT Systems.\r\n\r\nSeamlessly connect devices, automate processes, and gather real-time data to drive smarter decisions and enhance efficiency. From smart homes to industrial automation, our IoT solutions provide unparalleled control and insight, transforming the way you operate. Experience the future of connectivity with intelligent systems that adapt to your needs, optimize performance, and propel your business into the digital age.",
+        "moreDetail": "Unlock the full potential of your business with our cutting-edge IoT Systems.\r\n\r\nSeamlessly connect devices, automate processes, and gather real-time data to drive smarter decisions and enhance efficiency. From smart homes to industrial automation, our IoT solutions provide unparalleled control and insight, transforming the way you operate. Experience the future of connectivity with intelligent systems that adapt to your needs, optimize performance, and propel your business into the digital age.",
+        "image": "/1735638047919-iot.jpg",
+        "category": "Digital",
+        "createdAt": "2024-12-31T09:40:47.921Z",
+        "updatedAt": "2025-06-18T03:22:53.254Z",
+        "__v": 0,
+        "Name": "IOT",
+        "slug": "iot"
+      }
+    ]
+  },
+  "timestamp": 1751390117571
+}
