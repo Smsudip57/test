@@ -201,7 +201,7 @@ export default function Firewall({
 
   // State for booking modal
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  
+
   // Handler for consultation button with memoization for performance
   const handleConsultation = useCallback(() => {
     // Use the booking modal instead of chat box
@@ -251,8 +251,7 @@ export default function Firewall({
     () =>
       currentService?.deltail ||
       Mainservice?.description ||
-      `Learn more about our ${
-        currentService?.Title || "professional"
+      `Learn more about our ${currentService?.Title || "professional"
       } services and solutions. Professional digital transformation and IT services from Webmedigital.`,
     [Mainservice, currentService]
   );
@@ -264,11 +263,10 @@ export default function Firewall({
         <meta name="description" content={pageDescription} />
         <meta
           name="keywords"
-          content={`${
-            currentService?.Title || ""
-          }, IT services, digital transformation, webmedigital, ${slug.join(
-            ", "
-          )}`}
+          content={`${currentService?.Title || ""
+            }, IT services, digital transformation, webmedigital, ${slug.join(
+              ", "
+            )}`}
         />
         <meta name="robots" content="index, follow" />
         <link
@@ -337,7 +335,7 @@ export default function Firewall({
                 <p className="pr-10 font-medium whitespace-pre-wrap">
                   {currentService?.deltail || Mainservice?.description}
                 </p>
-                <div className="flex gap-6">
+                <div className="flex flex-wrap gap-4">
                   <button
                     className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded hover:opacity-80 text-sm transition-all duration-300"
                     onClick={handleConsultation}
@@ -346,14 +344,21 @@ export default function Firewall({
                     Book Free Consultation
                   </button>
                   <Link
-                    href={`/service-details/${
-                      currentService?.slug ||
+                    href={`/service-details/${currentService?.slug ||
                       currentService?.Title?.toLowerCase()
-                    }`}
+                      }`}
                     className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     aria-label={`Explore ${currentService?.Title}`}
                   >
                     <span className="mr-1">Explore</span>
+                    <EastIcon fontSize="inherit" />
+                  </Link>
+                  <Link
+                    href="/about/blog"
+                    className="align-start border border-[#446E6D] text-[#446E6D] hover:bg-[#446E6D] hover:text-white px-4 py-2 rounded text-sm flex items-center transition-all duration-300"
+                    aria-label="Learn more about our services"
+                  >
+                    <span className="mr-1">Learn More</span>
                     <EastIcon fontSize="inherit" />
                   </Link>
                 </div>
@@ -373,8 +378,8 @@ export default function Firewall({
                           src={currentService.image}
                           alt={`${currentService?.Title} service illustration`}
                           className="w-full rounded-md object-cover hover:opacity-80 transition-opacity duration-300"
-                          // width={100}
-                          // height={100}
+                        // width={100}
+                        // height={100}
                         />
                       </a>
                     </div>
@@ -597,11 +602,11 @@ export default function Firewall({
                                   {/* Rating badge */}
                                   {(product?.rating ||
                                     product?.rating === 0) && (
-                                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-2 py-1 rounded-full shadow-md z-10 flex items-center gap-1">
-                                      <Star className="text-yellow-500 w-3 h-3 fill-current" />
-                                      <span>{product.rating}</span>
-                                    </div>
-                                  )}
+                                      <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-2 py-1 rounded-full shadow-md z-10 flex items-center gap-1">
+                                        <Star className="text-yellow-500 w-3 h-3 fill-current" />
+                                        <span>{product.rating}</span>
+                                      </div>
+                                    )}
 
                                   {/* Hover overlay */}
                                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
@@ -759,8 +764,8 @@ export default function Firewall({
             <Industies parent={currentService?._id} />
           </section>
           <div className="mx-auto min-h-screen flex justify-center items-center">
-        <BlogSection parent={Mainservice?._id} />
-      </div>
+            <BlogSection parent={Mainservice?._id} />
+          </div>
           <section aria-labelledby="industries-heading" className="mt-16">
             <Contact />
           </section>

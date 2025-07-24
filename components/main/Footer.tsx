@@ -25,7 +25,7 @@ const Footer = () => {
     <div className="bg-[#393939] text-white px-4 sm:px-12 lg:px-24 pt-12 flex relative z-30">
       <div className="w-[90%] lg:w-[80%] max-w-[1536px] mx-auto">
         <div className="flex flex-col sm:flex-row justify-between gap-10 md:gap-5 xl:gap-20 pb-4 sm:pb-12 pr-6 sm:pr-0">
-          <div className="gap-5 flex flex-col lg:w-[33%]">
+          <div className="gap-5 flex flex-col lg:w-[25%]">
             <img
               alt="WebMe"
               loading="lazy"
@@ -45,7 +45,7 @@ const Footer = () => {
               businesses and technology.
             </p>
           </div>
-          <div className="hidden md:flex items-center sm:justify-center w-[33%]">
+          <div className="hidden md:flex sm:justify-center w-[25%]">
             <div className="flex flex-col gap-5">
               <h2 className="font-inter text-[14px] leading-4 font-semibold uppercase">
                 Company
@@ -71,6 +71,24 @@ const Footer = () => {
                 </a>
                 <a href="/about/privacy-policy">
                   <p className="font-normal">Privacy Policy</p>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="hidden md:flex sm:justify-center w-[25%]">
+            <div className="flex flex-col gap-5">
+              <h2 className="font-inter text-[14px] leading-4 font-semibold uppercase">
+                Resources
+              </h2>
+              <div className="flex flex-col gap-4">
+                <a href="/about/faq">
+                  <p className="font-normal">FAQ</p>
+                </a>
+                <a href="/about/blog">
+                  <p className="font-normal">Blog</p>
+                </a>
+                <a href="/about/knowledgebase">
+                  <p className="font-normal">Knowledge Base</p>
                 </a>
               </div>
             </div>
