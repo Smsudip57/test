@@ -5,7 +5,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { motion } from 'framer-motion';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import axios from 'axios';
 
 // Type definitions matching the knowledgebase schema
@@ -89,8 +89,6 @@ export default function KnowledgebaseLayout({
 
     const router = useRouter();
     const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const currentCategory = searchParams?.get('category');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -374,7 +372,7 @@ export default function KnowledgebaseLayout({
                                 <h3 className="text-lg font-bold text-gray-800 mb-4">Topics</h3>
                                 <div className="space-y-2">
                                     <button
-                                        className={`w-full text-left flex items-center justify-between p-2 rounded-md transition-colors ${pathname === '/about/knowledgebase' && !currentCategory && !searchQuery ? 'bg-[#446E6D] text-white' : 'hover:bg-gray-100 text-gray-700'
+                                        className={`w-full text-left flex items-center justify-between p-2 rounded-md transition-colors ${pathname === '/about/knowledgebase' && !searchQuery ? 'bg-[#446E6D] text-white' : 'hover:bg-gray-100 text-gray-700'
                                             }`}
                                         onClick={() => {
                                             clearSearch();
@@ -382,7 +380,7 @@ export default function KnowledgebaseLayout({
                                         }}
                                     >
                                         <span>All Articles</span>
-                                        <span className={`text-xs px-2 py-1 rounded-full ${pathname === '/about/knowledgebase' && !currentCategory && !searchQuery ? 'bg-white text-gray-700' : 'bg-gray-200 text-gray-700'
+                                        <span className={`text-xs px-2 py-1 rounded-full ${pathname === '/about/knowledgebase' && !searchQuery ? 'bg-white text-gray-700' : 'bg-gray-200 text-gray-700'
                                             }`}>
                                             {knowledgebaseData.length}
                                         </span>
@@ -391,16 +389,14 @@ export default function KnowledgebaseLayout({
                                     {categories.map((cat, idx) => (
                                         <button
                                             key={idx}
-                                            className={`w-full text-left flex items-center justify-between p-2 rounded-md transition-colors ${currentCategory === cat.about ? 'bg-[#446E6D] text-white' : 'hover:bg-gray-100 text-gray-700'
-                                                }`}
+                                            className="w-full text-left flex items-center justify-between p-2 rounded-md transition-colors hover:bg-gray-100 text-gray-700"
                                             onClick={() => {
                                                 clearSearch();
                                                 router.push(`/about/knowledgebase?category=${encodeURIComponent(cat.about)}`);
                                             }}
                                         >
                                             <span>{cat.about}</span>
-                                            <span className={`text-xs px-2 py-1 rounded-full ${currentCategory === cat.about ? 'bg-white text-gray-700' : 'bg-gray-200 text-gray-700'
-                                                }`}>
+                                            <span className="text-xs px-2 py-1 rounded-full bg-gray-200 text-gray-700">
                                                 {cat.articles.length}
                                             </span>
                                         </button>

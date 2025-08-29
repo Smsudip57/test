@@ -2,7 +2,11 @@ import React from "react";
 import HeroContent from "../sub/HeroContent";
 import WebParticles from "./webParticles";
 
-const Hero = () => {
+interface HeroProps {
+  pageData?: any;
+}
+
+const Hero: React.FC<HeroProps> = ({ pageData }) => {
   return (
     <div className="relative flex flex-col h-full w-full pt-32 lg:pt-0 lg:mb-48" id="about-me">
       <WebParticles />
@@ -14,7 +18,7 @@ const Hero = () => {
       >
         <source src="/blackhole.webm" type="video/webm" />
       </video> */}
-      <HeroContent />
+      <HeroContent pageData={pageData} />
     </div>
   );
 };

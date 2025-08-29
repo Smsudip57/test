@@ -24,7 +24,7 @@ export default async function AdminPage({ params }) {
       const Name = decodeURIComponent(name);
       if (services && services.length > 0 && Name ) {
         // console.log(services);
-        const Service = services.find((service) => service.Title === Name);
+        const Service = services.find((service) => service.Title === Name || service.slug === Name);
         
         // console.log(Service);
         return  Service ;

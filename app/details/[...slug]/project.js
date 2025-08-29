@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Head from "next/head";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -17,45 +17,10 @@ import KnowledgeBase from "@/components/shaerd/Knowledgebase";
 // VideoPlayer Component
 
 export default function Page({ project }) {
-  const [openPoints, setOpenPoints] = useState(
-    project?.section?.map(() => 0) || [] // Track first point (index 0) as open by default
-  );
   const [f1, setf1] = useState(false);
   const [f2, setf2] = useState(false);
   const [f3, setf3] = useState(false);
   const [f4, setf4] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const videoRef = useRef(null);
-
-  const togglePoint = (sectionIndex, pointIndex) => {
-    setOpenPoints((prev) =>
-      prev.map((openPoint, i) =>
-        i === sectionIndex
-          ? openPoint === pointIndex
-            ? null
-            : pointIndex
-          : openPoint
-      )
-    );
-  };
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleVideoEnd = () => {
-    setIsPlaying(false);
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-    }
-  };
 
   if (!project) {
     return (
@@ -120,7 +85,6 @@ export default function Page({ project }) {
                 src={project?.media?.url}
                 themeColor="#446E6D"
                 aspectRatio="16/9"
-                onEnd={handleVideoEnd}
               />
             ) : (
               <img
@@ -140,17 +104,15 @@ export default function Page({ project }) {
         >
           <div className="w-4/5 mx-auto flex justify-between gap-[15%]">
             <div
-              className={`basis-1/2 w-full h-full pt-[10%] ${
-                sectionIndex % 2 === 0 ? "order-1" : "order-2"
-              }`}
+              className={`basis-1/2 w-full h-full pt-[10%] ${sectionIndex % 2 === 0 ? "order-1" : "order-2"
+                }`}
             >
               {/* Using the ImageCarousel component */}
               <ImageCarousel images={section.image} title={section.title} />
             </div>
             <div
-              className={`basis-1/2 h-full pt-16 items-start text-start ${
-                sectionIndex % 2 === 0 ? "order-2" : "order-1"
-              }`}
+              className={`basis-1/2 h-full pt-16 items-start text-start ${sectionIndex % 2 === 0 ? "order-2" : "order-1"
+                }`}
             >
               <h2 className="text-5xl lg:text-3xl font-semibold text-[#446E6D]">
                 {section.title}
@@ -168,12 +130,12 @@ export default function Page({ project }) {
       </div>
 
       <div className="mx-auto min-h-screen flex justify-center items-center">
-        <KnowledgeBase parent={project?.relatedServices}  />
+        <KnowledgeBase parent={project?.relatedServices} />
       </div>
 
       {/* FAQ Section Component */}
-      <FaqSection parent={project?.relatedServices}  />
-      
+      <FaqSection parent={project?.relatedServices} />
+
     </div>
   );
 }
@@ -188,116 +150,88 @@ const PointComp = ({ points }) => {
   );
 };
 
-// Individual PointItem component with improved viewport detection and motion animations
+// Clean PointItem component using Framer Motion's whileInView - no glitches!
 const PointItem = ({ item, index }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const elementRef = useRef(null);
+  const [isManuallyToggled, setIsManuallyToggled] = useState(false);
 
-  useEffect(() => {
-    const currentElement = elementRef.current;
-    if (!currentElement) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          // When element enters viewport, open it
-          if (entry.isIntersecting) {
-            // Add a small delay so users can see the opening animation
-            setTimeout(() => {
-              setIsOpen(true);
-            }, 200 + index * 100); // Stagger the animations by index
-          } else {
-            // When element leaves viewport, close it immediately
-            setIsOpen(false);
-          }
-        });
-      },
-      {
-        threshold: 0.3, // Trigger when 30% of the element is visible
-        rootMargin: "0px 0px -100px 0px", // Only trigger when element is well into viewport
-      }
-    );
-
-    // Start observing this element
-    observer.observe(currentElement);
-
-    // Cleanup function
-    return () => {
-      if (currentElement) {
-        observer.unobserve(currentElement);
-      }
-      observer.disconnect();
-    };
-  }, [index]);
-
-  // Toggle open/closed state manually when clicked
-  const toggleOpen = () => {
-    setIsOpen((prev) => !prev);
+  // Manual toggle function for click interaction
+  const handleClick = () => {
+    setIsManuallyToggled(prev => !prev);
   };
 
   return (
     <motion.div
-      ref={elementRef}
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`w-full border-l-4 pl-6 cursor-pointer transition-all duration-300 ease-in-out ${
-        isOpen ? "border-l-[#446E6D]" : "border-l-white"
-      }`}
-      onClick={toggleOpen}
+      className={`w-full border-l-4 pl-6 cursor-pointer transition-all duration-300 ease-in-out ${true ? "border-l-[#446E6D]" : "border-l-white"
+        }`}
+      onClick={handleClick}
       whileHover={{ scale: 1.02, x: 5 }}
       whileTap={{ scale: 0.98 }}
     >
+      {/* Title with viewport-triggered animations */}
       <motion.h3
-        className="text-2xl font-semibold text-[#446E6D]"
-        animate={{
-          color: isOpen ? "#446E6D" : "#666666",
-          scale: isOpen ? 1.05 : 1,
+        initial={{ color: "#666666", scale: 1 }}
+        whileInView={{
+          color: "#446E6D",
+          scale: 1.05,
+          transition: { duration: 0.4, delay: index * 0.1 }
         }}
-        transition={{ duration: 0.3 }}
+        whileHover={{ scale: 1.08 }}
+        viewport={{
+          threshold: 0.3,
+          margin: "0px 0px -50px 0px",
+          once: false // Allow re-triggering
+        }}
+        className="text-2xl font-semibold transition-colors duration-300"
       >
         {item?.title}
       </motion.h3>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{
-              height: 0,
-              opacity: 0,
-              y: -10,
-              scale: 0.95,
-            }}
-            animate={{
+      {/* Content that expands when in viewport */}
+      <motion.div
+        initial={{ height: 0, opacity: 0, y: -10 }}
+        whileInView={
+          isManuallyToggled
+            ? { height: "auto", opacity: 1, y: 0 } // If manually toggled, stay open
+            : {
               height: "auto",
               opacity: 1,
               y: 0,
-              scale: 1,
-            }}
-            exit={{
-              height: 0,
-              opacity: 0,
-              y: -10,
-              scale: 0.95,
-            }}
-            transition={{
-              duration: 0.5,
-              ease: [0.04, 0.62, 0.23, 0.98], // Custom easing for smooth feel
-            }}
-            className="overflow-hidden"
-          >
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              className="text-lg font-sans mt-4 text-stone-700"
-            >
-              {item?.detail}
-            </motion.p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              transition: {
+                duration: 0.6,
+                delay: index * 0.1 + 0.2,
+                ease: [0.04, 0.62, 0.23, 0.98]
+              }
+            }
+        }
+        exit={{
+          height: 0,
+          opacity: 0,
+          y: -10,
+          transition: { duration: 0.4, ease: "easeInOut" }
+        }}
+        viewport={{
+          threshold: 0.2,
+          margin: "0px 0px -80px 0px",
+          once: false
+        }}
+        className="overflow-hidden"
+      >
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.4, delay: index * 0.1 + 0.4 }
+          }}
+          viewport={{ threshold: 0.2, once: false }}
+          className="text-lg font-sans mt-4 mb-6 text-stone-700 leading-relaxed"
+        >
+          {item?.detail}
+        </motion.p>
+      </motion.div>
     </motion.div>
   );
 };

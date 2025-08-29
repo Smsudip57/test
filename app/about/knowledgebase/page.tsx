@@ -1,6 +1,6 @@
 "use client"
-import React, { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react'
+import { useRouter } from 'next/navigation';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -9,10 +9,24 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useKnowledgebase } from './layout';
 
-export default function Page() {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+function SearchParamsWrapper({ children }: { children: (categoryParam: string | null) => React.ReactNode }) {
+  const [categoryParam, setCategoryParam] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      setCategoryParam(searchParams.get('category'));
+    }
+  }, []);
+
+  return <>{children(categoryParam)}</>;
+}
+
+function KnowledgebasePageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const categoryParam = searchParams.get('category');
 
   const {
     knowledgebaseData,
@@ -27,6 +41,44 @@ export default function Page() {
     getReadingTime
   } = useKnowledgebase();
 
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen">
+      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#446E6D]"></div>
+    </div>}>
+      <SearchParamsWrapper>
+        {(categoryParam) => <KnowledgebaseContent
+          router={router}
+          categoryParam={categoryParam}
+          knowledgebaseData={knowledgebaseData}
+          categories={categories}
+          loading={loading}
+          error={error}
+          isSearching={isSearching}
+          searchResults={searchResults}
+          searchQuery={searchQuery}
+          clearSearch={clearSearch}
+          formatDate={formatDate}
+          getReadingTime={getReadingTime}
+        />}
+      </SearchParamsWrapper>
+    </Suspense>
+  );
+}
+
+function KnowledgebaseContent({
+  router,
+  categoryParam,
+  knowledgebaseData,
+  categories,
+  loading,
+  error,
+  isSearching,
+  searchResults,
+  searchQuery,
+  clearSearch,
+  formatDate,
+  getReadingTime
+}: any) {
   const [selectedCategory, setSelectedCategory] = useState(categoryParam || '');
 
   useEffect(() => {
@@ -54,7 +106,7 @@ export default function Page() {
 
   // Filter articles by category
   const filteredArticles = selectedCategory
-    ? categories.find(cat => cat.about === selectedCategory)?.articles || []
+    ? categories.find((cat: any) => cat.about === selectedCategory)?.articles || []
     : knowledgebaseData;
 
   return (
@@ -98,7 +150,7 @@ export default function Page() {
 
               {searchResults.length > 0 ? (
                 <div className="grid grid-cols-1 gap-6">
-                  {searchResults.map((article, idx) => (
+                  {searchResults.map((article: any, idx: number) => (
                     <motion.div
                       key={article._id}
                       initial={{ opacity: 0, y: 20 }}
@@ -172,7 +224,7 @@ export default function Page() {
             <div className="mb-12">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Featured Articles</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {getFeaturedArticles().map((article, idx) => (
+                {getFeaturedArticles().map((article: any, idx: number) => (
                   <motion.div
                     key={article._id}
                     initial={{ opacity: 0, y: 20 }}
@@ -227,7 +279,7 @@ export default function Page() {
             <div className="mb-12">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Browse by Topic</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {categories.map((category, index) => (
+                {categories.map((category: any, index: number) => (
                   <div key={index} className="bg-white rounded-lg shadow-md p-6">
                     <h3
                       className="text-xl font-bold text-[#446E6D] mb-4 cursor-pointer hover:text-[#37c0bd]"
@@ -236,7 +288,7 @@ export default function Page() {
                       {category.about}
                     </h3>
                     <ul className="space-y-3">
-                      {category.articles.slice(0, 5).map((article, idx) => (
+                      {category.articles.slice(0, 5).map((article: any, idx: number) => (
                         <li
                           key={idx}
                           className="text-gray-700 hover:text-[#37c0bd] cursor-pointer flex items-center"
@@ -285,7 +337,7 @@ export default function Page() {
               {!isSearching && selectedCategory && (
                 filteredArticles.length > 0 ? (
                   <div className="grid grid-cols-1 gap-8">
-                    {filteredArticles.map((article, idx) => (
+                    {filteredArticles.map((article: any, idx: number) => (
                       <motion.div
                         key={article._id}
                         initial={{ opacity: 0, y: 20 }}
@@ -356,4 +408,8 @@ export default function Page() {
       )}
     </>
   );
+}
+
+export default function Page() {
+  return <KnowledgebasePageContent />;
 }

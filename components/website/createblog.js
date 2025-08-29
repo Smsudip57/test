@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import axios from 'axios';
 import { Loader2, UploadCloud, X, PlusCircle, ListOrdered } from 'lucide-react';
 import { MyContext } from '@/context/context';
+import { fetchMultiple } from '@/lib/client-fetch';
 
 const CreateBlog = () => {
   const [formData, setFormData] = useState({
@@ -35,11 +36,11 @@ const CreateBlog = () => {
           const aspectRatio = width / height;
           const targetRatio = 16 / 7;
           const tolerance = 0.05; // 5% tolerance
-          
+
           if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
             resolve({ width, height, aspectRatio });
           } else {
-            reject({ 
+            reject({
               message: `Image must have a 16:7 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
               dimensions: { width, height, aspectRatio }
             });
@@ -57,12 +58,11 @@ const CreateBlog = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [serviceRes, industryRes] = await Promise.all([
-          axios.get('/api/service/getservice'),
-          axios.get('/api/industry/get'),
-        ]);
-        setServices(serviceRes.data.services || []);
-        setIndustries(industryRes.data.industries || []);
+        // Use optimized fetchMultiple function - single bulk API call instead of 2 separate requests
+        const data = await fetchMultiple(['services', 'industries']);
+
+        setServices(data.services || []);
+        setIndustries(data.industries || []);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -82,14 +82,14 @@ const CreateBlog = () => {
     try {
       // Validate image dimensions (16:7 aspect ratio with 5% tolerance)
       await validateImageDimensions(file);
-      
+
       // If validation passes, set the image preview and update formData
       setImagePreview(URL.createObjectURL(file));
       setFormData((prev) => ({ ...prev, image: file }));
     } catch (error) {
       console.error("Image validation failed:", error);
       customToast({
-        success: false, 
+        success: false,
         message: error.message || "Image must have a 16:7 aspect ratio"
       });
       e.target.value = "";
@@ -99,9 +99,9 @@ const CreateBlog = () => {
   const handleAddPoint = () => {
     setFormData((prev) => ({
       ...prev,
-      points: [...prev.points, { 
-        title: '', 
-        explanationType: 'article', 
+      points: [...prev.points, {
+        title: '',
+        explanationType: 'article',
         article: '',
         bullets: [],
         image: null,
@@ -113,7 +113,7 @@ const CreateBlog = () => {
   const handlePointChange = (index, field, value) => {
     const updatedPoints = [...formData.points];
     updatedPoints[index] = { ...updatedPoints[index], [field]: value };
-    
+
     // If changing explanationType, ensure the required fields are initialized
     if (field === 'explanationType') {
       if (value === 'article' && !updatedPoints[index].article) {
@@ -122,17 +122,17 @@ const CreateBlog = () => {
         updatedPoints[index].bullets = [{ style: 'dot', content: '' }];
       }
     }
-    
+
     setFormData((prev) => ({ ...prev, points: updatedPoints }));
   };
 
   const handleRemovePoint = (index) => {
     const updatedPoints = formData.points.filter((_, i) => i !== index);
     setFormData((prev) => ({ ...prev, points: updatedPoints }));
-    
+
     // Remove image preview
     setPointImagePreviews(prev => {
-      const updated = {...prev};
+      const updated = { ...prev };
       delete updated[index];
       return updated;
     });
@@ -164,11 +164,11 @@ const CreateBlog = () => {
     try {
       const imageData = new FormData();
       imageData.append('image', file);
-      
+
       const response = await axios.post('/api/upload/image', imageData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      
+
       if (response.data.success) {
         return response.data.imageUrl;
       } else {
@@ -183,14 +183,14 @@ const CreateBlog = () => {
   const handlePointImageChange = (pointIndex, e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
+
     const updatedPoints = [...formData.points];
     // Store the file object in a separate property
     updatedPoints[pointIndex].imageFile = file;
     updatedPoints[pointIndex].image = null; // Clear the image URL if any
-    
+
     setFormData((prev) => ({ ...prev, points: updatedPoints }));
-    
+
     // Create preview for point image
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -206,15 +206,15 @@ const CreateBlog = () => {
     const updatedPoints = [...formData.points];
     updatedPoints[pointIndex].image = null;
     updatedPoints[pointIndex].imageFile = null;
-    
+
     setFormData((prev) => ({
       ...prev,
       points: updatedPoints,
     }));
-    
+
     // Remove the preview
     setPointImagePreviews(prev => {
-      const updated = {...prev};
+      const updated = { ...prev };
       delete updated[index];
       return updated;
     });
@@ -224,7 +224,7 @@ const CreateBlog = () => {
   const uploadAllPointImages = async () => {
     const updatedPoints = [...formData.points];
     let hasImagesToUpload = false;
-    
+
     // Check if any points have image files to upload
     for (const point of updatedPoints) {
       if (point.imageFile) {
@@ -232,22 +232,22 @@ const CreateBlog = () => {
         break;
       }
     }
-    
+
     if (!hasImagesToUpload) {
       return updatedPoints; // No images to upload, return points as is
     }
-    
+
     setUploadingPointImages(true);
-    
+
     try {
       // Upload each point image and update the points with the returned URLs
       for (let i = 0; i < updatedPoints.length; i++) {
         const point = updatedPoints[i];
-        
+
         if (point.imageFile) {
           // Upload the image and get the URL
           const imageUrl = await uploadPointImage(point.imageFile);
-          
+
           // Update the point with the image URL
           updatedPoints[i] = {
             ...point,
@@ -256,7 +256,7 @@ const CreateBlog = () => {
           };
         }
       }
-      
+
       return updatedPoints;
     } catch (error) {
       console.error('Error uploading point images:', error);
@@ -316,7 +316,7 @@ const CreateBlog = () => {
       let updatedPoints;
       try {
         updatedPoints = await uploadAllPointImages();
-        
+
         // Update form data with the new points that have image URLs
         setFormData(prev => ({
           ...prev,
@@ -326,10 +326,10 @@ const CreateBlog = () => {
         setLoading(false);
         return; // Stop if image uploads fail
       }
-      
+
       // Step 2: Create the main form data for submission
       const data = new FormData();
-      
+
       // Append regular fields
       data.append('title', formData.title);
       data.append('description', formData.description);
@@ -337,13 +337,13 @@ const CreateBlog = () => {
       data.append('image', formData.image);
       data.append('relatedService', formData.relatedService);
       data.append('relatedIndustries', formData.relatedIndustries);
-      
+
       // Prepare points for submission - remove any imageFile properties
       const pointsForSubmission = updatedPoints.map(point => {
         const { imageFile, ...pointWithoutImageFile } = point;
         return pointWithoutImageFile;
       });
-      
+
       // Convert points array to JSON
       data.append('points', JSON.stringify(pointsForSubmission));
 
@@ -393,8 +393,8 @@ const CreateBlog = () => {
           {imagePreview ? (
             <div className="relative">
               <img src={imagePreview} alt="Preview" className="w-full aspect-[16/7] object-cover rounded-lg" />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => {
                   setImagePreview(null);
                   setFormData(prev => ({ ...prev, image: null }));
@@ -427,37 +427,37 @@ const CreateBlog = () => {
         <div className='flex flex-col gap-5'>
           <div>
             <label className="block text-gray-700 font-medium mb-2">Title</label>
-            <input 
-              type="text" 
-              name="title" 
-              value={formData.title} 
-              onChange={handleInputChange} 
-              className="w-full px-4 py-2 border rounded-lg" 
-              required 
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg"
+              required
             />
           </div>
 
           <div>
             <label className="block text-gray-700 font-medium mb-2">Category</label>
-            <input 
-              type="text" 
-              name="type" 
-              value={formData.type} 
-              onChange={handleInputChange} 
-              className="w-full px-4 py-2 border rounded-lg" 
-              required 
+            <input
+              type="text"
+              name="type"
+              value={formData.type}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg"
+              required
             />
           </div>
 
           <div>
             <label className="block text-gray-700 font-medium mb-2">Description</label>
-            <textarea 
-              name="description" 
-              value={formData.description} 
-              onChange={handleInputChange} 
-              className="w-full px-4 py-2 border rounded-lg" 
-              rows="4" 
-              required 
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg"
+              rows="4"
+              required
             />
           </div>
 
@@ -496,9 +496,9 @@ const CreateBlog = () => {
               </select>
             </div>
           </div>
-          
-          <button 
-            type="submit" 
+
+          <button
+            type="submit"
             className="bg-blue-500 text-white p-3 rounded-lg w-full transition duration-300 hover:bg-blue-600 mt-4"
             disabled={loading || uploadingPointImages}
           >
@@ -515,9 +515,9 @@ const CreateBlog = () => {
         <div className="md:col-span-2 mt-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold text-gray-800">Blog Points</h3>
-            <button 
-              type="button" 
-              onClick={handleAddPoint} 
+            <button
+              type="button"
+              onClick={handleAddPoint}
               className="flex items-center text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg transition"
             >
               <PlusCircle className="mr-2" size={18} /> Add Point
@@ -531,13 +531,13 @@ const CreateBlog = () => {
           )}
 
           {formData.points.map((point, pointIndex) => (
-            <div 
-              key={pointIndex} 
+            <div
+              key={pointIndex}
               className="mb-6 p-6 border rounded-lg bg-gray-50 relative"
             >
-              <button 
-                type="button" 
-                onClick={() => handleRemovePoint(pointIndex)} 
+              <button
+                type="button"
+                onClick={() => handleRemovePoint(pointIndex)}
                 className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition"
               >
                 <X size={16} />
@@ -650,8 +650,8 @@ const CreateBlog = () => {
                 <div className="space-y-4">
                   {pointImagePreviews[pointIndex] ? (
                     <div className="relative">
-                      <img 
-                        src={pointImagePreviews[pointIndex]} 
+                      <img
+                        src={pointImagePreviews[pointIndex]}
                         alt={`Preview for point ${pointIndex + 1}`}
                         className="w-full max-h-40 object-contain rounded-md border border-gray-200"
                       />

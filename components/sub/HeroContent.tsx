@@ -18,7 +18,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { MyContext } from "@/context/context";
 import Link from "next/link";
-import axios from "axios";
+import { fetchMultiple } from "@/lib/client-fetch";
 import SearchComponent from "./component/heroSearchComponent";
 import Image from "next/image";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
@@ -117,15 +117,14 @@ const Advertiser = ({ data }: any) => {
                 exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
                 transition={{ duration: 0.4, delay: index * 0.2 }}
                 onClick={() => {
-                  router.push(`/customer-success-stories/${item?.slug? item?.slug : ""}`);
+                  router.push(`/customer-success-stories/${item?.slug ? item?.slug : ""}`);
                 }}
               >
                 <div
-                  className={`max-w-80 bg-white ${
-                    item?.masterTitle === "Services"
-                      ? "aspect-[16/9]"
-                      : "aspect-square  "
-                  } p-3 px-6 rounded-lg  text-left relative`}
+                  className={`max-w-80 bg-white ${item?.masterTitle === "Services"
+                    ? "aspect-[16/9]"
+                    : "aspect-square  "
+                    } p-3 px-6 rounded-lg  text-left relative`}
                 >
                   <div
                     className="absolute top-0 left-0 w-full h-full"
@@ -206,23 +205,21 @@ const Advertiser = ({ data }: any) => {
                 exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
                 transition={{ duration: 0.4, delay: index * 0.2 }}
                 onClick={() => {
-                  router.push(`/details/projects/${item?.slug ? item?.slug : item?.Title }`);
+                  router.push(`/details/projects/${item?.slug ? item?.slug : item?.Title}`);
                 }}
               >
                 <div
-                  className={`max-w-80 ${
-                    index % 4 === 0
-                      ? "bg-[#FFE8D7]"
-                      : index % 3 === 0
+                  className={`max-w-80 ${index % 4 === 0
+                    ? "bg-[#FFE8D7]"
+                    : index % 3 === 0
                       ? "bg-[#FCE5F3]"
                       : index % 2 === 0
-                      ? "bg-[#E5EDFD]"
-                      : "bg-[#FFF8BB]"
-                  } ${
-                    item?.masterTitle === "Services"
+                        ? "bg-[#E5EDFD]"
+                        : "bg-[#FFF8BB]"
+                    } ${item?.masterTitle === "Services"
                       ? "aspect-[16/9]"
                       : "aspect-square  "
-                  } p-3 rounded-lg  text-left relative`}
+                    } p-3 rounded-lg  text-left relative`}
                 >
                   <div
                     className={`m-0.5  basis-[46%] lg:basis-[47.2%] rounded-xl`}
@@ -243,7 +240,7 @@ const Advertiser = ({ data }: any) => {
                     )}
                     <h1
                       className="font-medium text-sm text-[#0B2B20]  font-lora mb-[22px] line-clamp-2"
-                      style={{ marginTop: !(index % 2 === 0) ? "24px" :""}}
+                      style={{ marginTop: !(index % 2 === 0) ? "24px" : "" }}
                     >
                       {item?.Title}
                     </h1>
@@ -251,7 +248,7 @@ const Advertiser = ({ data }: any) => {
                       {item?.detail}
                     </p>
                     <button className="bg-[#0B2B20]  px-3 py-1 mb-6 text-[10px] rounded text-white"
-                    style={{ marginBottom: !(index % 2 === 0) ? "0px" :""}}
+                      style={{ marginBottom: !(index % 2 === 0) ? "0px" : "" }}
                     >
                       <Link href={`/details/projects/${item?.Title}`}>
                         Know More
@@ -287,10 +284,10 @@ const Advertiser = ({ data }: any) => {
                 exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
                 transition={{ duration: 0.4, delay: index * 0.2 }}
                 onClick={() => {
-                  if(item?.masterTitle === "Services"){
-                    router.push(`/${item?.slug ? item?.slug : item?.Title }`);
-                  }else if(item?.masterTitle === "Industries"){
-                    router.push(`/industries/${item?.slug ? item?.slug : item?.Title.toLowerCase() }`);
+                  if (item?.masterTitle === "Services") {
+                    router.push(`/${item?.slug ? item?.slug : item?.Title}`);
+                  } else if (item?.masterTitle === "Industries") {
+                    router.push(`/industries/${item?.slug ? item?.slug : item?.Title.toLowerCase()}`);
 
                   }
                   // console.log(item)
@@ -302,11 +299,10 @@ const Advertiser = ({ data }: any) => {
                   height={200}
                   src={item?.image}
                   alt={item?.alt || "Service image"}
-                  className={`w-80 ${
-                    item?.masterTitle === "Services"
-                      ? "aspect-[16/9]"
-                      : "aspect-square  "
-                  } object-cover rounded-lg shadow-lg bg-white`}
+                  className={`w-80 ${item?.masterTitle === "Services"
+                    ? "aspect-[16/9]"
+                    : "aspect-square  "
+                    } object-cover rounded-lg shadow-lg bg-white`}
                   onError={(e) => {
                     e.currentTarget.onerror = null;
                     e.currentTarget.src = "/placeholder.jpg";
@@ -326,7 +322,7 @@ const Advertiser = ({ data }: any) => {
   );
 };
 
-const HeroContent = () => {
+const HeroContent = ({ pageData }: { pageData?: any }) => {
   const [imageStyle, setImageStyle] = useState<number>(0);
 
   const { setChatBoxOpen } = React.useContext(MyContext);
@@ -345,30 +341,51 @@ const HeroContent = () => {
   }, []);
 
   useEffect(() => {
+    // If data is provided as props, use it instead of fetching
+    if (pageData && pageData.services && pageData.testimonials && pageData.industries && pageData.projects) {
+      console.log("Using hero data from props (faster)");
+
+      const dataSources = [
+        { title: "Services", data: pageData.services },
+        { title: "Customer Success Stories", data: pageData.testimonials },
+        { title: "Industries", data: pageData.industries },
+        { title: "Projects", data: pageData.projects },
+      ];
+
+      const formattedData = dataSources.reduce(
+        (allItems: any, { title, data }: any) => {
+          if (Array.isArray(data)) {
+            const itemsWithMasterTitle = data.map((item) => ({
+              masterTitle: title,
+              ...item,
+              image: item?.image,
+            }));
+
+            return [...allItems, ...itemsWithMasterTitle];
+          }
+          return allItems;
+        },
+        []
+      );
+      setServices(formattedData);
+      return;
+    }
+
+    // Fallback: fetch from API if no props provided
+    console.log("Fetching hero data from API (slower)");
     const fetchServices = async () => {
       try {
-        const [
-          servicesResponse,
-          testimonialsResponse,
-          industriesResponse,
-          projectsResponse,
-        ] = await Promise.all([
-          axios.get("/api/service/getservice", {
-            params: { populate: "category" },
-          }),
-          axios.get("/api/testimonial/get"),
-          axios.get("/api/industry/get"),
-          axios.get("/api/project/get"),
-        ]);
+        // Use optimized fetchMultiple function - single bulk API call instead of 4 separate requests
+        const data:any = await fetchMultiple(['services', 'testimonials', 'industries', 'projects']);
 
         const dataSources = [
-          { title: "Services", data: servicesResponse.data.services },
+          { title: "Services", data: data.services },
           {
             title: "Customer Success Stories",
-            data: testimonialsResponse.data.testimonials,
+            data: data.testimonials,
           },
-          { title: "Industries", data: industriesResponse.data.industries },
-          { title: "Projects", data: projectsResponse.data.data },
+          { title: "Industries", data: data.industries },
+          { title: "Projects", data: data.projects },
         ];
 
         const formattedData = dataSources.reduce(
@@ -394,7 +411,7 @@ const HeroContent = () => {
     };
 
     fetchServices();
-  }, []);
+  }, [pageData]);
 
   return (
     <motion.div

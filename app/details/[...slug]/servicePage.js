@@ -32,7 +32,7 @@ export default function Page({ details: Service }) {
             )
           );
         }
-      } catch (error) {}
+      } catch (error) { }
     };
     fetchdata();
   }, []);
@@ -94,19 +94,17 @@ export default function Page({ details: Service }) {
       </header>
 
       {Service?.sections?.map((item, index) => (
-        <section key={index} className={`${index % 2 === 0 ? "my-24" : ""}`}>
+        <section key={`${index}`} className={`${index % 2 === 0 ? "my-24" : ""}`}>
           <div className="w-4/5 mx-auto flex justify-between gap-[15%]">
             <div
-              className={`basis-1/2 w-full h-full pt-[10%] ${
-                index % 2 === 0 ? "order-1" : "order-2"
-              }`}
+              className={`basis-1/2 w-full h-full pt-[10%] ${index % 2 === 0 ? "order-1" : "order-2"
+                }`}
             >
               <img src={item?.image} alt={item?.title} className="w-full" />
             </div>
             <div
-              className={`basis-1/2 h-full pt-16 items-start text-start ${
-                index % 2 === 0 ? "order-2" : "order-1"
-              }`}
+              className={`basis-1/2 h-full pt-16 items-start text-start ${index % 2 === 0 ? "order-2" : "order-1"
+                }`}
             >
               <h2 className="text-5xl lg:text-3xl font-semibold text-[#446E6D]">
                 {item?.title}
@@ -121,15 +119,15 @@ export default function Page({ details: Service }) {
         <CaseStudy child={Service?._id} />
       </div>
 
-       <div
-            aria-labelledby="related-projects-heading flex"
-            className="mt-20 relative z-30 text-left"
-          >
-            <h2 id="related-projects-heading" className="sr-only">
-              Related Projects
-            </h2>
-            <Projects product={Service?._id} child={Service?._id} />
-          </div>
+      <div
+        aria-labelledby="related-projects-heading flex"
+        className="mt-20 relative z-30 text-left"
+      >
+        <h2 id="related-projects-heading" className="sr-only">
+          Related Projects
+        </h2>
+        <Projects product={Service?._id} child={Service?._id} />
+      </div>
 
       <div className="mx-auto min-h-screen flex justify-center items-center">
         <KnowledgeBase child={Service?._id} product={Service?._id} />
@@ -138,14 +136,14 @@ export default function Page({ details: Service }) {
       {/* FAQ Section Component */}
       <FaqSection child={Service?._id} product={Service?._id} />
       <section aria-labelledby="industries-heading" className="mt-16 relative z-20">
-            <h2 id="industries-heading" className="sr-only">
-              Industries We Serve
-            </h2>
-            <Industies product={Service?._id} />
-          </section>
-          <section aria-labelledby="industries-heading" className="mt-16">
-            <Contact />
-          </section>
+        <h2 id="industries-heading" className="sr-only">
+          Industries We Serve
+        </h2>
+        <Industies product={Service?._id} />
+      </section>
+      <section aria-labelledby="industries-heading" className="mt-16">
+        <Contact />
+      </section>
     </div>
   );
 }
@@ -155,122 +153,107 @@ const PointComp = ({ points }) => {
   return (
     <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
       {points.map((item, index) => (
-        <PointItem key={index} item={item} index={index} />
+        <PointItem key={`${index}`} item={item} index={index} />
       ))}
     </div>
   );
 };
 
-// Individual PointItem component with improved viewport detection and motion animations
+// Clean PointItem component using Framer Motion's whileInView
 const PointItem = ({ item, index }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const elementRef = useRef(null);
+  const [isManuallyToggled, setIsManuallyToggled] = useState(false);
 
-  useEffect(() => {
-    const currentElement = elementRef.current;
-    if (!currentElement) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          // When element enters viewport, open it
-          if (entry.isIntersecting) {
-            // Add a small delay so users can see the opening animation
-            setTimeout(() => {
-              setIsOpen(true);
-            }, 200 + index * 100); // Stagger the animations by index
-          } else {
-            // When element leaves viewport, close it immediately
-            setIsOpen(false);
-          }
-        });
-      },
-      {
-        threshold: 0.7, // Trigger when 30% of the element is visible
-        rootMargin: "0px 0px -100px 0px", // Only trigger when element is well into viewport
-      }
-    );
-
-    // Start observing this element
-    observer.observe(currentElement);
-
-    // Cleanup function
-    return () => {
-      if (currentElement) {
-        observer.unobserve(currentElement);
-      }
-      observer.disconnect();
-    };
-  }, [index]);
-
-  // Toggle open/closed state manually when clicked
-  const toggleOpen = () => {
-    setIsOpen((prev) => !prev);
+  // Manual toggle function for click interaction
+  const handleClick = () => {
+    setIsManuallyToggled(prev => !prev);
   };
 
   return (
     <motion.div
-      ref={elementRef}
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className={`w-full border-l-4 pl-6 cursor-pointer transition-all duration-300 ease-in-out ${
-        isOpen ? "border-l-[#446E6D]" : "border-l-white"
+        true ? "border-l-[#446E6D]" : "border-l-white"
       }`}
-      onClick={toggleOpen}
+      onClick={handleClick}
       whileHover={{ scale: 1.02, x: 5 }}
       whileTap={{ scale: 0.98 }}
     >
-      <motion.h3
-        className="text-2xl font-semibold text-[#446E6D]"
-        animate={{
-          color: isOpen ? "#446E6D" : "#666666",
-          scale: isOpen ? 1.05 : 1,
+      {/* Title that animates on viewport entry */}
+      <motion.div
+        initial={{ borderLeftWidth: 0, borderLeftColor: "transparent" }}
+        whileInView={{
+          borderLeftColor: "#446E6D",
+          transition: { duration: 0.6, delay: index * 0.1 }
         }}
-        transition={{ duration: 0.3 }}
+        viewport={{
+          threshold: 0.3,
+          margin: "0px 0px -50px 0px",
+          once: false // Allow re-triggering when scrolling back
+        }}
+        className="border-l-4 pl-6 py-2"
       >
-        {item?.title}
-      </motion.h3>
+        <motion.h3
+          initial={{ color: "#666666", scale: 1 }}
+          whileInView={{
+            color: "#446E6D",
+            scale: 1.05,
+            transition: { duration: 0.4, delay: index * 0.1 + 0.2 }
+          }}
+          whileHover={{ scale: 1.08 }}
+          viewport={{
+            threshold: 0.3,
+            margin: "0px 0px -50px 0px",
+            once: false
+          }}
+          className="text-2xl font-semibold transition-colors duration-300"
+        >
+          {item?.title}
+        </motion.h3>
+      </motion.div>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{
-              height: 0,
-              opacity: 0,
-              y: -10,
-              scale: 0.95,
-            }}
-            animate={{
+      {/* Content that expands/contracts based on viewport and manual toggle */}
+      <motion.div
+        initial={{ height: 0, opacity: 0 }}
+        whileInView={
+          isManuallyToggled
+            ? { height: "auto", opacity: 1 }
+            : {
               height: "auto",
               opacity: 1,
-              y: 0,
-              scale: 1,
-            }}
-            exit={{
-              height: 0,
-              opacity: 0,
-              y: -10,
-              scale: 0.95,
-            }}
-            transition={{
-              duration: 0.5,
-              ease: [0.04, 0.62, 0.23, 0.98], // Custom easing for smooth feel
-            }}
-            className="overflow-hidden"
-          >
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              className="text-lg font-sans mt-4 text-stone-700"
-            >
-              {item?.detail}
-            </motion.p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              transition: {
+                duration: 0.6,
+                delay: index * 0.1 + 0.4,
+                ease: [0.04, 0.62, 0.23, 0.98]
+              }
+            }
+        }
+        exit={{
+          height: 0,
+          opacity: 0,
+          transition: { duration: 0.3 }
+        }}
+        viewport={{
+          threshold: 0.2,
+          margin: "0px 0px -100px 0px",
+          once: false
+        }}
+        className="overflow-hidden ml-6"
+      >
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.4, delay: index * 0.1 + 0.6 }
+          }}
+          viewport={{ threshold: 0.2, once: false }}
+          className="text-lg font-sans mt-4 mb-6 text-stone-700 leading-relaxed"
+        >
+          {item?.detail}
+        </motion.p>
+      </motion.div>
     </motion.div>
   );
 };

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import axios from "axios";
+import { fetchSlugPageData } from "../../lib/ssr-fetch";
 import Content from "./content";
 
 // Keep dynamic for fresh data but optimize performance
@@ -14,11 +14,8 @@ export async function generateMetadata({ params }) {
   const mainSlug = slug[0] ? decodeURIComponent(slug[0]).toLowerCase() : "";
 
   try {
-    // Check if this is a service-specific slug
-    const servicesRes = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/service/getservice`
-    );
-    const services = servicesRes?.data?.services || [];
+    // Use the convenience function for metadata generation too
+    const { services } = await fetchSlugPageData();
 
     // Find service by slug
     const serviceBySlug = services.find((service) => {
@@ -169,55 +166,8 @@ export default async function Page({ params }) {
   };
 
   try {
-    const timestamp = Date.now();
-    const randomParam = Math.random().toString(36).substring(7);
-
-    // Enhanced cache-busting with multiple strategies
-    const [servicesRes, productsRes, childsRes] = await Promise.all([
-      axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/service/getservice?_t=${timestamp}&_r=${randomParam}`,
-        {
-          headers: {
-            "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
-            Pragma: "no-cache",
-            Expires: "0",
-            "If-Modified-Since": "0",
-            "If-None-Match": "no-match-for-this",
-          },
-          timeout: 10000,
-        }
-      ),
-      axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/product/get?_t=${timestamp}&_r=${randomParam}`,
-        {
-          headers: {
-            "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
-            Pragma: "no-cache",
-            Expires: "0",
-            "If-Modified-Since": "0",
-            "If-None-Match": "no-match-for-this",
-          },
-          timeout: 10000,
-        }
-      ),
-      axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/child/get?_t=${timestamp}&_r=${randomParam}`,
-        {
-          headers: {
-            "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
-            Pragma: "no-cache",
-            Expires: "0",
-            "If-Modified-Since": "0",
-            "If-None-Match": "no-match-for-this",
-          },
-          timeout: 10000,
-        }
-      ),
-    ]);
-
-    const services = servicesRes?.data?.services || [];
-    const products = productsRes?.data?.products || [];
-    const childs = childsRes?.data?.products || [];
+    // Use the new convenience function for clean, optimized fetching
+    const { services, products, childs } = await fetchSlugPageData();
 
     // First check if the slug matches a predefined category
     let currentMainService = Mainservice[mainSlug] || null;
@@ -251,7 +201,7 @@ export default async function Page({ params }) {
         slug={slug}
         Mainservice={currentMainService}
       />
-    ):notFound();
+    ) : notFound();
   } catch (error) {
     console.error("Error fetching data:", error);
     return notFound();

@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -9,7 +9,10 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useBlog } from './layout';
 
-export default function Page() {
+// Force dynamic rendering  
+export const dynamic = 'force-dynamic';
+
+function BlogPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
@@ -296,5 +299,15 @@ export default function Page() {
         </>
       )}
     </>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen">
+      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#446E6D]"></div>
+    </div>}>
+      <BlogPageContent />
+    </Suspense>
   );
 }

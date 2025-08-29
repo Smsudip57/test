@@ -4,7 +4,7 @@ import Link from "next/link";
 import axios from "axios";
 import VideoPlayer from "@/components/shaerd/Video";
 
-const Projects = ({ product = null, service = null, child = null }) => {
+const Projects = ({ product = null, service = null, child = null, projects: projectsProp = null }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [empty, setEmpty] = useState(false);
@@ -12,6 +12,40 @@ const Projects = ({ product = null, service = null, child = null }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
+    if (projectsProp && Array.isArray(projectsProp)) {
+      if (product || service || child) {
+        const filteredProjects = projectsProp.filter((project) => {
+          const matchesService =
+            service &&
+            Array.isArray(project.relatedServices) &&
+            project.relatedServices.includes(service);
+
+          const matchesProduct =
+            product &&
+            Array.isArray(project.relatedProducts) &&
+            project.relatedProducts.includes(product);
+
+          const matchesChild =
+            child &&
+            Array.isArray(project.relatedChikfdServices) &&
+            project.relatedChikfdServices.includes(child);
+
+          // Return true if any of the filters match
+          return matchesService || matchesProduct || matchesChild;
+        });
+
+        setProjects(filteredProjects);
+        setEmpty(filteredProjects.length === 0);
+      } else {
+        setProjects(projectsProp);
+        setEmpty(projectsProp.length === 0);
+      }
+      setLoading(false);
+      return;
+    }
+
+    // Fallback: fetch from API if no props provided or props is null/undefined
+    console.log("Fetching projects from API (slower)");
     const controller = new AbortController();
     const signal = controller.signal;
 
@@ -19,8 +53,6 @@ const Projects = ({ product = null, service = null, child = null }) => {
       setLoading(true); // Ensure loading is set to true at the beginning
 
       try {
-        // Add a small delay to ensure the loading skeleton is visible
-        // This is helpful for development and testing
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         const response = await axios.get("/api/project/get", {
@@ -89,7 +121,7 @@ const Projects = ({ product = null, service = null, child = null }) => {
     return () => {
       controller.abort();
     };
-  }, [product, service, child]);
+  }, [product, service, child, projectsProp]);
 
   // Reset visible projects when projects change
   useEffect(() => {
@@ -138,15 +170,14 @@ const Projects = ({ product = null, service = null, child = null }) => {
   // Loading skeleton component for project cards
   const ProjectSkeleton = ({ index }) => (
     <div
-      className={`m-0.5 p-4 sm:p-10 ${
-        index % 4 === 0
+      className={`m-0.5 p-4 sm:p-10 ${index % 4 === 0
           ? "bg-[#FFE8D7]"
           : index % 3 === 0
-          ? "bg-[#FCE5F3]"
-          : index % 2 === 0
-          ? "bg-[#E5EDFD]"
-          : "bg-[#FFF8BB]"
-      } basis-[46%] lg:basis-[47.2%] rounded-xl`}
+            ? "bg-[#FCE5F3]"
+            : index % 2 === 0
+              ? "bg-[#E5EDFD]"
+              : "bg-[#FFF8BB]"
+        } basis-[46%] lg:basis-[47.2%] rounded-xl`}
     >
       {!(index % 2 === 0) && (
         <div className="w-full aspect-video rounded-lg overflow-hidden bg-gray-200 animate-pulse"></div>
@@ -196,15 +227,14 @@ const Projects = ({ product = null, service = null, child = null }) => {
             <div className="flex flex-col flex-wrap lg:flex-row gap-4 sm:gap-8 justify-center">
               {displayedProjects.map((project, index) => (
                 <div
-                  className={`m-0.5 p-4 sm:p-10 ${
-                    index % 4 === 0
+                  className={`m-0.5 p-4 sm:p-10 ${index % 4 === 0
                       ? "bg-[#FFE8D7]"
                       : index % 3 === 0
-                      ? "bg-[#FCE5F3]"
-                      : index % 2 === 0
-                      ? "bg-[#E5EDFD]"
-                      : "bg-[#FFF8BB]"
-                  } basis-[46%] lg:basis-[47.2%] rounded-xl`}
+                        ? "bg-[#FCE5F3]"
+                        : index % 2 === 0
+                          ? "bg-[#E5EDFD]"
+                          : "bg-[#FFF8BB]"
+                    } basis-[46%] lg:basis-[47.2%] rounded-xl`}
                   key={index}
                 >
                   {!(index % 2 === 0) &&
@@ -238,9 +268,8 @@ const Projects = ({ product = null, service = null, child = null }) => {
                   </p>
                   <button className="bg-[#0B2B20] px-6 py-3 mb-7 rounded-lg text-white hover:bg-[#173c2f] transition-colors">
                     <Link
-                      href={`/details/projects/${
-                        project?.slug ? project?.slug : project?.Title
-                      }`}
+                      href={`/details/projects/${project?.slug ? project?.slug : project?.Title
+                        }`}
                     >
                       Know More
                     </Link>
@@ -278,9 +307,8 @@ const Projects = ({ product = null, service = null, child = null }) => {
                 >
                   <span>{getButtonText()}</span>
                   <svg
-                    className={`w-4 h-4 transition-transform duration-300 ${
-                      isExpanded ? "rotate-180" : ""
-                    }`}
+                    className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""
+                      }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -299,9 +327,8 @@ const Projects = ({ product = null, service = null, child = null }) => {
         ) : (
           // Display message when no projects are found
           <div
-            className={`text-center py-10 ${
-              !loading && !empty ? "hidden" : "block"
-            }`}
+            className={`text-center py-10 ${!loading && !empty ? "hidden" : "block"
+              }`}
           >
             <div className="mx-auto w-24 h-24 mb-6 bg-gray-100 rounded-full flex items-center justify-center">
               <svg

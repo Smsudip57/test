@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import axios from "axios";
 import { Loader2, Play } from "lucide-react";
 import Link from "next/link";
 import Video from "@/components/shaerd/Video";
+import { fetchCustomerStoriesData } from "@/lib/client-fetch";
 
 interface Testimonial {
   _id: string;
@@ -77,24 +77,13 @@ export default function CustomerSuccessStories() {
     async function fetchData() {
       try {
         setLoading(true);
-        const [
-          testimonialResponse,
-          serviceResponse,
-          productResponse,
-          childServiceResponse,
-        ] = await Promise.all([
-          axios.get("/api/testimonial/get"),
-          axios.get("/api/service/getservice"),
-          axios.get("/api/product/get"),
-          axios.get("/api/child/get"),
-        ]);
+        // Use optimized fetchMultiple function - single bulk API call instead of 4 separate requests
+        const data:any = await fetchCustomerStoriesData();
 
-        const testimonials: Testimonial[] =
-          testimonialResponse.data.testimonials || [];
-        const services: Service[] = serviceResponse.data.services || [];
-        const products: Product[] = productResponse.data.products || [];
-        const childServices: ChildService[] =
-          childServiceResponse.data.products || [];
+        const testimonials: Testimonial[] = data.testimonials || [];
+        const services: Service[] = data.services || [];
+        const products: Product[] = data.products || [];
+        const childServices: ChildService[] = data.childServices || [];
 
         setAllTestimonials(testimonials);
 
@@ -288,7 +277,7 @@ export default function CustomerSuccessStories() {
                   </p>
 
                   {/* Success Story Tag */}
-                  
+
                 </div>
               </div>
             </div>
@@ -299,7 +288,7 @@ export default function CustomerSuccessStories() {
           <Video
             src={allTestimonials[random]?.video}
             poster={allTestimonials[random]?.image}
-            // title="Customer Success"
+          // title="Customer Success"
           />
         </div>
       </div>
@@ -426,16 +415,16 @@ export default function CustomerSuccessStories() {
       {Object.values(categorizedTestimonials).every(
         (arr) => arr.length === 0
       ) && (
-        <div className="w-[90%] xl:w-[1280px] mx-auto py-20 text-center">
-          <p className="text-xl text-gray-500">
-            No customer success stories found.
-          </p>
-          <p className="mt-4 text-gray-600">
-            Check back later for inspiring stories about how our clients have
-            achieved success with WEBME.
-          </p>
-        </div>
-      )}
+          <div className="w-[90%] xl:w-[1280px] mx-auto py-20 text-center">
+            <p className="text-xl text-gray-500">
+              No customer success stories found.
+            </p>
+            <p className="mt-4 text-gray-600">
+              Check back later for inspiring stories about how our clients have
+              achieved success with WEBME.
+            </p>
+          </div>
+        )}
     </div>
   );
 }

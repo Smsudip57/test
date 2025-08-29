@@ -13,13 +13,13 @@ import WebParticles from "@/components/main/webParticles";
 import { fetchAllHomePageData } from "@/lib/ssr-fetch";
 
 export default async function Home() {
-  const pageData:any = await fetchAllHomePageData();
+  const pageData: any = await fetchAllHomePageData();
 
   return (
     <main className="h-full ">
       <div className="flex flex-col gap-20 bg-[url('/hero-bg.svg')] bg-no-repeat bg-cover relative z-20">
         <div className="lg:w-[90%] w-full mx-auto bg-[url('/hero-bg.svg')] bg-cover max-w-[1920px] ">
-          <Hero />
+          <Hero pageData={pageData} />
         </div>
       </div>
       <div className="flex flex-col gap-20 w-[95%] lg:w-[90%]   max-w-[1920px] mx-auto overflow-hidden ">
@@ -30,7 +30,7 @@ export default async function Home() {
         <CaseStudy />
         <div className="z-20 w-full">
           <Industies industries={pageData.industries} />
-          <Projects />
+          <Projects projects={pageData.projects} />
           <Pricing />
           <Infinite />
           <Contact />
