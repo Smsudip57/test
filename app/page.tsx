@@ -10,14 +10,10 @@ import Infinite from "@/components/main/Infinite";
 import Pricing from "@/components/main/Pricing";
 import Contact from "@/components/main/Contact";
 import WebParticles from "@/components/main/webParticles";
-import axios from "axios";
+import { fetchAllHomePageData } from "@/lib/ssr-fetch";
 
 export default async function Home() {
-  // Fetch the service data server-side
-  const serviceResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/service/getservice`, { 
-    next: { revalidate: 0 } 
-  });
-  const service = { data: await serviceResponse.json() };
+  const pageData:any = await fetchAllHomePageData();
 
   return (
     <main className="h-full ">
@@ -29,11 +25,11 @@ export default async function Home() {
       <div className="flex flex-col gap-20 w-[95%] lg:w-[90%]   max-w-[1920px] mx-auto overflow-hidden ">
         <div className="bg-[rgba(231,247,246,1)] z-10">
           {/* Pass the service prop to the Webme component */}
-          <Webme service={service.data} />
+          <Webme service={pageData} />
         </div>
         <CaseStudy />
         <div className="z-20 w-full">
-          <Industies />
+          <Industies industries={pageData.industries} />
           <Projects />
           <Pricing />
           <Infinite />

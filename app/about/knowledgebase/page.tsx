@@ -1,1047 +1,359 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import SearchIcon from "@mui/icons-material/Search";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import PersonIcon from "@mui/icons-material/Person";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-
-// Updated type definitions to match the new schema
-interface Bullet {
-  style: "number" | "dot" | "roman";
-  content: string;
-}
-
-interface MainSection {
-  title: string;
-  explanationType: "article" | "bullets";
-  article?: string;
-  bullets?: Bullet[];
-  image?: string;
-}
-
-interface ApiArticle {
-  _id: string;
-  title: string;
-  Image?: string;
-  introduction: string;
-  mainSections: MainSection[];
-  conclusion: string;
-  tags: string[];
-  relatedServices: Array<{
-    _id: string;
-    Title: string;
-    [key: string]: any;
-  }>;
-  relatedIndustries: Array<{ _id: string; title: string; [key: string]: any }>;
-  status: "draft" | "published" | "archived";
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface UiPoint {
-  title: string;
-  explain: string;
-  explanationType?: "article" | "bullets";
-  bullets?: Bullet[];
-  image?: string;
-  points?: UiPoint[];
-}
-
-interface UiArticle {
-  _id: string;
-  title: string;
-  explain: string;
-  image?: string;
-  points: UiPoint[];
-  updatedAt: string;
-  tags: string[];
-}
-
-interface CategoryWithArticles {
-  about: string;
-  articles: UiArticle[];
-}
+"use client"
+import React, { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CloseIcon from '@mui/icons-material/Close';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useKnowledgebase } from './layout';
 
 export default function Page() {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [blogData, setBlogData] = useState<CategoryWithArticles[]>([]);
-  const [category, setCategory] = useState<string>("");
-  const [single, setSingle] = useState<UiArticle | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filteredArticles, setFilteredArticles] = useState<UiArticle[]>([]);
-  const [showSearch, setShowSearch] = useState<boolean>(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get('category');
 
-  // Fetch knowledgebase data when component mounts
+  const {
+    knowledgebaseData,
+    categories,
+    loading,
+    error,
+    isSearching,
+    searchResults,
+    searchQuery,
+    clearSearch,
+    formatDate,
+    getReadingTime
+  } = useKnowledgebase();
+
+  const [selectedCategory, setSelectedCategory] = useState(categoryParam || '');
+
   useEffect(() => {
-    const fetchKnowledgebase = async (): Promise<void> => {
-      try {
-        setLoading(true);
-        const response = await axios.get<{
-          success: boolean;
-          knowledgebases: ApiArticle[];
-        }>("/api/knowledgebase/get");
+    setSelectedCategory(categoryParam || '');
+  }, [categoryParam]);
 
-        if (response.data.success) {
-          // Process and organize the data
-          const organizedData = processKnowledgebaseData(
-            response.data.knowledgebases
-          );
-          setBlogData(organizedData);
-        } else {
-          setError("Failed to fetch knowledgebase data");
-        }
-      } catch (err) {
-        console.error("Error fetching knowledgebase:", err);
-        setError("An error occurred while fetching data");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchKnowledgebase();
-  }, []);
-
-  // Function to process and organize knowledgebase data
-  const processKnowledgebaseData = (
-    knowledgebases: ApiArticle[]
-  ): CategoryWithArticles[] => {
-    // Group articles by their related services (categories)
-    const categoryMap: Record<string, CategoryWithArticles> = {};
-
-    knowledgebases.forEach((article) => {
-      if (article.status !== "published") return;
-
-      // Get the category name from relatedServices (it's an array)
-      let categoryName = "Uncategorized";
-      if (article.relatedServices && article.relatedServices.length > 0) {
-        categoryName = article.relatedServices[0].Title;
-      }
-
-      // Create category if it doesn't exist
-      if (!categoryMap[categoryName]) {
-        categoryMap[categoryName] = {
-          about: categoryName,
-          articles: [],
-        };
-      }
-
-      // Format article for our UI structure
-      const formattedArticle: UiArticle = {
-        _id: article._id,
-        title: article.title,
-        explain: article.introduction,
-        image: article.Image,
-        points: [],
-        updatedAt: article.updatedAt,
-        tags: article.tags || [],
-      };
-
-      // Add main sections based on the new schema
-      if (article.mainSections && article.mainSections.length > 0) {
-        article.mainSections.forEach((section) => {
-          const formattedSection: UiPoint = {
-            title: section.title,
-            explain:
-              section.explanationType === "article"
-                ? section.article || ""
-                : "",
-            explanationType: section.explanationType,
-            bullets: section.bullets || [],
-            image: section.image,
-            points: [],
-          };
-
-          formattedArticle.points.push(formattedSection);
-        });
-      }
-
-      // Add conclusion as a section
-      if (article.conclusion) {
-        formattedArticle.points.push({
-          title: "Conclusion",
-          explain: article.conclusion,
-          points: [],
-        });
-      }
-
-      // Add article to its category
-      categoryMap[categoryName].articles.push(formattedArticle);
-    });
-
-    // Convert the map to an array
-    return Object.values(categoryMap);
+  // Function to handle category selection
+  const handleCategorySelect = (categoryName: string) => {
+    setSelectedCategory(categoryName);
+    router.push(`/about/knowledgebase?category=${encodeURIComponent(categoryName)}`);
   };
 
-  // Helper function to render bullet points
-  const renderBulletPoints = (bullets: Bullet[]) => {
-    return (
-      <div className="space-y-2">
-        {bullets.map((bullet, idx) => {
-          let listComponent;
-
-          switch (bullet.style) {
-            case "number":
-              listComponent = (
-                <div key={idx} className="flex items-start">
-                  <span className="text-[#446E6D] font-semibold mr-3 mt-1 min-w-[1.5rem]">
-                    {idx + 1}.
-                  </span>
-                  <span className="text-gray-700 leading-relaxed">
-                    {bullet.content}
-                  </span>
-                </div>
-              );
-              break;
-            case "roman":
-              const romanNumerals = [
-                "i",
-                "ii",
-                "iii",
-                "iv",
-                "v",
-                "vi",
-                "vii",
-                "viii",
-                "ix",
-                "x",
-              ];
-              listComponent = (
-                <div key={idx} className="flex items-start">
-                  <span className="text-[#446E6D] font-semibold mr-3 mt-1 min-w-[1.5rem]">
-                    {romanNumerals[idx] || `${idx + 1}.`}
-                  </span>
-                  <span className="text-gray-700 leading-relaxed">
-                    {bullet.content}
-                  </span>
-                </div>
-              );
-              break;
-            case "dot":
-            default:
-              listComponent = (
-                <div key={idx} className="flex items-start">
-                  <span className="text-[#446E6D] mr-3 mt-2 text-xl leading-none">
-                    •
-                  </span>
-                  <span className="text-gray-700 leading-relaxed">
-                    {bullet.content}
-                  </span>
-                </div>
-              );
-              break;
-          }
-
-          return listComponent;
-        })}
-      </div>
-    );
+  // Function to clear category selection
+  const clearCategorySelection = () => {
+    setSelectedCategory('');
+    router.push('/about/knowledgebase');
   };
 
-  // Handle search input changes
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setSearchQuery(e.target.value);
-
-    if (e.target.value.trim() === "") {
-      setFilteredArticles([]);
-      setShowSearch(false);
-      return;
-    }
-
-    // Filter articles based on search query
-    const results: UiArticle[] = [];
-    blogData.forEach((category) => {
-      category.articles.forEach((article) => {
-        if (
-          article.title.toLowerCase().includes(e.target.value.toLowerCase()) ||
-          article.explain.toLowerCase().includes(e.target.value.toLowerCase())
-        ) {
-          results.push(article);
-        }
-      });
-    });
-
-    setFilteredArticles(results);
-    setShowSearch(true);
+  // Get featured articles (4 most recent)
+  const getFeaturedArticles = () => {
+    return [...knowledgebaseData].sort((a, b) =>
+      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    ).slice(0, 4);
   };
 
-  // Handle search submission
-  const handleSearch = (
-    e: React.MouseEvent<HTMLDivElement> | React.FormEvent
-  ): void => {
-    e.preventDefault();
-    if (searchQuery.trim() === "") {
-      setShowSearch(false);
-      return;
-    }
-
-    // Filter articles based on search query
-    const results: UiArticle[] = [];
-    blogData.forEach((category) => {
-      category.articles.forEach((article) => {
-        if (
-          article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          article.explain.toLowerCase().includes(searchQuery.toLowerCase())
-        ) {
-          results.push(article);
-        }
-      });
-    });
-
-    setFilteredArticles(results);
-    setShowSearch(true);
-  };
-
-  // Get all articles for featured section
-  const getAllArticles = (): UiArticle[] => {
-    const allArticles: UiArticle[] = [];
-    blogData.forEach((category) => {
-      category.articles.forEach((article) => {
-        allArticles.push(article);
-      });
-    });
-    return allArticles;
-  };
-
-  // Format date
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  // Estimated reading time
-  const getReadingTime = (text: string): string => {
-    const wordsPerMinute = 200;
-    const words = text.split(/\s+/).length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return `${minutes} min read`;
-  };
-
-  const [formValues, setFormValues] = useState({
-    sections: [
-      {
-        title: "",
-        points: [{ title: "", detail: "" }],
-      },
-    ],
-  });
-
-  const [sectionImages, setSectionImages] = useState<string[][]>([[]]);
-  const [sectionPreviews, setSectionPreviews] = useState<string[][]>([[]]);
-
-  const addSection = () => {
-    setFormValues((prev) => ({
-      ...prev,
-      sections: [
-        ...prev.sections,
-        {
-          title: "",
-          points: [{ title: "", detail: "" }],
-        },
-      ],
-    }));
-
-    // Initialize empty arrays for the new section's images
-    setSectionImages([...sectionImages, []]);
-    setSectionPreviews([...sectionPreviews, []]);
-  };
+  // Filter articles by category
+  const filteredArticles = selectedCategory
+    ? categories.find(cat => cat.about === selectedCategory)?.articles || []
+    : knowledgebaseData;
 
   return (
-    <div className="pt-16 min-h-screen bg-gray-50" id="read-more">
-      {/* Hero Section */}
-      <div className="w-full bg-[#446E6D] py-16 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">
-            Knowledge Base
-          </h1>
-          <p className="text-lg md:text-xl text-center max-w-3xl mx-auto mb-8 opacity-90">
-            Find answers to your questions and learn more about our services and
-            solutions
-          </p>
-
-          {/* Search box in hero section */}
-          <div className="max-w-2xl mx-auto">
-            <div className="relative">
-              <input
-                className="w-full py-4 px-6 rounded-full text-gray-800 text-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-[#37c0bd] transition-all duration-300"
-                name="search"
-                placeholder="Search for articles..."
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-              <button
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#37c0bd] hover:bg-[#2a9d99] p-3 rounded-full shadow-md transition-all duration-300"
-                onClick={handleSearch as any}
-              >
-                <SearchIcon className="text-white" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <>
       {loading ? (
-        <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 text-center">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded-full w-1/3 mx-auto mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded-full w-1/2 mx-auto mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded-full w-1/4 mx-auto mb-4"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-              {[...Array(6)].map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-lg shadow-md overflow-hidden"
-                >
-                  <div className="h-48 bg-gray-300"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
-                    <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className="bg-white rounded-lg shadow-md p-8 text-center">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-gray-200 rounded w-1/2 mx-auto"></div>
+            <div className="h-64 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
           </div>
         </div>
       ) : error ? (
-        <div className="max-w-8xl mx-auto py-16 px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
-            <p className="text-xl text-red-700">{error}</p>
-            <button
-              className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-              onClick={() => window.location.reload()}
-            >
-              Try Again
-            </button>
-          </div>
+        <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
+          <p className="text-red-700">{error}</p>
+          <button
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+            onClick={() => window.location.reload()}
+          >
+            Try Again
+          </button>
         </div>
       ) : (
-        <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 relative z-20">
-          {/* Breadcrumb navigation */}
-          <div className="flex items-center text-sm text-gray-500 mb-8">
-            <span
-              className="cursor-pointer hover:text-[#446E6D] flex items-center"
-              onClick={() => {
-                setCategory("");
-                setSingle(null);
-                setShowSearch(false);
-              }}
-            >
-              Home
-            </span>
-
-            {(category || single || showSearch) && (
-              <>
-                <KeyboardArrowRightIcon fontSize="small" className="mx-1" />
-                <span
-                  className={`cursor-pointer ${
-                    !single && !showSearch
-                      ? "text-[#446E6D] font-medium"
-                      : "hover:text-[#446E6D]"
-                  }`}
-                  onClick={() => {
-                    setCategory("");
-                    setSingle(null);
-                    setShowSearch(false);
-                  }}
-                >
-                  Topics
-                </span>
-              </>
-            )}
-
-            {category && (
-              <>
-                <KeyboardArrowRightIcon fontSize="small" className="mx-1" />
-                <span className="text-[#446E6D] font-medium">{category}</span>
-              </>
-            )}
-
-            {single && (
-              <>
-                <KeyboardArrowRightIcon fontSize="small" className="mx-1" />
-                <span className="text-[#446E6D] font-medium truncate max-w-xs">
-                  {single.title}
-                </span>
-              </>
-            )}
-
-            {showSearch && (
-              <>
-                <KeyboardArrowRightIcon fontSize="small" className="mx-1" />
-                <span className="text-[#446E6D] font-medium">
-                  Search Results
-                </span>
-              </>
-            )}
-          </div>
-
-          <div className="flex flex-col lg:flex-row lg:items-start gap-8">
-            {/* Main content area */}
-            <div className="lg:w-2/3 order-2 lg:order-1">
-              {/* Back button for mobile */}
-              {(category || single || showSearch) && (
+        <>
+          {/* Search Results */}
+          {isSearching && (
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-800">
+                  Search Results for &quot;{searchQuery}&quot;
+                </h2>
                 <button
-                  className="lg:hidden flex items-center text-[#446E6D] mb-6 hover:underline"
-                  onClick={() => {
-                    if (single) {
-                      setSingle(null);
-                      setCategory(category || "");
-                    } else {
-                      setCategory("");
-                      setShowSearch(false);
-                    }
-                  }}
+                  onClick={clearSearch}
+                  className="text-gray-500 hover:text-[#446E6D] flex items-center"
                 >
-                  <ArrowBackIcon fontSize="small" className="mr-1" />
-                  Back
+                  <CloseIcon fontSize="small" className="mr-1" />
+                  Clear
                 </button>
-              )}
+              </div>
 
-              {/* Search results */}
-              {showSearch && (
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                    Search Results for &quot;{searchQuery}&quot;
-                  </h2>
-
-                  {filteredArticles.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-6">
-                      {filteredArticles.map((article, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3, delay: idx * 0.1 }}
-                          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                          onClick={() => {
-                            setSingle(article);
-                            setShowSearch(false);
-                          }}
-                        >
-                          <div className="flex flex-col sm:flex-row">
-                            {article.image && (
-                              <div className="sm:w-1/3 h-48 sm:h-auto">
-                                <img
-                                  src={article.image}
-                                  alt={article.title}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                            )}
-                            <div
-                              className={`p-6 ${
-                                article.image ? "sm:w-2/3" : "w-full"
-                              }`}
-                            >
-                              <h3 className="text-xl font-semibold text-gray-800 mb-2 hover:text-[#37c0bd] cursor-pointer">
-                                {article.title}
-                              </h3>
-                              <p className="text-gray-600 mb-4 line-clamp-2">
-                                {article.explain}
-                              </p>
-                              <div className="flex items-center text-sm text-gray-500 space-x-4">
-                                <span className="flex items-center">
-                                  <CalendarMonthIcon
-                                    fontSize="small"
-                                    className="mr-1"
-                                  />
-                                  {formatDate(article.updatedAt)}
-                                </span>
-                                <span className="flex items-center">
-                                  <AccessTimeIcon
-                                    fontSize="small"
-                                    className="mr-1"
-                                  />
-                                  {getReadingTime(article.explain)}
-                                </span>
-                              </div>
-                            </div>
+              {searchResults.length > 0 ? (
+                <div className="grid grid-cols-1 gap-6">
+                  {searchResults.map((article, idx) => (
+                    <motion.div
+                      key={article._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: idx * 0.1 }}
+                      className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+                      onClick={() => router.push(`/about/knowledgebase/${article.slug || article._id}`)}
+                    >
+                      <div className="flex flex-col md:flex-row">
+                        <div className="md:w-2/5 relative">
+                          <div className="aspect-video w-full overflow-hidden">
+                            <img
+                              src={article.Image || '/placeholder-image.jpg'}
+                              alt={article.title}
+                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                            />
                           </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="bg-white rounded-lg p-8 text-center border">
-                      <p className="text-gray-600 mb-4">
-                        No articles found matching your search.
-                      </p>
-                      <button
-                        className="px-4 py-2 bg-[#446E6D] text-white rounded-md hover:bg-[#37c0bd] transition-colors"
-                        onClick={() => {
-                          setSearchQuery("");
-                          setShowSearch(false);
-                        }}
-                      >
-                        Clear Search
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Featured articles section */}
-              {!category && !single && !showSearch && (
-                <div className="mb-12">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                    Featured Articles
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {getAllArticles()
-                      .slice(0, 4)
-                      .map((article, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3, delay: idx * 0.1 }}
-                          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-                          onClick={() => {
-                            setSingle(article);
-                            setCategory("");
-                          }}
-                        >
-                          {article.image && (
-                            <div className="h-48 overflow-hidden">
-                              <img
-                                src={article.image}
-                                alt={article.title}
-                                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
-                              />
+                          {article.tags && article.tags.length > 0 && (
+                            <div className="absolute top-3 right-3 bg-[#446E6D] text-white py-1 px-3 rounded-full text-xs font-semibold">
+                              {article.tags[0]}
                             </div>
-                          )}
-                          <div className="p-6">
-                            <h3 className="text-xl font-semibold text-gray-800 mb-2 hover:text-[#37c0bd]">
-                              {article.title}
-                            </h3>
-                            <p className="text-gray-600 mb-4 line-clamp-2">
-                              {article.explain}
-                            </p>
-                            <div className="flex items-center text-sm text-gray-500 space-x-4">
-                              <span className="flex items-center">
-                                <CalendarMonthIcon
-                                  fontSize="small"
-                                  className="mr-1"
-                                />
-                                {formatDate(article.updatedAt)}
-                              </span>
-                              <span className="flex items-center">
-                                <AccessTimeIcon
-                                  fontSize="small"
-                                  className="mr-1"
-                                />
-                                {getReadingTime(article.explain)}
-                              </span>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Display all topics and their articles */}
-              {!category && !single && !showSearch && (
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                    Browse by Topic
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
-                    {blogData
-                      .filter(
-                        (item) => item.articles && item.articles.length > 0
-                      )
-                      .map((item, index) => (
-                        <div
-                          key={index}
-                          className="bg-white rounded-lg shadow-md p-6"
-                        >
-                          <h3
-                            className="text-xl font-bold text-[#446E6D] mb-4 cursor-pointer hover:text-[#37c0bd]"
-                            onClick={() => {
-                              setCategory(item.about);
-                              setSingle(null);
-                            }}
-                          >
-                            {item.about}
-                          </h3>
-                          <ul className="space-y-3">
-                            {item.articles &&
-                              item.articles.slice(0, 5).map((article, idx) => (
-                                <li
-                                  className="text-gray-700 hover:text-[#37c0bd] cursor-pointer flex items-center"
-                                  key={idx}
-                                  onClick={() => {
-                                    setSingle(article);
-                                    setCategory("");
-                                  }}
-                                >
-                                  <ArrowForwardIosIcon
-                                    fontSize="inherit"
-                                    className="mr-2 text-xs text-[#446E6D]"
-                                  />
-                                  <span className="line-clamp-1">
-                                    {article.title}
-                                  </span>
-                                </li>
-                              ))}
-                          </ul>
-                          {item.articles.length > 5 && (
-                            <button
-                              className="mt-4 text-[#446E6D] hover:text-[#37c0bd] text-sm font-medium"
-                              onClick={() => {
-                                setCategory(item.about);
-                                setSingle(null);
-                              }}
-                            >
-                              View all {item.articles.length} articles
-                            </button>
                           )}
                         </div>
-                      ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Display articles in selected category */}
-              {category && !single && (
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                    {category}
-                  </h2>
-                  {blogData
-                    .filter((item) => item.about === category)
-                    .map((item, index) => (
-                      <div key={index} className="mb-8">
-                        {item.articles && item.articles.length > 0 ? (
-                          <div className="grid grid-cols-1 gap-6">
-                            {item.articles.map((article, idx) => (
-                              <motion.div
-                                key={idx}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3, delay: idx * 0.1 }}
-                                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                                onClick={() => {
-                                  setSingle(article);
-                                  setCategory("");
-                                }}
-                              >
-                                <div className="flex flex-col sm:flex-row">
-                                  {article.image && (
-                                    <div className="sm:w-1/3 h-48 sm:h-auto">
-                                      <img
-                                        src={article.image}
-                                        alt={article.title}
-                                        className="w-full h-full object-cover"
-                                      />
-                                    </div>
-                                  )}
-                                  <div
-                                    className={`p-6 ${
-                                      article.image ? "sm:w-2/3" : "w-full"
-                                    }`}
-                                  >
-                                    <h3 className="text-xl font-semibold text-gray-800 mb-2 hover:text-[#37c0bd] cursor-pointer">
-                                      {article.title}
-                                    </h3>
-                                    <p className="text-gray-600 mb-4 line-clamp-3">
-                                      {article.explain}
-                                    </p>
-                                    <div className="flex items-center text-sm text-gray-500 space-x-4">
-                                      <span className="flex items-center">
-                                        <CalendarMonthIcon
-                                          fontSize="small"
-                                          className="mr-1"
-                                        />
-                                        {formatDate(article.updatedAt)}
-                                      </span>
-                                      <span className="flex items-center">
-                                        <AccessTimeIcon
-                                          fontSize="small"
-                                          className="mr-1"
-                                        />
-                                        {getReadingTime(article.explain)}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </motion.div>
-                            ))}
+                        <div className="md:w-3/5 p-5">
+                          <div className="flex items-center gap-3 mb-2 text-gray-500 text-xs">
+                            <span className="flex items-center gap-1">
+                              <CalendarMonthIcon fontSize="inherit" />
+                              {formatDate(article.updatedAt)}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <AccessTimeIcon />
+                              {getReadingTime(article.introduction, article.mainSections)}
+                            </span>
                           </div>
-                        ) : (
-                          <div className="bg-white rounded-lg p-8 text-center border">
-                            <p className="text-gray-600">
-                              No articles found in this topic.
-                            </p>
-                            <button
-                              className="mt-4 px-4 py-2 bg-[#446E6D] text-white rounded-md hover:bg-[#37c0bd] transition-colors"
-                              onClick={() => {
-                                setCategory("");
-                                setSingle(null);
-                              }}
-                            >
-                              Browse All Topics
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                </div>
-              )}
 
-              {/* Display single article - Updated to handle new schema */}
-              {single && (
-                <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                  {single.image && (
-                    <div className="w-full h-64 md:h-80 overflow-hidden">
-                      <img
-                        src={single.image}
-                        alt={single.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
+                          <h3 className="text-xl font-bold mb-2 text-gray-800 hover:text-[#446E6D] transition-colors cursor-pointer line-clamp-2">
+                            {article.title}
+                          </h3>
 
-                  <div className="p-6 md:p-8">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-4">
-                      {single.title}
-                    </h1>
+                          <p className="text-gray-600 mb-4 line-clamp-2 text-sm">
+                            {article.introduction}
+                          </p>
 
-                    <div className="flex flex-wrap items-center text-sm text-gray-500 mb-6 gap-4">
-                      <span className="flex items-center">
-                        <CalendarMonthIcon fontSize="small" className="mr-1" />
-                        {formatDate(single.updatedAt)}
-                      </span>
-                      <span className="flex items-center">
-                        <AccessTimeIcon fontSize="small" className="mr-1" />
-                        {getReadingTime(single.explain)}
-                      </span>
-                    </div>
-
-                    {single.tags && single.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {single.tags.map((tag, idx) => (
-                          <span
-                            key={idx}
-                            className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm"
+                          <button
+                            className="text-sm py-2 px-4 bg-[#446E6D] text-white rounded-md hover:bg-[#37c0bd] transition-colors flex items-center gap-1"
                           >
-                            {tag}
-                          </span>
-                        ))}
+                            Read More
+                            <ArrowForwardIosIcon style={{ fontSize: '12px' }} />
+                          </button>
+                        </div>
                       </div>
-                    )}
-
-                    <div className="prose prose-lg max-w-none">
-                      {/* Introduction */}
-                      <p className="text-gray-700 mb-8 leading-relaxed text-lg">
-                        {single.explain}
-                      </p>
-
-                      {/* Main Sections - Updated to handle new schema */}
-                      {single.points &&
-                        single.points.map((section, index) => (
-                          <div key={index} className="mb-8">
-                            {section.title &&
-                              section.title !== "Conclusion" && (
-                                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                                  {section.title}
-                                </h2>
-                              )}
-
-                            {/* Section Image */}
-                            {section.image && (
-                              <div className="mb-6">
-                                <img
-                                  src={section.image}
-                                  alt={section.title}
-                                  className="w-full h-auto rounded-lg shadow-md"
-                                />
-                              </div>
-                            )}
-
-                            {/* Article Content or Bullets based on explanationType */}
-                            {section.explanationType === "article" &&
-                              section.explain && (
-                                <div className="text-gray-700 mb-6 leading-relaxed whitespace-pre-wrap">
-                                  {section.explain}
-                                </div>
-                              )}
-
-                            {section.explanationType === "bullets" &&
-                              section.bullets &&
-                              section.bullets.length > 0 && (
-                                <div className="mb-6 ml-4">
-                                  {renderBulletPoints(section.bullets)}
-                                </div>
-                              )}
-
-                            {/* For conclusion or sections without explanationType */}
-                            {!section.explanationType && section.explain && (
-                              <div className="text-gray-700 mb-6 leading-relaxed">
-                                {section.title === "Conclusion" ? (
-                                  <>
-                                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                                      Conclusion
-                                    </h2>
-                                    <p className="leading-relaxed whitespace-pre-wrap">
-                                      {section.explain}
-                                    </p>
-                                  </>
-                                ) : (
-                                  <p className="leading-relaxed whitespace-pre-wrap">
-                                    {section.explain}
-                                  </p>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                    </div>
-                  </div>
+                    </motion.div>
+                  ))}
                 </div>
-              )}
-            </div>
-
-            {/* Sidebar */}
-            <div className="lg:w-1/3 order-1 lg:order-2 space-y-6">
-              {/* Search box in sidebar */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Search</h3>
-                <div className="relative">
-                  <input
-                    className="w-full py-3 px-4 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#446E6D] transition-all"
-                    name="search"
-                    placeholder="Search articles..."
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                  />
+              ) : (
+                <div className="bg-white rounded-lg p-8 text-center border">
+                  <p className="text-gray-600 mb-4">No articles found matching your search.</p>
                   <button
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#446E6D]"
-                    onClick={handleSearch as any}
+                    className="px-4 py-2 bg-[#446E6D] text-white rounded-md hover:bg-[#37c0bd] transition-colors"
+                    onClick={clearSearch}
                   >
-                    <SearchIcon />
+                    Clear Search
                   </button>
                 </div>
-              </div>
-
-              {/* Topics sidebar */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Topics</h3>
-                <ul className="space-y-3">
-                  {blogData.map((item, index) => (
-                    <li key={index}>
-                      <button
-                        className={`w-full text-left flex items-center py-2 px-3 rounded-md transition-colors ${
-                          category === item.about
-                            ? "bg-[#446E6D] text-white"
-                            : "text-gray-700 hover:bg-gray-100"
-                        }`}
-                        onClick={() => {
-                          setCategory(item.about);
-                          setSingle(null);
-                        }}
-                      >
-                        <ArrowForwardIosIcon
-                          fontSize="inherit"
-                          className={`mr-2 text-xs ${
-                            category === item.about
-                              ? "text-white"
-                              : "text-[#446E6D]"
-                          }`}
-                        />
-                        <span>{item.about}</span>
-                        <span className="ml-auto bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">
-                          {item.articles.length}
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Recent articles */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">
-                  Recent Articles
-                </h3>
-                <ul className="space-y-4">
-                  {getAllArticles()
-                    .slice(0, 5)
-                    .map((article, idx) => (
-                      <li
-                        key={idx}
-                        className="border-b border-gray-100 pb-4 last:border-0 last:pb-0"
-                      >
-                        <button
-                          className="w-full text-left group"
-                          onClick={() => {
-                            setSingle(article);
-                            setCategory("");
-                          }}
-                        >
-                          <h4 className="text-gray-700 font-medium group-hover:text-[#446E6D] line-clamp-2">
-                            {article.title}
-                          </h4>
-                          <span className="text-xs text-gray-500 mt-1 flex items-center">
-                            <CalendarMonthIcon
-                              fontSize="inherit"
-                              className="mr-1"
-                            />
-                            {formatDate(article.updatedAt)}
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-
-              {/* Tags cloud */}
-              {getAllArticles().some(
-                (article) => article.tags && article.tags.length > 0
-              ) && (
-                <div className="bg-white rounded-lg shadow-md p-6">
-                  <h3 className="text-lg font-bold text-gray-800 mb-4">
-                    Popular Tags
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {Array.from(
-                      new Set(
-                        getAllArticles().flatMap(
-                          (article) => article.tags || []
-                        )
-                      )
-                    )
-                      .slice(0, 12)
-                      .map((tag, idx) => (
-                        <span
-                          key={idx}
-                          className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-[#446E6D] hover:text-white transition-colors"
-                          onClick={() => {
-                            setSearchQuery(tag);
-                            handleSearch({ preventDefault: () => {} } as any);
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                  </div>
-                </div>
               )}
             </div>
-          </div>
-        </div>
+          )}
+
+          {/* Featured Articles */}
+          {!isSearching && !selectedCategory && (
+            <div className="mb-12">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">Featured Articles</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {getFeaturedArticles().map((article, idx) => (
+                  <motion.div
+                    key={article._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: idx * 0.1 }}
+                    className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col h-full"
+                    onClick={() => router.push(`/about/knowledgebase/${article.slug || article._id}`)}
+                  >
+                    <div className="relative">
+                      <div className="aspect-video w-full overflow-hidden">
+                        <img
+                          src={article.Image || '/placeholder-image.jpg'}
+                          alt={article.title}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                      {article.tags && article.tags.length > 0 && (
+                        <div className="absolute top-3 right-3 bg-[#446E6D] text-white py-1 px-3 rounded-full text-xs font-semibold">
+                          {article.tags[0]}
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-5 flex flex-col flex-grow">
+                      <div className="flex items-center gap-3 text-gray-500 text-xs mb-2">
+                        <span className="flex items-center gap-1">
+                          <CalendarMonthIcon fontSize="inherit" />
+                          {formatDate(article.updatedAt)}
+                        </span>
+                      </div>
+
+                      <h3 className="text-lg font-bold mb-2 text-gray-800 hover:text-[#446E6D] transition-colors line-clamp-2">
+                        {article.title}
+                      </h3>
+
+                      <p className="text-gray-600 text-sm line-clamp-3 mb-4 flex-grow">
+                        {article.introduction}
+                      </p>
+
+                      <button className="text-[#446E6D] font-medium text-sm hover:text-[#37c0bd] transition-colors flex items-center mt-auto self-start">
+                        Read More
+                        <ArrowForwardIosIcon style={{ fontSize: '12px' }} className="ml-1" />
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Browse by Topic */}
+          {!isSearching && !selectedCategory && (
+            <div className="mb-12">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">Browse by Topic</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {categories.map((category, index) => (
+                  <div key={index} className="bg-white rounded-lg shadow-md p-6">
+                    <h3
+                      className="text-xl font-bold text-[#446E6D] mb-4 cursor-pointer hover:text-[#37c0bd]"
+                      onClick={() => handleCategorySelect(category.about)}
+                    >
+                      {category.about}
+                    </h3>
+                    <ul className="space-y-3">
+                      {category.articles.slice(0, 5).map((article, idx) => (
+                        <li
+                          key={idx}
+                          className="text-gray-700 hover:text-[#37c0bd] cursor-pointer flex items-center"
+                          onClick={() => router.push(`/about/knowledgebase/${article.slug || article._id}`)}
+                        >
+                          <ArrowForwardIosIcon
+                            fontSize="inherit"
+                            className="mr-2 text-xs text-[#446E6D]"
+                          />
+                          <span className="line-clamp-1">{article.title}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    {category.articles.length > 5 && (
+                      <button
+                        className="mt-4 text-[#446E6D] hover:text-[#37c0bd] text-sm font-medium"
+                        onClick={() => handleCategorySelect(category.about)}
+                      >
+                        View all {category.articles.length} articles
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Category Articles List */}
+          <AnimatePresence>
+            <div>
+              {selectedCategory && (
+                <div className="mb-6 flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    {selectedCategory}
+                  </h2>
+                  <button
+                    className="text-[#446E6D] hover:text-[#37c0bd] text-sm flex items-center"
+                    onClick={clearCategorySelection}
+                  >
+                    <KeyboardArrowLeftIcon fontSize="small" />
+                    Back to all topics
+                  </button>
+                </div>
+              )}
+
+              {!isSearching && selectedCategory && (
+                filteredArticles.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-8">
+                    {filteredArticles.map((article, idx) => (
+                      <motion.div
+                        key={article._id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: idx * 0.1 }}
+                        className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+                        onClick={() => router.push(`/about/knowledgebase/${article.slug || article._id}`)}
+                      >
+                        <div className="flex flex-col md:flex-row">
+                          <div className="md:w-2/5 relative">
+                            <div className="aspect-video w-full overflow-hidden">
+                              <img
+                                src={article.Image || '/placeholder-image.jpg'}
+                                alt={article.title}
+                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                              />
+                            </div>
+                            {article.tags && article.tags.length > 0 && (
+                              <div className="absolute top-3 right-3 bg-[#446E6D] text-white py-1 px-3 rounded-full text-xs font-semibold">
+                                {article.tags[0]}
+                              </div>
+                            )}
+                          </div>
+                          <div className="md:w-3/5 p-6">
+                            <div className="flex items-center gap-4 mb-2 text-gray-500 text-sm">
+                              <span className="flex items-center gap-1">
+                                <CalendarMonthIcon fontSize="inherit" />
+                                {formatDate(article.updatedAt)}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <AccessTimeIcon />
+                                {getReadingTime(article.introduction, article.mainSections)}
+                              </span>
+                            </div>
+
+                            <h3 className="text-2xl font-bold mb-3 text-gray-800 hover:text-[#446E6D] transition-colors cursor-pointer line-clamp-2">
+                              {article.title}
+                            </h3>
+
+                            <p className="text-gray-600 mb-6 line-clamp-3">
+                              {article.introduction}
+                            </p>
+
+                            <button className="text-md py-2.5 px-6 bg-[#446E6D] text-white rounded-md hover:bg-[#37c0bd] transition-colors flex items-center gap-2 font-medium">
+                              Read More
+                              <ArrowForwardIosIcon style={{ fontSize: '14px' }} />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-lg p-8 text-center border">
+                    <p className="text-gray-600 mb-4">No articles found in this topic.</p>
+                    <button
+                      className="px-4 py-2 bg-[#446E6D] text-white rounded-md hover:bg-[#37c0bd] transition-colors"
+                      onClick={clearCategorySelection}
+                    >
+                      View All Topics
+                    </button>
+                  </div>
+                )
+              )}
+            </div>
+          </AnimatePresence>
+        </>
       )}
-    </div>
+    </>
   );
 }

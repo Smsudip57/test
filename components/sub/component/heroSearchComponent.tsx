@@ -36,7 +36,7 @@ export default function HeroSearchComponent() {
   const [deleting, setDeleting] = useState(false);
   const [index, setIndex] = useState(0);
   const [isTypingData1, setIsTypingData1] = useState(true);
-  
+
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<SearchResults | null>(null);
   const [totalResults, setTotalResults] = useState(0);
@@ -45,7 +45,7 @@ export default function HeroSearchComponent() {
   const [showDropdown, setShowDropdown] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   // Handle typing animation effect
   useEffect(() => {
     const handleTyping = () => {
@@ -78,7 +78,7 @@ export default function HeroSearchComponent() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        searchContainerRef.current && 
+        searchContainerRef.current &&
         !searchContainerRef.current.contains(event.target as Node)
       ) {
         setShowDropdown(false);
@@ -106,7 +106,7 @@ export default function HeroSearchComponent() {
 
       try {
         const response = await axios.get(`/api/search?search=${encodeURIComponent(query)}`);
-        
+
         if (response.data.success) {
           setResults(response.data.results);
           setTotalResults(response.data.totalResults);
@@ -141,7 +141,7 @@ export default function HeroSearchComponent() {
       try {
         setLoading(true);
         const response = await axios.get(`/api/search?search=${encodeURIComponent(searchQuery.trim())}`);
-        
+
         if (response.data.success) {
           setResults(response.data.results);
           setTotalResults(response.data.totalResults);
@@ -201,7 +201,7 @@ export default function HeroSearchComponent() {
           description: item.description,
           image: item.image,
           category: item.type,
-          url: `/about/blog?id=${item._id}`
+          url: `/about/blog/${item.slug || item._id}`
         };
       case 'knowledgeBase':
         return {
@@ -210,7 +210,7 @@ export default function HeroSearchComponent() {
           title: item.title,
           description: item.introduction,
           image: item.Image,
-          url: `/knowledge-base/${item._id}`
+          url: `/about/knowledgebase/${item.slug || item._id}`
         };
       case 'projects':
         return {
@@ -277,7 +277,7 @@ export default function HeroSearchComponent() {
               className="text-[#101513] text-base xs:text-base w-full leading-7 focus:outline-none"
             />
             {searchQuery && (
-              <button 
+              <button
                 type="button"
                 onClick={clearSearch}
                 className="text-gray-400 hover:text-gray-600 p-1"
@@ -286,7 +286,7 @@ export default function HeroSearchComponent() {
               </button>
             )}
           </div>
-          <button 
+          <button
             type="submit"
             className="bg-[#446E6D] font-medium text-white text-lg sm:text-base px-1.5 xs:px-3 md:px-[34px] py-2 md:py-[11.5px] font-graphik rounded-[39px] border-box flex items-center justify-center"
           >
@@ -307,7 +307,7 @@ export default function HeroSearchComponent() {
       {/* Search Results Dropdown with smoother animation */}
       <AnimatePresence>
         {showDropdown && searchQuery.length > 1 && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -323,7 +323,7 @@ export default function HeroSearchComponent() {
             ) : error ? (
               <div className="p-6 text-center">
                 <p className="text-red-500">{error}</p>
-                <button 
+                <button
                   onClick={() => debouncedSearch(searchQuery)}
                   className="mt-2 text-[#446E6D] hover:underline"
                 >
@@ -337,86 +337,86 @@ export default function HeroSearchComponent() {
                     Found <span className="font-semibold text-[#446E6D]">{totalResults}</span> results for &quot;{searchQuery}&quot;
                   </p>
                 </div>
-                
+
                 {/* Services */}
                 {results.services?.length > 0 && (
-                  <ResultSection 
-                    title="Services" 
-                    items={results.services} 
+                  <ResultSection
+                    title="Services"
+                    items={results.services}
                     type="services"
                     formatItem={formatResultItem}
                     onItemClick={() => setShowDropdown(false)}
                   />
                 )}
-                
+
                 {/* Child Services */}
                 {results.childServices?.length > 0 && (
-                  <ResultSection 
-                    title="Solutions" 
-                    items={results.childServices} 
+                  <ResultSection
+                    title="Solutions"
+                    items={results.childServices}
                     type="childServices"
                     formatItem={formatResultItem}
                     onItemClick={() => setShowDropdown(false)}
                   />
                 )}
-                
+
                 {/* Products */}
                 {results.products?.length > 0 && (
-                  <ResultSection 
-                    title="Products" 
-                    items={results.products} 
+                  <ResultSection
+                    title="Products"
+                    items={results.products}
                     type="products"
                     formatItem={formatResultItem}
                     onItemClick={() => setShowDropdown(false)}
                   />
                 )}
-                
+
                 {/* Blogs */}
                 {results.blogs?.length > 0 && (
-                  <ResultSection 
-                    title="Blogs" 
-                    items={results.blogs} 
+                  <ResultSection
+                    title="Blogs"
+                    items={results.blogs}
                     type="blogs"
                     formatItem={formatResultItem}
                     onItemClick={() => setShowDropdown(false)}
                   />
                 )}
-                
+
                 {/* Knowledge Base */}
                 {results.knowledgeBase?.length > 0 && (
-                  <ResultSection 
-                    title="Knowledge Base" 
-                    items={results.knowledgeBase} 
+                  <ResultSection
+                    title="Knowledge Base"
+                    items={results.knowledgeBase}
                     type="knowledgeBase"
                     formatItem={formatResultItem}
                     onItemClick={() => setShowDropdown(false)}
                   />
                 )}
-                
+
                 {/* Projects */}
                 {results.projects?.length > 0 && (
-                  <ResultSection 
-                    title="Projects" 
-                    items={results.projects} 
+                  <ResultSection
+                    title="Projects"
+                    items={results.projects}
                     type="projects"
                     formatItem={formatResultItem}
                     onItemClick={() => setShowDropdown(false)}
                   />
                 )}
-                
+
                 {/* Testimonials */}
                 {results.testimonials?.length > 0 && (
-                  <ResultSection 
-                    title="Testimonials" 
-                    items={results.testimonials} 
+                  <ResultSection
+                    title="Testimonials"
+                    items={results.testimonials}
                     type="testimonials"
                     formatItem={formatResultItem}
                     onItemClick={() => setShowDropdown(false)}
                   />
                 )}
-                
+
                 <div className="p-3 bg-gray-50 text-center">
-                
+
                 </div>
               </div>
             ) : searchQuery && !loading ? (
@@ -445,7 +445,7 @@ interface ResultSectionProps {
 function ResultSection({ title, items, type, formatItem, onItemClick }: ResultSectionProps) {
   // Limit to 3 items max per section in dropdown
   const limitedItems = items.slice(0, 3);
-  
+
   return (
     <div className="py-3 px-4">
       <h3 className="text-sm font-semibold text-gray-700 mb-2">{title}</h3>
@@ -453,8 +453,8 @@ function ResultSection({ title, items, type, formatItem, onItemClick }: ResultSe
         {limitedItems.map((item) => {
           const formattedItem = formatItem(item, type);
           return (
-            <Link 
-              href={formattedItem.url} 
+            <Link
+              href={formattedItem.url}
               key={formattedItem.id}
               onClick={onItemClick}
               className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors group"
@@ -479,8 +479,8 @@ function ResultSection({ title, items, type, formatItem, onItemClick }: ResultSe
                     />
                   </>
                 ) : formattedItem.image ? (
-                  <img 
-                    src={formattedItem.image} 
+                  <img
+                    src={formattedItem.image}
                     alt={formattedItem.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                   />
@@ -492,7 +492,7 @@ function ResultSection({ title, items, type, formatItem, onItemClick }: ResultSe
                   </div>
                 )}
               </div>
-              
+
               <div className="flex-1 min-w-0">
                 <h4 className="text-sm font-medium text-gray-900 truncate group-hover:text-[#446E6D]">
                   {formattedItem.title}
@@ -506,7 +506,7 @@ function ResultSection({ title, items, type, formatItem, onItemClick }: ResultSe
                   <span className="inline-flex items-center text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
                     {formattedItem.type}
                   </span>
-                 
+
                   {/* Show video indicator if project has video */}
                   {type === 'projects' && item.media?.type === 'video' && (
                     <span className="inline-flex items-center ml-1 text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-600">

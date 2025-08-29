@@ -8,9 +8,27 @@ const Footer = () => {
   const pathname = usePathname();
   const router = useRouter();
   const context = React.useContext(MyContext);
+  const { customToast } = useContext(MyContext);
 
   // const [isAdminPath, setIsAdminPath] = useState(false);
   const [loaded, setloaded] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = () => {
+    if (!email.trim()) {
+      customToast({ success: false, message: "Please enter your email address" });
+      return;
+    }
+
+    if (!email.includes("@")) {
+      customToast({ success: false, message: "Please enter a valid email address" });
+      return;
+    }
+
+    // Success case
+    customToast({ success: true, message: "Thank you for subscribing to our newsletter!" });
+    setEmail("");
+  };
 
   if (
     pathname.includes("/admin") ||
@@ -101,10 +119,15 @@ const Footer = () => {
             <div className="gap-[10px] flex">
               <input
                 placeholder="Work Email Address"
-                type="text"
-                className="border border-[#091948] bg-white text-sm rounded-lg px-[10px] lg:px-[18px] py-1.5 lg:py-[12px]"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="border border-[#091948] bg-white text-sm text-black rounded-lg px-[10px] lg:px-[18px] py-1.5 lg:py-[12px] flex-1"
               />
-              <button className="bg-[#C1EBE7] px-[10px] lg:px-[18px] py-1.5 lg:py-[12px] rounded-lg drop-shadow-md shadow-[#A4ACB9] font-graphik text-sm text-[#393939]">
+              <button
+                onClick={handleSubscribe}
+                className="bg-[#C1EBE7] px-[10px] lg:px-[18px] py-1.5 lg:py-[12px] rounded-lg drop-shadow-md shadow-[#A4ACB9] font-graphik text-sm text-[#393939] hover:bg-[#A4D3CF] transition-colors duration-200"
+              >
                 Subscribe
               </button>
             </div>
@@ -117,10 +140,15 @@ const Footer = () => {
             <div className="gap-[10px] flex">
               <input
                 placeholder="Work Email Address"
-                type="text"
-                className="border border-[#091948] bg-white text-sm rounded-lg px-[10px] lg:px-[18px] py-1.5 lg:py-[12px]"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="border border-[#091948] bg-white text-sm text-black rounded-lg px-[10px] lg:px-[18px] py-1.5 lg:py-[12px] flex-1"
               />
-              <button className="bg-[#C1EBE7] px-[10px] lg:px-[18px] py-1.5 lg:py-[12px] rounded-lg drop-shadow-md shadow-[#A4ACB9] font-graphik text-sm text-[#393939]">
+              <button
+                onClick={handleSubscribe}
+                className="bg-[#C1EBE7] px-[10px] lg:px-[18px] py-1.5 lg:py-[12px] rounded-lg drop-shadow-md shadow-[#A4ACB9] font-graphik text-sm text-[#393939] hover:bg-[#A4D3CF] transition-colors duration-200"
+              >
                 Subscribe
               </button>
             </div>
