@@ -150,10 +150,9 @@ const Navbar = () => {
   return (
     <div className="w-full relative xl:block ">
       <div
-        className={`w-full h-[65px] fixed top-0 shadow-lg  ${
-          scrolled ? "bg-white shadow-[#8cdcdd]/30" : ""
-        } backdrop-blur-md z-50`}
-        onMouseLeave={() => {}}
+        className={`w-full h-[65px] fixed top-0 shadow-lg  ${scrolled ? "bg-white shadow-[#8cdcdd]/30" : ""
+          } backdrop-blur-md z-50`}
+        onMouseLeave={() => { }}
       >
         <div className="w-[90%] lg:w-[80%] h-full flex flex-row items-center justify-between m-auto">
           <a
@@ -231,7 +230,7 @@ const Navbar = () => {
               Industries
             </a>
             <a
-              href="/#projects"
+              href="/projects"
               className="cursor-pointer hover:opacity-70  hidden lg:block"
             >
               Projects
@@ -329,7 +328,7 @@ const Navbar = () => {
                   </Menu>
                 </MenuItem>
                 <MenuItem>
-                  <a href="/#projects">Projects</a>
+                  <a href="/projects">Projects</a>
                 </MenuItem>
                 {/* <MenuItem><a href="/">Products</a></MenuItem> */}
                 <MenuItem>
@@ -347,7 +346,7 @@ const Navbar = () => {
           </div>
 
 
-            <div
+          <div
             className="w-auto cursor-pointer text-left relative"
             onClick={() => setprofileopen(!profileopen)}
             onAbort={() => setprofileopen(false)}
@@ -389,34 +388,34 @@ const Navbar = () => {
               >
                 {
                   context.user &&
-                    !context.loading &&
-                    context.user?.role === "admin" && (
-                      // <Link href="/admin">
-                      <p
-                        className="text-nowrap flex gap-3"
-                        onClick={() => {
-                          router.push("/admin/dashboard");
-                        }}
-                      >
-                        <Crown /> Admin Dashboard
-                      </p>
-                    )
+                  !context.loading &&
+                  context.user?.role === "admin" && (
+                    // <Link href="/admin">
+                    <p
+                      className="text-nowrap flex gap-3"
+                      onClick={() => {
+                        router.push("/admin/dashboard");
+                      }}
+                    >
+                      <Crown /> Admin Dashboard
+                    </p>
+                  )
                   // </Link>
                 }
                 {
                   context.user &&
-                    !context.loading &&
-                    context.user?.role === "user" && (
-                      // <Link href="/admin">
-                      <p
-                        className="text-nowrap flex gap-3"
-                        onClick={() => {
-                          router.push("/customer");
-                        }}
-                      >
-                        <User /> Customer Dashboard
-                      </p>
-                    )
+                  !context.loading &&
+                  context.user?.role === "user" && (
+                    // <Link href="/admin">
+                    <p
+                      className="text-nowrap flex gap-3"
+                      onClick={() => {
+                        router.push("/customer");
+                      }}
+                    >
+                      <User /> Customer Dashboard
+                    </p>
+                  )
                   // </Link>
                 }
                 <p
@@ -431,9 +430,8 @@ const Navbar = () => {
         </div>
       </div>
       <div
-        className={`w-[30%] max-w-[455px] min-h-screen max-h-screen fixed z-40 mt-[65px] overflow-y-auto bg-white boder-l-[1px] border-[#446E6D] ${
-          animated ? "flex" : "hidden"
-        }`}
+        className={`w-[30%] max-w-[455px] min-h-screen max-h-screen fixed z-40 mt-[65px] overflow-y-auto bg-white boder-l-[1px] border-[#446E6D] ${animated ? "flex" : "hidden"
+          }`}
         style={{ animation: `${animated} 0.5s ease-in-out forwards` }}
         onMouseEnter={() => {
           if (clicked) {

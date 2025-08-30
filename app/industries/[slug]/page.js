@@ -40,7 +40,7 @@ export default async function Page({params}) {
       notFound();
     }
 
-    if(true){
+    if(slug){
         return <Content industry={industry} />;
 
     }else{
