@@ -14,8 +14,8 @@ export const dynamic = 'force-dynamic';
 
 function BlogPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const categoryParam = searchParams.get('category');
+  const searchParams: any = useSearchParams();
+  const categoryParam: any = searchParams.get('category');
 
   const {
     blogData,
@@ -118,7 +118,7 @@ function BlogPageContent() {
                             </span>
                             <span className="flex items-center gap-1">
                               <AccessTimeIcon />
-                              {getReadingTime(post.description, post.points)}
+                              {getReadingTime(post.description, post.contents)}
                             </span>
                           </div>
 
@@ -259,7 +259,7 @@ function BlogPageContent() {
                               </span>
                               <span className="flex items-center gap-1">
                                 <AccessTimeIcon />
-                                {getReadingTime(post.description, post.points)}
+                                {getReadingTime(post.description, post.contents)}
                               </span>
                             </div>
 

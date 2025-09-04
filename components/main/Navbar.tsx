@@ -54,7 +54,7 @@ const Navbar = () => {
   const [profileopen, setprofileopen] = useState(false);
   const context = useContext(MyContext);
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname:any = usePathname();
 
   const handleOpen = (event: any) => {
     setAnchorEl(event.currentTarget);

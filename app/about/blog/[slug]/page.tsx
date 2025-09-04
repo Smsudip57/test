@@ -9,37 +9,25 @@ import { motion } from 'framer-motion';
 import { useBlog } from '../layout';
 import axios from 'axios';
 
-interface Bullet {
-    style: "number" | "dot" | "roman";
-    content: string;
-}
-
-interface Point {
-    title: string;
-    explanationType: 'article' | 'bullets';
-    article?: string;
-    explanation?: string;
-    bullets?: Bullet[];
-    image?: string | null;
-}
-
 interface BlogPost {
     _id: string;
     type: string;
     image: string;
     title: string;
     description: string;
-    points: Point[];
+    contents: string;
     createdAt: string;
-    relatedService?: string;
-    relatedIndustries?: string;
+    relatedServices?: string[];
+    relatedIndustries?: string[];
+    relatedProducts?: string[];
+    relatedChikfdServices?: string[];
     slug?: string;
 }
 
 export default function BlogPostPage() {
     const router = useRouter();
     const params = useParams();
-    const slug = params.slug as string;
+    const slug = params?.slug as string;
 
     const { formatDate, getReadingTime } = useBlog();
 
@@ -69,35 +57,6 @@ export default function BlogPostPage() {
             fetchBlog();
         }
     }, [slug]);
-
-    // Helper function to render bullet points with proper styling
-    const renderBullets = (bullets: Bullet[]) => {
-        return (
-            <ul className="space-y-2 mt-3 ml-6">
-                {bullets.map((bullet, idx) => {
-                    if (bullet.style === "number") {
-                        return (
-                            <li key={idx} className="list-decimal">
-                                {bullet.content}
-                            </li>
-                        );
-                    } else if (bullet.style === "roman") {
-                        return (
-                            <li key={idx} className="list-[lower-roman]">
-                                {bullet.content}
-                            </li>
-                        );
-                    } else {
-                        return (
-                            <li key={idx} className="list-disc">
-                                {bullet.content}
-                            </li>
-                        );
-                    }
-                })}
-            </ul>
-        );
-    };
 
     if (loading) {
         return (
@@ -166,7 +125,7 @@ export default function BlogPostPage() {
                     </span>
                     <span className="flex items-center gap-1">
                         <AccessTimeIcon />
-                        {getReadingTime(blog.description, blog.points)}
+                        {getReadingTime(blog.description, blog.contents)}
                     </span>
                 </div>
 
@@ -179,33 +138,11 @@ export default function BlogPostPage() {
                         {blog.description}
                     </p>
 
-                    <div className="space-y-10 mt-10">
-                        {blog.points.map((point, index) => (
-                            <div key={index} className="bg-gray-50 p-6 rounded-lg border-l-4 border-[#446E6D]">
-                                <h2 className="text-xl font-bold text-gray-800 mb-4">
-                                    {index + 1}. {point.title}
-                                </h2>
-
-                                {point.image && (
-                                    <div className="mb-4 mt-2">
-                                        <img
-                                            src={point.image}
-                                            alt={`Illustration for ${point.title}`}
-                                            className="rounded-lg w-full max-h-80 object-contain"
-                                        />
-                                    </div>
-                                )}
-
-                                {point.explanationType === 'article' ? (
-                                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                                        {point?.article ? point.article : point?.explanation}
-                                    </p>
-                                ) : (
-                                    renderBullets(point.bullets || [])
-                                )}
-                            </div>
-                        ))}
-                    </div>
+                    {/* Render HTML contents */}
+                    <div
+                        className="mt-10 blog-content"
+                        dangerouslySetInnerHTML={{ __html: blog.contents }}
+                    />
                 </div>
 
                 <div className="mt-10 pt-6 border-t border-gray-200">

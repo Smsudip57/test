@@ -8,30 +8,18 @@ import { motion } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import axios from 'axios';
 
-interface Bullet {
-    style: "number" | "dot" | "roman";
-    content: string;
-}
-
-interface Point {
-    title: string;
-    explanationType: 'article' | 'bullets';
-    article?: string;
-    explanation?: string;
-    bullets?: Bullet[];
-    image?: string | null;
-}
-
 interface BlogPost {
     _id: string;
     type: string;
     image: string;
     title: string;
     description: string;
-    points: Point[];
+    contents: string;
     createdAt: string;
-    relatedService?: string;
-    relatedIndustries?: string;
+    relatedServices?: string[];
+    relatedIndustries?: string[];
+    relatedProducts?: string[];
+    relatedChikfdServices?: string[];
     slug?: string;
 }
 
@@ -48,7 +36,7 @@ interface BlogContextType {
     searchResults: BlogPost[];
     getRecentPosts: () => BlogPost[];
     formatDate: (dateString: string) => string;
-    getReadingTime: (content: string, points: Point[]) => string;
+    getReadingTime: (description: string, contents: string) => string;
 }
 
 const BlogContext = createContext<BlogContextType | undefined>(undefined);
@@ -106,19 +94,16 @@ export default function BlogLayout({
         return new Date(dateString).toLocaleDateString('en-GB', options);
     };
 
-    const getReadingTime = (content: string, points: Point[]) => {
-        const wordsPerMinute = 200;
-        let totalWordCount = content.trim().split(/\s+/).length;
+    const getReadingTime = (description: string, contents: string) => {
+        const wordsPerMinute = 100;
 
-        points.forEach(point => {
-            if (point.explanationType === 'article' && point.article) {
-                totalWordCount += point.article.trim().split(/\s+/).length;
-            } else if (point.explanationType === 'bullets' && point.bullets) {
-                point.bullets.forEach(bullet => {
-                    totalWordCount += bullet.content.trim().split(/\s+/).length;
-                });
-            }
-        });
+        const descriptionText = description || '';
+        let totalWordCount = descriptionText.trim().split(/\s+/).filter(word => word.length > 0).length;
+
+        const contentsText = (contents && typeof contents === 'string')
+            ? contents.replace(/<[^>]*>/g, ' ').trim()
+            : '';
+        totalWordCount += contentsText.split(/\s+/).filter(word => word.length > 0).length;
 
         const readingTime = Math.ceil(totalWordCount / wordsPerMinute);
         return `${readingTime} min read`;

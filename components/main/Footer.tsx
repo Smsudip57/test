@@ -5,7 +5,7 @@ import path from "path";
 import { MyContext } from "@/context/context";
 
 const Footer = () => {
-  const pathname = usePathname();
+  const pathname:any = usePathname();
   const router = useRouter();
   const context = React.useContext(MyContext);
   const { customToast } = useContext(MyContext);

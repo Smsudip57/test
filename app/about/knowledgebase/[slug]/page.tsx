@@ -9,34 +9,18 @@ import { motion } from 'framer-motion';
 import { useKnowledgebase } from '../layout';
 import axios from 'axios';
 
-// Type definitions matching the knowledgebase schema
-interface Bullet {
-    style: "number" | "dot" | "roman";
-    content: string;
-}
-
-interface MainSection {
-    title: string;
-    explanationType: "article" | "bullets";
-    article?: string;
-    bullets?: Bullet[];
-    image?: string;
-}
-
+// Type definitions matching the simplified knowledgebase schema
 interface KnowledgebaseArticle {
     _id: string;
     title: string;
-    Image?: string;
+    Image: string;
     introduction: string;
-    mainSections: MainSection[];
-    conclusion: string;
+    contents: string;
     tags: string[];
-    relatedServices: Array<{
-        _id: string;
-        Title: string;
-        [key: string]: any;
-    }>;
-    relatedIndustries: Array<{ _id: string; title: string;[key: string]: any }>;
+    relatedServices?: string[];
+    relatedIndustries?: string[];
+    relatedProducts?: string[];
+    relatedChikfdServices?: string[];
     status: "draft" | "published" | "archived";
     createdAt: string;
     updatedAt: string;
@@ -46,9 +30,9 @@ interface KnowledgebaseArticle {
 export default function KnowledgebaseArticlePage() {
     const router = useRouter();
     const params = useParams();
-    const slug = params.slug as string;
+    const slug = params?.slug as string;
 
-    const { formatDate, getReadingTime, renderBulletPoints } = useKnowledgebase();
+    const { formatDate, getReadingTime } = useKnowledgebase();
 
     const [article, setArticle] = useState<KnowledgebaseArticle | null>(null);
     const [loading, setLoading] = useState(true);
@@ -151,7 +135,7 @@ export default function KnowledgebaseArticlePage() {
                     </span>
                     <span className="flex items-center gap-1">
                         <AccessTimeIcon />
-                        {getReadingTime(article.introduction, article.mainSections)}
+                        {getReadingTime(article.introduction, article.contents)}
                     </span>
                 </div>
 
@@ -178,46 +162,11 @@ export default function KnowledgebaseArticlePage() {
                         {article.introduction}
                     </p>
 
-                    {/* Main Sections */}
-                    <div className="space-y-10 mt-10">
-                        {article.mainSections.map((section, index) => (
-                            <div key={index} className="bg-gray-50 p-6 rounded-lg border-l-4 border-[#446E6D]">
-                                <h2 className="text-xl font-bold text-gray-800 mb-4">
-                                    {index + 1}. {section.title}
-                                </h2>
-
-                                {section.image && (
-                                    <div className="mb-4 mt-2">
-                                        <img
-                                            src={section.image}
-                                            alt={`Illustration for ${section.title}`}
-                                            className="rounded-lg w-full max-h-80 object-contain"
-                                        />
-                                    </div>
-                                )}
-
-                                {section.explanationType === 'article' ? (
-                                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                                        {section.article}
-                                    </p>
-                                ) : (
-                                    renderBulletPoints(section.bullets || [])
-                                )}
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Conclusion */}
-                    {article.conclusion && (
-                        <div className="bg-gray-50 p-6 rounded-lg border-l-4 border-[#446E6D] mt-10">
-                            <h2 className="text-xl font-bold text-gray-800 mb-4">
-                                Conclusion
-                            </h2>
-                            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                                {article.conclusion}
-                            </p>
-                        </div>
-                    )}
+                    {/* Main Contents */}
+                    <div
+                        className="mt-10 blog-content"
+                        dangerouslySetInnerHTML={{ __html: article.contents }}
+                    />
                 </div>
 
                 <div className="mt-10 pt-6 border-t border-gray-200">

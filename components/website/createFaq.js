@@ -5,22 +5,20 @@ import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Box, TextField, Button, Typography, Paper, IconButton,
-  FormControl, InputLabel, Select, MenuItem, CircularProgress,
-  Checkbox, ListItemText, Chip, OutlinedInput, Divider,
-  Card, CardContent, Tooltip, Fade, alpha
+  CircularProgress, Divider, Card, CardContent, Tooltip, Fade, alpha
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TitleIcon from '@mui/icons-material/Title';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import LinkIcon from '@mui/icons-material/Link';
 import SaveIcon from '@mui/icons-material/Save';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import CategoryIcon from '@mui/icons-material/Category';
 import BusinessIcon from '@mui/icons-material/Business';
+import RelatedItemsSelector from './RelatedItemsSelector';
 
 // Theme colors
 const themeColors = {
@@ -82,85 +80,25 @@ export default function CreateFaq() {
     relatedChikfdServices: [] // Already an array
   });
 
-  // Data lists
-  const [services, setServices] = useState([]);
-  const [industries, setIndustries] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [childServices, setChildServices] = useState([]);
-
   // Loading and submission states
-  const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // Fetch data on component mount
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        // Fetch services
-        const servicesRes = await axios.get('/api/service/getservice', {
-          withCredentials: true
-        });
-        if (servicesRes.data.success) {
-          setServices(servicesRes.data.services || []);
-        }
+  // Fetch data on component mount - removed since RelatedItemsSelector handles this
+  // useEffect(() => {
+  //   // Data fetching moved to RelatedItemsSelector component
+  // }, []);
 
-        // Fetch industries
-        const industriesRes = await axios.get('/api/industry/get', {
-          withCredentials: true
-        });
-        if (industriesRes.data.success) {
-          setIndustries(industriesRes.data.industries || []);
-        }
-
-        // Fetch products
-        const productsRes = await axios.get('/api/product/get', {
-          withCredentials: true
-        });
-        if (productsRes.data.success) {
-          setProducts(productsRes.data.products || []);
-        }
-
-        // Fetch child services
-        const childServicesRes = await axios.get('/api/child/get', {
-          withCredentials: true
-        });
-        if (childServicesRes.data.success) {
-          setChildServices(childServicesRes.data.products || []);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        toast.error("Failed to load reference data");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // All inputs now use handleMultiSelectChange since all related fields are arrays
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    
-    // For relatedServices and relatedIndustries, we need special handling 
-    // since they've changed from single values to arrays
-    if (name === 'relatedServices' || name === 'relatedIndustries') {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value ? [value] : [] // Convert single value to array
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
+  // Handle related items changes from RelatedItemsSelector
+  const handleRelatedItemsChange = (relatedItemsData) => {
+    setFormData(prev => ({
+      ...prev,
+      ...relatedItemsData
+    }));
   };
 
-  // Handle multi-select changes
-  const handleMultiSelectChange = (e) => {
+  // Handle regular input changes
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -261,42 +199,25 @@ export default function CreateFaq() {
     setSuccess(false);
   };
 
-  if (loading) {
-    return (
-      <Box sx={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        height: '400px' 
-      }}>
-        <CircularProgress sx={{ color: themeColors.primary }} size={60} thickness={4} />
-        <Typography variant="h6" sx={{ mt: 3, color: 'text.secondary' }}>
-          Loading resources...
-        </Typography>
-      </Box>
-    );
-  }
-
   if (success) {
     return (
-      <Paper 
+      <Paper
         component={motion.div}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        elevation={3} 
-        sx={{ 
-          p: 5, 
-          maxWidth: 900, 
-          mx: 'auto', 
+        elevation={3}
+        sx={{
+          p: 5,
+          maxWidth: 900,
+          mx: 'auto',
           mt: 4,
           textAlign: 'center',
           borderRadius: 2
         }}
       >
-        <CheckCircleOutlineIcon 
-          sx={{ fontSize: 80, mb: 2, color: themeColors.accent }} 
+        <CheckCircleOutlineIcon
+          sx={{ fontSize: 80, mb: 2, color: themeColors.accent }}
         />
         <Typography variant="h4" sx={{ mb: 2, color: themeColors.primary, fontWeight: 'bold' }}>
           FAQ Created Successfully!
@@ -310,7 +231,7 @@ export default function CreateFaq() {
             size="large"
             startIcon={<AddCircleOutlineIcon />}
             onClick={handleAddAnother}
-            sx={{ 
+            sx={{
               bgcolor: themeColors.primary,
               '&:hover': { bgcolor: themeColors.accent }
             }}
@@ -322,13 +243,13 @@ export default function CreateFaq() {
             size="large"
             startIcon={<ArrowBackIcon />}
             onClick={() => window.location.href = '/admin/faqs'}
-            sx={{ 
+            sx={{
               color: themeColors.primary,
               borderColor: themeColors.primary,
-              '&:hover': { 
+              '&:hover': {
                 borderColor: themeColors.accent,
                 color: themeColors.accent
-              } 
+              }
             }}
           >
             View All FAQs
@@ -339,23 +260,23 @@ export default function CreateFaq() {
   }
 
   return (
-    <Paper 
+    <Paper
       component={motion.div}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      elevation={3} 
-      sx={{ 
-        p: { xs: 3, md: 6 }, 
+      elevation={3}
+      sx={{
+        p: { xs: 3, md: 6 },
         borderRadius: 2,
         maxWidth: '1100px',
         mx: 'auto'
       }}
     >
-      <Typography 
-        variant="h4" 
-        sx={{ 
-          mb: 4, 
+      <Typography
+        variant="h4"
+        sx={{
+          mb: 4,
           fontWeight: 600,
           color: themeColors.primary,
           borderBottom: '2px solid',
@@ -374,7 +295,7 @@ export default function CreateFaq() {
             <TitleIcon />
             Basic Information
           </SectionTitle>
-          
+
           <TextField
             label="FAQ Title"
             name="title"
@@ -400,309 +321,17 @@ export default function CreateFaq() {
           />
         </Box>
 
-        {/* Related Items Section */}
-        <Box sx={{ mb: 5 }}>
-          <SectionTitle variant="h5" gutterBottom>
-            <LinkIcon />
-            Related Items
-          </SectionTitle>
-          
-          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3, mb: 3 }}>
-            {/* Related Services - Updated to multiple select */}
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="related-service-label" sx={{ 
-                '&.Mui-focused': { color: themeColors.primary } 
-              }}>
-                Related Services
-              </InputLabel>
-              <Select
-                labelId="related-service-label"
-                multiple
-                name="relatedServices"
-                value={formData.relatedServices}
-                onChange={handleMultiSelectChange}
-                input={
-                  <OutlinedInput 
-                    label="Related Services" 
-                    sx={{ 
-                      borderRadius: 1.5,
-                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: themeColors.primary,
-                      },
-                    }} 
-                  />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => {
-                      const service = services.find(s => s._id === value);
-                      return (
-                        <Chip 
-                          key={value} 
-                          label={service ? service.Title : value} 
-                          size="small"
-                          sx={{ 
-                            fontWeight: 500,
-                            backgroundColor: alpha(themeColors.primary, 0.1),
-                            '& .MuiChip-label': { color: themeColors.primary }
-                          }}
-                        />
-                      );
-                    })}
-                  </Box>
-                )}
-                MenuProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: 300
-                    }
-                  }
-                }}
-              >
-                {services.map((service) => (
-                  <MenuItem key={service._id} value={service._id}>
-                    <Checkbox 
-                      checked={formData.relatedServices.indexOf(service._id) > -1} 
-                      sx={{ 
-                        color: themeColors.primaryLight,
-                        '&.Mui-checked': {
-                          color: themeColors.primary,
-                        },
-                      }}
-                    />
-                    <ListItemText 
-                      primary={service.Title} 
-                      secondary={service.detail?.substring(0, 60) + (service.detail?.length > 60 ? '...' : '')}
-                      primaryTypographyProps={{ fontWeight: 500 }}
-                      secondaryTypographyProps={{ fontSize: '0.75rem' }}
-                    />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            {/* Related Industries - Updated to multiple select */}
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="related-industry-label" sx={{ 
-                '&.Mui-focused': { color: themeColors.primary } 
-              }}>
-                Related Industries
-              </InputLabel>
-              <Select
-                labelId="related-industry-label"
-                multiple
-                name="relatedIndustries"
-                value={formData.relatedIndustries}
-                onChange={handleMultiSelectChange}
-                input={
-                  <OutlinedInput 
-                    label="Related Industries" 
-                    sx={{ 
-                      borderRadius: 1.5,
-                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: themeColors.primary,
-                      },
-                    }} 
-                  />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => {
-                      const industry = industries.find(i => i._id === value);
-                      return (
-                        <Chip 
-                          key={value} 
-                          label={industry ? industry.Title : value} 
-                          size="small"
-                          sx={{ 
-                            fontWeight: 500,
-                            backgroundColor: alpha(themeColors.primaryDark, 0.1),
-                            '& .MuiChip-label': { color: themeColors.primaryDark }
-                          }}
-                        />
-                      );
-                    })}
-                  </Box>
-                )}
-                MenuProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: 300
-                    }
-                  }
-                }}
-              >
-                {industries.map((industry) => (
-                  <MenuItem key={industry._id} value={industry._id}>
-                    <Checkbox 
-                      checked={formData.relatedIndustries.indexOf(industry._id) > -1} 
-                      sx={{ 
-                        color: themeColors.primaryLight,
-                        '&.Mui-checked': {
-                          color: themeColors.primaryDark,
-                        },
-                      }}
-                    />
-                    <ListItemText 
-                      primary={industry.Title} 
-                      secondary={industry.detail?.substring(0, 60) + (industry.detail?.length > 60 ? '...' : '')}
-                      primaryTypographyProps={{ fontWeight: 500 }}
-                      secondaryTypographyProps={{ fontSize: '0.75rem' }}
-                    />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          
-          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
-            {/* Related Products Multi-Select - Already configured correctly */}
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="related-products-label" sx={{ 
-                '&.Mui-focused': { color: themeColors.primary } 
-              }}>
-                Related Products
-              </InputLabel>
-              <Select
-                labelId="related-products-label"
-                multiple
-                name="relatedProducts"
-                value={formData.relatedProducts}
-                onChange={handleMultiSelectChange}
-                input={
-                  <OutlinedInput 
-                    label="Related Products" 
-                    sx={{ 
-                      borderRadius: 1.5,
-                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: themeColors.primary,
-                      },
-                    }} 
-                  />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => {
-                      const product = products.find(p => p._id === value);
-                      return (
-                        <Chip 
-                          key={value} 
-                          label={product ? product.Title : value} 
-                          size="small"
-                          sx={{ 
-                            fontWeight: 500,
-                            backgroundColor: alpha(themeColors.primary, 0.1),
-                            '& .MuiChip-label': { color: themeColors.primary }
-                          }}
-                        />
-                      );
-                    })}
-                  </Box>
-                )}
-                MenuProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: 300
-                    }
-                  }
-                }}
-              >
-                {products.map((product) => (
-                  <MenuItem key={product._id} value={product._id}>
-                    <Checkbox 
-                      checked={formData.relatedProducts.indexOf(product._id) > -1} 
-                      sx={{ 
-                        color: themeColors.primaryLight,
-                        '&.Mui-checked': {
-                          color: themeColors.primary,
-                        },
-                      }}
-                    />
-                    <ListItemText 
-                      primary={product.Title} 
-                      secondary={product.detail?.substring(0, 60) + (product.detail?.length > 60 ? '...' : '')}
-                      primaryTypographyProps={{ fontWeight: 500 }}
-                      secondaryTypographyProps={{ fontSize: '0.75rem' }}
-                    />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            {/* Related Child Services Multi-Select - Already configured correctly */}
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="related-child-services-label" sx={{ 
-                '&.Mui-focused': { color: themeColors.primary } 
-              }}>
-                Related Child Services
-              </InputLabel>
-              <Select
-                labelId="related-child-services-label"
-                multiple
-                name="relatedChikfdServices"
-                value={formData.relatedChikfdServices}
-                onChange={handleMultiSelectChange}
-                input={
-                  <OutlinedInput 
-                    label="Related Child Services" 
-                    sx={{ 
-                      borderRadius: 1.5,
-                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: themeColors.primary,
-                      },
-                    }} 
-                  />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => {
-                      const service = childServices.find(s => s._id === value);
-                      return (
-                        <Chip 
-                          key={value} 
-                          label={service ? service.Title : value} 
-                          size="small"
-                          sx={{ 
-                            fontWeight: 500,
-                            backgroundColor: alpha(themeColors.accent, 0.1),
-                            '& .MuiChip-label': { color: themeColors.accent }
-                          }}
-                        />
-                      );
-                    })}
-                  </Box>
-                )}
-                MenuProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: 300
-                    }
-                  }
-                }}
-              >
-                {childServices.map((service) => (
-                  <MenuItem key={service._id} value={service._id}>
-                    <Checkbox 
-                      checked={formData.relatedChikfdServices.indexOf(service._id) > -1} 
-                      sx={{ 
-                        color: themeColors.primaryLight,
-                        '&.Mui-checked': {
-                          color: themeColors.accent,
-                        },
-                      }}
-                    />
-                    <ListItemText 
-                      primary={service.Title} 
-                      secondary={service.detail?.substring(0, 60) + (service.detail?.length > 60 ? '...' : '')}
-                      primaryTypographyProps={{ fontWeight: 500 }}
-                      secondaryTypographyProps={{ fontSize: '0.75rem' }}
-                    />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Box>
+        {/* Related Items Section - Now using separate component */}
+        <RelatedItemsSelector
+          value={{
+            relatedServices: formData.relatedServices,
+            relatedIndustries: formData.relatedIndustries,
+            relatedProducts: formData.relatedProducts,
+            relatedChikfdServices: formData.relatedChikfdServices
+          }}
+          onChange={handleRelatedItemsChange}
+          disabled={submitting}
+        />
 
         {/* Questions and Answers Section */}
         <Box sx={{ mb: 5 }}>
@@ -725,16 +354,16 @@ export default function CreateFaq() {
                 <QuestionNumberBadge>
                   {index + 1}
                 </QuestionNumberBadge>
-                
+
                 <CardContent sx={{ pt: 3 }}>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
                     justifyContent: 'space-between',
-                    mb: 2 
+                    mb: 2
                   }}>
-                    <Box sx={{ 
-                      display: 'flex', 
+                    <Box sx={{
+                      display: 'flex',
                       alignItems: 'center',
                       color: 'text.secondary'
                     }}>
@@ -743,16 +372,16 @@ export default function CreateFaq() {
                         Question {index + 1}
                       </Typography>
                     </Box>
-                    
+
                     <Tooltip title="Remove question" placement="top" TransitionComponent={Fade}>
                       <IconButton
                         color="error"
                         size="small"
                         onClick={() => removeQuestion(index)}
-                        sx={{ 
-                          '&:hover': { 
-                            backgroundColor: alpha('#f44336', 0.1) 
-                          } 
+                        sx={{
+                          '&:hover': {
+                            backgroundColor: alpha('#f44336', 0.1)
+                          }
                         }}
                       >
                         <DeleteOutlineIcon />
@@ -816,8 +445,8 @@ export default function CreateFaq() {
             variant="outlined"
             startIcon={<AddCircleOutlineIcon />}
             onClick={addQuestion}
-            sx={{ 
-              mt: 2, 
+            sx={{
+              mt: 2,
               borderRadius: 1.5,
               borderStyle: 'dashed',
               py: 1.5,
@@ -837,7 +466,7 @@ export default function CreateFaq() {
 
         {/* Submit Button */}
         <Divider sx={{ my: 4 }} />
-        
+
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button
             type="submit"
@@ -845,7 +474,7 @@ export default function CreateFaq() {
             disabled={submitting}
             startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
             size="large"
-            sx={{ 
+            sx={{
               bgcolor: themeColors.primary,
               '&:hover': { bgcolor: themeColors.accent },
               borderRadius: 1.5,

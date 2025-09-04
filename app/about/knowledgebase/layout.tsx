@@ -8,38 +8,23 @@ import { motion } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import axios from 'axios';
 
-// Type definitions matching the knowledgebase schema
-interface Bullet {
-    style: "number" | "dot" | "roman";
-    content: string;
-}
-
-interface MainSection {
-    title: string;
-    explanationType: "article" | "bullets";
-    article?: string;
-    bullets?: Bullet[];
-    image?: string;
-}
-
+// Type definitions matching the simplified knowledgebase schema
 interface KnowledgebaseArticle {
     _id: string;
     title: string;
     Image?: string;
     introduction: string;
-    mainSections: MainSection[];
-    conclusion: string;
+    contents: string;
     tags: string[];
-    relatedServices: Array<{
-        _id: string;
-        Title: string;
-        [key: string]: any;
-    }>;
-    relatedIndustries: Array<{ _id: string; title: string;[key: string]: any }>;
+    relatedServices?: string[] | { Title: string }[];
+    relatedIndustries?: string[];
+    relatedProducts?: string[];
+    relatedChikfdServices?: string[];
     status: "draft" | "published" | "archived";
     createdAt: string;
     updatedAt: string;
     slug?: string;
+    conclution?: string
 }
 
 interface CategoryWithArticles {
@@ -60,8 +45,7 @@ interface KnowledgebaseContextType {
     searchResults: KnowledgebaseArticle[];
     getRecentArticles: () => KnowledgebaseArticle[];
     formatDate: (dateString: string) => string;
-    getReadingTime: (content: string, sections: MainSection[]) => string;
-    renderBulletPoints: (bullets: Bullet[]) => JSX.Element;
+    getReadingTime: (introduction: string, contents: string) => string;
 }
 
 const KnowledgebaseContext = createContext<KnowledgebaseContextType | undefined>(undefined);
@@ -123,10 +107,10 @@ export default function KnowledgebaseLayout({
     const processKnowledgebaseData = (articles: KnowledgebaseArticle[]): CategoryWithArticles[] => {
         const categoryMap: Record<string, CategoryWithArticles> = {};
 
-        articles.forEach((article) => {
+        articles.forEach((article:any) => {
             let categoryName = "General";
             if (article.relatedServices && article.relatedServices.length > 0) {
-                categoryName = article.relatedServices[0].Title;
+                categoryName = article?.relatedServices[0]?.Title;
             }
 
             if (!categoryMap[categoryName]) {
@@ -148,68 +132,21 @@ export default function KnowledgebaseLayout({
         return new Date(dateString).toLocaleDateString('en-GB', options);
     };
 
-    const getReadingTime = (introduction: string, sections: MainSection[]) => {
+    const getReadingTime = (introduction: string, contents: string) => {
         const wordsPerMinute = 200;
-        let totalWordCount = introduction.trim().split(/\s+/).length;
 
-        sections.forEach(section => {
-            if (section.explanationType === 'article' && section.article) {
-                totalWordCount += section.article.trim().split(/\s+/).length;
-            } else if (section.explanationType === 'bullets' && section.bullets) {
-                section.bullets.forEach(bullet => {
-                    totalWordCount += bullet.content.trim().split(/\s+/).length;
-                });
-            }
-        });
+        // Count words in introduction (with fallback for undefined/null)
+        const introductionText = introduction || '';
+        let totalWordCount = introductionText.trim().split(/\s+/).filter(word => word.length > 0).length;
+
+        // Count words in contents (strip HTML tags for word counting)
+        const contentsText = (contents && typeof contents === 'string')
+            ? contents.replace(/<[^>]*>/g, ' ').trim()
+            : '';
+        totalWordCount += contentsText.split(/\s+/).filter(word => word.length > 0).length;
 
         const readingTime = Math.ceil(totalWordCount / wordsPerMinute);
         return `${readingTime} min read`;
-    };
-
-    const renderBulletPoints = (bullets: Bullet[]) => {
-        return (
-            <div className="space-y-2">
-                {bullets.map((bullet, idx) => {
-                    switch (bullet.style) {
-                        case "number":
-                            return (
-                                <div key={idx} className="flex items-start">
-                                    <span className="text-[#446E6D] font-semibold mr-3 mt-1 min-w-[1.5rem]">
-                                        {idx + 1}.
-                                    </span>
-                                    <span className="text-gray-700 leading-relaxed">
-                                        {bullet.content}
-                                    </span>
-                                </div>
-                            );
-                        case "roman":
-                            const romanNumerals = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x"];
-                            return (
-                                <div key={idx} className="flex items-start">
-                                    <span className="text-[#446E6D] font-semibold mr-3 mt-1 min-w-[1.5rem]">
-                                        {romanNumerals[idx] || `${idx + 1}.`}
-                                    </span>
-                                    <span className="text-gray-700 leading-relaxed">
-                                        {bullet.content}
-                                    </span>
-                                </div>
-                            );
-                        case "dot":
-                        default:
-                            return (
-                                <div key={idx} className="flex items-start">
-                                    <span className="text-[#446E6D] mr-3 mt-2 text-xl leading-none">
-                                        •
-                                    </span>
-                                    <span className="text-gray-700 leading-relaxed">
-                                        {bullet.content}
-                                    </span>
-                                </div>
-                            );
-                    }
-                })}
-            </div>
-        );
     };
 
     const handleSearch = (e?: React.FormEvent) => {
@@ -221,10 +158,10 @@ export default function KnowledgebaseLayout({
             return;
         }
 
-        const results = knowledgebaseData.filter(article =>
+        const results = knowledgebaseData.filter((article:any) =>
             article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             article.introduction.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            article.conclusion.toLowerCase().includes(searchQuery.toLowerCase())
+            article?.conclusion.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
         setSearchResults(results);
@@ -262,7 +199,6 @@ export default function KnowledgebaseLayout({
         getRecentArticles,
         formatDate,
         getReadingTime,
-        renderBulletPoints,
     };
 
     return (

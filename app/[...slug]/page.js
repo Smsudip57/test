@@ -193,6 +193,7 @@ export default async function Page({ params }) {
         };
       }
     }
+    // console.log(products)
     return currentMainService ? (
       <Content
         services={services}
