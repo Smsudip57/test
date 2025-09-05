@@ -55,13 +55,13 @@ const RELATION_CONFIG = {
     },
     products: {
         key: 'products',
-        label: 'Related Products',
+        label: 'Related Child Services',
         valueKey: 'relatedProducts',
         color: 'primary'
     },
     childServices: {
         key: 'childServices',
-        label: 'Related Child Services',
+        label: 'Related Products',
         valueKey: 'relatedChikfdServices',
         color: 'accent'
     },
