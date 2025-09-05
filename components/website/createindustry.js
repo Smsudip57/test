@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useRef, useContext } from "react";
 import axios from "axios";
 import {
   Upload,
@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { MyContext } from "@/context/context";
+import RelatedItemsSelector from "./RelatedItemsSelector";
 
 const CreateIndustry = () => {
   const [formData, setFormData] = useState({
@@ -21,7 +22,14 @@ const CreateIndustry = () => {
     Efficiency: 0,
     costSaving: 0,
     customerSatisfaction: 0,
-    relatedService: [],
+  });
+
+  const [relatedItems, setRelatedItems] = useState({
+    relatedServices: [],
+    relatedSuccessStory: [],
+    relatedProducts: [],
+    relatedChikfdServices: [],
+    relatedProjects: [],
   });
 
   const [image, setImage] = useState(null);
@@ -30,7 +38,6 @@ const CreateIndustry = () => {
   const [logoPreview, setLogoPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [services, setServices] = useState([]);
   const [success, setSuccess] = useState(false);
 
   const { customToast } = useContext(MyContext) || {
@@ -40,25 +47,9 @@ const CreateIndustry = () => {
   const imageInputRef = useRef(null);
   const logoInputRef = useRef(null);
 
-  // Fetch services on component mount
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
-  // Fetch services for the dropdown
-  const fetchServices = async () => {
-    try {
-      const res = await axios.get("/api/service/getservice");
-      if (res.data.success) {
-        setServices(res.data.services || []);
-      }
-    } catch (err) {
-      console.error("Error fetching services:", err);
-      customToast({
-        success: false,
-        message: "Failed to load services for selection",
-      });
-    }
+  // Handle related items changes
+  const handleRelatedItemsChange = (newRelatedItems) => {
+    setRelatedItems(newRelatedItems);
   };
 
   const handleInputChange = (e) => {
@@ -192,13 +183,13 @@ const CreateIndustry = () => {
 
     // Append all form fields
     Object.keys(formData).forEach((key) => {
-      if (key === "relatedService" && formData[key].length > 0) {
-        // Handle array of related services
-        formData[key].forEach((serviceId) => {
-          data.append("relatedService", serviceId);
-        });
-      } else {
-        data.append(key, formData[key]);
+      data.append(key, formData[key]);
+    });
+
+    // Append related items as JSON strings
+    Object.keys(relatedItems).forEach((key) => {
+      if (relatedItems[key] && relatedItems[key].length > 0) {
+        data.append(key, JSON.stringify(relatedItems[key]));
       }
     });
 
@@ -227,7 +218,14 @@ const CreateIndustry = () => {
           Efficiency: 0,
           costSaving: 0,
           customerSatisfaction: 0,
-          relatedService: [],
+        });
+
+        setRelatedItems({
+          relatedServices: [],
+          relatedSuccessStory: [],
+          relatedProducts: [],
+          relatedChikfdServices: [],
+          relatedProjects: [],
         });
 
         clearImage("image");
@@ -242,7 +240,7 @@ const CreateIndustry = () => {
       console.error("Error creating industry:", error);
       setError(
         error.response?.data?.message ||
-          "Failed to create industry. Please try again."
+        "Failed to create industry. Please try again."
       );
       customToast({
         success: false,
@@ -323,100 +321,15 @@ const CreateIndustry = () => {
               required
             ></textarea>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Related Services
-            </label>
-            <div className="mb-3">
-              {formData.relatedService.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {formData.relatedService.map((serviceId) => {
-                    const service = services.find((s) => s._id === serviceId);
-                    return (
-                      <span
-                        key={serviceId}
-                        className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-100 text-blue-800"
-                      >
-                        {service?.Title || "Service"}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setFormData((prev) => ({
-                              ...prev,
-                              relatedService: prev.relatedService.filter(
-                                (id) => id !== serviceId
-                              ),
-                            }));
-                          }}
-                          className="ml-2 inline-flex text-blue-500 hover:text-blue-700"
-                        >
-                          <X size={16} />
-                        </button>
-                      </span>
-                    );
-                  })}
-                </div>
-              )}
-              <div className="border border-gray-300 rounded-lg p-3 max-h-60 overflow-y-auto bg-white">
-                <div className="mb-2">
-                  <input
-                    type="text"
-                    placeholder="Search services..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                    onChange={(e) => {
-                      const searchTerm = e.target.value.toLowerCase();
-                      // You can implement service filtering here if needed
-                    }}
-                  />
-                </div>
-                <div className="space-y-2">
-                  {services.map((service) => (
-                    <div key={service._id} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id={`service-${service._id}`}
-                        checked={formData.relatedService.includes(service._id)}
-                        onChange={() => {
-                          setFormData((prev) => {
-                            if (prev.relatedService.includes(service._id)) {
-                              return {
-                                ...prev,
-                                relatedService: prev.relatedService.filter(
-                                  (id) => id !== service._id
-                                ),
-                              };
-                            } else {
-                              return {
-                                ...prev,
-                                relatedService: [
-                                  ...prev.relatedService,
-                                  service._id,
-                                ],
-                              };
-                            }
-                          });
-                        }}
-                        className="h-4 w-4 text-[#446E6D] border-gray-300 rounded focus:ring-[#446E6D]"
-                      />
-                      <label
-                        htmlFor={`service-${service._id}`}
-                        className="ml-2 block text-sm text-gray-700 cursor-pointer hover:text-[#446E6D]"
-                      >
-                        {service.Title}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 mt-1">
-              {formData.relatedService.length === 0
-                ? "No services selected"
-                : `${formData.relatedService.length} service${
-                    formData.relatedService.length > 1 ? "s" : ""
-                  } selected`}
-            </p>
-          </div>
+
+          {/* Related Items Selector */}
+          <RelatedItemsSelector
+            relations={['services', 'testimonials', 'products', 'childServices', 'projects']}
+            value={relatedItems}
+            onChange={handleRelatedItemsChange}
+            disabled={loading}
+            isMultiple={true}
+          />
         </div>
 
         {/* Right Column - Images and Metrics */}
@@ -581,11 +494,10 @@ const CreateIndustry = () => {
             disabled={loading}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`w-full py-3 px-4 rounded-lg text-white font-medium ${
-              loading
-                ? "bg-[#446E6D]/70 cursor-not-allowed"
-                : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
-            } shadow-md flex items-center justify-center`}
+            className={`w-full py-3 px-4 rounded-lg text-white font-medium ${loading
+              ? "bg-[#446E6D]/70 cursor-not-allowed"
+              : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
+              } shadow-md flex items-center justify-center`}
           >
             {loading ? (
               <>

@@ -22,11 +22,12 @@ interface Testimonial {
   relatedChild?: Object | null;
 }
 
-export default function CaseStudy({ parent, child, product, industry }: {
+export default function CaseStudy({ parent, child, product, data }: {
   parent?: any;
   child?: string;
   product?: string;
   industry?: string;
+  data?: Testimonial[];
 }) {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const swiperRef = useRef<any>(null);
@@ -35,13 +36,12 @@ export default function CaseStudy({ parent, child, product, industry }: {
     const fetchTestimonials = async () => {
       try {
         const res = await axios.get("/api/testimonial/get");
-        if (parent || child || product || industry) {
+        if (parent || child || product) {
           const filteredItems = res.data.testimonials.filter(
             (item: Testimonial) =>
               (parent && item.relatedService?._id === parent) ||
               (child && item.relatedProduct === child) ||
-              (product && item.relatedChild === product) ||
-              (industry && item.relatedIndustries === industry) 
+              (product && item.relatedChild === product)
           );
           setTestimonials(filteredItems);
         } else {
@@ -51,7 +51,11 @@ export default function CaseStudy({ parent, child, product, industry }: {
         console.error("Failed to fetch testimonials:", error);
       }
     };
-    fetchTestimonials();
+    if (data) {
+      setTestimonials(data)
+    } else {
+      fetchTestimonials();
+    }
   }, []);
 
   const handleVideoPlay = () => {

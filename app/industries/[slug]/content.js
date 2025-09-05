@@ -1,74 +1,37 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import CaseStudy from "@/components/main/CaseStudy";
 import BlogSection from "@/components/shaerd/Blog";
 import FaqSection from "@/components/shaerd/Faqs";
 import KnowledgeBase from "@/components/shaerd/Knowledgebase";
 import Showcase from "@/components/shaerd/industryshowcase";
+import Projects from "@/components/main/Projects";
 
-const service = [
-  {
-    Name: "Branding",
-    image: "/nextjs.jpg",
-    url: "/branding?search=webdev#details",
-  },
-  {
-    Name: "Branding",
-    image: "/expt.jpg",
-    url: "/branding?search=appdev#details",
-  },
-  {
-    Name: "Workfrom Anywhere",
-    image: "/m365.jpg",
-    url: "work-from-anywere?search=microsolft365#details",
-  },
-  {
-    Name: "Workfrom Anywhere",
-    image: "/micro-t.jpg",
-    url: "/work-from-anywere?search=windowsvirtualdesktop#details",
-  },
-  {
-    Name: "Modern Workplace",
-    image: "/newerp.jpg",
-    url: "/modern-workplace?search=erp#details",
-  },
-  {
-    Name: "Modern Workplace",
-    image: "/nnetwork.jpg",
-    url: "/modern-workplace?search=networksecurity#details",
-  },
-  {
-    Name: "Digital",
-    image: "/cctv.jpg",
-    url: "/digital?search=surveillancesystems#details",
-  },
-  {
-    Name: "Digital",
-    image: "/iot.jpg",
-    url: "/digital?search=iotsystems#details",
-  },
-  {
-    Name: "Endless Support",
-    image: "/consult.png",
-    url: "/endless-support#details",
-  },
-  {
-    Name: "Endless Support",
-    image: "/cs.jpg",
-    url: "/endless-support#details",
-  },
-];
 
 // Main Component (Default Export)
-export default function FacultyManagement({ industry }) {
-  const [services, setServices] = useState(industry?.relatedService);
+export default function FacultyManagement({ industry, services: allServices, products }) {
+  const [services, setServices] = useState();
   useEffect(() => {
-    if (industry?.relatedService) {
-      setServices({ services: industry?.relatedService });
+    if (industry?.relatedChikfdServices) {
+      const relatedChildList = industry?.relatedChikfdServices.map((item) => {
+        const categoryIds = item?.category;
+        const targetProductsCat = products?.find((product) =>
+          categoryIds.toString() === product?._id.toString()
+        )?.category;
+        const targetService = allServices?.find((service) =>
+          targetProductsCat.toString() === service?._id.toString()
+        );
+        return {
+          ...item,
+          parentService: targetService,
+        }
+      });
+      setServices(relatedChildList);
+
     }
   }, [industry]);
+
   return (
     <div className="w-full h-full pt-[65px] lg:pt-0 relative z-20">
       <div className="w-full lg:w-4/5 mx-auto min-h-screen">
@@ -173,16 +136,23 @@ export default function FacultyManagement({ industry }) {
       </div>
       <div className="w-full  min-h-screen flex justify-center items-center">
         <div className="w-[90%]  mx-auto">
-          {industry?.relatedService &&
-            Array.isArray(industry?.relatedService) && (
-              <Showcase service={industry?.relatedService} />
+          {industry?.relatedChikfdServices?.length > 0 &&
+            Array.isArray(industry?.relatedChikfdServices) && (
+              <Showcase service={services} />
             )}
         </div>
       </div>
-      <div className="w-[90%] mx-auto lg:w-full">
-        <CaseStudy industry={industry?._id} />
-      </div>
-
+      {
+        industry?.relatedProjects?.length > 0
+        &&
+        <Projects projects={industry?.relatedProjects} title={"Impactfull Projects"} />
+      }
+      {industry?.relatedSuccessStory?.length > 0
+        &&
+        <div className="w-[90%] mx-auto lg:w-full">
+          <CaseStudy data={industry?.relatedSuccessStory} />
+        </div>
+      }
       {/* Blog Section Component */}
       <div className="mx-auto min-h-screen flex justify-center items-center">
         <BlogSection industry={industry?._id} />

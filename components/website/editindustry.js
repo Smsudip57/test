@@ -14,6 +14,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { MyContext } from "@/context/context";
+import RelatedItemsSelector from "./RelatedItemsSelector";
 
 const EditIndustry = () => {
   const [industries, setIndustries] = useState([]);
@@ -27,7 +28,14 @@ const EditIndustry = () => {
     Efficiency: 0,
     costSaving: 0,
     customerSatisfaction: 0,
-    relatedService: [],
+  });
+
+  const [relatedItems, setRelatedItems] = useState({
+    relatedServices: [],
+    relatedSuccessStory: [],
+    relatedProducts: [],
+    relatedChikfdServices: [],
+    relatedProjects: [],
   });
 
   const [image, setImage] = useState(null);
@@ -37,7 +45,6 @@ const EditIndustry = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
-  const [services, setServices] = useState([]);
 
   const { customToast } = useContext(MyContext) || {
     customToast: (msg) => console.log(msg),
@@ -46,23 +53,16 @@ const EditIndustry = () => {
   const imageInputRef = useRef(null);
   const logoInputRef = useRef(null);
 
-  // Fetch industries and services on load
+  // Fetch industries on load
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [industriesRes, servicesRes] = await Promise.all([
-          axios.get("/api/industry/get"),
-          axios.get("/api/service/getservice"),
-        ]);
-
+        const industriesRes = await axios.get("/api/industry/get");
         setIndustries(industriesRes.data.industries || []);
         setFilteredIndustries(industriesRes.data.industries || []);
-        setServices(servicesRes.data.services || []);
       } catch (error) {
         console.error("Failed to fetch data:", error);
-        setError(
-          "Failed to load industries and services. Please refresh the page."
-        );
+        setError("Failed to load industries. Please refresh the page.");
         customToast({
           success: false,
           message: "Failed to load data",
@@ -99,16 +99,32 @@ const EditIndustry = () => {
       Efficiency: industry.Efficiency || 0,
       costSaving: industry.costSaving || 0,
       customerSatisfaction: industry.customerSatisfaction || 0,
-      relatedService: Array.isArray(industry.relatedService)
-        ? industry.relatedService.map((service) =>
-            typeof service === "object" ? service._id : service
-          )
-        : industry.relatedService
-        ? [
-            typeof industry.relatedService === "object"
-              ? industry.relatedService._id
-              : industry.relatedService,
-          ]
+    });    // Set related items from the industry data
+    setRelatedItems({
+      relatedServices: Array.isArray(industry.relatedServices)
+        ? industry.relatedServices.map((service) =>
+          typeof service === "object" ? service._id : service
+        )
+        : [],
+      relatedSuccessStory: Array.isArray(industry.relatedSuccessStory)
+        ? industry.relatedSuccessStory.map((story) =>
+          typeof story === "object" ? story._id : story
+        )
+        : [],
+      relatedProducts: Array.isArray(industry.relatedProducts)
+        ? industry.relatedProducts.map((product) =>
+          typeof product === "object" ? product._id : product
+        )
+        : [],
+      relatedChikfdServices: Array.isArray(industry.relatedChikfdServices)
+        ? industry.relatedChikfdServices.map((service) =>
+          typeof service === "object" ? service._id : service
+        )
+        : [],
+      relatedProjects: Array.isArray(industry.relatedProjects)
+        ? industry.relatedProjects.map((project) =>
+          typeof project === "object" ? project._id : project
+        )
         : [],
     });
 
@@ -119,6 +135,11 @@ const EditIndustry = () => {
     setLogo(null);
     setError("");
     setSuccess(false);
+  };
+
+  // Handle related items changes
+  const handleRelatedItemsChange = (newRelatedItems) => {
+    setRelatedItems(newRelatedItems);
   };
 
   // Handle input changes
@@ -137,18 +158,6 @@ const EditIndustry = () => {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-  };
-
-  // Handle service selection (multi-select)
-  const handleServiceSelection = (e) => {
-    const selectedOptions = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setFormData((prev) => ({
-      ...prev,
-      relatedService: selectedOptions,
-    }));
   };
 
   // Handle image changes with preview
@@ -265,12 +274,12 @@ const EditIndustry = () => {
     data.append("costSaving", formData.costSaving || 0);
     data.append("customerSatisfaction", formData.customerSatisfaction || 0);
 
-    // Append related services (can be multiple)
-    if (formData.relatedService && formData.relatedService.length > 0) {
-      formData.relatedService.forEach((serviceId) => {
-        data.append("relatedService", serviceId);
-      });
-    }
+    // Append related items as JSON strings
+    Object.keys(relatedItems).forEach((key) => {
+      if (relatedItems[key] && relatedItems[key].length > 0) {
+        data.append(key, JSON.stringify(relatedItems[key]));
+      }
+    });
 
     // Append files if they exist
     if (image) data.append("image", image);
@@ -419,104 +428,14 @@ const EditIndustry = () => {
                 ></textarea>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Related Services
-                </label>
-                <div className="mb-3">
-                  {formData.relatedService.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {formData.relatedService.map((serviceId) => {
-                        const service = services.find(
-                          (s) => s._id === serviceId
-                        );
-                        return (
-                          <span
-                            key={serviceId}
-                            className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-100 text-blue-800"
-                          >
-                            {service?.Title || "Service"}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  relatedService: prev.relatedService.filter(
-                                    (id) => id !== serviceId
-                                  ),
-                                }));
-                              }}
-                              className="ml-2 inline-flex text-blue-500 hover:text-blue-700"
-                            >
-                              <X size={16} />
-                            </button>
-                          </span>
-                        );
-                      })}
-                    </div>
-                  )}
-                  <div className="border border-gray-300 rounded-lg p-3 max-h-60 overflow-y-auto bg-white">
-                    <div className="mb-2">
-                      <input
-                        type="text"
-                        placeholder="Search services..."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                        onChange={(e) => {
-                          const searchTerm = e.target.value.toLowerCase();
-                          // You can implement service filtering here if needed
-                        }}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      {services.map((service) => (
-                        <div key={service._id} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            id={`service-${service._id}`}
-                            checked={formData.relatedService.includes(
-                              service._id
-                            )}
-                            onChange={() => {
-                              setFormData((prev) => {
-                                if (prev.relatedService.includes(service._id)) {
-                                  return {
-                                    ...prev,
-                                    relatedService: prev.relatedService.filter(
-                                      (id) => id !== service._id
-                                    ),
-                                  };
-                                } else {
-                                  return {
-                                    ...prev,
-                                    relatedService: [
-                                      ...prev.relatedService,
-                                      service._id,
-                                    ],
-                                  };
-                                }
-                              });
-                            }}
-                            className="h-4 w-4 text-[#446E6D] border-gray-300 rounded focus:ring-[#446E6D]"
-                          />
-                          <label
-                            htmlFor={`service-${service._id}`}
-                            className="ml-2 block text-sm text-gray-700 cursor-pointer hover:text-[#446E6D]"
-                          >
-                            {service.Title}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  {formData.relatedService.length === 0
-                    ? "No services selected"
-                    : `${formData.relatedService.length} service${
-                        formData.relatedService.length > 1 ? "s" : ""
-                      } selected`}
-                </p>
-              </div>
+              {/* Related Items Selector */}
+              <RelatedItemsSelector
+                relations={['services', 'testimonials', 'products', 'childServices', 'projects']}
+                value={relatedItems}
+                onChange={handleRelatedItemsChange}
+                disabled={loading}
+                isMultiple={true}
+              />
             </div>
 
             {/* Right Column - Images and Metrics */}
@@ -679,11 +598,10 @@ const EditIndustry = () => {
                 disabled={loading || success}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className={`w-full py-3 px-4 rounded-lg text-white font-medium ${
-                  loading || success
-                    ? "bg-[#446E6D]/70 cursor-not-allowed"
-                    : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
-                } shadow-md flex items-center justify-center`}
+                className={`w-full py-3 px-4 rounded-lg text-white font-medium ${loading || success
+                  ? "bg-[#446E6D]/70 cursor-not-allowed"
+                  : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
+                  } shadow-md flex items-center justify-center`}
               >
                 {loading ? (
                   <>

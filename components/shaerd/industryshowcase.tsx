@@ -36,83 +36,42 @@ interface WebmeProps {
 
 const Webme: React.FC<WebmeProps> = ({ service: apiservice }) => {
   const [active, setActive] = useState<string>("");
-  const [projects, setProjects] = useState<ProjectType[]>();
-  const [related, setRelated] = useState<EnhancedProjectType[]>();
 
-  useEffect(() => {
-    // Create abort controller
-    const controller = new AbortController();
-    const signal = controller.signal;
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.get("/api/project/get", {
-          signal: signal,
-        });
-        setProjects(response.data.data);
-      } catch (error: any) {
-        if (error.name !== "CanceledError") {
-          // Axios uses 'CanceledError' instead of 'AbortError'
-          console.error("Error fetching projects:", error);
-        }
-      }
-    };
+  // Extract unique parent services
+  const uniqueParentServices = apiservice
+    ?.map((item: any) => item?.parentService)
+    ?.filter((service, index, self) =>
+      service && self.findIndex(s => s?.Name === service?.Name || s?.Title === service?.Title) === index
+    ) || [];
 
-    fetchProjects();
-
-    return () => {
-      controller.abort();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!projects || !apiservice) return;
-
-    const relatedProjects = projects
-      .filter((project) => {
-        return apiservice.some(
-          (service) => service._id === project.relatedServices
-        );
-      })
-      .map((project) => {
-        const found = apiservice.find(
-          (service) => service._id === project.relatedServices
-        );
-        return {
-          ...project,
-          key: found?.Name ? found.Name : found?.Title,
-        } as EnhancedProjectType;
-      });
-
-    setRelated(relatedProjects);
-  }, [projects, apiservice]);
 
   // Reorder list: bring related items to the top
-  const sortedServices = Array.isArray(related)
-    ? [...related].sort((a, b) => {
-        if (!active) return 0; // No sorting if no active hover
-        if (a.key === active && b.key !== active) return -1; // Move related items up
-        if (b.key === active && a.key !== active) return 1; // Move unrelated items down
-        return 0; // Keep original order for others
-      })
+  const sortedServices: any = Array.isArray(apiservice)
+    ? [...apiservice].sort((a: any, b: any) => {
+      if (!active) return 0; // No sorting if no active hover
+      if (a?.parentService?.Name === active && b?.parentService?.Name !== active) return -1; // Move related items up
+      if (b?.parentService?.Name === active && a?.parentService?.Name !== active) return 1; // Move unrelated items down
+      return 0; // Keep original order for others
+    })
     : [];
 
   return (
     <section
-      className=""
+      className="rounded-lg"
       style={{ backgroundColor: "rgba(231,247,246,1)" }}
       id="services"
     >
       {/* Navbar */}
       <div className="lg:w-full md:text-xl hidden lg:text-2xl text-[#282828] font-lora mb-10 font-extralight list-none lg:flex justify-evenly p-5 box-border uppercase cursor-pointer opacity-50 mt-6">
-        {apiservice?.map((item, index) => (
-          <React.Fragment key={item._id}>
+        {uniqueParentServices?.map((item, index) => (
+          <React.Fragment key={item?._id || index}>
             <li
               className="py-0 hover:opacity-60 text-nowrap"
               onClick={() => setActive(item?.Name ? item.Name : item.Title)}
             >
               {item?.Name ? item.Name : item.Title}
             </li>
-            {index !== apiservice.length - 1 && (
+            {index !== uniqueParentServices.length - 1 && (
               <li className="border-[1px] border-[#446E6D] opacity-50"></li>
             )}
           </React.Fragment>
@@ -124,14 +83,14 @@ const Webme: React.FC<WebmeProps> = ({ service: apiservice }) => {
         {/* Image Cards Grid */}
         <div className="flex flex-col justify-center sm:flex-wrap gap-4 lg:gap-5 sm:flex-row">
           <AnimatePresence>
-            {sortedServices.map((item, index) => (
+            {sortedServices.map((item: any, index:any) => (
               <motion.div
                 key={item.key + index}
                 layout // Enables smooth movement transition
                 initial={{ opacity: 1 }}
                 animate={{
-                  opacity: active === "" || active === item.key ? 1 : 0.1,
-                  scale: active === "" || active === item.key ? 1 : 0.95, // Fade unrelated items
+                  opacity: active === "" || active === item?.parentService?.Name ? 1 : 0.1,
+                  scale: active === "" || active === item?.parentService?.Name ? 1 : 0.95, // Fade unrelated items
                 }}
                 exit={{ opacity: 0 }}
                 transition={{
@@ -147,13 +106,12 @@ const Webme: React.FC<WebmeProps> = ({ service: apiservice }) => {
                 {item?.media?.type === "video" ? (
                   <div className="w-full aspect-video rounded-lg overflow-hidden cursor-pointer">
                     <a
-                      href={`/details/projects/${
-                        item?.slug ? item.slug : item.Title
-                      }`}
+                      href={`/details/projects/${item?.slug ? item.slug : item.Title
+                        }`}
                       className=""
                     >
                       <VideoPlayer
-                        src={item.media.url}
+                        src={item?.media?.url}
                         themeColor="#446E6D"
                         controls={true}
                       />
@@ -161,18 +119,16 @@ const Webme: React.FC<WebmeProps> = ({ service: apiservice }) => {
                   </div>
                 ) : (
                   <a
-                    href={`/details/projects/${
-                      item?.slug ? item.slug : item.Title
-                    }`}
+                    href={`/details/products/${item?.slug ? item.slug : item.Title
+                      }`}
                   >
                     <img
-                      src={item.media.url}
+                      src={item?.image}
                       alt={item.Title}
-                      className={`w-full p-1 rounded-md overflow-hidden aspect-[16/9] border-[1px] shadow-md shadow-slate-500 transition-all duration-300 ${
-                        active === item.key
+                      className={`w-full p-1 rounded-md overflow-hidden aspect-[16/9] border-[1px] shadow-md shadow-slate-500 transition-all duration-300 ${active === item.key
                           ? "bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1"
                           : "border-[#76b4b1d0]"
-                      }`}
+                        }`}
                     />
                   </a>
                 )}

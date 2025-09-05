@@ -4,7 +4,7 @@ import Link from "next/link";
 import axios from "axios";
 import VideoPlayer from "@/components/shaerd/Video";
 
-const Projects = ({ product = null, service = null, child = null, projects: projectsProp = null }) => {
+const Projects = ({ product = null, service = null, child = null, projects: projectsProp = null, title = null }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [empty, setEmpty] = useState(false);
@@ -207,7 +207,10 @@ const Projects = ({ product = null, service = null, child = null, projects: proj
       <section className="mt-16 sm:mt-[100px] px-4 sm:px-12 lg:px-[136px]">
         <div className="mx-auto mb-10 sm:mb-14 px-4 max-w-2xl text-center">
           <h1 className="font-lora text-2xl lg:text-4xl text-green-900 font-bold mb-6">
-            OUR PROJECTS
+            {
+              title ? title.toUpperCase() : "OUR PROJECTS"
+            }
+            
           </h1>
           <p className="text-[#393939] text-base lg:text-xl">
             Innovative Solutions Brought to Life

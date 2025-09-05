@@ -47,6 +47,12 @@ const RELATION_CONFIG = {
         valueKey: 'relatedIndustries',
         color: 'primaryDark'
     },
+    testimonials: {
+        key: 'testimonials',
+        label: 'Related Success Stories',
+        valueKey: 'relatedSuccessStory',
+        color: 'accent'
+    },
     products: {
         key: 'products',
         label: 'Related Products',
@@ -58,6 +64,12 @@ const RELATION_CONFIG = {
         label: 'Related Child Services',
         valueKey: 'relatedChikfdServices',
         color: 'accent'
+    },
+    projects: {
+        key: 'projects',
+        label: 'Related Projects',
+        valueKey: 'relatedProjects',
+        color: 'primaryDark'
     }
 };
 
@@ -66,7 +78,7 @@ export default function RelatedItemsSelector({
     value = {},
     onChange,
     disabled = false,
-    isMultiple = true 
+    isMultiple = true
 }) {
     // Dynamic data state based on relations
     const [data, setData] = useState({});
@@ -140,28 +152,43 @@ export default function RelatedItemsSelector({
             );
         }
 
-        return items.map((item) => (
-            <MenuItem key={item._id} value={item._id} sx={{ py: 0.5 }}>
-                {isMultiple && (
-                    <Checkbox
-                        size="small"
-                        checked={value[field]?.indexOf(item._id) > -1 || false}
-                        sx={{
-                            color: themeColors.primaryLight,
-                            '&.Mui-checked': {
-                                color: color,
-                            },
-                        }}
+        return items.map((item) => {
+            // Handle different field names for different item types
+            let primaryText, secondaryText;
+
+            if (item.Testimonial) {
+                // For testimonials
+                primaryText = `${item.postedBy || 'Unknown'} - ${item.role || 'Unknown Role'}`;
+                secondaryText = item.Testimonial?.substring(0, 50) + (item.Testimonial?.length > 50 ? '...' : '');
+            } else {
+                // For other items (services, products, industries, etc.)
+                primaryText = item.Title || item.title || 'Untitled';
+                secondaryText = (item.deltail || item.detail)?.substring(0, 50) + ((item.deltail || item.detail)?.length > 50 ? '...' : '');
+            }
+
+            return (
+                <MenuItem key={item._id} value={item._id} sx={{ py: 0.5 }}>
+                    {isMultiple && (
+                        <Checkbox
+                            size="small"
+                            checked={value[field]?.indexOf(item._id) > -1 || false}
+                            sx={{
+                                color: themeColors.primaryLight,
+                                '&.Mui-checked': {
+                                    color: color,
+                                },
+                            }}
+                        />
+                    )}
+                    <ListItemText
+                        primary={primaryText}
+                        secondary={secondaryText}
+                        primaryTypographyProps={{ fontWeight: 500, fontSize: '0.85rem' }}
+                        secondaryTypographyProps={{ fontSize: '0.7rem' }}
                     />
-                )}
-                <ListItemText
-                    primary={item.Title}
-                    secondary={(item?.deltail ? item?.deltail : item.detail)?.substring(0, 50) + (item.detail?.length > 50 ? '...' : '')}
-                    primaryTypographyProps={{ fontWeight: 500, fontSize: '0.85rem' }}
-                    secondaryTypographyProps={{ fontSize: '0.7rem' }}
-                />
-            </MenuItem>
-        ));
+                </MenuItem>
+            );
+        });
     };
 
     // Dynamic render function for chips (multi-select) or single value display
@@ -176,10 +203,22 @@ export default function RelatedItemsSelector({
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {selected.map((selectedId) => {
                         const item = items?.find(i => i._id === selectedId);
+                        let chipLabel = 'Loading...';
+
+                        if (item) {
+                            if (item.Testimonial) {
+                                // For testimonials
+                                chipLabel = `${item.postedBy || 'Unknown'}`;
+                            } else {
+                                // For other items
+                                chipLabel = item.Title || item.title || 'Untitled';
+                            }
+                        }
+
                         return (
                             <Chip
                                 key={selectedId}
-                                label={item ? item.Title : `Loading...`}
+                                label={chipLabel}
                                 size="small"
                                 sx={{
                                     fontWeight: 500,
@@ -205,9 +244,21 @@ export default function RelatedItemsSelector({
 
             // For single select, selected is the single ID value from the Select component
             const item = items?.find(i => i._id === selected);
+            let displayText = 'Loading...';
+
+            if (item) {
+                if (item.Testimonial) {
+                    // For testimonials
+                    displayText = `${item.postedBy || 'Unknown'} - ${item.role || 'Unknown Role'}`;
+                } else {
+                    // For other items
+                    displayText = item.Title || item.title || 'Untitled';
+                }
+            }
+
             return (
                 <Typography sx={{ fontSize: '0.85rem', fontWeight: 500 }}>
-                    {item ? item.Title : 'Loading...'}
+                    {displayText}
                 </Typography>
             );
         }
