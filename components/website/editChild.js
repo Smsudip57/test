@@ -33,7 +33,7 @@ import {
   Tag,
 } from "lucide-react";
 
-export default function EditChildServiceList() {
+export default function EditProductList() {
   const router = useRouter();
   const [childServices, setChildServices] = useState([]);
   const [filteredChildServices, setFilteredChildServices] = useState([]);
@@ -102,7 +102,7 @@ export default function EditChildServiceList() {
       .replace(/(^-|-$)/g, "");
   };
 
-  // Fetch child services and parent services
+  // Fetch products and parent services
   const fetchServicesData = async () => {
     try {
       setLoading(true);
@@ -116,7 +116,7 @@ export default function EditChildServiceList() {
       setChildServices(childResponse.data.products || []);
       setParentServices(parentResponse.data.products || []);
 
-      // If there's already a selected parent service, update the filtered child services
+      // If there's already a selected parent service, update the filtered products
       if (selectedParentService) {
         const filtered =
           childResponse.data.products?.filter(
@@ -134,14 +134,12 @@ export default function EditChildServiceList() {
 
   useEffect(() => {
     fetchServicesData();
-  }, []);
-
-  // Handle parent service selection change
+  }, []);    // Handle parent service selection change
   const handleParentServiceChange = useCallback(
     (serviceId) => {
       setSelectedParentService(serviceId);
 
-      // Filter child services based on the selected parent service's _id
+      // Filter products based on the selected parent service's _id
       const filtered = childServices.filter(
         (child) => child.category === serviceId
       );
@@ -162,7 +160,7 @@ export default function EditChildServiceList() {
 
     const term = searchTerm.toLowerCase().trim();
     if (!term) {
-      // If search term is empty, show all child services for the selected parent service
+      // If search term is empty, show all products for the selected parent service
       const filtered = childServices.filter(
         (child) => child.category === selectedParentService
       );
@@ -186,7 +184,7 @@ export default function EditChildServiceList() {
     setMainImagePreview(childService.image);
     setImagesToDelete([]);
 
-    // Transform the child service data to match our form structure
+    // Transform the product data to match our form structure
     setChildServiceData({
       Title: childService.Title,
       detail: childService.detail,
@@ -199,7 +197,7 @@ export default function EditChildServiceList() {
     });
   }, []);
 
-  // Handle input changes for main child service fields
+  // Handle input changes for main product fields
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setChildServiceData((prev) => ({ ...prev, [name]: value }));
@@ -421,19 +419,19 @@ export default function EditChildServiceList() {
 
   // Form validation - Updated to validate itemsTag as simple string
   const validateForm = useCallback(() => {
-    // Check main child service fields
+    // Check main product fields
     if (!childServiceData.Title || !childServiceData.Title.trim()) {
-      setError("Child service title is required");
+      setError("Product title is required");
       return false;
     }
 
     if (!childServiceData.detail || !childServiceData.detail.trim()) {
-      setError("Child service detail is required");
+      setError("Product detail is required");
       return false;
     }
 
     if (!childServiceData.moreDetail || !childServiceData.moreDetail.trim()) {
-      setError("Child service more detail is required");
+      setError("Product more detail is required");
       return false;
     }
 
@@ -524,7 +522,7 @@ export default function EditChildServiceList() {
     setError("");
   }, []);
 
-  // Save edited child service - Updated to include itemsTag as simple string
+  // Save edited product - Updated to include itemsTag as simple string
   const handleSave = useCallback(() => {
     const saveChildService = async () => {
       if (!validateForm()) {
@@ -537,7 +535,7 @@ export default function EditChildServiceList() {
         const formData = new FormData();
         formData.append("productId", editingChildService);
 
-        // Add basic child service fields
+        // Add basic product fields
         formData.append("Title", childServiceData.Title);
         formData.append("detail", childServiceData.detail);
         formData.append("moreDetail", childServiceData.moreDetail);
@@ -588,25 +586,25 @@ export default function EditChildServiceList() {
 
         customToast({
           success: true,
-          message: "Child service updated successfully!",
+          message: "Product updated successfully!",
         });
 
         // Refresh data and exit edit mode
         await fetchServicesData();
         cancelEdit();
       } catch (error) {
-        console.error("Error updating child service:", error);
+        console.error("Error updating product:", error);
         customToast({
           success: false,
           message:
-            error.response?.data?.message || "Failed to update child service",
+            error.response?.data?.message || "Failed to update product",
         });
       } finally {
         setSaving(false);
       }
     };
 
-    setShowConfirm("Are you sure you want to update this child service?");
+    setShowConfirm("Are you sure you want to update this product?");
     setConfirmFunction(() => saveChildService);
   }, [
     editingChildService,
@@ -627,7 +625,7 @@ export default function EditChildServiceList() {
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-xl shadow-md">
             <h1 className="text-2xl font-bold mb-6 text-gray-800">
-              Edit Child Services
+              Edit Products
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -668,7 +666,7 @@ export default function EditChildServiceList() {
               {/* Search */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Search Child Services
+                  Search Products
                 </label>
                 <div className="flex">
                   <input
@@ -707,7 +705,7 @@ export default function EditChildServiceList() {
             <div className="bg-white p-6 rounded-xl shadow-md">
               <h2 className="text-lg font-semibold mb-4 flex items-center">
                 <Filter size={18} className="mr-2 text-[#446E6D]" />
-                Child Services ({filteredChildServices.length})
+                Products ({filteredChildServices.length})
               </h2>
               <div className="divide-y divide-gray-200">
                 {filteredChildServices.map((childService) => (
@@ -745,14 +743,14 @@ export default function EditChildServiceList() {
                         {parentServices.find(
                           (s) => s._id === childService.category
                         ) && (
-                          <span className="text-xs bg-gray-100 text-gray-700 rounded-full px-2 py-0.5">
-                            {
-                              parentServices.find(
-                                (s) => s._id === childService.category
-                              ).Title
-                            }
-                          </span>
-                        )}
+                            <span className="text-xs bg-gray-100 text-gray-700 rounded-full px-2 py-0.5">
+                              {
+                                parentServices.find(
+                                  (s) => s._id === childService.category
+                                ).Title
+                              }
+                            </span>
+                          )}
                         {childService.slug && (
                           <span className="text-xs bg-gray-100 text-gray-700 rounded-full px-2 py-0.5 truncate max-w-[120px]">
                             {childService.slug}
@@ -784,7 +782,7 @@ export default function EditChildServiceList() {
                 <div className="flex items-center">
                   <Info size={24} className="text-[#446E6D] mr-3" />
                   <p className="text-[#446E6D]">
-                    No child services found for this parent service.
+                    No products found for this parent service.
                   </p>
                 </div>
               </div>
@@ -805,11 +803,11 @@ export default function EditChildServiceList() {
                   className="flex items-center text-gray-600 hover:text-[#446E6D] transition-colors"
                 >
                   <ChevronLeft size={20} className="mr-1" />
-                  <span>Back to Child Services</span>
+                  <span>Back to Products</span>
                 </button>
 
                 <h1 className="text-2xl font-bold text-center text-gray-800">
-                  Edit Child Service
+                  Edit Product
                 </h1>
 
                 <motion.button
@@ -817,11 +815,10 @@ export default function EditChildServiceList() {
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSave}
                   disabled={saving}
-                  className={`flex items-center px-4 py-2 rounded-lg ${
-                    saving
+                  className={`flex items-center px-4 py-2 rounded-lg ${saving
                       ? "bg-[#446E6D]/70"
                       : "bg-[#446E6D] hover:bg-[#375857]"
-                  } text-white transition-colors`}
+                    } text-white transition-colors`}
                 >
                   {saving ? (
                     <>
@@ -869,11 +866,11 @@ export default function EditChildServiceList() {
                 </div>
               )}
 
-              {/* Main child service info */}
+              {/* Main product info */}
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="p-6 border-b border-gray-200">
                   <h2 className="text-xl font-semibold text-gray-800">
-                    Basic Child Service Information
+                    Basic Product Information
                   </h2>
                 </div>
 
@@ -882,7 +879,7 @@ export default function EditChildServiceList() {
                     {/* Left column - Image */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Child Service Image*{" "}
+                        Product Image*{" "}
                         <span className="text-xs text-gray-500">
                           (16:9 ratio required)
                         </span>
@@ -902,7 +899,7 @@ export default function EditChildServiceList() {
                           <div className="relative rounded-lg overflow-hidden border border-gray-200">
                             <img
                               src={mainImagePreview}
-                              alt="Child service preview"
+                              alt="Product preview"
                               className="w-full h-64 object-cover"
                             />
                             <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
@@ -925,7 +922,7 @@ export default function EditChildServiceList() {
                               className="mx-auto text-gray-400 mb-2"
                             />
                             <p className="text-sm text-gray-500">
-                              Click to upload image (16:9 ratio)
+                              Click to upload product image (16:9 ratio)
                             </p>
                             <p className="text-xs text-gray-400 mt-1">
                               PNG, JPG, GIF or WEBP (max 10MB)
@@ -962,7 +959,7 @@ export default function EditChildServiceList() {
                           htmlFor="Title"
                           className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                          Child Service Title*
+                          Product Title*
                         </label>
                         <input
                           id="Title"
@@ -971,7 +968,7 @@ export default function EditChildServiceList() {
                           value={childServiceData.Title}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                          placeholder="Enter child service title"
+                          placeholder="Enter product title"
                         />
                       </div>
 
@@ -993,11 +990,11 @@ export default function EditChildServiceList() {
                           value={childServiceData.slug}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                          placeholder="child-service-name-example"
+                          placeholder="product-name-example"
                         />
                         <p className="mt-1 text-xs text-gray-500">
                           Only lowercase letters, numbers, and hyphens. Used in
-                          URLs: /child-service/
+                          URLs: /product/
                           {childServiceData.slug || "example-slug"}
                         </p>
                       </div>
@@ -1020,7 +1017,7 @@ export default function EditChildServiceList() {
                           placeholder="Enter item tag (e.g., web-design, mobile-app, branding)"
                         />
                         <p className="mt-1 text-xs text-gray-500">
-                          Enter a single tag that describes this child service
+                          Enter a single tag that describes this product
                         </p>
                       </div>
 
@@ -1038,7 +1035,7 @@ export default function EditChildServiceList() {
                           onChange={handleInputChange}
                           rows={2}
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                          placeholder="Brief description of the child service"
+                          placeholder="Brief description of the product"
                         />
                       </div>
 
@@ -1056,7 +1053,7 @@ export default function EditChildServiceList() {
                           onChange={handleInputChange}
                           rows={4}
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                          placeholder="Detailed description of the child service"
+                          placeholder="Detailed description of the product"
                         />
                       </div>
                     </div>
@@ -1071,7 +1068,7 @@ export default function EditChildServiceList() {
                     <span className="bg-[#446E6D]/10 text-[#446E6D] w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">
                       {childServiceData.sections.length}
                     </span>
-                    Child Service Sections
+                    Product Sections
                   </h2>
 
                   <motion.button
@@ -1158,11 +1155,10 @@ const SectionItem = React.memo(
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ type: "spring", stiffness: 300, damping: 25 }}
-        className={`relative rounded-xl ${
-          isDragging
+        className={`relative rounded-xl ${isDragging
             ? "border-2 border-[#446E6D] shadow-lg"
             : "border border-gray-200"
-        } bg-white shadow-sm overflow-hidden`}
+          } bg-white shadow-sm overflow-hidden`}
         style={{
           opacity: isDragging ? 0.7 : 1,
           transform: isDragging ? "scale(1.02)" : "scale(1)",

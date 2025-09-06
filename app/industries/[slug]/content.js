@@ -13,24 +13,35 @@ import Projects from "@/components/main/Projects";
 export default function FacultyManagement({ industry, services: allServices, products }) {
   const [services, setServices] = useState();
   useEffect(() => {
-    if (industry?.relatedChikfdServices) {
-      const relatedChildList = industry?.relatedChikfdServices.map((item) => {
-        const categoryIds = item?.category;
+    if (industry?.relatedChikfdServices && Array.isArray(industry.relatedChikfdServices) && allServices && products) {
+      const relatedChildList = industry.relatedChikfdServices.map((item) => {
+        if (!item?.category) return item;
+
+        const categoryIds = item.category;
         const targetProductsCat = products?.find((product) =>
-          categoryIds.toString() === product?._id.toString()
+          categoryIds?.toString() === product?._id?.toString()
         )?.category;
+
+        if (!targetProductsCat) return item;
+
         const targetService = allServices?.find((service) =>
-          targetProductsCat.toString() === service?._id.toString()
+          targetProductsCat?.toString() === service?._id?.toString()
         );
+
         return {
           ...item,
           parentService: targetService,
-        }
+        };
       });
-      setServices(relatedChildList);
 
+      // Remove duplicates based on _id
+      const uniqueServices = relatedChildList.filter((item, index, self) =>
+        index === self.findIndex((s) => s?._id === item?._id)
+      );
+
+      setServices(uniqueServices);
     }
-  }, [industry]);
+  }, [industry, allServices, products]);
 
   return (
     <div className="w-full h-full pt-[65px] lg:pt-0 relative z-20">

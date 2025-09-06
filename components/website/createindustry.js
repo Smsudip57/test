@@ -366,6 +366,14 @@ const CreateIndustry = () => {
                 </div>
               ) : (
                 <label className="flex flex-col items-center justify-center h-40 cursor-pointer">
+                  <input
+                    ref={imageInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                    required
+                  />
                   <ImageIcon className="h-12 w-12 text-[#446E6D]" />
                   <p className="mt-2 text-sm font-medium text-[#446E6D]">
                     Click to upload an image
@@ -375,14 +383,7 @@ const CreateIndustry = () => {
                   </p>
                 </label>
               )}
-              <input
-                ref={imageInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-                required
-              />
+
             </div>
           </div>
 

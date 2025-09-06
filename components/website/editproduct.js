@@ -26,7 +26,7 @@ import {
   Filter
 } from 'lucide-react';
 
-export default function EditProductList() {
+export default function EditChildServiceList() {
   const router = useRouter();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -40,10 +40,10 @@ export default function EditProductList() {
   const { setShowConfirm, setConfirmFunction, customToast } = useContext(MyContext);
   const [saving, setSaving] = useState(false);
   const mainImageRef = useRef(null);
-  
+
   // Track images to delete when updating
   const [imagesToDelete, setImagesToDelete] = useState([]);
-  
+
   // Form state for editing
   const [productData, setProductData] = useState({
     Title: '',
@@ -59,19 +59,19 @@ export default function EditProductList() {
   const validateImageDimensions = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         const img = new Image();
-        img.onload = function() {
+        img.onload = function () {
           const width = this.width;
           const height = this.height;
           const aspectRatio = width / height;
           const targetRatio = 16 / 9;
           const tolerance = 0.001; // 0.1% tolerance
-          
+
           if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
             resolve({ width, height, aspectRatio });
           } else {
-            reject({ 
+            reject({
               message: `Image must have a 16:9 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
               dimensions: { width, height, aspectRatio }
             });
@@ -100,10 +100,10 @@ export default function EditProductList() {
 
       setProducts(productsResponse.data.products || []);
       setServices(servicesResponse.data.services || []);
-      
+
       // If there's already a selected service, update the filtered products
       if (selectedService) {
-        const filtered = productsResponse.data.products?.filter(product => 
+        const filtered = productsResponse.data.products?.filter(product =>
           product.category === selectedService
         ) || [];
         setFilteredProducts(filtered);
@@ -123,8 +123,8 @@ export default function EditProductList() {
   // Handle service selection change
   const handleServiceChange = useCallback((serviceId) => {
     setSelectedService(serviceId);
-    
-    // Filter products based on the selected service's _id
+
+    // Filter child services based on the selected service's _id
     const filtered = products.filter(product => product.category === serviceId);
     setFilteredProducts(filtered);
   }, [products]);
@@ -132,26 +132,26 @@ export default function EditProductList() {
   // Search functionality
   const handleSearch = useCallback(() => {
     if (!selectedService) {
-      customToast({ 
-        success: false, 
-        message: 'Please select a service first' 
+      customToast({
+        success: false,
+        message: 'Please select a service first'
       });
       return;
     }
 
     const term = searchTerm.toLowerCase().trim();
     if (!term) {
-      // If search term is empty, show all products for the selected service
+      // If search term is empty, show all child services for the selected service
       const filtered = products.filter(product => product.category === selectedService);
       setFilteredProducts(filtered);
       return;
     }
 
     // Filter by search term within the selected service
-    const filtered = products.filter(product => 
-      product.category === selectedService && 
-      (product.Title.toLowerCase().includes(term) || 
-       product.detail.toLowerCase().includes(term))
+    const filtered = products.filter(product =>
+      product.category === selectedService &&
+      (product.Title.toLowerCase().includes(term) ||
+        product.detail.toLowerCase().includes(term))
     );
     setFilteredProducts(filtered);
   }, [products, selectedService, searchTerm, customToast]);
@@ -161,7 +161,7 @@ export default function EditProductList() {
     setEditingProduct(product._id);
     setMainImagePreview(product.image);
     setImagesToDelete([]);
-    
+
     // Transform the product data to match our form structure
     setProductData({
       Title: product.Title,
@@ -178,7 +178,7 @@ export default function EditProductList() {
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setProductData(prev => ({ ...prev, [name]: value }));
-    
+
     // Auto-generate slug when title changes
     if (name === 'Title') {
       setProductData(prev => ({ ...prev, slug: generateSlug(value) }));
@@ -189,24 +189,24 @@ export default function EditProductList() {
   const handleMainImageChange = useCallback(async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
       setError('Only image files are allowed!');
       customToast({ success: false, message: 'Only image files are allowed!' });
       return;
     }
-    
+
     try {
       // Validate image dimensions (16:9)
       await validateImageDimensions(file);
-      
+
       // If there's an existing image, mark it for deletion
       if (typeof productData.image === 'string') {
         setImagesToDelete(prev => [...prev, productData.image]);
       }
-      
+
       setProductData(prev => ({ ...prev, image: file }));
-      
+
       // Create image preview
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -215,9 +215,9 @@ export default function EditProductList() {
       reader.readAsDataURL(file);
     } catch (err) {
       setError(err.message);
-      customToast({ 
-        success: false, 
-        message: 'Image must have a 16:9 aspect ratio' 
+      customToast({
+        success: false,
+        message: 'Image must have a 16:9 aspect ratio'
       });
       e.target.value = '';
     }
@@ -245,18 +245,18 @@ export default function EditProductList() {
         setError('At least one section is required');
         return prev;
       }
-      
+
       const updatedSections = [...prev.sections];
       const removedSection = updatedSections[index];
-      
+
       // If the section has an image URL, mark it for deletion
       if (typeof removedSection.image === 'string') {
         setImagesToDelete(prev => [...prev, removedSection.image]);
       }
-      
-      return { 
-        ...prev, 
-        sections: prev.sections.filter((_, i) => i !== index) 
+
+      return {
+        ...prev,
+        sections: prev.sections.filter((_, i) => i !== index)
       };
     });
   }, []);
@@ -286,16 +286,16 @@ export default function EditProductList() {
     try {
       // Validate image dimensions (16:9)
       await validateImageDimensions(file);
-      
+
       setProductData(prev => {
         const updatedSections = [...prev.sections];
         const section = updatedSections[sectionIndex];
-        
+
         // If there's an existing image URL, mark it for deletion
         if (typeof section.image === 'string') {
           setImagesToDelete(prev => [...prev, section.image]);
         }
-        
+
         // Create preview using FileReader
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -311,19 +311,19 @@ export default function EditProductList() {
           });
         };
         reader.readAsDataURL(file);
-        
+
         return prev; // Return unchanged state, will be updated in reader.onloadend
       });
     } catch (err) {
       setError(err.message);
-      customToast({ 
-        success: false, 
-        message: 'Image must have a 16:9 aspect ratio' 
+      customToast({
+        success: false,
+        message: 'Image must have a 16:9 aspect ratio'
       });
       e.target.value = '';
     }
   }, [customToast]);
-  
+
   const moveSection = useCallback((fromIndex, toIndex) => {
     setProductData(prev => {
       const updatedSections = [...prev.sections];
@@ -351,18 +351,18 @@ export default function EditProductList() {
   const removePoint = useCallback((sectionIndex, pointIndex) => {
     setProductData(prev => {
       const section = prev.sections[sectionIndex];
-      
+
       if (section.points.length <= 1) {
         setError('At least one point is required in a section');
         return prev;
       }
-      
+
       const updatedSections = [...prev.sections];
       updatedSections[sectionIndex] = {
         ...section,
         points: section.points.filter((_, i) => i !== pointIndex)
       };
-      
+
       return { ...prev, sections: updatedSections };
     });
   }, []);
@@ -372,7 +372,7 @@ export default function EditProductList() {
       const updatedSections = [...prev.sections];
       updatedSections[sectionIndex] = {
         ...updatedSections[sectionIndex],
-        points: updatedSections[sectionIndex].points.map((point, idx) => 
+        points: updatedSections[sectionIndex].points.map((point, idx) =>
           idx === pointIndex ? { ...point, [field]: value } : point
         )
       };
@@ -384,77 +384,77 @@ export default function EditProductList() {
   const validateForm = useCallback(() => {
     // Check main product fields
     if (!productData.Title || !productData.Title.trim()) {
-      setError('Product title is required');
+      setError('Child Service title is required');
       return false;
     }
-    
+
     if (!productData.detail || !productData.detail.trim()) {
-      setError('Product detail is required');
+      setError('Child Service detail is required');
       return false;
     }
-    
+
     if (!productData.moreDetail || !productData.moreDetail.trim()) {
-      setError('Product more detail is required');
+      setError('Child Service more detail is required');
       return false;
     }
-    
+
     if (!productData.slug || !productData.slug.trim()) {
       setError('Slug is required');
       return false;
     }
-    
+
     // Validate slug format
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(productData.slug)) {
       setError('Slug must be lowercase, containing only letters, numbers, and hyphens');
       return false;
     }
-    
+
     if (!productData.image) {
-      setError('Main product image is required');
+      setError('Main child service image is required');
       return false;
     }
-    
+
     if (!productData.category) {
       setError('Service is required');
       return false;
     }
-    
+
     // Validate sections
     if (productData.sections.length === 0) {
       setError('At least one section is required');
       return false;
     }
-    
+
     for (const [i, section] of productData.sections.entries()) {
       if (!section.title || !section.title.trim()) {
         setError(`Section ${i + 1} title is required`);
         return false;
       }
-      
+
       if (!section.image && !section.imagePreview) {
         setError(`Image is required for section ${i + 1}`);
         return false;
       }
-      
+
       // Validate points
       if (!section.points || section.points.length === 0) {
         setError(`At least one point is required for section ${i + 1}`);
         return false;
       }
-      
+
       for (const [j, point] of section.points.entries()) {
         if (!point.title || !point.title.trim()) {
           setError(`Title is required for point ${j + 1} in section ${i + 1}`);
           return false;
         }
-        
+
         if (!point.detail || !point.detail.trim()) {
           setError(`Detail is required for point ${j + 1} in section ${i + 1}`);
           return false;
         }
       }
     }
-    
+
     setError('');
     return true;
   }, [productData]);
@@ -482,36 +482,36 @@ export default function EditProductList() {
       if (!validateForm()) {
         return;
       }
-      
+
       setSaving(true);
-      
+
       try {
         const formData = new FormData();
         formData.append('productId', editingProduct);
-        
+
         // Add basic product fields
         formData.append('Title', productData.Title);
         formData.append('detail', productData.detail);
         formData.append('moreDetail', productData.moreDetail);
         formData.append('slug', productData.slug);
         formData.append('category', productData.category);
-        
+
         // Add images to delete
         if (imagesToDelete.length > 0) {
           formData.append('imagesToDelete', JSON.stringify(imagesToDelete));
         }
-        
+
         // Add main image if it's a File object
         if (productData.image instanceof File) {
           formData.append('mainImage', productData.image);
         }
-        
+
         // Prepare sections data
         const sectionsData = productData.sections.map(section => {
           // Determine image handling
           let sectionImage = section.image;
           const useUploadedImage = section.image instanceof File;
-          
+
           return {
             title: section.title,
             image: useUploadedImage ? '' : section.image, // Empty string if we're uploading a new image
@@ -519,16 +519,16 @@ export default function EditProductList() {
             points: section.points
           };
         });
-        
+
         formData.append('sections', JSON.stringify(sectionsData));
-        
+
         // Append all section images that are Files
         productData.sections.forEach((section, index) => {
           if (section.image instanceof File) {
             formData.append('sectionImages', section.image);
           }
         });
-        
+
         // Submit the update
         const response = await axios.put('/api/product/edit', formData, {
           headers: {
@@ -536,25 +536,25 @@ export default function EditProductList() {
           },
           withCredentials: true
         });
-        
-        customToast({ success: true, message: 'Product updated successfully!' });
-        
+
+        customToast({ success: true, message: 'Child Service updated successfully!' });
+
         // Refresh data and exit edit mode
         await fetchProductsAndServices();
         cancelEdit();
-        
+
       } catch (error) {
         console.error('Error updating product:', error);
-        customToast({ 
-          success: false, 
-          message: error.response?.data?.message || 'Failed to update product' 
+        customToast({
+          success: false,
+          message: error.response?.data?.message || 'Failed to update child service'
         });
       } finally {
         setSaving(false);
       }
     };
-    
-    setShowConfirm('Are you sure you want to update this product?');
+
+    setShowConfirm('Are you sure you want to update this child service?');
     setConfirmFunction(() => saveProduct);
   }, [editingProduct, productData, imagesToDelete, validateForm, cancelEdit, customToast, setShowConfirm, setConfirmFunction, fetchProductsAndServices]);
 
@@ -564,8 +564,8 @@ export default function EditProductList() {
       {!editingProduct && (
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-xl shadow-md">
-            <h1 className="text-2xl font-bold mb-6 text-gray-800">Edit Products</h1>
-            
+            <h1 className="text-2xl font-bold mb-6 text-gray-800">Edit Child Services</h1>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Service Selection */}
               <div>
@@ -592,11 +592,11 @@ export default function EditProductList() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Search */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Search Products
+                  Search Child Services
                 </label>
                 <div className="flex">
                   <input
@@ -619,7 +619,7 @@ export default function EditProductList() {
               </div>
             </div>
           </div>
-          
+
           {loading ? (
             <div className="flex justify-center items-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#446E6D]"></div>
@@ -635,7 +635,7 @@ export default function EditProductList() {
             <div className="bg-white p-6 rounded-xl shadow-md">
               <h2 className="text-lg font-semibold mb-4 flex items-center">
                 <Filter size={18} className="mr-2 text-[#446E6D]" />
-                Products ({filteredProducts.length})
+                Child Services ({filteredProducts.length})
               </h2>
               <div className="divide-y divide-gray-200">
                 {filteredProducts.map((product) => (
@@ -648,10 +648,10 @@ export default function EditProductList() {
                   >
                     <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0 border border-gray-200">
                       {product.image ? (
-                        <img 
-                          src={product.image} 
-                          alt={product.Title} 
-                          className="w-full h-full object-cover" 
+                        <img
+                          src={product.image}
+                          alt={product.Title}
+                          className="w-full h-full object-cover"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
@@ -696,14 +696,14 @@ export default function EditProductList() {
               <div className="bg-[#446E6D]/5 border-l-4 border-[#446E6D] p-4 rounded-r-lg">
                 <div className="flex items-center">
                   <Info size={24} className="text-[#446E6D] mr-3" />
-                  <p className="text-[#446E6D]">No products found for this service.</p>
+                  <p className="text-[#446E6D]">No child services found for this service.</p>
                 </div>
               </div>
             )
           )}
         </div>
       )}
-      
+
       {/* Edit view */}
       {editingProduct && (
         <DndProvider backend={HTML5Backend}>
@@ -716,19 +716,18 @@ export default function EditProductList() {
                   className="flex items-center text-gray-600 hover:text-[#446E6D] transition-colors"
                 >
                   <ChevronLeft size={20} className="mr-1" />
-                  <span>Back to Products</span>
+                  <span>Back to Child Services</span>
                 </button>
-                
-                <h1 className="text-2xl font-bold text-center text-gray-800">Edit Product</h1>
-                
+
+                <h1 className="text-2xl font-bold text-center text-gray-800">Edit Child Service</h1>
+
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSave}
                   disabled={saving}
-                  className={`flex items-center px-4 py-2 rounded-lg ${
-                    saving ? 'bg-[#446E6D]/70' : 'bg-[#446E6D] hover:bg-[#375857]'
-                  } text-white transition-colors`}
+                  className={`flex items-center px-4 py-2 rounded-lg ${saving ? 'bg-[#446E6D]/70' : 'bg-[#446E6D] hover:bg-[#375857]'
+                    } text-white transition-colors`}
                 >
                   {saving ? (
                     <>
@@ -747,7 +746,7 @@ export default function EditProductList() {
                 </motion.button>
               </div>
             </div>
-            
+
             {/* Content */}
             <div className="max-w-7xl mx-auto px-4 space-y-8">
               {/* Error display */}
@@ -759,21 +758,21 @@ export default function EditProductList() {
                   </div>
                 </div>
               )}
-              
+
               {/* Main product info */}
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="p-6 border-b border-gray-200">
                   <h2 className="text-xl font-semibold text-gray-800">
-                    Basic Product Information
+                    Basic Child Service Information
                   </h2>
                 </div>
-                
+
                 <div className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Left column - Image */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Product Image* <span className="text-xs text-gray-500">(16:9 ratio required)</span>
+                        Child Service Image* <span className="text-xs text-gray-500">(16:9 ratio required)</span>
                       </label>
                       <div className="relative">
                         <input
@@ -785,13 +784,13 @@ export default function EditProductList() {
                           accept="image/*"
                           ref={mainImageRef}
                         />
-                        
+
                         {mainImagePreview ? (
                           <div className="relative rounded-lg overflow-hidden border border-gray-200">
-                            <img 
+                            <img
                               src={mainImagePreview}
-                              alt="Product preview" 
-                              className="w-full h-64 object-cover" 
+                              alt="Child Service preview"
+                              className="w-full h-64 object-cover"
                             />
                             <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
                               <button
@@ -804,12 +803,12 @@ export default function EditProductList() {
                             </div>
                           </div>
                         ) : (
-                          <div 
+                          <div
                             onClick={() => mainImageRef.current?.click()}
                             className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-[#446E6D] transition-colors"
                           >
                             <Upload size={36} className="mx-auto text-gray-400 mb-2" />
-                            <p className="text-sm text-gray-500">Click to upload product image (16:9)</p>
+                            <p className="text-sm text-gray-500">Click to upload child service image (16:9)</p>
                             <p className="text-xs text-gray-400 mt-1">PNG, JPG or GIF (max 10MB)</p>
                           </div>
                         )}
@@ -835,12 +834,12 @@ export default function EditProductList() {
                         </select>
                       </div>
                     </div>
-                    
+
                     {/* Right column - Text fields */}
                     <div className="space-y-5">
                       <div>
                         <label htmlFor="Title" className="block text-sm font-medium text-gray-700 mb-1">
-                          Product Title*
+                          Child Service Title*
                         </label>
                         <input
                           id="Title"
@@ -849,10 +848,10 @@ export default function EditProductList() {
                           value={productData.Title}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                          placeholder="Enter product title"
+                          placeholder="Enter child service title"
                         />
                       </div>
-                      
+
                       {/* Slug field */}
                       <div>
                         <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">
@@ -865,13 +864,13 @@ export default function EditProductList() {
                           value={productData.slug}
                           onChange={handleInputChange}
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                          placeholder="product-name-example"
+                          placeholder="child-service-name-example"
                         />
                         <p className="mt-1 text-xs text-gray-500">
-                          Only lowercase letters, numbers, and hyphens. Used in URLs: /product/{productData.slug || 'example-slug'}
+                          Only lowercase letters, numbers, and hyphens. Used in URLs: /childservice/{productData.slug || 'example-slug'}
                         </p>
                       </div>
-                      
+
                       <div>
                         <label htmlFor="detail" className="block text-sm font-medium text-gray-700 mb-1">
                           Short Description*
@@ -883,10 +882,10 @@ export default function EditProductList() {
                           onChange={handleInputChange}
                           rows={2}
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                          placeholder="Brief description of the product"
+                          placeholder="Brief description of the child service"
                         />
                       </div>
-                      
+
                       <div>
                         <label htmlFor="moreDetail" className="block text-sm font-medium text-gray-700 mb-1">
                           Full Description*
@@ -898,14 +897,14 @@ export default function EditProductList() {
                           onChange={handleInputChange}
                           rows={4}
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                          placeholder="Detailed description of the product"
+                          placeholder="Detailed description of the child service"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               {/* Sections */}
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="p-6 border-b border-gray-200 flex justify-between items-center">
@@ -913,9 +912,9 @@ export default function EditProductList() {
                     <span className="bg-[#446E6D]/10 text-[#446E6D] w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">
                       {productData.sections.length}
                     </span>
-                    Product Sections
+                    Child Service Sections
                   </h2>
-                  
+
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -926,7 +925,7 @@ export default function EditProductList() {
                     Add Section
                   </motion.button>
                 </div>
-                
+
                 <div className="p-6">
                   <div className="space-y-6">
                     <AnimatePresence>
@@ -977,7 +976,7 @@ const SectionItem = React.memo(({
       isDragging: monitor.isDragging()
     })
   }));
-  
+
   const [, drop] = useDrop(() => ({
     accept: 'SECTION',
     hover: (item) => {
@@ -987,9 +986,9 @@ const SectionItem = React.memo(({
       }
     }
   }));
-  
+
   const sectionImageRef = useRef(null);
-  
+
   return (
     <motion.div
       ref={(node) => drag(drop(node))}
@@ -997,10 +996,9 @@ const SectionItem = React.memo(({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
-      className={`relative rounded-xl ${
-        isDragging ? 'border-2 border-[#446E6D] shadow-lg' : 'border border-gray-200'
-      } bg-white shadow-sm overflow-hidden`}
-      style={{ 
+      className={`relative rounded-xl ${isDragging ? 'border-2 border-[#446E6D] shadow-lg' : 'border border-gray-200'
+        } bg-white shadow-sm overflow-hidden`}
+      style={{
         opacity: isDragging ? 0.7 : 1,
         transform: isDragging ? 'scale(1.02)' : 'scale(1)',
       }}
@@ -1027,7 +1025,7 @@ const SectionItem = React.memo(({
           )}
         </div>
       </div>
-      
+
       {/* Section Content */}
       <div className="p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1045,7 +1043,7 @@ const SectionItem = React.memo(({
               placeholder="Enter section title"
             />
           </div>
-          
+
           {/* Right Column - Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1060,9 +1058,9 @@ const SectionItem = React.memo(({
                 accept="image/*"
                 ref={sectionImageRef}
               />
-              
+
               {!section.imagePreview && !section.image ? (
-                <div 
+                <div
                   onClick={() => sectionImageRef.current?.click()}
                   className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#446E6D] transition-colors"
                 >
@@ -1103,7 +1101,7 @@ const SectionItem = React.memo(({
             </div>
           </div>
         </div>
-        
+
         {/* Points Section */}
         <div className="mt-8 border-t border-gray-100 pt-5">
           <div className="flex justify-between items-center mb-4">
@@ -1123,7 +1121,7 @@ const SectionItem = React.memo(({
               Add Point
             </motion.button>
           </div>
-          
+
           <div className="space-y-4">
             <AnimatePresence>
               {section.points?.map((point, pointIndex) => (
@@ -1148,7 +1146,7 @@ const SectionItem = React.memo(({
                       placeholder="Enter point title"
                     />
                   </div>
-                  
+
                   <div className="relative">
                     <div className="flex justify-between items-center">
                       <label htmlFor={`point-detail-${index}-${pointIndex}`} className="block text-xs font-medium text-gray-700 mb-1">
@@ -1180,7 +1178,7 @@ const SectionItem = React.memo(({
           </div>
         </div>
       </div>
-      
+
       {/* Section Footer */}
       <div className="bg-[#446E6D]/5 p-3 text-xs text-[#446E6D] flex items-start">
         <Info size={14} className="mr-1.5 flex-shrink-0 mt-0.5" />
