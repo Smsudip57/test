@@ -4,19 +4,15 @@ import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 const RelatedProducts = ({ relatedProducts }) => {
-    // Early return if no data exists
-    if (!relatedProducts || relatedProducts.length === 0) {
-        return null;
-    }
-
     const [currentSlide, setCurrentSlide] = useState(0);
     const [loaded, setLoaded] = useState(false);
 
     // Only initialize Keen Slider if more than 1 item
     const [sliderRef, instanceRef] = useKeenSlider(
-        relatedProducts.length > 1 ? {
+        relatedProducts && relatedProducts.length > 1 ? {
             initial: 0,
             loop: relatedProducts.length > 4, // Only loop if more than 4 items (more than what's visible at desktop)
             mode: "free-snap",
@@ -55,14 +51,19 @@ const RelatedProducts = ({ relatedProducts }) => {
 
     // Auto-scroll effect - only when there are enough items to loop
     useEffect(() => {
-        if (instanceRef.current && relatedProducts.length > 4) {
+        if (instanceRef.current && relatedProducts && relatedProducts.length > 4) {
             const interval = setInterval(() => {
                 instanceRef.current?.next();
             }, 4000);
 
             return () => clearInterval(interval);
         }
-    }, [instanceRef, relatedProducts.length]);
+    }, [instanceRef, relatedProducts]);
+
+    // Early return if no data exists - after hooks
+    if (!relatedProducts || relatedProducts.length === 0) {
+        return null;
+    }
 
     return (
         <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
@@ -202,10 +203,11 @@ const ProductCard = ({ product }) => {
             >
                 {/* Product Image */}
                 <div className="relative overflow-hidden aspect-video">
-                    <img
+                    <Image
                         src={product.image || "/default-product.jpg"}
                         alt={product.Title || "Product"}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                        fill
+                        className="object-cover transition-transform duration-500 hover:scale-110"
                         onError={(e) => {
                             e.target.src = "/default-product.jpg";
                         }}
