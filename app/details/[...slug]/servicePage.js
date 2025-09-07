@@ -11,9 +11,11 @@ import Projects from "@/components/main/Projects";
 import Industies from "@/components/main/Industies";
 import { motion, AnimatePresence } from "framer-motion";
 import Contact from "@/components/main/Contact";
+import RelatedProducts from "@/components/shaerd/RelatedProducts";
 
 
 export default function Page({ details: Service }) {
+  const [details, setdetails] = useState(null);
   const [f1, setf1] = useState(false);
   const [f2, setf2] = useState(false);
   const [f3, setf3] = useState(false);
@@ -115,6 +117,14 @@ export default function Page({ details: Service }) {
         </section>
       ))}
 
+      {/* Related Products Section */}
+      {Service?.relatedProducts && Service.relatedProducts.length > 0 && (
+        <div className="mt-20">
+
+          <RelatedProducts relatedProducts={Service.relatedProducts} />
+        </div>
+      )}
+
       <div className="w-[90%] mx-auto lg:w-full">
         <CaseStudy child={Service?._id} />
       </div>
@@ -132,6 +142,8 @@ export default function Page({ details: Service }) {
       <div className="mx-auto min-h-screen flex justify-center items-center">
         <KnowledgeBase child={Service?._id} product={Service?._id} />
       </div>
+
+
 
       {/* FAQ Section Component */}
       <FaqSection child={Service?._id} product={Service?._id} />
@@ -173,9 +185,8 @@ const PointItem = ({ item, index }) => {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`w-full border-l-4 pl-6 cursor-pointer transition-all duration-300 ease-in-out ${
-        true ? "border-l-[#446E6D]" : "border-l-white"
-      }`}
+      className={`w-full border-l-4 pl-6 cursor-pointer transition-all duration-300 ease-in-out ${true ? "border-l-[#446E6D]" : "border-l-white"
+        }`}
       onClick={handleClick}
       whileHover={{ scale: 1.02, x: 5 }}
       whileTap={{ scale: 0.98 }}

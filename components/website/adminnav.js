@@ -13,17 +13,7 @@ export default function Adminnav({user, login}) {
   const context = React.useContext(MyContext);
   const router = useRouter();
   const [loginout, setloginout] = useState(false);
-
-  React.useEffect(()=>{
-    if(!context.loading&&!loginout&& (!context.user||context.user.role!=='admin')){
-      // notFound();
-    }
-  },[context.user,context.loading])
-  if(context.loading){
-    return(
-      <div className='fixed top-0 bg-white left-0 z-50 min-h-screen min-w-screen'></div>
-    )
-  }
+  
 
   const handleToggle = async() => {
     try {

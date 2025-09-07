@@ -43,6 +43,10 @@ export default async function AdminPage({ params }) {
       const Name = decodeURIComponent(name);
       if (products && products.length > 0 && Name) {
         const Product = products.find((product) => product?.slug === Name || product?.Title === Name);
+        if(Product){
+          const relatedProducts = childs.filter(child => child?.category === Product?._id);
+          Product.relatedProducts = relatedProducts;
+        }
         return Product
       } else {
         return false;
