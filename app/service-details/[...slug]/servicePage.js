@@ -2,30 +2,32 @@
 import React, { useEffect, useState } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Head from "next/head";
-import axios from "axios";
+import CaseStudy from "@/components/main/CaseStudy";
+import BlogSection from "@/components/shaerd/Blog";
+import FaqSection from "@/components/shaerd/Faqs";
+import KnowledgeBase from "@/components/shaerd/Knowledgebase";
+import Projects from "@/components/main/Projects";
+import Industies from "@/components/main/Industies";
+import { motion, AnimatePresence } from "framer-motion";
+import Contact from "@/components/main/Contact";
+import RelatedProducts from "@/components/shaerd/RelatedProducts";
 
-export default function Page({ details: Service }) {
+export default function Page({
+  details: Service,
+  industries,
+  testimonials,
+  faqs,
+  blogs,
+  projects,
+}) {
   const [details, setdetails] = useState([]);
   const [f1, setf1] = useState(false);
   const [f2, setf2] = useState(false);
   const [f3, setf3] = useState(false);
   const [f4, setf4] = useState(false);
 
-  useEffect(() => {
-    const fetchdata = async () => {
-      try {
-        const response = await axios.get("/api/servicedetails/get");
-        if (response?.data) {
-          setdetails(
-            response?.data?.servicedetails?.find(
-              (item) => item?.relatedServices?._id === Service?._id
-            )
-          );
-        }
-      } catch (error) {}
-    };
-    fetchdata();
-  }, []);
+  // Note: Removed axios call since we're getting all data via SSR props
+  // If you still need servicedetails, you can add it to the SSR fetch in page.js
 
   return (
     <div className="min-h-screen min-w-screen text-center relative font-sans">
@@ -102,544 +104,153 @@ export default function Page({ details: Service }) {
                 {item?.title}
               </h2>
               <PointComp points={item?.points} />
-              {/* <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
-                {item?.points?.map((poin, subIndex) => (
-                  <div
-                    key={subIndex}
-                    className={`w-full border-l-4 pl-6 cursor-pointer ${openSections[index] === subIndex
-                        ? "border-l-[#446E6D]"
-                        : "border-l-white"
-                      }`}
-                    onClick={() =>
-                      setOpenSections((prev) => {
-                        // Close all sections except the clicked one
-                        const updatedSections = [...prev];
-                        updatedSections[index] =
-                          updatedSections[index] === subIndex ? null : subIndex;
-                        return updatedSections;
-                      })
-                    }
-                  >
-                    <h3 className="text-2xl font-semibold text-[#446E6D]">
-                      {item[`subHeading${subIndex + 1}`]}
-                    </h3>
-                    <p
-                      className={`text-lg font-sans mt-4 text-stone-700 ${openSections[index] === subIndex ? "block" : "hidden"
-                        }`}
-                    >
-                      {item[`subHeading${subIndex + 1}edtails`]}
-                    </p>
-                  </div>
-                ))}
-              </div> */}
             </div>
           </div>
         </section>
       ))}
 
-      <div className="mt-24 w-4/5 mx-auto flex gap-5">
-        <div className="basis-1/2 ">
-          <div className="mt-16 w-full relative overflow-hidden rounded-2xl shadow-md border-2 border-gray-200">
-            <div
-              className="absolute top-0 left-0 w-full h-full"
-              style={{ zIndex: -1 }}
-            >
-              <svg
-                width="1280"
-                height="459"
-                viewBox="0 0 1280 459"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M2462 -979C2462 -184.814 1812.81 459 1012 459C211.187 459 -438 -184.814 -438 -979C-438 -1773.19 211.187 -2417 1012
-                            -2417C1812.81 -2417 2462 -1773.19 2462 -979Z"
-                  fill="rgb(259, 240, 255)"
-                ></path>
-              </svg>
-            </div>
-            <div className="w-full flex flex-col h-max items-start">
-              <div className=" basis-1/2 min-h-full w-full pt-16  px-28 lg:px-44 ">
-                <img
-                  src="/logo_mountain_gate.png"
-                  className="w-full active:border-[5px] active:border-blue-500 rounded-full overflow-hidden"
-                ></img>
-              </div>
-              <div className="basis-1/2">
-                <div className="px-10 pb-16 lg:py-16 lg:pr-24 text-left">
-                  <div className="h-[16px] lg:h-[32px] mb-5">
-                    <img
-                      src="https://a.sfdcstatic.com/shared/images/pbc/icons/quotation-english.svg"
-                      alt="backqoute"
-                      className="h-full"
-                    />
-                  </div>
-                  <span className="text-xl lg:text-3xl">
-                    <strong>
-                      The Odoo Application has transformed the way we manage
-                      maintenance tasks. The automation has not only saved us
-                      time but also improved the accuracy and efficiency of our
-                      operations.
-                    </strong>
-                  </span>
-                  <br></br>
-                  <br></br>
-                  <span className="text-xl">
-                    <strong>Abhilash Dass</strong>
-                  </span>
-                  <p className="mt-2 text-lg lg:text-xl font-extralight">
-                    Admin Manager, Mountain Gate Property Management
-                  </p>
-                  <button className=" mt-10 text-[#446E6D] border-[1px] border-[#446E6D] py-2 lg:py-3 lg:px-8 px-4 flex items-center rounded font-semibold cursor-pointer gap-2 text-sm lg:text-base">
-                    <span>
-                      Read the story <OpenInNewIcon fontSize="inherit" />
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="w-full py-16 mt-24">
+        <div className="w-[90%] mx-auto lg:w-full">
+          <CaseStudy data={testimonials} />
         </div>
-        <div className="basis-1/2 h-full">
-          <div className="mt-16 w-full h-full flex flex-col ` relative overflow-hidden rounded-2xl shadow-md border-2 border-gray-200">
-            <div
-              className="absolute top-0 left-0 w-full h-full"
-              style={{ zIndex: -1 }}
-            >
-              <svg
-                width="1280"
-                height="459"
-                viewBox="0 0 1280 459"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M2462 -979C2462 -184.814 1812.81 459 1012 459C211.187 459 -438 -184.814 -438 -979C-438 -1773.19 211.187 -2417 1012
-                            -2417C1812.81 -2417 2462 -1773.19 2462 -979Z"
-                  fill="rgb(259, 240, 255)"
-                ></path>
-              </svg>
-            </div>
-            <div className="w-full flex flex-col items-center">
-              <div className=" basis-1/2 h-full w-full pt-16 px-28 lg:px-40 ">
-                <img
-                  src="/green-logo.png"
-                  className="w-full active:border-[5px] active:border-blue-500 rounded-lg overflow-hidden"
-                ></img>
-              </div>
-              <div className="basis-1/2">
-                <div className="px-10 pb-16 lg:py-16 lg:pr-24 text-left">
-                  <div className="h-[16px] lg:h-[32px] mb-5">
-                    <img
-                      src="https://a.sfdcstatic.com/shared/images/pbc/icons/quotation-english.svg"
-                      alt="backqoute"
-                      className="h-full"
-                    />
-                  </div>
-                  <span className="text-xl lg:text-3xl">
-                    <strong>
-                      The implementation of Microsoft 365, our new website, and
-                      Odoo ERP has transformed our operations. We now have a
-                      unified system that enhances our productivity and customer
-                      service. The support and expertise provided throughout the
-                      process were exceptional.
-                    </strong>
-                  </span>
-                  <br></br>
-                  <br></br>
-                  <span className="text-xl">
-                    <strong>Rajesh Kumar</strong>
-                  </span>
-                  <p className="mt-2 text-lg lg:text-xl font-extralight">
-                    Managing Director, GREENTECH GENERAL MAINT
-                  </p>
-                  <button className=" mt-10 text-[#446E6D] border-[1px] border-[#446E6D] py-2 lg:py-3 lg:px-8 px-4 flex items-center rounded font-semibold cursor-pointer gap-2 text-sm lg:text-base">
-                    <span>
-                      Read the story <OpenInNewIcon fontSize="inherit" />
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+
+        <div
+          aria-labelledby="related-projects-heading flex"
+          className="mt-20 relative z-30 text-left"
+        >
+          <h2 id="related-projects-heading" className="sr-only">
+            Related Projects
+          </h2>
+          <Projects projects={projects} />
         </div>
-      </div>
-      <div className="relative  bg-no-repeat bg-cover w-[90%] mx-auto xl:w-full bg-bottom">
-        <div className="absolute top-0 left-0 w-full h-full hidden xl:block">
-          <img
-            src="https://wp.salesforce.com/en-us/wp-content/uploads/sites/4/2024/03/logo-grid-background-min.jpg?w=1024"
-            className="w-full h-full"
-          />
+
+        <div className="mx-auto min-h-screen flex justify-center items-center">
+          <BlogSection data={blogs} />
         </div>
-        <div className="flex flex-col justify-center mt-[110px]">
-          <div className="mx-auto text-center w-full lg:w-[1000px]  z-20">
-            <span className="text-2xl lg:text-4xl text-[#446E6D]">
-              <strong>Begin your journey with us today!</strong>
-            </span>
-            <p className="text-base lg:text-lg mt-8">
-              Get out-of-the-box automotive features and workflows that make it
-              easy to explore new revenue opportunities, advance next-generation
-              vehicle experiences, and innovate with AI and automation – all
-              powered by the #1 automotive CRM.
-            </p>
-          </div>
-          <div className="w-full xl:w-[1280px] mx-auto my-12 z-20">
-            <div className=" grid xl:grid-cols-3 gap-10 xl:mx-28">
-              <div className="bg-white overflow-hidden rounded-xl shadow-xl flex flex-col">
-                <div className="p-8 h-full relative">
-                  <img
-                    src="https://www.salesforce.com/content/dam/web/global/svg-icons/screen.svg"
-                    className="text-sm bg-[#6a949221] p-3 rounded-full w-max"
-                  />
-                  <p className="text-xl mt-7">
-                    <strong>Start your trial.</strong>
-                  </p>
-                  <p className="mt-3 mb-14">
-                    Try Automotive Cloud free for 30 days. No credit card. No
-                    installations.
-                  </p>
-                  <button className="absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe">
-                    <span className="font-bold">
-                      Try for free <OpenInNewIcon fontSize="inherit" />
-                    </span>
-                  </button>
-                </div>
-              </div>
-              <div className="bg-white overflow-hidden rounded-xl shadow-xl flex flex-col">
-                <div className="p-8 h-full relative">
-                  <img
-                    src="https://www.salesforce.com/content/dam/web/global/svg-icons/call.svg"
-                    className="text-sm bg-[#6a949221] p-3 rounded-full w-max"
-                  />
-                  <p className="text-xl mt-7">
-                    <strong>Talk to an expert.</strong>
-                  </p>
-                  <p className="mt-3 mb-14">
-                    Tell us a bit so the right person can reach out faster.
-                  </p>
-                  <button className="absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe">
-                    <span className="font-bold">
-                      Request a call <OpenInNewIcon fontSize="inherit" />
-                    </span>
-                  </button>
-                </div>
-              </div>
-              <div className="bg-white overflow-hidden rounded-xl shadow-xl flex flex-col">
-                <div className="p-8 h-full relative">
-                  <img
-                    src="https://a.sfdcstatic.com/shared/images/pbc/play.svg"
-                    className="text-sm bg-[#6a949221] p-3 rounded-full w-max"
-                  />
-                  <p className="text-xl mt-7">
-                    <strong>Watch a demo.</strong>
-                  </p>
-                  <p className="mt-3 mb-14">
-                    Get the latest research, industry insights, and product news
-                    delivered straight to your inbox.
-                  </p>
-                  <button className="absolute bottom-0 mb-8  mt-10 text-[#446E6D] flex items-center rounded font-semibold cursor-pointe">
-                    <span className="font-bold">
-                      See demo <OpenInNewIcon fontSize="inherit" />
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="relative  bg-no-repeat bg-cover w-full bg-bottom">
-        <div className="flex flex-col justify-center mt-[110px]">
-          <div className="mx-auto text-center w-[90%] lg:w-[1000px]  z-20">
-            <span className="text-2xl lg:text-4xl">
-              <strong>WEBME CRM for Automotive FAQ</strong>
-            </span>
-          </div>
-          <div className="w-[90%] lg:w-[1000px]  mx-auto mt-12 mb-52 z-20">
-            <div className="flex flex-col gap-10 lg:mx-24">
-              <div
-                className={`w-full border-b-2 border-[#446e6d44]`}
-                onClick={() => setf1((prev) => !prev)}
-              >
-                <button className="text-[#446E6D] text-lg lg:text-xl w-full flex justify-between items-center mb-6">
-                  <strong className="bg-white flex w-full text-left">
-                    What is a CRM for the automotive industry?
-                  </strong>
-                  <span className="text-3xl p-[5px] rounded-full overflow-hidden bg-[#446e6d21]">
-                    {!f1 ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="13.54"
-                        height="13.54"
-                        fill="none"
-                        aria-hidden="true"
-                        className="fill-black accordion__icon accordion__icon--plus"
-                        viewBox="0 0 22 22"
-                      >
-                        <path
-                          d="M13 12.5h8.25c.4 0 .75-.35.75-.75v-1.5c0-.4-.35-.75-.75-.75H13c-.3 0-.5-.2-.5-.5V.75c0-.4-.35-.75-.75-.75h-1.5c-.4 0-.75.35-.75.75V9c0 .3-.2.5-.5.5H.75c-.4 0-.75.35-.75.75v1.5c0 .4.35.75.75.75H9c.3 0 .5.2.5.5v8.25c0 .4.35.75.75.75h1.5c.4 0 .75-.35.75-.75V13c0-.3.2-.5.5-.5Z"
-                          className="icon__plus"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14.77"
-                        height="14.77 "
-                        fill="none"
-                        aria-hidden="true"
-                        className=" fill-black accordion__icon accordion__icon--minus"
-                        viewBox="0 0 24 3"
-                      >
-                        <path
-                          d="M24 2.25c0 .4-.35.75-.75.75H.75C.35 3 0 2.65 0 2.25V.75C0 .35.35 0 .75 0h22.5c.4 0 .75.35.75.75v1.5Z"
-                          className="icon__minus"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    )}
-                  </span>
-                </button>
-                <p className={`${f1 ? "block" : "hidden"} mb-6 `}>
-                  Customer relationship management for the automotive industry
-                  is a system for managing all of your company’s interactions
-                  with current and potential customers, as well as critical
-                  information like driver, vehicle, retail, and automotive
-                  financial data.
-                </p>
-              </div>
-              <div
-                className={`w-full border-b-2 border-[#446e6d44]`}
-                onClick={() => setf2((prev) => !prev)}
-              >
-                <button className="text-[#446E6D] text-lg lg:text-xl w-full flex justify-between items-center mb-6">
-                  <strong className="bg-white flex w-full  text-left">
-                    How do I choose the best automotive CRM for my business?
-                  </strong>
-                  <span className="text-3xl p-[5px] rounded-full overflow-hidden bg-[#446e6d21]">
-                    {!f2 ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="13.54"
-                        height="13.54"
-                        fill="none"
-                        aria-hidden="true"
-                        className="fill-black accordion__icon accordion__icon--plus"
-                        viewBox="0 0 22 22"
-                      >
-                        <path
-                          d="M13 12.5h8.25c.4 0 .75-.35.75-.75v-1.5c0-.4-.35-.75-.75-.75H13c-.3 0-.5-.2-.5-.5V.75c0-.4-.35-.75-.75-.75h-1.5c-.4 0-.75.35-.75.75V9c0 .3-.2.5-.5.5H.75c-.4 0-.75.35-.75.75v1.5c0 .4.35.75.75.75H9c.3 0 .5.2.5.5v8.25c0 .4.35.75.75.75h1.5c.4 0 .75-.35.75-.75V13c0-.3.2-.5.5-.5Z"
-                          className="icon__plus"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14.77"
-                        height="14.77 "
-                        fill="none"
-                        aria-hidden="true"
-                        className=" fill-black accordion__icon accordion__icon--minus"
-                        viewBox="0 0 24 3"
-                      >
-                        <path
-                          d="M24 2.25c0 .4-.35.75-.75.75H.75C.35 3 0 2.65 0 2.25V.75C0 .35.35 0 .75 0h22.5c.4 0 .75.35.75.75v1.5Z"
-                          className="icon__minus"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    )}
-                  </span>
-                </button>
-                <p className={`${f2 ? "block" : "hidden"} mb-6 `}>
-                  First, determine what you want an automotive CRM to solve. An
-                  automotive CRM should include functionality, such as vehicle
-                  and driver information, automotive lead management, partner
-                  performance management, inventory management, fleet
-                  management, embedded analytics and AI, and more.
-                </p>
-              </div>
-              <div
-                className={`w-full border-b-2 border-[#446e6d44]`}
-                onClick={() => setf3((prev) => !prev)}
-              >
-                <button className="text-[#446E6D] text-lg lg:text-xl w-full flex justify-between items-center mb-6">
-                  <strong className="bg-white flex w-full text-left">
-                    What are the benefits of using a CRM for automotive?
-                  </strong>
-                  <span className="text-3xl p-[5px] rounded-full overflow-hidden bg-[#446e6d21]">
-                    {!f3 ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="13.54"
-                        height="13.54"
-                        fill="none"
-                        aria-hidden="true"
-                        className="fill-black accordion__icon accordion__icon--plus"
-                        viewBox="0 0 22 22"
-                      >
-                        <path
-                          d="M13 12.5h8.25c.4 0 .75-.35.75-.75v-1.5c0-.4-.35-.75-.75-.75H13c-.3 0-.5-.2-.5-.5V.75c0-.4-.35-.75-.75-.75h-1.5c-.4 0-.75.35-.75.75V9c0 .3-.2.5-.5.5H.75c-.4 0-.75.35-.75.75v1.5c0 .4.35.75.75.75H9c.3 0 .5.2.5.5v8.25c0 .4.35.75.75.75h1.5c.4 0 .75-.35.75-.75V13c0-.3.2-.5.5-.5Z"
-                          className="icon__plus"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14.77"
-                        height="14.77 "
-                        fill="none"
-                        aria-hidden="true"
-                        className=" fill-black accordion__icon accordion__icon--minus"
-                        viewBox="0 0 24 3"
-                      >
-                        <path
-                          d="M24 2.25c0 .4-.35.75-.75.75H.75C.35 3 0 2.65 0 2.25V.75C0 .35.35 0 .75 0h22.5c.4 0 .75.35.75.75v1.5Z"
-                          className="icon__minus"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    )}
-                  </span>
-                </button>
-                <p className={`${f3 ? "block" : "hidden"} mb-6 `}>
-                  An automotive CRM can help you get 360-degree visibility into
-                  your customers and their households and vehicles, build a
-                  robust sales pipeline, intelligently manage your vehicle and
-                  parts product portfolio, and deliver meaningful service
-                  experiences for drivers and households.
-                </p>
-              </div>
-              <div
-                className={`w-full border-b-2 border-[#446e6d44]`}
-                onClick={() => setf4((prev) => !prev)}
-              >
-                <button className="text-[#446E6D] text-lg lg:text-xl w-full flex justify-between items-center mb-6">
-                  <strong className="bg-white flex w-full text-left">
-                    Does my business need an automotive CRM?
-                  </strong>
-                  <span className="text-3xl p-[5px] rounded-full overflow-hidden bg-[#446e6d21]">
-                    {!f4 ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="13.54"
-                        height="13.54"
-                        fill="none"
-                        aria-hidden="true"
-                        className="fill-black accordion__icon accordion__icon--plus"
-                        viewBox="0 0 22 22"
-                      >
-                        <path
-                          d="M13 12.5h8.25c.4 0 .75-.35.75-.75v-1.5c0-.4-.35-.75-.75-.75H13c-.3 0-.5-.2-.5-.5V.75c0-.4-.35-.75-.75-.75h-1.5c-.4 0-.75.35-.75.75V9c0 .3-.2.5-.5.5H.75c-.4 0-.75.35-.75.75v1.5c0 .4.35.75.75.75H9c.3 0 .5.2.5.5v8.25c0 .4.35.75.75.75h1.5c.4 0 .75-.35.75-.75V13c0-.3.2-.5.5-.5Z"
-                          className="icon__plus"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14.77"
-                        height="14.77 "
-                        fill="none"
-                        aria-hidden="true"
-                        className=" fill-black accordion__icon accordion__icon--minus"
-                        viewBox="0 0 24 3"
-                      >
-                        <path
-                          d="M24 2.25c0 .4-.35.75-.75.75H.75C.35 3 0 2.65 0 2.25V.75C0 .35.35 0 .75 0h22.5c.4 0 .75.35.75.75v1.5Z"
-                          className="icon__minus"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    )}
-                  </span>
-                </button>
-                <p className={`${f4 ? "block" : "hidden"} mb-6 `}>
-                  Consider an automotive CRM if you find that your
-                  customer-facing interactions are misguided, that you’re
-                  missing upsell opportunities, or if you want to better serve
-                  drivers and their households. An automotive CRM like
-                  Automotive Cloud helps teams take action fast and delight
-                  every customer.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+
+        {/* FAQ Section Component */}
+        <FaqSection data={faqs} />
+        <section
+          aria-labelledby="industries-heading"
+          className="mt-16 relative z-20"
+        >
+          <h2 id="industries-heading" className="sr-only">
+            Industries We Serve
+          </h2>
+          <Industies industries={industries} />
+        </section>
+        <section aria-labelledby="industries-heading" className="mt-16">
+          <Contact />
+        </section>
       </div>
     </div>
   );
 }
 
-// const PointComp = ({ points }) => {
-//   const [open, setopen] = useState(0)
-
-//   return <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
-//     {
-//       points.map((item, index) => (
-//         <div
-//           key={index}
-//           className={`w-full border-l-4 pl-6 cursor-pointer ${open === index
-//             ? "border-l-[#446E6D]"
-//             : "border-l-white"
-//             }`}
-//           onClick={() =>
-//             setopen(index)
-//           }
-//         >
-//           <h3 className="text-2xl font-semibold text-[#446E6D]">
-//             {item?.title}
-//           </h3>
-//           <p
-//             className={`text-lg font-sans mt-4 text-stone-700 ${open === index ? "block" : "hidden"
-//               }`}
-//           >
-//             {item?.detail}
-//           </p>
-//         </div>
-//       ))
-//     }
-//   </div>
-
-// }
-
 const PointComp = ({ points }) => {
-  // Initialize with all points open (array of true values matching points length)
-  const [openStates, setOpenStates] = useState(() => points.map(() => true));
-
-  const togglePoint = (index) => {
-    setOpenStates((prev) => {
-      const newStates = [...prev];
-      newStates[index] = !newStates[index]; // Toggle the clicked point
-      return newStates;
-    });
-  };
-
   return (
     <div className="text-xl font-sans mt-12 border-l-2 border-[#446E6D] flex flex-col gap-8">
       {points.map((item, index) => (
-        <div
-          key={index}
-          className={`w-full border-l-4 pl-6 cursor-pointer ${
-            openStates[index] ? "border-l-[#446E6D]" : "border-l-white"
-          }`}
-          onClick={() => togglePoint(index)}
-        >
-          <h3 className="text-2xl font-semibold text-[#446E6D]">
-            {item?.title}
-          </h3>
-          <p
-            className={`text-lg font-sans mt-4 text-stone-700 ${
-              openStates[index] ? "block" : "hidden"
-            }`}
-          >
-            {item?.detail}
-          </p>
-        </div>
+        <PointItem key={`${index}`} item={item} index={index} />
       ))}
     </div>
+  );
+};
+
+// Clean PointItem component using Framer Motion's whileInView
+const PointItem = ({ item, index }) => {
+  const [isManuallyToggled, setIsManuallyToggled] = useState(false);
+
+  // Manual toggle function for click interaction
+  const handleClick = () => {
+    setIsManuallyToggled(prev => !prev);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className={`w-full border-l-4 pl-6 cursor-pointer transition-all duration-300 ease-in-out ${true ? "border-l-[#446E6D]" : "border-l-white"
+        }`}
+      onClick={handleClick}
+      whileHover={{ scale: 1.02, x: 5 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      {/* Title that animates on viewport entry */}
+      <motion.div
+        initial={{ borderLeftWidth: 0, borderLeftColor: "transparent" }}
+        whileInView={{
+          borderLeftColor: "#446E6D",
+          transition: { duration: 0.6, delay: index * 0.1 }
+        }}
+        viewport={{
+          threshold: 0.3,
+          margin: "0px 0px -50px 0px",
+          once: false // Allow re-triggering when scrolling back
+        }}
+        className="border-l-4 pl-6 py-2"
+      >
+        <motion.h3
+          initial={{ color: "#666666", scale: 1 }}
+          whileInView={{
+            color: "#446E6D",
+            scale: 1.05,
+            transition: { duration: 0.4, delay: index * 0.1 + 0.2 }
+          }}
+          whileHover={{ scale: 1.08 }}
+          viewport={{
+            threshold: 0.3,
+            margin: "0px 0px -50px 0px",
+            once: false
+          }}
+          className="text-2xl font-semibold transition-colors duration-300"
+        >
+          {item?.title}
+        </motion.h3>
+      </motion.div>
+
+      {/* Content that expands/contracts based on viewport and manual toggle */}
+      <motion.div
+        initial={{ height: 0, opacity: 0 }}
+        whileInView={
+          isManuallyToggled
+            ? { height: "auto", opacity: 1 }
+            : {
+              height: "auto",
+              opacity: 1,
+              transition: {
+                duration: 0.6,
+                delay: index * 0.1 + 0.4,
+                ease: [0.04, 0.62, 0.23, 0.98]
+              }
+            }
+        }
+        exit={{
+          height: 0,
+          opacity: 0,
+          transition: { duration: 0.3 }
+        }}
+        viewport={{
+          threshold: 0.2,
+          margin: "0px 0px -100px 0px",
+          once: false
+        }}
+        className="overflow-hidden ml-6"
+      >
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.4, delay: index * 0.1 + 0.6 }
+          }}
+          viewport={{ threshold: 0.2, once: false }}
+          className="text-lg font-sans mt-4 mb-6 text-stone-700 leading-relaxed"
+        >
+          {item?.detail}
+        </motion.p>
+      </motion.div>
+    </motion.div>
   );
 };

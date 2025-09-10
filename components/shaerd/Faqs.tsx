@@ -30,6 +30,7 @@ interface FaqSectionProps {
   industry?: string;
   child?: string;
   product?: string;
+  data: FaqData[];
 }
 
 const FaqItem: React.FC<FaqItemProps> = ({
@@ -117,13 +118,13 @@ const FaqSection: React.FC<FaqSectionProps> = ({
   industry,
   child,
   product,
+  data
 }) => {
   const [faqs, setFaqs] = useState<FaqData[]>([]);
   const [openFaqs, setOpenFaqs] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const fetchFaqs = async () => {
-      console.log(child);
       try {
         // Only append industry param if it exists
         const queryParam = industry ? `?industry=${industry}` : "";
@@ -193,7 +194,11 @@ const FaqSection: React.FC<FaqSectionProps> = ({
       }
     };
 
+    if (!data) {
     fetchFaqs();
+    } else {
+      setFaqs(data);
+    }
   }, [industry, child, product]);
 
   const toggleFaq = (questionId: number) => {

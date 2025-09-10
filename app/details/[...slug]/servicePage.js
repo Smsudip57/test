@@ -21,23 +21,23 @@ export default function Page({ details: Service }) {
   const [f3, setf3] = useState(false);
   const [f4, setf4] = useState(false);
 
-  useEffect(() => {
-    const fetchdata = async () => {
-      try {
-        const response = await axios.get("/api/servicedetails/get");
-        if (response?.data) {
-          // console.log(response?.data?.servicedetails)
-          // console.log(Service)
-          setdetails(
-            response?.data?.servicedetails?.find(
-              (item) => item?.relatedServices?._id === Service?._id
-            )
-          );
-        }
-      } catch (error) { }
-    };
-    fetchdata();
-  }, []);
+  // useEffect(() => {
+  //   const fetchdata = async () => {
+  //     try {
+  //       const response = await axios.get("/api/servicedetails/get");
+  //       if (response?.data) {
+  //         // console.log(response?.data?.servicedetails)
+  //         // console.log(Service)
+  //         setdetails(
+  //           response?.data?.servicedetails?.find(
+  //             (item) => item?.relatedServices?._id === Service?._id
+  //           )
+  //         );
+  //       }
+  //     } catch (error) { }
+  //   };
+  //   fetchdata();
+  // }, []);
 
   return (
     <div className="min-h-screen min-w-screen text-center relative font-sans">

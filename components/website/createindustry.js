@@ -240,7 +240,7 @@ const CreateIndustry = () => {
       console.error("Error creating industry:", error);
       setError(
         error.response?.data?.message ||
-        "Failed to create industry. Please try again."
+          "Failed to create industry. Please try again."
       );
       customToast({
         success: false,
@@ -324,7 +324,13 @@ const CreateIndustry = () => {
 
           {/* Related Items Selector */}
           <RelatedItemsSelector
-            relations={['services', 'testimonials', 'products', 'childServices', 'projects']}
+            relations={[
+              "services",
+              "testimonials",
+              "products",
+              "childServices",
+              "projects",
+            ]}
             value={relatedItems}
             onChange={handleRelatedItemsChange}
             disabled={loading}
@@ -383,7 +389,6 @@ const CreateIndustry = () => {
                   </p>
                 </label>
               )}
-
             </div>
           </div>
 
@@ -425,17 +430,17 @@ const CreateIndustry = () => {
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
                     PNG, JPG, GIF up to 10MB
-                  </p>
+                  </p>{" "}
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoChange}
+                    className="hidden"
+                    required
+                  />
                 </label>
               )}
-              <input
-                ref={logoInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleLogoChange}
-                className="hidden"
-                required
-              />
             </div>
           </div>
 
@@ -495,10 +500,11 @@ const CreateIndustry = () => {
             disabled={loading}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`w-full py-3 px-4 rounded-lg text-white font-medium ${loading
-              ? "bg-[#446E6D]/70 cursor-not-allowed"
-              : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
-              } shadow-md flex items-center justify-center`}
+            className={`w-full py-3 px-4 rounded-lg text-white font-medium ${
+              loading
+                ? "bg-[#446E6D]/70 cursor-not-allowed"
+                : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
+            } shadow-md flex items-center justify-center`}
           >
             {loading ? (
               <>

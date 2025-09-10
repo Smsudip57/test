@@ -1,48 +1,54 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function middleware(request) {
+  if (process.env.NODE_ENV === "development") {
+    return NextResponse.next();
+  }
+
   const { pathname } = request.nextUrl;
-  console.log('Middleware running for:', pathname);
-  
-  if (pathname.startsWith('/admin')) {
-    console.log('Admin path detected, checking authentication...');
+  console.log("Middleware running for:", pathname);
+
+  if (pathname.startsWith("/admin")) {
+    console.log("Admin path detected, checking authentication...");
     try {
-      const userToken = request.cookies.get('user')?.value;
-      console.log('User token found:', !!userToken);
-      
+      const userToken = request.cookies.get("user")?.value;
+      console.log("User token found:", !!userToken);
+
       if (!userToken) {
-        console.log('No user token, redirecting to home');
-        return NextResponse.redirect(new URL('/', request.url));
+        console.log("No user token, redirecting to home");
+        return NextResponse.redirect(new URL("/", request.url));
       }
 
       // Call the backend API to get user info
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getuserinfo`, {
-        method: 'GET',
-        headers: {
-          'Cookie': `user=${userToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/getuserinfo`,
+        {
+          method: "GET",
+          headers: {
+            Cookie: `user=${userToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
-        return NextResponse.redirect(new URL('/', request.url));
+        return NextResponse.redirect(new URL("/", request.url));
       }
 
       const data = await response.json();
-      console.log(response)
-      
+      console.log(response);
+
       if (!data.success || !data.user) {
-        return NextResponse.redirect(new URL('/', request.url));
+        return NextResponse.redirect(new URL("/", request.url));
       }
 
-      if (data.user.role !== 'admin') {
-        return NextResponse.redirect(new URL('/', request.url));
+      if (data.user.role !== "admin") {
+        return NextResponse.redirect(new URL("/", request.url));
       }
       return NextResponse.next();
-      
     } catch (error) {
-      console.error('Middleware error:', error);
-      return NextResponse.redirect(new URL('/', request.url));
+      console.error("Middleware error:", error);
+      return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
@@ -50,8 +56,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: [
-    '/admin/:path*', 
-    '/admin'
-  ]
+  matcher: ["/admin/:path*", "/admin"],
 };
