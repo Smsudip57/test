@@ -17,7 +17,8 @@ import {
 import { MyContext } from "@/context/context";
 import Link from "next/link";
 import TextEditor from '@/components/shaerd/TextEditor';
-import RelatedItemsSelector from '@/components/website/RelatedItemsSelector';
+import RelatedItemsSelector from '@/components/website/components/RelatedItemsSelector';
+import ImageUploader from '@/components/website/components/ImageUploader';
 
 const BlogManager = () => {
   // States for blog listing
@@ -462,43 +463,19 @@ const BlogManager = () => {
       >
         {/* Image Upload Section */}
         <div className="lg:col-span-2 flex flex-col gap-6">
-          <div className="p-6 border-2 border-dashed rounded-lg bg-gray-50 flex flex-col items-center justify-center min-h-[300px] relative">
-            {imagePreview ? (
-              <div className="relative w-full h-full flex justify-center">
-                <img
-                  src={imagePreview}
-                  alt="Blog preview"
-                  className="object-contain max-h-[250px] rounded-md"
-                />
-                <button
-                  type="button"
-                  onClick={removeImage}
-                  className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            ) : (
-              <>
-                <UploadCloud size={50} className="text-gray-400 mb-4" />
-                <p className="text-gray-500 mb-2 text-center">
-                  Drag and drop an image, or click to browse
-                </p>
-                <p className="text-gray-400 text-sm mb-4 text-center">
-                  Recommended size: 16:7 aspect ratio (required)
-                </p>
-                <label className="cursor-pointer bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors">
-                  <span>Choose Image</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
-                </label>
-              </>
-            )}
-          </div>
+          <ImageUploader
+            aspectRatio="16:7"
+            label="Featured Image"
+            onImageChange={(file, preview) => {
+              setFormData(prev => ({ ...prev, image: file }));
+              setImagePreview(preview);
+            }}
+            initialPreview={imagePreview}
+            acceptedFormats="PNG, JPG, WebP"
+            maxSize={10}
+            required={false}
+            placeholder="Upload blog featured image"
+          />
 
           <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
             <h3 className="font-medium text-gray-800 mb-4">Blog Details</h3>

@@ -14,7 +14,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { MyContext } from "@/context/context";
-import RelatedItemsSelector from "./RelatedItemsSelector";
+import RelatedItemsSelector from "./components/RelatedItemsSelector";
 
 const EditIndustry = () => {
   const [industries, setIndustries] = useState([]);

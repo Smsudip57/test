@@ -18,7 +18,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import CategoryIcon from '@mui/icons-material/Category';
 import BusinessIcon from '@mui/icons-material/Business';
-import RelatedItemsSelector from './RelatedItemsSelector';
+import RelatedItemsSelector from './components/RelatedItemsSelector';
 
 // Theme colors
 const themeColors = {

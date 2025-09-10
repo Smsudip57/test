@@ -17,7 +17,7 @@ import {
     Trash2,
 } from "lucide-react";
 import { MyContext } from "@/context/context";
-import RelatedItemsSelector from "./RelatedItemsSelector";
+import RelatedItemsSelector from "./components/RelatedItemsSelector";
 import dynamic from "next/dynamic";
 
 // Dynamically import TextEditor to avoid SSR issues

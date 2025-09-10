@@ -16,8 +16,6 @@ export default function Page({ details: Service }) {
       try {
         const response = await axios.get("/api/servicedetails/get");
         if (response?.data) {
-          // console.log(response?.data?.servicedetails)
-          // console.log(Service)
           setdetails(
             response?.data?.servicedetails?.find(
               (item) => item?.relatedServices?._id === Service?._id

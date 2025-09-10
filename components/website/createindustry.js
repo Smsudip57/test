@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { MyContext } from "@/context/context";
-import RelatedItemsSelector from "./RelatedItemsSelector";
+import RelatedItemsSelector from "./components/RelatedItemsSelector";
 
 const CreateIndustry = () => {
   const [formData, setFormData] = useState({

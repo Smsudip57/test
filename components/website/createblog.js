@@ -5,7 +5,8 @@ import { Loader2, UploadCloud, X } from 'lucide-react';
 import { MyContext } from '@/context/context';
 import { fetchMultiple } from '@/lib/client-fetch';
 import TextEditor from '@/components/shaerd/TextEditor';
-import RelatedItemsSelector from '@/components/website/RelatedItemsSelector';
+import RelatedItemsSelector from '@/components/website/components/RelatedItemsSelector';
+import ImageUploader from '@/components/website/components/ImageUploader';
 
 const CreateBlog = () => {
   const [formData, setFormData] = useState({
@@ -24,37 +25,6 @@ const CreateBlog = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const { customToast } = useContext(MyContext);
 
-  // Function to validate image dimensions (16:7 aspect ratio with 5% tolerance)
-  const validateImageDimensions = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const width = img.width;
-          const height = img.height;
-          const aspectRatio = width / height;
-          const targetRatio = 16 / 7;
-          const tolerance = 0.05; // 5% tolerance
-
-          if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
-            resolve({ width, height, aspectRatio });
-          } else {
-            reject({
-              message: `Image must have a 16:7 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
-              dimensions: { width, height, aspectRatio }
-            });
-          }
-        };
-        img.onerror = () => {
-          reject({ message: "Failed to load image. Please select a valid image file." });
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -68,27 +38,6 @@ const CreateBlog = () => {
       relatedProducts: relatedItems.relatedProducts || [],
       relatedChikfdServices: relatedItems.relatedChikfdServices || [],
     }));
-  };
-
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    try {
-      // Validate image dimensions (16:7 aspect ratio with 5% tolerance)
-      await validateImageDimensions(file);
-
-      // If validation passes, set the image preview and update formData
-      setImagePreview(URL.createObjectURL(file));
-      setFormData((prev) => ({ ...prev, image: file }));
-    } catch (error) {
-      console.error("Image validation failed:", error);
-      customToast({
-        success: false,
-        message: error.message || "Image must have a 16:7 aspect ratio"
-      });
-      e.target.value = "";
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -170,47 +119,19 @@ const CreateBlog = () => {
       >
         {/* Image Upload Section */}
         <div className="lg:col-span-2 flex flex-col gap-6">
-          <div className="p-6 border-2 border-dashed rounded-lg bg-gray-50 flex flex-col items-center justify-center min-h-[300px] relative">
-            {imagePreview ? (
-              <div className="relative w-full h-full flex justify-center">
-                <img
-                  src={imagePreview}
-                  alt="Blog preview"
-                  className="object-contain max-h-[250px] rounded-md"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setImagePreview(null);
-                    setFormData(prev => ({ ...prev, image: null }));
-                  }}
-                  className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            ) : (
-              <>
-                <UploadCloud size={50} className="text-gray-400 mb-4" />
-                <p className="text-gray-500 mb-2 text-center">
-                  Drag and drop an image, or click to browse
-                </p>
-                <p className="text-gray-400 text-sm mb-4 text-center">
-                  Recommended size: 16:7 aspect ratio (required)
-                </p>
-                <label className="cursor-pointer bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors">
-                  <span>Choose Image</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                    required
-                  />
-                </label>
-              </>
-            )}
-          </div>
+          <ImageUploader
+            aspectRatio="16:7"
+            label="Featured Image"
+            onImageChange={(file, preview) => {
+              setFormData(prev => ({ ...prev, image: file }));
+              setImagePreview(preview);
+            }}
+            initialPreview={imagePreview}
+            acceptedFormats="PNG, JPG, WebP"
+            maxSize={10}
+            required={true}
+            placeholder="Upload blog featured image"
+          />
 
           <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
             <h3 className="font-medium text-gray-800 mb-4">Blog Details</h3>
