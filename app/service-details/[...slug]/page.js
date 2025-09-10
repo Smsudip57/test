@@ -46,27 +46,23 @@ export default async function AdminPage({ params }) {
 
         const serviceId = Service._id.toString();
 
-        // Filter related industries (array of ObjectIds)
         const relatedIndustries = industries.filter((industry) =>
-          industry?.relatedServices?.some((id) => id.toString() === serviceId)
+          industry?.relatedServices?.some(
+            (service) => service?._id?.toString() === serviceId
+          )
         );
-
-        // Filter related testimonials (single ObjectId)
         const relatedTestimonials = testimonials.filter(
-          (testimonial) => testimonial?.relatedService?._id?.toString() === serviceId
+          (testimonial) =>
+            testimonial?.relatedService?._id?.toString() === serviceId
         );
-
-        // Filter related FAQs (array of ObjectIds)
         const relatedFaqs = faqs.filter((faq) =>
-          faq?.relatedServices?.some((id) => id.toString() === serviceId)
+          faq?.relatedServices?.some(
+            (service) => service?._id?.toString() === serviceId
+          )
         );
-
-        // Filter related blogs (array of ObjectIds)
         const relatedBlogs = blogs.filter((blog) =>
           blog?.relatedServices?.some((id) => id.toString() === serviceId)
         );
-
-        // Filter related projects (array of ObjectIds)
         const relatedProjects = projects.filter((project) =>
           project?.relatedServices?.some((id) => id.toString() === serviceId)
         );
