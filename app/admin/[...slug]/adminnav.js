@@ -9,39 +9,10 @@ import { MyContext } from '@/context/context';
 
 export default function Adminnav({user, login}) {
   const [isOn, setIsOn] = useState(false);
-  const [isLoading,setisLoading] = useState(false)
   const context = React.useContext(MyContext);
   const router = useRouter();
-  const [loginout, setloginout] = useState(false);
 
-  React.useEffect(()=>{
-    if(!context.loading&&!loginout&& (!context.user||context.user.role!=='admin')){
-      // notFound();
-    }
-  },[context.user,context.loading])
-  if(context.loading){
-    return(
-      <div className='fixed top-0 bg-white left-0 z-50 min-h-screen min-w-screen'></div>
-    )
-  }
 
-  const handleToggle = async() => {
-    try {
-      setisLoading(true);
-      const response = await axios.post(`/api/setting/toggleLogin`,{
-        loginOn: !isOn
-      },{
-        withCredentials: true
-      });
-      if(response.data.success){
-        setIsOn(prev=>!prev);
-      }
-    } catch (error) {
-
-    } finally{
-      setisLoading(false);
-    }
-    };
 
     const handleLogout = async() => {
       try {

@@ -49,7 +49,7 @@ export default async function Page({params}) {
 
 
   return (
-    <div className={`${inter.className} relative bg-[#F3F4F6]`}>
+    <div className={`${inter.className} relative bg-[#F3F4F6] min-h-screen`}>
       <Adminnav user={user} login={login?.data?.loginOn}/>
       <div className='w-full relative flex'>
         <Navbar />

@@ -1,6 +1,3 @@
-import { cookies } from 'next/headers';
-import { notFound } from 'next/navigation';
-import axios from 'axios';
 import Adminnav from './adminnav';
 import Navbar from './navbar';
 import Editwebsite from '@/components/website/editwebsite';
