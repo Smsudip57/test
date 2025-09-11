@@ -1,10 +1,17 @@
 "use client";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useContext,
+} from "react";
 import axios from "axios";
 import ReusableTable from "@/components/ui/ReusableTable";
 import PageHeader from "@/components/ui/PageHeader";
 import UserDetailsModal from "@/components/ui/UserDetailsModal";
 import { UserCheck, UserX, Clock, User, Eye } from "lucide-react";
+import { MyContext } from "@/context/context";
 
 const UserManagement = () => {
   const [activeTab, setActiveTab] = useState("approved");
@@ -15,6 +22,7 @@ const UserManagement = () => {
   const [roleFilter, setRoleFilter] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const context = useContext(MyContext);
 
   // Stable image error handler
   const handleImageError = useCallback((e) => {
@@ -85,6 +93,12 @@ const UserManagement = () => {
         );
 
         if (response.data.success) {
+          const actionText = action === "approve" ? "approved" : "rejected";
+          context?.customToast({
+            success: true,
+            message: `User ${actionText} successfully`,
+          });
+
           // Pass current values as parameters
           fetchUsers(
             pagination?.currentPage || 1,
@@ -93,13 +107,26 @@ const UserManagement = () => {
             activeTab
           );
         } else {
-          // Silent fail for better UX
+          context?.customToast({
+            success: false,
+            message: response.data.message || `Failed to ${action} user`,
+          });
         }
       } catch (error) {
-        // Silent fail for better UX
+        context?.customToast({
+          success: false,
+          message: error.response?.data?.message || `Error ${action}ing user`,
+        });
       }
     },
-    [fetchUsers, pagination?.currentPage, searchTerm, roleFilter, activeTab]
+    [
+      fetchUsers,
+      pagination?.currentPage,
+      searchTerm,
+      roleFilter,
+      activeTab,
+      context,
+    ]
   );
 
   // STABLE data

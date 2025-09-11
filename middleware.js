@@ -33,7 +33,6 @@ export async function middleware(request) {
       }
 
       const data = await response.json();
-      console.log(response);
 
       if (!data.success || !data.user) {
         return NextResponse.redirect(new URL("/", request.url));

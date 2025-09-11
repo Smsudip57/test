@@ -5,7 +5,7 @@ import {
   LayoutDashboard,
   Globe,
   Users,
-  MessageSquare,
+  Calendar,
   Settings,
   ChevronDown,
   Home,
@@ -33,9 +33,9 @@ export default function Sidebar() {
       basePath: "/admin/user-management",
     },
     {
-      icon: <MessageSquare className="w-5 h-5" />,
-      name: "Chat",
-      basePath: "/admin/chat",
+      icon: <Calendar className="w-5 h-5" />,
+      name: "Consultations",
+      basePath: "/admin/consulation-Management",
     },
     {
       icon: <Settings className="w-5 h-5" />,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   X,
   User,
@@ -12,11 +12,13 @@ import {
   CheckCircle,
 } from "lucide-react";
 import axios from "axios";
+import { MyContext } from "@/context/context";
 
 const UserDetailsModal = ({ user, isOpen, onClose, onUpdate }) => {
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const context = useContext(MyContext);
 
   if (!isOpen || !user) return null;
 
@@ -32,11 +34,24 @@ const UserDetailsModal = ({ user, isOpen, onClose, onUpdate }) => {
       );
 
       if (response.data.success) {
+        context?.customToast({
+          success: true,
+          message: `User ${user.isSuspended ? 'unsuspended' : 'suspended'} successfully`,
+        });
         onUpdate();
         onClose();
+      } else {
+        context?.customToast({
+          success: false,
+          message: response.data.message || "Failed to update suspension status",
+        });
       }
     } catch (error) {
       console.error("Error toggling suspension:", error);
+      context?.customToast({
+        success: false,
+        message: error.response?.data?.message || "Error updating suspension status",
+      });
     } finally {
       setLoading(false);
     }
@@ -46,7 +61,10 @@ const UserDetailsModal = ({ user, isOpen, onClose, onUpdate }) => {
     e.preventDefault();
     e.stopPropagation();
     if (!newPassword || newPassword.length < 6) {
-      alert("Password must be at least 6 characters long");
+      context?.customToast({
+        success: false,
+        message: "Password must be at least 6 characters long",
+      });
       return;
     }
 
@@ -59,13 +77,24 @@ const UserDetailsModal = ({ user, isOpen, onClose, onUpdate }) => {
       );
 
       if (response.data.success) {
-        alert("Password reset successfully");
+        context?.customToast({
+          success: true,
+          message: "Password reset successfully",
+        });
         setNewPassword("");
         setIsChangingPassword(false);
+      } else {
+        context?.customToast({
+          success: false,
+          message: response.data.message || "Failed to reset password",
+        });
       }
     } catch (error) {
       console.error("Error resetting password:", error);
-      alert("Error resetting password");
+      context?.customToast({
+        success: false,
+        message: error.response?.data?.message || "Error resetting password",
+      });
     } finally {
       setLoading(false);
     }

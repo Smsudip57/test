@@ -79,7 +79,17 @@ export default function Adminnav({ user, login }) {
         {/* Right Side - User Actions */}
         <div className="flex items-center space-x-4">
           {/* User Menu */}
-          {currentUser ? (
+          {currentUser === undefined ? (
+            // Skeleton loader while user data is loading
+            <div className="flex items-center space-x-3 p-2 rounded-lg animate-pulse">
+              <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+              <div className="hidden md:block">
+                <div className="h-4 bg-gray-200 rounded w-20 mb-1"></div>
+                <div className="h-3 bg-gray-200 rounded w-16"></div>
+              </div>
+              <div className="w-4 h-4 bg-gray-200 rounded"></div>
+            </div>
+          ) : currentUser ? (
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}

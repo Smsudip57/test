@@ -46,14 +46,96 @@ function ReusableTable({
   };
 
   if (loading) {
+    const skeletonRows = 8; // Number of skeleton rows
+    const totalColumns = columns.length + (actions.length > 0 ? 1 : 0);
+
     return (
-      <div className="w-full bg-white rounded-lg shadow-sm">
-        <div className="p-6">
+      <div className={`w-full bg-white rounded-lg shadow-sm ${className}`}>
+        {/* Header Skeleton */}
+        <div className="p-6 border-b border-gray-200 bg-white">
           <div className="animate-pulse">
-            <div className="h-10 bg-gray-200 rounded mb-4"></div>
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-100 rounded mb-2"></div>
-            ))}
+            <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
+              {/* Search Skeleton */}
+              <div className="relative flex-1 max-w-md">
+                <div className="h-12 bg-gray-200 rounded-lg"></div>
+              </div>
+              {/* Filter Skeleton */}
+              {filters.length > 0 && (
+                <div className="flex gap-3">
+                  {filters.map((_, index) => (
+                    <div
+                      key={index}
+                      className="w-44 h-12 bg-gray-200 rounded-lg"
+                    ></div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Table Skeleton */}
+        <div className="overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead className="bg-gray-50">
+              <tr>
+                {columns.map((_, index) => (
+                  <th
+                    key={`skeleton-header-${index}`}
+                    className="px-4 py-4 text-left"
+                  >
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-300 rounded w-20"></div>
+                    </div>
+                  </th>
+                ))}
+                {actions.length > 0 && (
+                  <th className="px-4 py-4 text-left w-32">
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-300 rounded w-16"></div>
+                    </div>
+                  </th>
+                )}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {[...Array(skeletonRows)].map((_, rowIndex) => (
+                <tr key={`skeleton-row-${rowIndex}`} className="animate-pulse">
+                  {columns.map((_, colIndex) => (
+                    <td
+                      key={`skeleton-cell-${rowIndex}-${colIndex}`}
+                      className="px-4 py-3 text-sm"
+                    >
+                      <div className="h-5 bg-gray-200 rounded w-full max-w-32"></div>
+                    </td>
+                  ))}
+                  {actions.length > 0 && (
+                    <td className="px-4 py-3 text-sm">
+                      <div className="flex gap-2">
+                        {actions.map((_, actionIndex) => (
+                          <div
+                            key={`skeleton-action-${rowIndex}-${actionIndex}`}
+                            className="h-7 w-12 bg-gray-200 rounded"
+                          ></div>
+                        ))}
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination Skeleton */}
+        <div className="px-4 py-4 border-t border-gray-200 bg-gray-50">
+          <div className="animate-pulse flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className="h-5 bg-gray-200 rounded w-48"></div>
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 bg-gray-200 rounded"></div>
+              <div className="h-8 w-24 bg-gray-200 rounded"></div>
+              <div className="h-8 w-8 bg-gray-200 rounded"></div>
+            </div>
           </div>
         </div>
       </div>

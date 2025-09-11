@@ -251,7 +251,8 @@ export default function Firewall({
     () =>
       currentService?.deltail ||
       Mainservice?.description ||
-      `Learn more about our ${currentService?.Title || "professional"
+      `Learn more about our ${
+        currentService?.Title || "professional"
       } services and solutions. Professional digital transformation and IT services from Webmedigital.`,
     [Mainservice, currentService]
   );
@@ -263,10 +264,11 @@ export default function Firewall({
         <meta name="description" content={pageDescription} />
         <meta
           name="keywords"
-          content={`${currentService?.Title || ""
-            }, IT services, digital transformation, webmedigital, ${slug.join(
-              ", "
-            )}`}
+          content={`${
+            currentService?.Title || ""
+          }, IT services, digital transformation, webmedigital, ${slug.join(
+            ", "
+          )}`}
         />
         <meta name="robots" content="index, follow" />
         <link
@@ -307,7 +309,11 @@ export default function Firewall({
         </script>
       </Head>
       {/* Booking Modal */}
-      <ERPConsultationPage isOpen={isBookingModalOpen} onClose={() => setIsBookingModalOpen(false)} />
+      <ERPConsultationPage
+        id={childData?._id || ""}
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
       {/* Background elements */}
       <div
         className="min-h-[650px] w-full bg-[#C1EBE7] bg-no-repeat bg-cover absolute uni z-[-10]"
@@ -344,9 +350,10 @@ export default function Firewall({
                     Book Free Consultation
                   </button>
                   <Link
-                    href={`/service-details/${currentService?.slug ||
+                    href={`/service-details/${
+                      currentService?.slug ||
                       currentService?.Title?.toLowerCase()
-                      }`}
+                    }`}
                     className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     aria-label={`Explore ${currentService?.Title}`}
                   >
@@ -378,8 +385,8 @@ export default function Firewall({
                           src={currentService.image}
                           alt={`${currentService?.Title} service illustration`}
                           className="w-full rounded-md object-cover hover:opacity-80 transition-opacity duration-300"
-                        // width={100}
-                        // height={100}
+                          // width={100}
+                          // height={100}
                         />
                       </a>
                     </div>
@@ -439,7 +446,11 @@ export default function Firewall({
                       Get it today!
                     </button>
                     <Link
-                      href={`/details/services/${productData?.slug ? productData.slug : productData?.Title}`}
+                      href={`/details/services/${
+                        productData?.slug
+                          ? productData.slug
+                          : productData?.Title
+                      }`}
                       className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     >
                       <span className="mr-1">Discover</span>
@@ -495,7 +506,9 @@ export default function Firewall({
                       Get it today!
                     </button>
                     <Link
-                      href={`/details/products/${childData.slug ? childData.slug : childData.Title}`}
+                      href={`/details/products/${
+                        childData.slug ? childData.slug : childData.Title
+                      }`}
                       className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     >
                       <span className="mr-1">Discover</span>
@@ -602,11 +615,11 @@ export default function Firewall({
                                   {/* Rating badge */}
                                   {(product?.rating ||
                                     product?.rating === 0) && (
-                                      <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-2 py-1 rounded-full shadow-md z-10 flex items-center gap-1">
-                                        <Star className="text-yellow-500 w-3 h-3 fill-current" />
-                                        <span>{product.rating}</span>
-                                      </div>
-                                    )}
+                                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-2 py-1 rounded-full shadow-md z-10 flex items-center gap-1">
+                                      <Star className="text-yellow-500 w-3 h-3 fill-current" />
+                                      <span>{product.rating}</span>
+                                    </div>
+                                  )}
 
                                   {/* Hover overlay */}
                                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
@@ -757,7 +770,10 @@ export default function Firewall({
             </h2>
             <Projects service={currentService?._id} />
           </section>
-          <section aria-labelledby="industries-heading" className="mt-16 relative z-20">
+          <section
+            aria-labelledby="industries-heading"
+            className="mt-16 relative z-20"
+          >
             <h2 id="industries-heading" className="sr-only">
               Industries We Serve
             </h2>
