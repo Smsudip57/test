@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 
 export async function middleware(request) {
-  if (process.env.NODE_ENV === "development") {
-    return NextResponse.next();
-  }
 
   const { pathname } = request.nextUrl;
   console.log("Middleware running for:", pathname);
