@@ -12,7 +12,7 @@ export default function Navbar() {
     {
       name: 'Parent Services',
       icons: <HeartHandshake style={{ width: '1em', height: '1em' }}/>,
-      basePath: '/admin/website/services',
+      basePath: '/admin/cms/website/services',
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
@@ -22,7 +22,7 @@ export default function Navbar() {
     {
       name: 'Parent Service Details',
       icons: <FileQuestion  style={{ width: '1em', height: '1em' }}/>,
-      basePath: '/admin/website/service-details',
+      basePath: '/admin/cms/website/service-details',
       buttons: [
         { name: 'Create', path: 'create' },
         // { name: 'Edit', path: 'edit' },
@@ -31,7 +31,7 @@ export default function Navbar() {
     },
     {
       name: 'Child Services',
-      basePath: '/admin/website/products',
+      basePath: '/admin/cms/website/products',
       icons: <PackageSearch  style={{ width: '1em', height: '1em' }}/>,
       buttons: [
         { name: 'Create', path: 'create' },
@@ -41,7 +41,7 @@ export default function Navbar() {
     },
     {
       name: 'Products',
-      basePath: '/admin/website/child-service',
+      basePath: '/admin/cms/website/child-service',
       icons: <Baby  style={{ width: '1em', height: '1em' }}/>,
       buttons: [
         { name: 'Create', path: 'create' },
@@ -52,7 +52,7 @@ export default function Navbar() {
     
     {
       name: 'Projects',
-      basePath: '/admin/website/projects',
+      basePath: '/admin/cms/website/projects',
       icons: <FolderGit  style={{ width: '1em', height: '1em' }}/>,
       buttons: [
         { name: 'Create', path: 'create' },
@@ -63,7 +63,7 @@ export default function Navbar() {
     {
       name: 'Testimonials',
       icons: <MessageCircleCode  style={{ width: '1em', height: '1em' }}/>,
-      basePath: '/admin/website/testimonials',
+      basePath: '/admin/cms/website/testimonials',
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
@@ -72,7 +72,7 @@ export default function Navbar() {
     {
       name: 'Industries',
       icons: <Factory  style={{ width: '1em', height: '1em' }}/>,
-      basePath: '/admin/website/industries',
+      basePath: '/admin/cms/website/industries',
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
@@ -82,7 +82,7 @@ export default function Navbar() {
     {
       name: 'Blogs',
       icons: <Newspaper   style={{ width: '1em', height: '1em' }}/>,
-      basePath: '/admin/website/blog',
+      basePath: '/admin/cms/website/blog',
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
@@ -92,7 +92,7 @@ export default function Navbar() {
     {
       name: 'Knowledgebase',
       icons: <NewspaperIcon   style={{ width: '1em', height: '1em' }}/>,
-      basePath: '/admin/website/knowledgebase',
+      basePath: '/admin/cms/website/knowledgebase',
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
@@ -102,7 +102,7 @@ export default function Navbar() {
     {
       name: 'Faq',
       icons: <FileQuestion  style={{ width: '1em', height: '1em' }}/>,
-      basePath: '/admin/website/faq',
+      basePath: '/admin/cms/website/faq',
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },

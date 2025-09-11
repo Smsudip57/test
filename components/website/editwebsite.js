@@ -147,7 +147,7 @@ export default function Page({params}) {
       case 'login':
         return <Login />
       default:
-        router.replace('/admin/website/services/create');
+        router.replace('/admin/cms/website/services/create');
         return <CreateService/>
     }
     
@@ -158,7 +158,7 @@ export default function Page({params}) {
     <div className='relative'>
       <div className='w-full relative flex flex-col gap-5'>
         <Navbar />
-        <div className='bg- rounded-md sh  w-full'>
+        <div className='bg- rounded-md sh  p-4 md:p-6 pt-0 md:pt-2 w-full'>
           {renderContent()}
         </div>
       </div>
