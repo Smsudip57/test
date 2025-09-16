@@ -2,10 +2,11 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import path from "path";
+import axios from "axios";
 import { MyContext } from "@/context/context";
 
 const Footer = () => {
-  const pathname:any = usePathname();
+  const pathname: any = usePathname();
   const router = useRouter();
   const context = React.useContext(MyContext);
   const { customToast } = useContext(MyContext);
@@ -14,20 +15,53 @@ const Footer = () => {
   const [loaded, setloaded] = useState(false);
   const [email, setEmail] = useState("");
 
-  const handleSubscribe = () => {
+  const handleSubscribe = async () => {
     if (!email.trim()) {
-      customToast({ success: false, message: "Please enter your email address" });
+      customToast({
+        success: false,
+        message: "Please enter your email address",
+      });
       return;
     }
 
-    if (!email.includes("@")) {
-      customToast({ success: false, message: "Please enter a valid email address" });
+    // Validate email with regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      customToast({
+        success: false,
+        message: "Please enter a valid email address",
+      });
       return;
     }
 
-    // Success case
-    customToast({ success: true, message: "Thank you for subscribing to our newsletter!" });
-    setEmail("");
+    try {
+      const response = await axios.post(
+        `/api/subscribe`,
+        {
+          email: email.toLowerCase().trim(),
+        }
+      );
+
+      if (response.data.success) {
+        customToast({
+          success: true,
+          message: "Thank you for subscribing to our newsletter!",
+        });
+        setEmail("");
+      } else {
+        customToast({
+          success: false,
+          message:
+            response.data.message || "Failed to subscribe. Please try again.",
+        });
+      }
+    } catch (error) {
+      console.error("Error subscribing:", error);
+      customToast({
+        success: false,
+        message: "Failed to subscribe. Please try again later.",
+      });
+    }
   };
 
   if (
