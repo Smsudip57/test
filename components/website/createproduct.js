@@ -71,9 +71,9 @@ export default function CreateChildService() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get("/api/product/get");
+        const response = await axios.get("/api/service/getservice");
         if (response.data.success) {
-          setServices(response.data.products);
+          setServices(response.data.services);
         } else {
           setError("Failed to load services.");
         }
@@ -456,12 +456,12 @@ export default function CreateChildService() {
 
         customToast({
           success: true,
-          message: "Product created successfully!",
+          message: "Child Service created successfully!",
         });
 
         // Reset form or redirect
         setTimeout(() => {
-          router.push("/admin/products");
+          router.push("/admin/products/create");
         }, 2000);
       } catch (error) {
         console.error("Error creating Product:", error);
