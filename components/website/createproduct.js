@@ -447,7 +447,7 @@ export default function CreateChildService() {
         });
 
         // Submit the form
-        const response = await axios.post("/api/child/create", submitFormData, {
+        const response = await axios.post("/api/product/create", submitFormData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -461,7 +461,7 @@ export default function CreateChildService() {
 
         // Reset form or redirect
         setTimeout(() => {
-          router.push("/admin/products/create");
+          router.push("/admin/cms/website/products/create");
         }, 2000);
       } catch (error) {
         console.error("Error creating Product:", error);
