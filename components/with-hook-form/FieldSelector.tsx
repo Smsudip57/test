@@ -37,9 +37,13 @@ function FieldSelectorRHF(props: FieldSelectorProps) {
     selectClassName = "",
     ...rest
   } = props;
-  const { control } = useFormContext();
+  const { control, getValues, watch } = useFormContext();
   // Error handling
   const errorMsg = (control?._formState?.errors?.[name]?.message) as string | undefined;
+  const fieldValue = watch(name);
+  React.useEffect(() => {
+    // ...existing code...
+  }, [fieldValue, name]);
   return (
     <div className={`${FIELD_CONTAINER_CLASS} ${className}`}>
       {label && (
@@ -56,27 +60,36 @@ function FieldSelectorRHF(props: FieldSelectorProps) {
       <Controller
         name={name}
         control={control}
-        render={({ field }) => (
-          <Select
-            value={value !== undefined ? String(value) : (field.value ? String(field.value) : undefined)}
-            onValueChange={(val: string) => {
-              field.onChange(val);
-              onSelect?.(val);
-            }}
-            disabled={disabled}
-          >
-            <SelectTrigger className={selectClassName}>
-              <SelectValue placeholder={placeholder} />
-            </SelectTrigger>
-            <SelectContent className="bg-white">
-              {options.map((opt) => (
-                <SelectItem key={opt.value} value={String(opt.value)}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
+        render={({ field }) => {
+          const currentFieldValue = field.value ? String(field.value) : "";
+          const optionValues = options.map(opt => String(opt.value));
+          return (
+            <Select
+              value={value !== undefined ? String(value) : currentFieldValue}
+              onValueChange={(val: string) => {
+                // Prevent Radix from clearing valid values during mount/effect cycles
+                if (val === "" && currentFieldValue !== "" && options.length > 0) {
+                  console.log(`🚫 Prevented Radix from clearing value "${currentFieldValue}"`);
+                  return;
+                }
+                field.onChange(val);
+                onSelect?.(val);
+              }}
+              disabled={disabled}
+            >
+              <SelectTrigger className={selectClassName}>
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+              <SelectContent className="bg-white">
+                {options.map((opt) => (
+                  <SelectItem key={opt.value} value={String(opt.value)}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          );
+        }}
       />
     </div>
   );

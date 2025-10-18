@@ -213,6 +213,7 @@ export default function ProductManager() {
             ? { childId: selectedProduct._id, ...data }
             : { productId: selectedProduct._id, ...data };
           await moduleConfig.editMutation(payload).unwrap();
+          console.log(payload)
           customToast({ success: true, message: `${moduleConfig.label} updated successfully!` });
           setSelectedProduct(null);
           reset();
