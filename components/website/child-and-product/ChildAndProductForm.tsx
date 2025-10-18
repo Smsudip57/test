@@ -45,6 +45,7 @@ interface ProductFormProps {
     onRemoveSection?: (index: number) => void;
     slugPreview?: string;
     isChildModule?: boolean;
+    moduleLabel?: string; // New prop for dynamic label
 }
 
 export function ProductForm({
@@ -53,7 +54,8 @@ export function ProductForm({
     onAddSection,
     onRemoveSection,
     slugPreview = "example-slug",
-    isChildModule = false
+    isChildModule = false,
+    moduleLabel = "Product" // Default value
 }: ProductFormProps) {
     const { control, watch } = useFormContext<ProductFormData>();
 
@@ -84,11 +86,11 @@ export function ProductForm({
             <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
                 {/* Left Column - Image & Category */}
                 <div className="md:col-span-5 space-y-8">
-                    <h2 className="text-lg font-bold text-primary mb-4">Product Image & Category</h2>
+                    <h2 className="text-lg font-bold text-primary mb-4">{moduleLabel} Image & Category</h2>
                     <FileInput
                         name="image"
-                        label="Main Product Image"
-                        placeholder="Upload product image with 16:9 aspect ratio"
+                        label={`Main ${moduleLabel} Image`}
+                        placeholder={`Upload ${moduleLabel.toLowerCase()} image with 16:9 aspect ratio`}
                         required
                         accept="image/*"
                         dimensions={{ width: 1920, height: 1080 }}
@@ -106,12 +108,12 @@ export function ProductForm({
 
                 {/* Right Column - Product Details */}
                 <div className="md:col-span-7 space-y-8">
-                    <h2 className="text-lg font-bold text-primary mb-4">Product Details</h2>
+                    <h2 className="text-lg font-bold text-primary mb-4">{moduleLabel} Details</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <FieldInput
                             name="Title"
-                            label="Product Title"
-                            placeholder="Enter product title"
+                            label={`${moduleLabel} Title`}
+                            placeholder={`Enter ${moduleLabel.toLowerCase()} title`}
                             required
                         />
                         <div>
@@ -122,7 +124,7 @@ export function ProductForm({
                                 required
                             />
                             <p className="text-xs text-gray-400 mt-1">
-                                Only lowercase letters, numbers, and hyphens. Used in URLs: /product/{slugPreview}
+                                Only lowercase letters, numbers, and hyphens. Used in URLs: /{moduleLabel.toLowerCase()}/{slugPreview}
                             </p>
                         </div>
                     </div>
@@ -157,7 +159,7 @@ export function ProductForm({
             <div className="pt-10 border-t border-gray-100">
                 <div className="flex justify-between items-center mb-8">
                     <h2 className="text-lg font-bold text-gray-700">
-                        Product Sections ({sectionFields.length})
+                        {moduleLabel} Sections ({sectionFields.length})
                     </h2>
                     <Button
                         type="button"

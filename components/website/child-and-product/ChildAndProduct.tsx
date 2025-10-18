@@ -121,7 +121,7 @@ export default function ProductManager() {
   const moduleConfig = useMemo<ModuleConfig>(() => {
     if (isChildModule) {
       return {
-        isChild: true,
+        isChild: false,
         label: "Product",
         createMutation: createChildService,
         editMutation: editChildService,
@@ -134,7 +134,7 @@ export default function ProductManager() {
       };
     }
     return {
-      isChild: false,
+      isChild: true,
       label: "Child Service",
       createMutation: createProduct,
       editMutation: editProduct,
@@ -303,6 +303,7 @@ export default function ProductManager() {
                   serviceOptions={categoryOptions}
                   servicesLoading={categoryLoading}
                   isChildModule={isChildModule}
+                  moduleLabel={moduleConfig.label}
                 />
                 <div className="flex justify-end">
                   <Button type="submit" variant="default" size="default" className="flex items-center px-6 py-3">
@@ -345,6 +346,7 @@ export default function ProductManager() {
                     serviceOptions={categoryOptions}
                     servicesLoading={categoryLoading}
                     isChildModule={isChildModule}
+                    moduleLabel={moduleConfig.label}
                   />
                   <div className="flex justify-end">
                     <Button type="submit" variant="default" size="default" className="flex items-center px-6 py-3">
