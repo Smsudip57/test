@@ -5,9 +5,10 @@ import StarsCanvas from "@/components/main/StarBackground";
 import Navbar from "@/components/main/Navbar";
 import Footer from "@/components/main/Footer";
 import Chat from "@/components/chat/globalSupportChat";
-import { ThemeProvider  } from "@/context/context";
-import { ToastContainer } from 'react-toastify'; 
+import { ThemeProvider } from "@/context/context";
+import { ToastContainer } from 'react-toastify';
 import ConfirimModel from '@/components/main/ConfirmModel';
+import ReduxProvider from "@/components/providers/ReduxProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 
@@ -27,24 +28,26 @@ export default function RootLayout({
       <body
         className={`${inter.className} overflow-y-scroll overflow-x-hidden`}
       >
-        <ThemeProvider>
-        <ConfirimModel />
-        <ToastContainer 
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-          <StarsCanvas />
-          <Navbar />
-          {children}
-          <Chat />
-          <Footer />
-        </ThemeProvider>
+        <ReduxProvider>
+          <ThemeProvider>
+            <ConfirimModel />
+            <ToastContainer
+              position="bottom-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
+            <StarsCanvas />
+            <Navbar />
+            {children}
+            <Chat />
+            <Footer />
+          </ThemeProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

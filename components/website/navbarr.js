@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import {HeartHandshake, PackageSearch,FolderGit ,MessageCircleCode,Factory  ,Newspaper, NewspaperIcon, FileQuestion, Baby   } from 'lucide-react'
+import { HeartHandshake, PackageSearch, FolderGit, MessageCircleCode, Factory, Newspaper, NewspaperIcon, FileQuestion, Baby } from 'lucide-react'
 
 export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState('');
@@ -11,7 +11,7 @@ export default function Navbar() {
   const routes = [
     {
       name: 'Parent Services',
-      icons: <HeartHandshake style={{ width: '1em', height: '1em' }}/>,
+      icons: <HeartHandshake style={{ width: '1em', height: '1em' }} />,
       basePath: '/admin/cms/website/services',
       buttons: [
         { name: 'Create', path: 'create' },
@@ -21,7 +21,7 @@ export default function Navbar() {
     },
     {
       name: 'Parent Service Details',
-      icons: <FileQuestion  style={{ width: '1em', height: '1em' }}/>,
+      icons: <FileQuestion style={{ width: '1em', height: '1em' }} />,
       basePath: '/admin/cms/website/service-details',
       buttons: [
         { name: 'Create', path: 'create' },
@@ -31,8 +31,8 @@ export default function Navbar() {
     },
     {
       name: 'Child Services',
-      basePath: '/admin/cms/website/products',
-      icons: <PackageSearch  style={{ width: '1em', height: '1em' }}/>,
+      basePath: '/admin/cms/website/child-service',
+      icons: <Baby style={{ width: '1em', height: '1em' }} />,
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
@@ -41,19 +41,19 @@ export default function Navbar() {
     },
     {
       name: 'Products',
-      basePath: '/admin/cms/website/child-service',
-      icons: <Baby  style={{ width: '1em', height: '1em' }}/>,
+      basePath: '/admin/cms/website/products',
+      icons: <PackageSearch style={{ width: '1em', height: '1em' }} />,
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
-        // { name: 'Delete', path: 'delete' },
+        { name: 'Delete', path: 'delete' },
       ],
     },
-    
+
     {
       name: 'Projects',
       basePath: '/admin/cms/website/projects',
-      icons: <FolderGit  style={{ width: '1em', height: '1em' }}/>,
+      icons: <FolderGit style={{ width: '1em', height: '1em' }} />,
       buttons: [
         { name: 'Create', path: 'create' },
         { name: 'Edit', path: 'edit' },
@@ -62,7 +62,7 @@ export default function Navbar() {
     },
     {
       name: 'Testimonials',
-      icons: <MessageCircleCode  style={{ width: '1em', height: '1em' }}/>,
+      icons: <MessageCircleCode style={{ width: '1em', height: '1em' }} />,
       basePath: '/admin/cms/website/testimonials',
       buttons: [
         { name: 'Create', path: 'create' },
@@ -71,7 +71,7 @@ export default function Navbar() {
     },
     {
       name: 'Industries',
-      icons: <Factory  style={{ width: '1em', height: '1em' }}/>,
+      icons: <Factory style={{ width: '1em', height: '1em' }} />,
       basePath: '/admin/cms/website/industries',
       buttons: [
         { name: 'Create', path: 'create' },
@@ -81,7 +81,7 @@ export default function Navbar() {
     },
     {
       name: 'Blogs',
-      icons: <Newspaper   style={{ width: '1em', height: '1em' }}/>,
+      icons: <Newspaper style={{ width: '1em', height: '1em' }} />,
       basePath: '/admin/cms/website/blog',
       buttons: [
         { name: 'Create', path: 'create' },
@@ -91,7 +91,7 @@ export default function Navbar() {
     },
     {
       name: 'Knowledgebase',
-      icons: <NewspaperIcon   style={{ width: '1em', height: '1em' }}/>,
+      icons: <NewspaperIcon style={{ width: '1em', height: '1em' }} />,
       basePath: '/admin/cms/website/knowledgebase',
       buttons: [
         { name: 'Create', path: 'create' },
@@ -101,7 +101,7 @@ export default function Navbar() {
     },
     {
       name: 'Faq',
-      icons: <FileQuestion  style={{ width: '1em', height: '1em' }}/>,
+      icons: <FileQuestion style={{ width: '1em', height: '1em' }} />,
       basePath: '/admin/cms/website/faq',
       buttons: [
         { name: 'Create', path: 'create' },
@@ -109,7 +109,7 @@ export default function Navbar() {
         // { name: 'Delete', path: 'delete' },
       ],
     },
-    
+
     // Add more routes as needed
   ];
 
@@ -137,15 +137,13 @@ export default function Navbar() {
               onClick={() =>
                 setOpenDropdown((prev) => (prev === route.name ? '' : route.name))
               }
-              className={`inline-flex text-nowrap gap-2 items-center justify-between rounded font w-full border-gray-300 shadow-sm px-5 py-2 font-semibold ${
-                (pathname.startsWith(route.basePath) && !isActiveDropdown) ? 'bg-[#446e6d24] text-[#446E6D]' : 'hover:bg-[#446e6d24]  text-gray-700'
-              } focus:outline-none text-left`}
+              className={`inline-flex text-nowrap gap-2 items-center justify-between rounded font w-full border-gray-300 shadow-sm px-5 py-2 font-semibold ${(pathname.startsWith(route.basePath) && !isActiveDropdown) ? 'bg-[#446e6d24] text-[#446E6D]' : 'hover:bg-[#446e6d24]  text-gray-700'
+                } focus:outline-none text-left`}
             >
               {route.icons}{route.name}
               <svg
-                className={`-mr-1 ml-2 h-5 w-5 ${
-                  isActiveDropdown ? 'rotate-180' : ''
-                } transition-transform`}
+                className={`-mr-1 ml-2 h-5 w-5 ${isActiveDropdown ? 'rotate-180' : ''
+                  } transition-transform`}
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
@@ -161,7 +159,7 @@ export default function Navbar() {
 
             {/* Dropdown Menu */}
             {isActiveDropdown && (
-              <div className="ml-[20px] z-[999999999999] bg-white absolute rounded-sm overflow-hidden shadow-md border-[#446E6D] w-full origin-top-right divide-y divide-gray-100 focus:outline-none" 
+              <div className="ml-[20px] z-[999999999999] bg-white absolute rounded-sm overflow-hidden shadow-md border-[#446E6D] w-full origin-top-right divide-y divide-gray-100 focus:outline-none"
                 onMouseLeave={() => setOpenDropdown('')}
               >
                 {route.buttons.map((button) => {
@@ -171,11 +169,10 @@ export default function Navbar() {
                     <button
                       key={button.name}
                       onClick={() => router.push(`${route.basePath}/${button.path}`)}
-                      className={`w-full block px-5 py-3  border-gray-300 text-left textn-nowrap ${
-                        isActiveButton
-                          ? 'bg-[#446e6d3b] text-[#446E6D]'
-                          : 'hover:bg-[#446e6d24] text-gray-700'
-                      }`}
+                      className={`w-full block px-5 py-3  border-gray-300 text-left textn-nowrap ${isActiveButton
+                        ? 'bg-[#446e6d3b] text-[#446E6D]'
+                        : 'hover:bg-[#446e6d24] text-gray-700'
+                        }`}
                     >
                       {button.name}
                     </button>
