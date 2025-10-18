@@ -103,7 +103,7 @@ export default function ProductManager() {
     };
   }, [pathname]);
 
-  const isChildModule = moduleType === "child";
+  const isChildModule = moduleType !== "child-service";
 
   // API Hooks
   const [createProduct] = useCreateProductMutation();
@@ -122,7 +122,7 @@ export default function ProductManager() {
     if (isChildModule) {
       return {
         isChild: true,
-        label: "Child Service",
+        label: "Product",
         createMutation: createChildService,
         editMutation: editChildService,
         deleteMutation: deleteChildService,
@@ -135,7 +135,7 @@ export default function ProductManager() {
     }
     return {
       isChild: false,
-      label: "Product",
+      label: "Child Service",
       createMutation: createProduct,
       editMutation: editProduct,
       deleteMutation: deleteProduct,
