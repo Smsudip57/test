@@ -678,11 +678,11 @@ export default function Firewall({
                                     {/* Price section */}
                                     <div className="flex items-center gap-2">
                                       <span className="text-xl font-bold text-[#446E6D]">
-                                        RS {product.price.toLocaleString()}
+                                        AED {product.price.toLocaleString()}
                                       </span>
                                       {product.oldPrice > product.price && (
                                         <span className="text-sm text-gray-400 line-through">
-                                          RS {product.oldPrice.toLocaleString()}
+                                          AED {product.oldPrice.toLocaleString()}
                                         </span>
                                       )}
                                     </div>
