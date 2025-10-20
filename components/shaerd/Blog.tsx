@@ -106,7 +106,7 @@ BlogCard.displayName = "BlogCard";
 const BlogSection: React.FC<BlogSectionProps> = ({ industry, parent, data }) => {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-console.log(parent)
+  console.log(parent)
   useEffect(() => {
     let isMounted = true;
     const fetchBlogs = async () => {
@@ -120,7 +120,8 @@ console.log(parent)
               industry &&
               ((typeof item.relatedIndustries === "string" && item.relatedIndustries === industry) ||
                 (Array.isArray(item.relatedIndustries) && item.relatedIndustries.includes(industry)));
-            const matchesParent = parent && item.relatedService?._id === parent;
+            const matchesParent = parent && ((typeof item.relatedServices === "string" && item.relatedServices === parent) ||
+                (Array.isArray(item.relatedServices) && item.relatedServices.includes(parent)));
             return matchesIndustry || matchesParent;
           });
         } else {
@@ -190,7 +191,7 @@ console.log(parent)
               {blogList.length === 0 && !loading && (
                 <div className="col-span-full py-10 text-center text-gray-500">
                   <div className="p-8 border border-dashed border-gray-300 rounded-lg">
-                    <p className="text-lg">No blogs found for this {parent ? "service":"industry"}.</p>
+                    <p className="text-lg">No blogs found for this {parent ? "service" : "industry"}.</p>
                     <p className="text-sm mt-2">Check back later for new content.</p>
                   </div>
                 </div>
