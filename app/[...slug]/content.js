@@ -780,7 +780,7 @@ export default function Firewall({
             <Industies parent={currentService?._id} />
           </section>
           <div className="mx-auto min-h-screen flex justify-center items-center">
-            <BlogSection parent={Mainservice?._id} />
+            <BlogSection parent={currentService?._id} />
           </div>
           <section aria-labelledby="industries-heading" className="mt-16">
             <Contact />
