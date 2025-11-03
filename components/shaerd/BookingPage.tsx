@@ -16,6 +16,8 @@ interface BookingModalProps {
   onClose: () => void;
   id?: string; // Optional service ID to pre-select
   coverImage?: string; // New prop for cover image
+  title?: string; // Title from the section
+  description?: string; // Description from the section
 }
 
 interface ChildService {
@@ -50,7 +52,9 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
   isOpen,
   onClose,
   id,
-  coverImage
+  coverImage,
+  title = "ERP Systems for Small Business in UAE",
+  description = "Streamline your operations with our customized ERP solutions."
 }) => {
   const { user, customToast } = useContext(MyContext);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -282,8 +286,7 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
         endTime: selectedSlot?.endTime,
         notes:
           formData.notes.trim() ||
-          `Booking for ${selectedService?.Title || "consultation"}${
-            selectedAdmin ? ` with admin: ${selectedAdmin}` : ""
+          `Booking for ${selectedService?.Title || "consultation"}${selectedAdmin ? ` with admin: ${selectedAdmin}` : ""
           }`,
       };
 
@@ -404,10 +407,10 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
         {/* Left Section */}
         <div className="md:w-1/2 p-8 md:rounded-l-2xl overflow-hidden">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            ERP Systems for Small Business in UAE
+            {title}
           </h2>
           <p className="text-gray-600 mb-4">
-            Streamline your operations with our customized ERP solutions.
+            {description}
           </p>
           <div className="flex space-x-4 mb-6">
             <span className="flex items-center space-x-1 text-blue-600 font-semibold">
@@ -534,11 +537,10 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
                     type="button"
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     disabled={isLoadingServices}
-                    className={`w-full border border-gray-300 rounded px-4 py-2 text-left bg-white focus:outline-none focus:ring-2 focus:ring-orange-300 flex items-center justify-between ${
-                      isLoadingServices
+                    className={`w-full border border-gray-300 rounded px-4 py-2 text-left bg-white focus:outline-none focus:ring-2 focus:ring-orange-300 flex items-center justify-between ${isLoadingServices
                         ? "cursor-not-allowed opacity-50"
                         : "cursor-pointer hover:border-gray-400"
-                    }`}
+                      }`}
                   >
                     <span
                       className={
@@ -548,13 +550,12 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
                       {isLoadingServices
                         ? "Loading services..."
                         : selectedService
-                        ? selectedService.Title
-                        : "Select a service"}
+                          ? selectedService.Title
+                          : "Select a service"}
                     </span>
                     <svg
-                      className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
-                        isDropdownOpen ? "rotate-180" : ""
-                      }`}
+                      className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""
+                        }`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -581,11 +582,10 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
                             key={service._id}
                             type="button"
                             onClick={() => handleServiceSelect(service)}
-                            className={`w-full text-left px-4 py-2 hover:bg-orange-50 hover:text-orange-700 focus:outline-none focus:bg-orange-50 focus:text-orange-700 transition-colors duration-150 block ${
-                              selectedService?._id === service._id
+                            className={`w-full text-left px-4 py-2 hover:bg-orange-50 hover:text-orange-700 focus:outline-none focus:bg-orange-50 focus:text-orange-700 transition-colors duration-150 block ${selectedService?._id === service._id
                                 ? "bg-orange-100 text-orange-800 font-medium"
                                 : "text-gray-900"
-                            }`}
+                              }`}
                           >
                             <div className="text-sm font-medium">
                               {service.Title}
@@ -628,11 +628,10 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
                           setIsTimeDropdownOpen(!isTimeDropdownOpen)
                         }
                         disabled={isLoadingSlots || availableSlots.length === 0}
-                        className={`w-full border border-gray-300 rounded px-4 py-2 text-left bg-white focus:outline-none focus:ring-2 focus:ring-orange-300 flex items-center justify-between ${
-                          isLoadingSlots || availableSlots.length === 0
+                        className={`w-full border border-gray-300 rounded px-4 py-2 text-left bg-white focus:outline-none focus:ring-2 focus:ring-orange-300 flex items-center justify-between ${isLoadingSlots || availableSlots.length === 0
                             ? "cursor-not-allowed opacity-50"
                             : "cursor-pointer hover:border-gray-400"
-                        }`}
+                          }`}
                       >
                         <span
                           className={
@@ -642,15 +641,14 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
                           {isLoadingSlots
                             ? "Loading..."
                             : availableSlots.length === 0
-                            ? "No times"
-                            : selectedSlot
-                            ? `${selectedSlot.startTime} - ${selectedSlot.endTime}`
-                            : "Select time"}
+                              ? "No times"
+                              : selectedSlot
+                                ? `${selectedSlot.startTime} - ${selectedSlot.endTime}`
+                                : "Select time"}
                         </span>
                         <svg
-                          className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
-                            isTimeDropdownOpen ? "rotate-180" : ""
-                          }`}
+                          className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isTimeDropdownOpen ? "rotate-180" : ""
+                            }`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -684,13 +682,12 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
                                         slot.availableAdmins[0].adminId
                                       )
                                     }
-                                    className={`w-full text-left px-4 py-3 hover:bg-orange-50 hover:text-orange-700 focus:outline-none focus:bg-orange-50 focus:text-orange-700 transition-colors duration-150 block ${
-                                      selectedSlot?.startTime ===
+                                    className={`w-full text-left px-4 py-3 hover:bg-orange-50 hover:text-orange-700 focus:outline-none focus:bg-orange-50 focus:text-orange-700 transition-colors duration-150 block ${selectedSlot?.startTime ===
                                         slot.startTime &&
-                                      selectedSlot?.endTime === slot.endTime
+                                        selectedSlot?.endTime === slot.endTime
                                         ? "bg-orange-100 text-orange-800 font-medium"
                                         : "text-gray-900"
-                                    }`}
+                                      }`}
                                   >
                                     <div className="text-sm font-medium">
                                       {slot.startTime} - {slot.endTime}
@@ -716,15 +713,14 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
                                             admin.adminName
                                           )
                                         }
-                                        className={`w-full text-left px-2 py-1 mb-1 rounded hover:bg-orange-50 hover:text-orange-700 focus:outline-none focus:bg-orange-50 focus:text-orange-700 transition-colors duration-150 block ${
-                                          selectedSlot?.startTime ===
+                                        className={`w-full text-left px-2 py-1 mb-1 rounded hover:bg-orange-50 hover:text-orange-700 focus:outline-none focus:bg-orange-50 focus:text-orange-700 transition-colors duration-150 block ${selectedSlot?.startTime ===
                                             slot.startTime &&
-                                          selectedSlot?.endTime ===
+                                            selectedSlot?.endTime ===
                                             slot.endTime &&
-                                          selectedAdmin === admin.adminId
+                                            selectedAdmin === admin.adminId
                                             ? "bg-orange-100 text-orange-800 font-medium"
                                             : "text-gray-700"
-                                        }`}
+                                          }`}
                                       >
                                         <div className="text-xs">
                                           with {admin.adminName}
@@ -771,11 +767,10 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting || !selectedService || !selectedSlot}
-                  className={`w-full py-2 rounded transition flex items-center justify-center ${
-                    isSubmitting || !selectedService || !selectedSlot
+                  className={`w-full py-2 rounded transition flex items-center justify-center ${isSubmitting || !selectedService || !selectedSlot
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-orange-500 hover:bg-orange-600 text-white"
-                  }`}
+                    }`}
                 >
                   {isSubmitting ? (
                     <>
