@@ -399,7 +399,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                         )}
 
                         <Link
-                            href={`/details/products/${product.slug ? product.slug : product.title}`}
+                            href={`/details/products/${product.slug ? product?.slug : product?.Title}`}
                             className="group/link flex items-center gap-2 bg-gradient-to-r from-primary to-primary-lighter text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 w-fit"
                         >
                             View Details
