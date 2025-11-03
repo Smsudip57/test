@@ -201,11 +201,13 @@ export default function Firewall({
 
   // State for booking modal
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [coverImage, setCoverImage] = useState("");
 
   // Handler for consultation button with memoization for performance
-  const handleConsultation = useCallback(() => {
+  const handleConsultation = useCallback((cover) => {
     // Use the booking modal instead of chat box
     setIsBookingModalOpen(true);
+    setCoverImage(cover);
   }, []);
 
   // Current service data for easier rendering
@@ -313,6 +315,7 @@ export default function Firewall({
         id={childData?._id || ""}
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
+        coverImage={coverImage}
       />
       {/* Background elements */}
       <div
@@ -344,7 +347,7 @@ export default function Firewall({
                 <div className="flex flex-wrap gap-4">
                   <button
                     className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded hover:opacity-80 text-sm transition-all duration-300"
-                    onClick={handleConsultation}
+                    onClick={() => handleConsultation(currentService?.image)}
                     aria-label="Book a free consultation"
                   >
                     Book Free Consultation
@@ -441,7 +444,7 @@ export default function Firewall({
                   <div className="flex justify-center gap-6 my-16">
                     <button
                       className="text-sm hover:opacity-80 active:scale-95 bg-[#446E6D] text-white rounded py-2 px-4 transition-all duration-300"
-                      onClick={handleConsultation}
+                      onClick={() => handleConsultation(productData?.image)}
                     >
                       Get it today!
                     </button>
@@ -501,7 +504,7 @@ export default function Firewall({
                   <div className="flex justify-center gap-6 my-16">
                     <button
                       className="text-sm hover:opacity-80 active:scale-95 bg-[#446E6D] text-white rounded py-2 px-4 transition-all duration-300"
-                      onClick={handleConsultation}
+                      onClick={() => handleConsultation(childData?.image)}
                     >
                       Get it today!
                     </button>

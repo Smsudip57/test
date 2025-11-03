@@ -15,6 +15,7 @@ interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   id?: string; // Optional service ID to pre-select
+  coverImage?: string; // New prop for cover image
 }
 
 interface ChildService {
@@ -49,6 +50,7 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
   isOpen,
   onClose,
   id,
+  coverImage
 }) => {
   const { user, customToast } = useContext(MyContext);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -480,7 +482,7 @@ const ERPConsultationPage: React.FC<BookingModalProps> = ({
         <div className="md:w-1/2 bg-orange-50 flex flex-col justify-center overflow-visible md:rounded-r-2xl">
           <div className="relative w-full h-56">
             <Image
-              src={consultImage}
+              src={coverImage ? coverImage : consultImage}
               alt="Businessman"
               fill
               style={{ objectFit: "cover" }}
