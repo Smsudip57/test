@@ -6,12 +6,11 @@ import Navbar from "@/components/main/Navbar";
 import Footer from "@/components/main/Footer";
 import Chat from "@/components/chat/globalSupportChat";
 import { ThemeProvider } from "@/context/context";
-import { ToastContainer } from 'react-toastify';
-import ConfirimModel from '@/components/main/ConfirmModel';
+import { ToastContainer } from "react-toastify";
+import ConfirimModel from "@/components/main/ConfirmModel";
 import ReduxProvider from "@/components/providers/ReduxProvider";
 
 const inter = Inter({ subsets: ["latin"] });
-
 
 export const metadata: Metadata = {
   title: "webmedigital",

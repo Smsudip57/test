@@ -41,7 +41,9 @@ const BlogCard: React.FC<{ blog: BlogPost }> = React.memo(({ blog }) => {
       tabIndex={0}
       role="button"
       aria-label={`Read blog: ${blog.title}`}
-      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') handleRedirect(); }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") handleRedirect();
+      }}
     >
       <div className="aspect-[16/7] w-full relative overflow-hidden">
         {blog.image ? (
@@ -54,7 +56,8 @@ const BlogCard: React.FC<{ blog: BlogPost }> = React.memo(({ blog }) => {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover absolute top-0 left-0 transition-transform duration-500 group-hover:scale-105"
               onError={(e: any) => {
-                e.target.src = "https://placehold.co/600x262/446E6D/ffffff?text=WEBME+Blog";
+                e.target.src =
+                  "https://placehold.co/600x262/446E6D/ffffff?text=WEBME+Blog";
               }}
               priority={false}
             />
@@ -88,12 +91,28 @@ const BlogCard: React.FC<{ blog: BlogPost }> = React.memo(({ blog }) => {
           {blog.title || "Untitled Blog Post"}
         </h3>
         <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {blog.excerpt || blog.description || "Read this article to learn more about the latest industry trends and insights."}
+          {blog.excerpt ||
+            blog.description ||
+            "Read this article to learn more about the latest industry trends and insights."}
         </p>
         <div className="mt-auto">
           <span className="inline-flex items-center text-[#446E6D] font-semibold transition-all group-hover:translate-x-1">
             Read article
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="ml-1 transition-transform group-hover:translate-x-1"><path stroke="#446E6D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M7 17l5-5m0 0l5-5m-5 5H7m5 0V7" /></svg>
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="ml-1 transition-transform group-hover:translate-x-1"
+            >
+              <path
+                stroke="#446E6D"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M7 17l5-5m0 0l5-5m-5 5H7m5 0V7"
+              />
+            </svg>
           </span>
         </div>
       </div>
@@ -103,25 +122,37 @@ const BlogCard: React.FC<{ blog: BlogPost }> = React.memo(({ blog }) => {
 
 BlogCard.displayName = "BlogCard";
 
-const BlogSection: React.FC<BlogSectionProps> = ({ industry, parent, data }) => {
+const BlogSection: React.FC<BlogSectionProps> = ({
+  industry,
+  parent,
+  data,
+}) => {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  console.log(parent)
+  console.log(parent);
   useEffect(() => {
     let isMounted = true;
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const response = await axios.get<{ blogs: BlogPost[] }>(`/api/blog/get`);
+        const response = await axios.get<{ blogs: BlogPost[] }>(
+          `/api/blog/get`
+        );
         let filteredBlogs = response.data.blogs;
         if (industry || parent) {
           filteredBlogs = filteredBlogs.filter((item: BlogPost) => {
             const matchesIndustry =
               industry &&
-              ((typeof item.relatedIndustries === "string" && item.relatedIndustries === industry) ||
-                (Array.isArray(item.relatedIndustries) && item.relatedIndustries.includes(industry)));
-            const matchesParent = parent && ((typeof item.relatedServices === "string" && item.relatedServices === parent) ||
-                (Array.isArray(item.relatedServices) && item.relatedServices.includes(parent)));
+              ((typeof item.relatedIndustries === "string" &&
+                item.relatedIndustries === industry) ||
+                (Array.isArray(item.relatedIndustries) &&
+                  item.relatedIndustries.includes(industry)));
+            const matchesParent =
+              parent &&
+              ((typeof item.relatedServices === "string" &&
+                item.relatedServices === parent) ||
+                (Array.isArray(item.relatedServices) &&
+                  item.relatedServices.includes(parent)));
             return matchesIndustry || matchesParent;
           });
         } else {
@@ -140,7 +171,9 @@ const BlogSection: React.FC<BlogSectionProps> = ({ industry, parent, data }) => 
       setBlogs(data);
       setLoading(false);
     }
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [industry, parent, data]);
 
   const blogList = useMemo(() => blogs, [blogs]);
@@ -191,8 +224,12 @@ const BlogSection: React.FC<BlogSectionProps> = ({ industry, parent, data }) => 
               {blogList.length === 0 && !loading && (
                 <div className="col-span-full py-10 text-center text-gray-500">
                   <div className="p-8 border border-dashed border-gray-300 rounded-lg">
-                    <p className="text-lg">No blogs found for this {parent ? "service" : "industry"}.</p>
-                    <p className="text-sm mt-2">Check back later for new content.</p>
+                    <p className="text-lg">
+                      No blogs found for this {parent ? "service" : "industry"}.
+                    </p>
+                    <p className="text-sm mt-2">
+                      Check back later for new content.
+                    </p>
                   </div>
                 </div>
               )}
@@ -206,7 +243,15 @@ const BlogSection: React.FC<BlogSectionProps> = ({ industry, parent, data }) => 
             aria-label="Read all blog resources"
           >
             <span>Read all resources</span>
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path stroke="#446E6D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M7 17l5-5m0 0l5-5m-5 5H7m5 0V7" /></svg>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
+              <path
+                stroke="#446E6D"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M7 17l5-5m0 0l5-5m-5 5H7m5 0V7"
+              />
+            </svg>
           </a>
         </footer>
       </div>
