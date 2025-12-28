@@ -39,6 +39,9 @@ const Footer = () => {
         `/api/subscribe`,
         {
           email: email.toLowerCase().trim(),
+        },
+        {
+          withCredentials: true,
         }
       );
 
