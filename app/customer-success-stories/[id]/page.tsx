@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
+import VideoPlayer from "@/components/shaerd/Video";
 
 interface Testimonial {
   _id: string;
@@ -40,8 +41,6 @@ export default function SingleTestimonialPage() {
   if (!id) {
     notFound();
   }
-
-  const [videoPlaying, setVideoPlaying] = useState(false);
 
   // Fetch single testimonial
   const {
@@ -146,34 +145,14 @@ export default function SingleTestimonialPage() {
       <div className="w-full md:w-[90%] lg:w-[1280px] mx-auto px-4 md:px-0 py-8 md:py-16">
         {/* Hero Section - Video/Image */}
         <div className="mb-10 md:mb-16">
-          <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl group bg-black">
-            {/* Video Player */}
-            {videoPlaying ? (
-              <iframe
-                src={`${testimonial.video}?autoplay=1`}
-                title="Testimonial Video"
-                className="w-full h-full"
-                allow="autoplay; fullscreen"
-                allowFullScreen
-              />
-            ) : (
-              <>
-                <img
-                  src={testimonial.image}
-                  alt={testimonial.postedBy}
-                  className="w-full h-full object-cover"
-                />
-                <div
-                  className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-center justify-center cursor-pointer"
-                  onClick={() => setVideoPlaying(true)}
-                >
-                  <div className="bg-white/90 group-hover:bg-white transition-all p-4 rounded-full">
-                    <Play size={32} className="text-[#446E6D] fill-[#446E6D]" />
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+          <VideoPlayer
+            src={testimonial.video}
+            poster={testimonial.image}
+            aspectRatio="16/9"
+            themeColor="#446E6D"
+            className="rounded-2xl shadow-2xl overflow-hidden"
+            playsInline
+          />
         </div>
 
         {/* Main Content Grid */}
