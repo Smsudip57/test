@@ -89,10 +89,9 @@ export default function SingleTestimonialPage() {
 
   const relatedTestimonials = getRelatedTestimonials();
 
-    if (!id) {
+  if (!id) {
     notFound();
   }
-
 
   if (isLoading) {
     return (
@@ -113,8 +112,8 @@ export default function SingleTestimonialPage() {
             Story Not Found
           </h1>
           <p className="text-gray-600 mb-8">
-            The success story you&apos;re looking for doesn&apos;t exist or has been
-            removed.
+            The success story you&apos;re looking for doesn&apos;t exist or has
+            been removed.
           </p>
           <Link
             href="/customer-success-stories"
