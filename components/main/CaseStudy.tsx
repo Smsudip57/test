@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
+import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -22,7 +23,12 @@ interface Testimonial {
   relatedChild?: Object | null;
 }
 
-export default function CaseStudy({ parent, child, product, data }: {
+export default function CaseStudy({
+  parent,
+  child,
+  product,
+  data,
+}: {
   parent?: any;
   child?: string;
   product?: string;
@@ -52,7 +58,7 @@ export default function CaseStudy({ parent, child, product, data }: {
       }
     };
     if (data) {
-      setTestimonials(data)
+      setTestimonials(data);
     } else {
       fetchTestimonials();
     }
@@ -179,10 +185,13 @@ export default function CaseStudy({ parent, child, product, data }: {
                         </div>
                       </div>
                       <button className="mt-10 text-[#446E6D] border-[1px] border-[#446E6D] py-2 lg:py-3 lg:px-8 px-4 flex items-center rounded font-semibold cursor-pointer gap-2 text-sm lg:text-base hover:bg-[#446E6D] hover:text-white transition-all">
-                        <span className="flex items-center">
+                        <Link
+                          href={`/customer-success-stories/${item._id}`}
+                          className="flex items-center w-full h-full"
+                        >
                           Read the story{" "}
                           <OpenInNewIcon fontSize="inherit" className="ml-1" />
-                        </span>
+                        </Link>
                       </button>
                     </div>
                   </div>

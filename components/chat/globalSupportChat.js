@@ -231,27 +231,27 @@ export default function Page() {
   };
 
   return (
-    <div className="right-8 fixed bottom-8 p-3 aspect-square bg-green-400 rounded-full z-[9999999999999] flex items-center justify-center text-4xl cursor-pointer">
+    <div className="right-8 fixed bottom-8 p-3 aspect-square bg-green-400 rounded-full z-[9999999999999] flex items-center justify-center text-6xl cursor-pointer">
       <div className="absolute bottom-[115%] right-0 text-base">
         <div
           className={`p-4 bg-white border rounded-xl shadow overflow-hidden transition-all duration-500 ${
             boxOpen
-              ? "w-[340px] md:w-[400px] h-[calc(100vh-300px)] min-h-[450px]"
+              ? "w-[360px] md:w-[420px] h-[85svh]"
               : "w-[0px] min-h-0 opacity-0 h-[0px]"
           }`}
         >
           <div className="h-full w-full bg-[#]">
             <div
-              className={`h-14 gap-5 cursor-pointer pb-4 w-full ${
+              className={`h-16 gap-5 cursor-pointer pb-4 w-full ${
                 sessionActive && "border-b border-gray-300"
               } flex items-center justify-between`}
             >
               <span className="flex items-center gap-2 text-gray-700">
                 {sessionActive && (
-                  <span className="bg-green-500 w-2 h-2 rounded-full"></span>
+                  <span className="bg-green-500 w-3 h-3 rounded-full"></span>
                 )}
-                <Headset />
-                <span className="font-semibold">Contact Us</span>
+                <Headset size={28} />
+                <span className="font-semibold text-lg">Contact Us</span>
               </span>
             </div>
             <div
@@ -263,10 +263,10 @@ export default function Page() {
                 <div className="h-full w-full flex flex-col items-center justify-center bg-white overflow-hidden">
                   {!loading && !chatloading ? (
                     <>
-                      <h1 className="text-gray-700 text-2xl w-full text-center">
+                      <h1 className="text-gray-700 text-3xl w-full text-center">
                         Hello! {greeting}
                       </h1>
-                      <p className="text-gray-500 text-sm text-center mt-2 px-4">
+                      <p className="text-gray-500 text-base text-center mt-2 px-4">
                         {/* Choose a quick message below or start a live chat */}
                         Choose a quick message below
                       </p>
@@ -284,12 +284,12 @@ export default function Page() {
                               onClick={() =>
                                 handleWhatsAppMessage(item.message)
                               }
-                              className="w-full text-left p-2 bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg transition-colors duration-200"
+                              className="w-full text-left p-3 bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg transition-colors duration-200"
                             >
-                              <div className="text-xs font-medium text-green-800">
+                              <div className="text-sm font-medium text-green-800">
                                 {item.title}
                               </div>
-                              <div className="text-xs text-green-600 mt-1 line-clamp-2">
+                              <div className="text-sm text-green-600 mt-1 line-clamp-2">
                                 {item.message}
                               </div>
                             </button>
@@ -428,11 +428,11 @@ export default function Page() {
               )}
             </div>
             {sessionActive && (
-              <div className="h-14 bg- w-full border-x border-b border-gray-300 flex items-center">
+              <div className="h-16 bg- w-full border-x border-b border-gray-300 flex items-center">
                 <input className="hidden" type="file" accept="image/*" />
                 <input
-                  className="w-full h-full text-black px-3 bg-inherit outline-none"
-                  placeholder="Type"
+                  className="w-full h-full text-black px-3 bg-inherit outline-none text-base"
+                  placeholder="Type message..."
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyDown={(e) => {
@@ -445,7 +445,7 @@ export default function Page() {
                   className="h-full aspect-square bg-[#] text-[#436E6D] hover:opacity-80 active:opacity-50 flex items-center justify-center cursor-pointer"
                   onClick={sendMessage}
                 >
-                  <SendHorizontal />
+                  <SendHorizontal size={24} />
                 </span>
               </div>
             )}

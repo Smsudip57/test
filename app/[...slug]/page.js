@@ -202,9 +202,10 @@ export default async function Page({ params }) {
         slug={slug}
         Mainservice={currentMainService}
       />
-    ) : notFound();
+    ) : (
+      notFound()
+    );
   } catch (error) {
-    console.error("Error fetching data:", error);
     return notFound();
   }
 }

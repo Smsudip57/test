@@ -56,10 +56,10 @@ const Advertiser = ({ data }: any) => {
           (item: any) => item.masterTitle === randomCategory
         );
 
-        // Pick random 2 items from filteredItems
+        // Pick random 1 item from filteredItems
         const randomItems = filteredItems
           .sort(() => 0.5 - Math.random())
-          .slice(0, Math.min(2, filteredItems.length));
+          .slice(0, Math.min(1, filteredItems.length));
 
         setCurrentItems(randomItems);
 
@@ -117,14 +117,15 @@ const Advertiser = ({ data }: any) => {
                 exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
                 transition={{ duration: 0.4, delay: index * 0.2 }}
                 onClick={() => {
-                  router.push(`/customer-success-stories/${item?.slug ? item?.slug : ""}`);
+                  router.push(`/customer-success-stories/${item?._id}`);
                 }}
               >
                 <div
-                  className={`max-w-80 bg-white ${item?.masterTitle === "Services"
-                    ? "aspect-[16/9]"
-                    : "aspect-square  "
-                    } p-3 px-6 rounded-lg  text-left relative`}
+                  className={`max-w-80 bg-white ${
+                    item?.masterTitle === "Services"
+                      ? "aspect-[16/9]"
+                      : "aspect-square  "
+                  } p-3 px-6 rounded-lg  text-left relative`}
                 >
                   <div
                     className="absolute top-0 left-0 w-full h-full"
@@ -183,10 +184,13 @@ const Advertiser = ({ data }: any) => {
                       </div>
                     </div>
                     <button className="mt-2 text-[#446E6D] border-[1px] border-[#446E6D] py-1  px-2 flex items-center rounded font-semibold cursor-pointer gap-2 text-[10px]  hover:bg-[#446E6D] hover:text-white transition-all">
-                      <span className="flex items-center">
+                      <Link
+                        href={`/customer-success-stories/${item._id}`}
+                        className="flex items-center"
+                      >
                         Read the story{" "}
                         <OpenInNewIcon fontSize="inherit" className="ml-1" />
-                      </span>
+                      </Link>
                     </button>
                   </div>
                 </div>
@@ -205,21 +209,25 @@ const Advertiser = ({ data }: any) => {
                 exit={{ opacity: 0, scale: 0.8, x: index % 2 === 0 ? 50 : -50 }}
                 transition={{ duration: 0.4, delay: index * 0.2 }}
                 onClick={() => {
-                  router.push(`/details/projects/${item?.slug ? item?.slug : item?.Title}`);
+                  router.push(
+                    `/details/projects/${item?.slug ? item?.slug : item?.Title}`
+                  );
                 }}
               >
                 <div
-                  className={`max-w-80 ${index % 4 === 0
-                    ? "bg-[#FFE8D7]"
-                    : index % 3 === 0
+                  className={`max-w-80 ${
+                    index % 4 === 0
+                      ? "bg-[#FFE8D7]"
+                      : index % 3 === 0
                       ? "bg-[#FCE5F3]"
                       : index % 2 === 0
-                        ? "bg-[#E5EDFD]"
-                        : "bg-[#FFF8BB]"
-                    } ${item?.masterTitle === "Services"
+                      ? "bg-[#E5EDFD]"
+                      : "bg-[#FFF8BB]"
+                  } ${
+                    item?.masterTitle === "Services"
                       ? "aspect-[16/9]"
                       : "aspect-square  "
-                    } p-3 rounded-lg  text-left relative`}
+                  } p-3 rounded-lg  text-left relative`}
                 >
                   <div
                     className={`m-0.5  basis-[46%] lg:basis-[47.2%] rounded-xl`}
@@ -247,7 +255,8 @@ const Advertiser = ({ data }: any) => {
                     <p className="text-[#0B2B20] text-xs  mb-[10px] whitespace-pre-wrap line-clamp-3">
                       {item?.detail}
                     </p>
-                    <button className="bg-[#0B2B20]  px-3 py-1 mb-6 text-[10px] rounded text-white"
+                    <button
+                      className="bg-[#0B2B20]  px-3 py-1 mb-6 text-[10px] rounded text-white"
                       style={{ marginBottom: !(index % 2 === 0) ? "0px" : "" }}
                     >
                       <Link href={`/details/projects/${item?.Title}`}>
@@ -287,8 +296,11 @@ const Advertiser = ({ data }: any) => {
                   if (item?.masterTitle === "Services") {
                     router.push(`/${item?.slug ? item?.slug : item?.Title}`);
                   } else if (item?.masterTitle === "Industries") {
-                    router.push(`/industries/${item?.slug ? item?.slug : item?.Title.toLowerCase()}`);
-
+                    router.push(
+                      `/industries/${
+                        item?.slug ? item?.slug : item?.Title.toLowerCase()
+                      }`
+                    );
                   }
                   // console.log(item)
                   // router.push(`/details/services/${item?.slug ? item?.slug : item?.title }`);
@@ -299,10 +311,11 @@ const Advertiser = ({ data }: any) => {
                   height={200}
                   src={item?.image}
                   alt={item?.alt || "Service image"}
-                  className={`w-80 ${item?.masterTitle === "Services"
-                    ? "aspect-[16/9]"
-                    : "aspect-square  "
-                    } object-cover rounded-lg shadow-lg bg-white`}
+                  className={`w-80 ${
+                    item?.masterTitle === "Services"
+                      ? "aspect-[16/9]"
+                      : "aspect-square  "
+                  } object-cover rounded-lg shadow-lg bg-white`}
                   onError={(e) => {
                     e.currentTarget.onerror = null;
                     e.currentTarget.src = "/placeholder.jpg";
@@ -342,7 +355,13 @@ const HeroContent = ({ pageData }: { pageData?: any }) => {
 
   useEffect(() => {
     // If data is provided as props, use it instead of fetching
-    if (pageData && pageData.services && pageData.testimonials && pageData.industries && pageData.projects) {
+    if (
+      pageData &&
+      pageData.services &&
+      pageData.testimonials &&
+      pageData.industries &&
+      pageData.projects
+    ) {
       console.log("Using hero data from props (faster)");
 
       const dataSources = [
@@ -376,7 +395,12 @@ const HeroContent = ({ pageData }: { pageData?: any }) => {
     const fetchServices = async () => {
       try {
         // Use optimized fetchMultiple function - single bulk API call instead of 4 separate requests
-        const data:any = await fetchMultiple(['services', 'testimonials', 'industries', 'projects']);
+        const data: any = await fetchMultiple([
+          "services",
+          "testimonials",
+          "industries",
+          "projects",
+        ]);
 
         const dataSources = [
           { title: "Services", data: data.services },
@@ -420,19 +444,17 @@ const HeroContent = ({ pageData }: { pageData?: any }) => {
       className="px-10 xl:px-20 min-h-screen z-[20] sm:py-28"
     >
       <motion.div variants={slideInFromTop} className="">
-        <div className="bg-slate-300 h-28 w-full rounded-xl overflow-hidden">
-          <img
-            alt="logo"
-            loading="lazy"
-            width="100"
-            height="36"
-            decoding="async"
-            data-nimg="1"
+        <div className="bg-slate-300 h-56 w-full rounded-xl overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
             className="w-full h-full object-cover"
             style={{ color: "transparent" }}
-            srcSet="/moving-car.gif"
-            src="/moving-car.gif"
-          />
+          >
+            <source src="/hero_video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
       </motion.div>
       <div className="flex flex-col lg:flex-row items-center justify-center ">
@@ -479,20 +501,6 @@ const HeroContent = ({ pageData }: { pageData?: any }) => {
               </div>
             </div>
           </motion.div>
-
-          {/* <motion.p
-          variants={slideInFromLeft(0.8)}
-          className="text-lg text-gray-400 my-5 max-w-[600px]"
-        >
-        I&apos;m a Full Stack Software Engineer with experience in Website,
-        Mobile, and Software development. Check out my projects and skills.
-        </motion.p> */}
-          {/* <motion.a
-          variants={slideInFromLeft(0.8)}
-          className="py-2 button-primary text-center text-white cursor-pointer rounded-lg max-w-[200px]"
-        >
-          Learn More!
-          </motion.a> */}
         </div>
 
         <motion.div
@@ -513,10 +521,10 @@ const HeroContent = ({ pageData }: { pageData?: any }) => {
               </div>
               {/* ))} */}
             </div>
-            <SearchComponent />
           </div>
         </motion.div>
       </div>
+      <SearchComponent />
     </motion.div>
   );
 };

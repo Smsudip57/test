@@ -180,7 +180,7 @@ const BlogSection: React.FC<BlogSectionProps> = ({
                     {/* Read button with animated arrow */}
                     <div className="mt-auto">
                       <a
-                        href={`/blog/${item._id}`}
+                        href={`/about/blog/${item.slug?item.slug:item._id}`}
                         className="inline-flex items-center text-[#446E6D] font-semibold transition-all group-hover:translate-x-1"
                       >
                         <span>Read article</span>

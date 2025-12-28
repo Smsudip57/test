@@ -8,6 +8,7 @@ import { CalendarIcon, BookOpen, Bookmark } from 'lucide-react';
 interface KnowledgeBaseArticle {
   _id: string;
   title: string;
+  slug: string;
   description: string;
   image: string;
   points?: Array<{ title: string; description: string }>;
@@ -30,9 +31,10 @@ interface KnowledgeBaseSectionProps {
   industry?: string;
   child?: string;
   product?: string;
+  data?: KnowledgeBaseArticle[];
 }
 
-const KnowledgeBaseSection: React.FC<KnowledgeBaseSectionProps> = ({ industry, child, product }) => {
+const KnowledgeBaseSection: React.FC<KnowledgeBaseSectionProps> = ({ industry, child, product, data }) => {
   const [articles, setArticles] = useState<KnowledgeBaseArticle[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   
@@ -78,8 +80,13 @@ const KnowledgeBaseSection: React.FC<KnowledgeBaseSectionProps> = ({ industry, c
       }
     };
 
-    fetchKnowledgeBase();
-  }, [industry, child, product]); // Fixed dependency array to include all filter parameters
+    if (data) {
+      setArticles(data);
+      setLoading(false);
+    } else {
+      fetchKnowledgeBase();
+    }
+  }, [industry, child, product, data]); // Fixed dependency array to include all filter parameters
   
   // Function to estimate read time (1 min per 200 words)
   const calculateReadTime = (text: string | undefined): number => {
@@ -178,7 +185,7 @@ const KnowledgeBaseSection: React.FC<KnowledgeBaseSectionProps> = ({ industry, c
                     {/* Read button with animated arrow */}
                     <div className="mt-auto">
                       <a 
-                        href={`/about/knowledgebase/${article._id}`} 
+                        href={`/about/knowledgebase/${article?.slug ? article.slug : article._id}`} 
                         className='inline-flex items-center text-[#446E6D] font-semibold transition-all group-hover:translate-x-1'
                       >
                         <span>Read article</span>

@@ -4,7 +4,14 @@ import Link from "next/link";
 import axios from "axios";
 import VideoPlayer from "@/components/shaerd/Video";
 
-const Projects = ({ product = null, service = null, child = null, projects: projectsProp = null, title = null }) => {
+const Projects = ({
+  product = null,
+  service = null,
+  child = null,
+  projects: projectsProp = null,
+  title = null,
+  data = null,
+}) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [empty, setEmpty] = useState(false);
@@ -12,6 +19,15 @@ const Projects = ({ product = null, service = null, child = null, projects: proj
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
+    // Priority 1: Use data prop if present
+    if (data && Array.isArray(data) && data.length > 0) {
+      setProjects(data);
+      setEmpty(data.length === 0);
+      setLoading(false);
+      return;
+    }
+
+    // Priority 2: Use projectsProp if present
     if (projectsProp && Array.isArray(projectsProp)) {
       if (product || service || child) {
         const filteredProjects = projectsProp.filter((project) => {
@@ -121,7 +137,7 @@ const Projects = ({ product = null, service = null, child = null, projects: proj
     return () => {
       controller.abort();
     };
-  }, [product, service, child, projectsProp]);
+  }, [product, service, child, projectsProp, data]);
 
   // Reset visible projects when projects change
   useEffect(() => {
@@ -170,14 +186,15 @@ const Projects = ({ product = null, service = null, child = null, projects: proj
   // Loading skeleton component for project cards
   const ProjectSkeleton = ({ index }) => (
     <div
-      className={`m-0.5 p-4 sm:p-10 ${index % 4 === 0
+      className={`m-0.5 p-4 sm:p-10 ${
+        index % 4 === 0
           ? "bg-[#FFE8D7]"
           : index % 3 === 0
-            ? "bg-[#FCE5F3]"
-            : index % 2 === 0
-              ? "bg-[#E5EDFD]"
-              : "bg-[#FFF8BB]"
-        } basis-[46%] lg:basis-[47.2%] rounded-xl`}
+          ? "bg-[#FCE5F3]"
+          : index % 2 === 0
+          ? "bg-[#E5EDFD]"
+          : "bg-[#FFF8BB]"
+      } basis-[46%] lg:basis-[47.2%] rounded-xl`}
     >
       {!(index % 2 === 0) && (
         <div className="w-full aspect-video rounded-lg overflow-hidden bg-gray-200 animate-pulse"></div>
@@ -207,10 +224,7 @@ const Projects = ({ product = null, service = null, child = null, projects: proj
       <section className="mt-16 sm:mt-[100px] px-4 sm:px-12 lg:px-[136px]">
         <div className="mx-auto mb-10 sm:mb-14 px-4 max-w-2xl text-center">
           <h1 className="font-lora text-2xl lg:text-4xl text-green-900 font-bold mb-6">
-            {
-              title ? title.toUpperCase() : "OUR PROJECTS"
-            }
-            
+            {title ? title.toUpperCase() : "OUR PROJECTS"}
           </h1>
           <p className="text-[#393939] text-base lg:text-xl">
             Innovative Solutions Brought to Life
@@ -230,14 +244,15 @@ const Projects = ({ product = null, service = null, child = null, projects: proj
             <div className="flex flex-col flex-wrap lg:flex-row gap-4 sm:gap-8 justify-center">
               {displayedProjects.map((project, index) => (
                 <div
-                  className={`m-0.5 p-4 sm:p-10 ${index % 4 === 0
+                  className={`m-0.5 p-4 sm:p-10 ${
+                    index % 4 === 0
                       ? "bg-[#FFE8D7]"
                       : index % 3 === 0
-                        ? "bg-[#FCE5F3]"
-                        : index % 2 === 0
-                          ? "bg-[#E5EDFD]"
-                          : "bg-[#FFF8BB]"
-                    } basis-[46%] lg:basis-[47.2%] rounded-xl`}
+                      ? "bg-[#FCE5F3]"
+                      : index % 2 === 0
+                      ? "bg-[#E5EDFD]"
+                      : "bg-[#FFF8BB]"
+                  } basis-[46%] lg:basis-[47.2%] rounded-xl`}
                   key={index}
                 >
                   {!(index % 2 === 0) &&
@@ -271,8 +286,9 @@ const Projects = ({ product = null, service = null, child = null, projects: proj
                   </p>
                   <button className="bg-[#0B2B20] px-6 py-3 mb-7 rounded-lg text-white hover:bg-[#173c2f] transition-colors">
                     <Link
-                      href={`/details/projects/${project?.slug ? project?.slug : project?.Title
-                        }`}
+                      href={`/details/projects/${
+                        project?.slug ? project?.slug : project?.Title
+                      }`}
                     >
                       Know More
                     </Link>
@@ -310,8 +326,9 @@ const Projects = ({ product = null, service = null, child = null, projects: proj
                 >
                   <span>{getButtonText()}</span>
                   <svg
-                    className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""
-                      }`}
+                    className={`w-4 h-4 transition-transform duration-300 ${
+                      isExpanded ? "rotate-180" : ""
+                    }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -330,8 +347,9 @@ const Projects = ({ product = null, service = null, child = null, projects: proj
         ) : (
           // Display message when no projects are found
           <div
-            className={`text-center py-10 ${!loading && !empty ? "hidden" : "block"
-              }`}
+            className={`text-center py-10 ${
+              !loading && !empty ? "hidden" : "block"
+            }`}
           >
             <div className="mx-auto w-24 h-24 mb-6 bg-gray-100 rounded-full flex items-center justify-center">
               <svg

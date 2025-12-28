@@ -15,17 +15,6 @@ const Projects = ({ parent, child, product, industries: industriesProp }: {
   useEffect(() => {
     // Step 4A: Use prop data if available, otherwise fetch
     if (industriesProp && industriesProp.length > 0) {
-      // const response = { data: { industries: industriesProp } };
-      //  if (parent || child || product) {
-      //           const filteredItems = response.data.industries.filter(
-      //             (item: Testimonial) =>
-      //               (parent && item.relatedService?._id === parent) ||
-      //               (child && item.relatedProduct?._id === child) ||
-      //               (product && item.relatedChild?._id === product)
-      //           );
-      //           setTestimonials(filteredItems);
-      //         } else {
-      //         }
       setIndustries(industriesProp);
       return;
     }
@@ -50,7 +39,6 @@ const Projects = ({ parent, child, product, industries: industriesProp }: {
     };
 
     if (!industriesProp) {
-      console.log("feching industries from API (slower)");
       fetchIndustries();
     }
   }, [industriesProp]);
