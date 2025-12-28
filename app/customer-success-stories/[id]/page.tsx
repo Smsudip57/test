@@ -36,7 +36,10 @@ export default function SingleTestimonialPage() {
   const router = useRouter();
   const id = params?.id as string;
 
-  // Guard clause - must be before hooks
+  // Guard clause - must be BEFORE hooks
+  if (!id) {
+    notFound();
+  }
 
   const [videoPlaying, setVideoPlaying] = useState(false);
 
@@ -88,10 +91,6 @@ export default function SingleTestimonialPage() {
   };
 
   const relatedTestimonials = getRelatedTestimonials();
-
-  if (!id) {
-    notFound();
-  }
 
   if (isLoading) {
     return (
