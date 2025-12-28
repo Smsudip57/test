@@ -17,7 +17,6 @@ interface PricingPlan {
 
 const Pricing = () => {
   const { user, loading } = useContext(MyContext);
-  if (!loading && !user) return null;
 
   const pricingPlans: PricingPlan[] = [
     {
@@ -104,14 +103,19 @@ const Pricing = () => {
                   {plan.name}
                 </p>
                 <p className="font-graphik font-medium text-[16px] leading-5">{plan.subtitle}</p>
-                <div className="mt-3">
-                  <span className="text-2xl font-bold" style={{ color: plan.textColor }}>
-                    {plan.price}
-                  </span>
-                  {plan.price !== 'Free' && plan.price !== 'Custom' && (
-                    <span className="text-sm text-gray-500">/month</span>
-                  )}
-                </div>
+                {
+                  !loading && !user ? null : (
+                    <div className="mt-3">
+                      <span className="text-2xl font-bold" style={{ color: plan.textColor }}>
+                        {plan.price}
+                      </span>
+                      {plan.price !== 'Free' && plan.price !== 'Custom' && (
+                        <span className="text-sm text-gray-500">/month</span>
+                      )}
+                    </div>
+                  )
+                }
+
               </div>
 
               <div className="px-[25px] pt-[25px] pb-[35px] bg-[#F6F6F6] rounded-br-xl rounded-bl-xl">

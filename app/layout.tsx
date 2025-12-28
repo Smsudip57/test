@@ -5,10 +5,11 @@ import StarsCanvas from "@/components/main/StarBackground";
 import Navbar from "@/components/main/Navbar";
 import Footer from "@/components/main/Footer";
 import Chat from "@/components/chat/globalSupportChat";
-import { ThemeProvider  } from "@/context/context";
-import { ToastContainer } from 'react-toastify'; 
+import { ThemeProvider } from "@/context/context";
+import { ToastContainer } from 'react-toastify';
 import ConfirimModel from '@/components/main/ConfirmModel';
-import { ReduxProvider } from "@/app/redux/ReduxProvider";
+import ReduxProvider from "@/components/providers/ReduxProvider";
+
 const inter = Inter({ subsets: ["latin"] });
 
 
@@ -31,7 +32,7 @@ export default function RootLayout({
         <ReduxProvider>
           <ThemeProvider>
             <ConfirimModel />
-            <ToastContainer 
+            <ToastContainer
               position="bottom-right"
               autoClose={5000}
               hideProgressBar={false}
