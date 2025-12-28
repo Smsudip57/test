@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
   useGetTestimonialByIdQuery,
   useListTestimonialsQuery,
@@ -33,7 +34,10 @@ interface Testimonial {
 export default function SingleTestimonialPage() {
   const params = useParams();
   const router = useRouter();
-  const id = params.id as string;
+  const id = params?.id as string;
+
+  // Guard clause - must be before hooks
+
   const [videoPlaying, setVideoPlaying] = useState(false);
 
   // Fetch single testimonial
@@ -72,9 +76,9 @@ export default function SingleTestimonialPage() {
         }
         // Match by product
         if (
-          testimonial?.relatedProducts &&
-          t?.relatedProducts &&
-          testimonial?.relatedProducts?._id === t?.relatedProducts?._id
+          testimonial?.relatedProduct &&
+          t?.relatedProduct &&
+          testimonial?.relatedProduct?._id === t?.relatedProduct?._id
         ) {
           return true;
         }
@@ -84,6 +88,11 @@ export default function SingleTestimonialPage() {
   };
 
   const relatedTestimonials = getRelatedTestimonials();
+
+    if (!id) {
+    notFound();
+  }
+
 
   if (isLoading) {
     return (
@@ -104,7 +113,7 @@ export default function SingleTestimonialPage() {
             Story Not Found
           </h1>
           <p className="text-gray-600 mb-8">
-            The success story you're looking for doesn't exist or has been
+            The success story you&apos;re looking for doesn&apos;t exist or has been
             removed.
           </p>
           <Link
@@ -201,10 +210,10 @@ export default function SingleTestimonialPage() {
               {/* Testimonial Text */}
               <div className="space-y-6">
                 <p className="text-gray-700 text-lg md:text-xl leading-relaxed whitespace-pre-line">
-                  "
+                  &quot;
                   {testimonial?.Testimonial ||
                     "Testimonial content not available"}
-                  "
+                  &quot;
                 </p>
 
                 {/* Metadata */}
@@ -280,7 +289,7 @@ export default function SingleTestimonialPage() {
                 Want Similar Results?
               </h3>
               <p className="text-gray-600 mb-6">
-                Let's discuss how we can help your business achieve similar
+                Let&apos;s discuss how we can help your business achieve similar
                 success.
               </p>
               <button className="w-full bg-[#446E6D] hover:bg-[#375857] text-white font-semibold py-3 rounded-lg transition-colors">
