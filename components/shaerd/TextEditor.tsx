@@ -16,6 +16,7 @@ import FontSize from "tiptap-extension-font-size";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
+import HardBreak from "@tiptap/extension-hard-break";
 import { cn } from "@/lib/utils";
 
 interface RichTextEditorProps {
@@ -29,9 +30,26 @@ interface RichTextEditorProps {
 
 // Predefined color palette
 const colorPalette = [
-  "#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", 
-  "#FFA500", "#800080", "#008000", "#A52A2A", "#808080", "#d40078", "#1E90FF", 
-  "#32CD32", "#FF4500", "#4B0082", "#8B4513", "#2E8B57", "#D2691E",
+  "#000000",
+  "#FF0000",
+  "#00FF00",
+  "#0000FF",
+  "#FFFF00",
+  "#FF00FF",
+  "#00FFFF",
+  "#FFA500",
+  "#800080",
+  "#008000",
+  "#A52A2A",
+  "#808080",
+  "#d40078",
+  "#1E90FF",
+  "#32CD32",
+  "#FF4500",
+  "#4B0082",
+  "#8B4513",
+  "#2E8B57",
+  "#D2691E",
 ];
 
 // Editor component that safely uses hooks at the top level
@@ -90,6 +108,11 @@ const EditorComponent: React.FC<{
       FontSize.configure({
         types: ["textStyle"],
       }),
+      HardBreak.configure({
+        HTMLAttributes: {
+          class: "hardbreak",
+        },
+      }),
     ],
     content: field.value || "<p></p>",
     onUpdate: ({ editor }) => {
@@ -101,12 +124,16 @@ const EditorComponent: React.FC<{
         class: "focus:outline-none w-full",
       },
     },
+    immediatelyRender: false,
   });
 
   // Handle clicking outside of color picker
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (colorPickerRef.current && !colorPickerRef.current.contains(event.target as Node)) {
+      if (
+        colorPickerRef.current &&
+        !colorPickerRef.current.contains(event.target as Node)
+      ) {
         setShowColorPicker(false);
       }
     };
@@ -149,7 +176,9 @@ const EditorComponent: React.FC<{
   };
 
   const handleLink = () => {
-    const currentUrl = editor.isActive("link") ? editor.getAttributes("link").href : "";
+    const currentUrl = editor.isActive("link")
+      ? editor.getAttributes("link").href
+      : "";
     const url = window.prompt("Enter URL", currentUrl);
 
     if (url) {
@@ -481,6 +510,11 @@ const UncontrolledEditor: React.FC<{
       Subscript,
       FontFamily.configure({ types: ["textStyle"] }),
       FontSize.configure({ types: ["textStyle"] }),
+      HardBreak.configure({
+        HTMLAttributes: {
+          class: "hardbreak",
+        },
+      }),
     ],
     content: value || "<p></p>",
     onUpdate: ({ editor }) => {
@@ -494,7 +528,10 @@ const UncontrolledEditor: React.FC<{
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (colorPickerRef.current && !colorPickerRef.current.contains(event.target as Node)) {
+      if (
+        colorPickerRef.current &&
+        !colorPickerRef.current.contains(event.target as Node)
+      ) {
         setShowColorPicker(false);
       }
     };
@@ -537,7 +574,9 @@ const UncontrolledEditor: React.FC<{
   };
 
   const handleLink = () => {
-    const currentUrl = editor.isActive("link") ? editor.getAttributes("link").href : "";
+    const currentUrl = editor.isActive("link")
+      ? editor.getAttributes("link").href
+      : "";
     const url = window.prompt("Enter URL", currentUrl);
     if (url) {
       editor.chain().focus().setLink({ href: url }).run();
@@ -575,9 +614,12 @@ const UncontrolledEditor: React.FC<{
     }
   };
 
-  const isActive = (type: string, options = {}) => editor.isActive(type, options);
-  const getButtonClass = (type: string, options = {}) => 
-    `px-2 py-1 border-none rounded ${isActive(type, options) ? "bg-[#C1EBE7]" : "bg-transparent"}`;
+  const isActive = (type: string, options = {}) =>
+    editor.isActive(type, options);
+  const getButtonClass = (type: string, options = {}) =>
+    `px-2 py-1 border-none rounded ${
+      isActive(type, options) ? "bg-[#C1EBE7]" : "bg-transparent"
+    }`;
 
   return (
     <div className="space-y-2 w-full">
@@ -596,14 +638,22 @@ const UncontrolledEditor: React.FC<{
       />
 
       <div className="flex flex-wrap items-center gap-2 bg-green-lighter p-2 rounded-md">
-        <select value={fontFamily} onChange={(e) => applyFontFamily(e.target.value)} className="border rounded px-2 py-1 bg-transparent">
+        <select
+          value={fontFamily}
+          onChange={(e) => applyFontFamily(e.target.value)}
+          className="border rounded px-2 py-1 bg-transparent"
+        >
           <option value="Roboto">Roboto</option>
           <option value="Georgia">Georgia</option>
           <option value="Arial">Arial</option>
           <option value="Courier New">Courier New</option>
         </select>
 
-        <select value={fontSize} onChange={(e) => applyFontSize(e.target.value)} className="border rounded px-2 py-1 bg-transparent">
+        <select
+          value={fontSize}
+          onChange={(e) => applyFontSize(e.target.value)}
+          className="border rounded px-2 py-1 bg-transparent"
+        >
           <option value="12px">12</option>
           <option value="14px">14</option>
           <option value="16px">16</option>
@@ -611,12 +661,38 @@ const UncontrolledEditor: React.FC<{
           <option value="24px">24</option>
         </select>
 
-        <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={getButtonClass("bold")} title="Bold">B</button>
-        <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className={getButtonClass("italic")} title="Italic">I</button>
-        <button type="button" onClick={() => editor.chain().focus().toggleUnderline().run()} className={getButtonClass("underline")} title="Underline">U</button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={getButtonClass("bold")}
+          title="Bold"
+        >
+          B
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={getButtonClass("italic")}
+          title="Italic"
+        >
+          I
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={getButtonClass("underline")}
+          title="Underline"
+        >
+          U
+        </button>
 
         <div className="relative" ref={colorPickerRef}>
-          <button type="button" onClick={() => setShowColorPicker(!showColorPicker)} className="px-2 py-1 rounded bg-transparent hover:bg-pink-50 flex items-center" title="Text color">
+          <button
+            type="button"
+            onClick={() => setShowColorPicker(!showColorPicker)}
+            className="px-2 py-1 rounded bg-transparent hover:bg-pink-50 flex items-center"
+            title="Text color"
+          >
             <div className="w-5 h-5 rounded-sm" style={{ background: color }} />
           </button>
 
@@ -624,32 +700,111 @@ const UncontrolledEditor: React.FC<{
             <div className="absolute left-0 mt-1 p-2 bg-white shadow-lg rounded-md z-20 border w-40">
               <div className="grid grid-cols-5 gap-2">
                 {colorPalette.map((color) => (
-                  <div key={color} onClick={() => applyColor(color)} className="w-6 h-6 rounded cursor-pointer border hover:scale-110 transition-transform" style={{ backgroundColor: color }} title={color} />
+                  <div
+                    key={color}
+                    onClick={() => applyColor(color)}
+                    className="w-6 h-6 rounded cursor-pointer border hover:scale-110 transition-transform"
+                    style={{ backgroundColor: color }}
+                    title={color}
+                  />
                 ))}
               </div>
             </div>
           )}
         </div>
 
-        <button type="button" onClick={() => editor.commands.toggleBulletList()} className={getButtonClass("bulletList")} title="Bullet list">• List</button>
-        <button type="button" onClick={() => editor.commands.toggleOrderedList()} className={getButtonClass("orderedList")} title="Numbered list">1. List</button>
-        <button type="button" onClick={addLocalImage} className="px-2 py-1 rounded" title="Upload image from device">🖼️ Upload</button>
-        <button type="button" onClick={addImageUrl} className="px-2 py-1 rounded" title="Add image from URL">🔗 Image URL</button>
-        <button type="button" onClick={handleLink} className={getButtonClass("link")} title={editor.isActive("link") ? `Edit link: ${editor.getAttributes("link").href}` : "Insert link"}>🔗 {editor.isActive("link") ? "Edit Link" : "Link"}</button>
+        <button
+          type="button"
+          onClick={() => editor.commands.toggleBulletList()}
+          className={getButtonClass("bulletList")}
+          title="Bullet list"
+        >
+          • List
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.commands.toggleOrderedList()}
+          className={getButtonClass("orderedList")}
+          title="Numbered list"
+        >
+          1. List
+        </button>
+        <button
+          type="button"
+          onClick={addLocalImage}
+          className="px-2 py-1 rounded"
+          title="Upload image from device"
+        >
+          🖼️ Upload
+        </button>
+        <button
+          type="button"
+          onClick={addImageUrl}
+          className="px-2 py-1 rounded"
+          title="Add image from URL"
+        >
+          🔗 Image URL
+        </button>
+        <button
+          type="button"
+          onClick={handleLink}
+          className={getButtonClass("link")}
+          title={
+            editor.isActive("link")
+              ? `Edit link: ${editor.getAttributes("link").href}`
+              : "Insert link"
+          }
+        >
+          🔗 {editor.isActive("link") ? "Edit Link" : "Link"}
+        </button>
       </div>
 
-      <div className={cn("rounded-md p-2 min-h-[150px]", className, "border-[1.5px] border-[#BABFC4]")}>
+      <div
+        className={cn(
+          "rounded-md p-2 min-h-[150px]",
+          className,
+          "border-[1.5px] border-[#BABFC4]"
+        )}
+      >
         <EditorContent editor={editor} className="custom-editor-content" />
       </div>
 
       <style jsx global>{`
-        .ProseMirror { outline: none !important; border: none !important; box-shadow: none !important; height: 100%; min-height: 150px; }
-        .ProseMirror:focus { outline: none !important; border: none !important; box-shadow: none !important; }
-        .custom-editor-content { height: 100%; }
-        .custom-editor-content .ProseMirror { padding: 8px; }
-        .tiptap-bullet-list, .ProseMirror ul { list-style-type: disc; padding-left: 1.5em; }
-        .tiptap-ordered-list, .ProseMirror ol { list-style-type: decimal; padding-left: 1.5em; }
-        .ProseMirror img, .tiptap-image { max-width: 100%; height: auto; margin: 1em 0; display: block; }
+        .ProseMirror {
+          outline: none !important;
+          border: none !important;
+          box-shadow: none !important;
+          height: 100%;
+          min-height: 150px;
+        }
+        .ProseMirror:focus {
+          outline: none !important;
+          border: none !important;
+          box-shadow: none !important;
+        }
+        .custom-editor-content {
+          height: 100%;
+        }
+        .custom-editor-content .ProseMirror {
+          padding: 8px;
+        }
+        .tiptap-bullet-list,
+        .ProseMirror ul {
+          list-style-type: disc;
+          padding-left: 1.5em;
+        }
+        .tiptap-ordered-list,
+        .ProseMirror ol {
+          list-style-type: decimal;
+          padding-left: 1.5em;
+        }
+        .ProseMirror img,
+        .tiptap-image {
+          max-width: 100%;
+          height: auto;
+          margin: 1em 0;
+          display: block;
+        }
       `}</style>
     </div>
   );
@@ -696,8 +851,16 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             {label}
           </label>
         )}
-        <div className={cn("rounded-md p-2 min-h-[150px]", className, "border-[1.5px] border-[#BABFC4]")}>
-          <p className="text-gray-500">Rich text editor requires form context or value/onChange props</p>
+        <div
+          className={cn(
+            "rounded-md p-2 min-h-[150px]",
+            className,
+            "border-[1.5px] border-[#BABFC4]"
+          )}
+        >
+          <p className="text-gray-500">
+            Rich text editor requires form context or value/onChange props
+          </p>
         </div>
       </div>
     );

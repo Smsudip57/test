@@ -255,7 +255,7 @@ export default function HeroSearchComponent() {
   return (
     <div className="w-full" style={{ position: 'relative', zIndex: 9999 }} ref={searchContainerRef}>
       <form onSubmit={handleSearchSubmit} className="w-full">
-        <div className="rounded-[70px] w-full mx-auto border-[1.5px] gap-2 xs:gap-4 flex md:gap-5 border-[#0B2B20] p-1 justify-between bg-white border-box">
+        <div className="rounded-[70px] w-full mx-auto border-4 gap-2 xs:gap-4 flex md:gap-5 border-[#0B2B20] p-1 justify-between bg-white border-box">
           <div className="flex gap-2.5 items-center flex-1">
             <img
               alt="search"

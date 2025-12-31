@@ -90,7 +90,7 @@ const Webme = ({ service: apiservice }: any) => {
               className="mx-auto w-full text-2xl md:text-xl lg:text-4xl text-[#446E6D] font-lora my-8 lg:my-0 lg:mb-16 font-bold flex justify-center items-center"
               onClick={() => setActive("")}
             >
-              <p className="upper">
+              {/* <p className="upper">
                 <span
                   className={`uppercase transition-all duration-300 ${active === "w" ? "text-[#D5E928]" : ""
                     }`}
@@ -127,7 +127,7 @@ const Webme = ({ service: apiservice }: any) => {
                 >
                   DIGITAL
                 </span>
-              </p>
+              </p> */}
             </div>
           </div>
         </div>

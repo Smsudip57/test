@@ -444,7 +444,7 @@ const HeroContent = ({ pageData }: { pageData?: any }) => {
       className="px-10 xl:px-20 min-h-screen z-[20] sm:py-28"
     >
       <motion.div variants={slideInFromTop} className="">
-        <div className="bg-slate-300 h-56 w-full rounded-xl overflow-hidden">
+        <div className="bg-slate-300 h-48 w-full rounded-xl overflow-hidden">
           <video
             autoPlay
             loop
@@ -457,74 +457,75 @@ const HeroContent = ({ pageData }: { pageData?: any }) => {
           </video>
         </div>
       </motion.div>
-      <div className="flex flex-col lg:flex-row items-center justify-center ">
-        <div className="w-full flex flex-col gap-5 justify-center m-auto text-start ">
-          <motion.div
-            variants={slideInFromLeft(0.5)}
-            className="flex flex-col gap-6 mt-6 text-6xl font-bold text-white max-w-[600px] w-auto h-auto"
-          >
-            <div className="z-99999 gap-7 mt-5 flex flex-col w-full">
-              <p
-                className="font-roboto font-bold leading-[60px] lg:leading-[84px] lg:text-[70px] text-[42px]"
-                style={{ fontFamily: "Roboto, sans-serif" }}
-              >
-                <a
-                  className="bg-gradient-to-r from-[#00FFF3] to-[#FFE500] text-transparent inline-block bg-clip-text"
-                  href="/"
+      <div className="w-full lg:max-w-[1200px] mx-auto">
+        <div className="flex flex-col lg:flex-row items-center justify-center ">
+          <div className="w-full flex flex-col gap-5 justify-center m-auto text-start ">
+            <motion.div
+              variants={slideInFromLeft(0.5)}
+              className="flex flex-col gap-6 mt-6 text-6xl font-bold text-white max-w-[600px] w-auto h-auto"
+            >
+              <div className="z-99999 gap-7 mt-5 flex flex-col w-full">
+                <p
+                  className="font-roboto font-bold leading-[60px] lg:leading-[84px] lg:text-[70px] text-[42px]"
+                  style={{ fontFamily: "Roboto, sans-serif" }}
                 >
-                  WEBME,
-                </a>
-                <span className="block text-black mt-4 pt-0.5">
-                  Your{" "}
-                  <span className="bg-[#282828] text-[#95E0D9] inline-block px-1.5">
-                    Co-Pilot
-                  </span>{" "}
-                  In The IT Journey
-                </span>
-              </p>
-            </div>
-            <div className="mt-6 ml-2">
-              <div className=" flex gap-5 w-full">
-                <button className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-base gap-3 items-center font-normal flex">
-                  <Link href="#services">
-                    Let&#39;s Start
-                    <EastIcon fontSize="inherit" />
-                  </Link>
-                </button>
-                <button
-                  className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-base gap-3 items-center font-normal flex"
-                  onClick={() => setChatBoxOpen(true)}
-                >
-                  Book Free Consultancy
-                  <EastIcon fontSize="inherit" />
-                </button>
+                  <a
+                    className="bg-gradient-to-r from-[#00FFF3] to-[#FFE500] text-transparent inline-block bg-clip-text"
+                    href="/"
+                  >
+                    WEBME,
+                  </a>
+                  <span className="block text-black mt-4 pt-0.5">
+                    Your{" "}
+                    <span className="bg-[#282828] text-[#95E0D9] inline-block px-1.5">
+                      Co-Pilot
+                    </span>{" "}
+                    In The IT Journey
+                  </span>
+                </p>
               </div>
-            </div>
-          </motion.div>
-        </div>
-
-        <motion.div
-          variants={slideInFromRight(0.8)}
-          className="w-full sm:w-[50%] h-full flex justify-center items-center"
-        >
-          {/* <Image
+              <div className="mt-6 ml-2">
+                <div className=" flex gap-5 w-full">
+                  <button className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-base gap-3 items-center font-normal flex">
+                    <Link href="#services">
+                      Let&#39;s Start
+                      <EastIcon fontSize="inherit" />
+                    </Link>
+                  </button>
+                  <button
+                    className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded  hover:opacity-70 text-base gap-3 items-center font-normal flex"
+                    onClick={() => setChatBoxOpen(true)}
+                  >
+                    Book Free Consultancy
+                    <EastIcon fontSize="inherit" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+          <motion.div
+            variants={slideInFromRight(0.8)}
+            className="w-full sm:w-[50%] h-full flex justify-center items-center"
+          >
+            {/* <Image
           src="/mainIconsdark.svg"
           alt="work icons"
           height={650}
           width={650}
           /> */}
-          <div className="w-full md:w-full relative block ">
-            <div className="mt-10">
-              <div className="w-full mb-4">
-                {/* {services?.map((item: any, index: number) => ( */}
-                <Advertiser data={services} />
+            <div className="w-full md:w-full relative block ">
+              <div className="mt-10">
+                <div className="w-full mb-4">
+                  {/* {services?.map((item: any, index: number) => ( */}
+                  <Advertiser data={services} />
+                </div>
+                {/* ))} */}
               </div>
-              {/* ))} */}
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
+        <SearchComponent />
       </div>
-      <SearchComponent />
     </motion.div>
   );
 };
