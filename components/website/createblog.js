@@ -1,12 +1,12 @@
-'use client';
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import axios from 'axios';
-import { Loader2, UploadCloud, X } from 'lucide-react';
-import { MyContext } from '@/context/context';
-import { fetchMultiple } from '@/lib/client-fetch';
-import TextEditor from '@/components/shaerd/TextEditor';
-import RelatedItemsSelector from '@/components/website/components/RelatedItemsSelector';
-import ImageUploader from '@/components/website/components/ImageUploader';
+"use client";
+import React, { useState, useEffect, useContext, useRef } from "react";
+import axios from "axios";
+import { Loader2, UploadCloud, X } from "lucide-react";
+import { MyContext } from "@/context/context";
+import { fetchMultiple } from "@/lib/client-fetch";
+import TextEditor from "@/components/shaerd/TextEditor";
+import RelatedItemsSelector from "@/components/website/components/RelatedItemsSelector";
+import ImageUploader from "@/components/website/components/ImageUploader";
 
 const CreateBlog = () => {
   const [formData, setFormData] = useState({
@@ -44,8 +44,17 @@ const CreateBlog = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (!formData.title || !formData.description || !formData.type || !formData.image || !formData.contents) {
-      customToast({ success: false, message: 'Please fill all required fields!' });
+    if (
+      !formData.title ||
+      !formData.description ||
+      !formData.type ||
+      !formData.image ||
+      !formData.contents
+    ) {
+      customToast({
+        success: false,
+        message: "Please fill all required fields!",
+      });
       setLoading(false);
       return;
     }
@@ -54,20 +63,32 @@ const CreateBlog = () => {
       const data = new FormData();
 
       // Append regular fields
-      data.append('title', formData.title);
-      data.append('description', formData.description);
-      data.append('contents', formData.contents);
-      data.append('type', formData.type);
-      data.append('image', formData.image);
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("contents", formData.contents);
+      data.append("type", formData.type);
+      data.append("image", formData.image);
 
       // Send related items as JSON strings for consistent backend parsing
-      data.append('relatedServices', JSON.stringify(formData.relatedServices || []));
-      data.append('relatedIndustries', JSON.stringify(formData.relatedIndustries || []));
-      data.append('relatedProducts', JSON.stringify(formData.relatedProducts || []));
-      data.append('relatedChikfdServices', JSON.stringify(formData.relatedChikfdServices || []));
+      data.append(
+        "relatedServices",
+        JSON.stringify(formData.relatedServices || [])
+      );
+      data.append(
+        "relatedIndustries",
+        JSON.stringify(formData.relatedIndustries || [])
+      );
+      data.append(
+        "relatedProducts",
+        JSON.stringify(formData.relatedProducts || [])
+      );
+      data.append(
+        "relatedChikfdServices",
+        JSON.stringify(formData.relatedChikfdServices || [])
+      );
 
-      const response = await axios.post('/api/blog/create', data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await axios.post("/api/blog/create", data, {
+        headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
 
@@ -87,8 +108,13 @@ const CreateBlog = () => {
         setImagePreview(null);
       }
     } catch (error) {
-      console.error('Error creating blog:', error);
-      customToast(error.response?.data || { success: false, message: 'Failed to create blog' });
+      console.error("Error creating blog:", error);
+      customToast(
+        error.response?.data || {
+          success: false,
+          message: "Failed to create blog",
+        }
+      );
     }
     setLoading(false);
   };
@@ -123,7 +149,7 @@ const CreateBlog = () => {
             aspectRatio="3:2"
             label="Featured Image"
             onImageChange={(file, preview) => {
-              setFormData(prev => ({ ...prev, image: file }));
+              setFormData((prev) => ({ ...prev, image: file }));
               setImagePreview(preview);
             }}
             initialPreview={imagePreview}
@@ -151,7 +177,12 @@ const CreateBlog = () => {
 
             {/* Related Items Selector */}
             <RelatedItemsSelector
-              relations={['services', 'industries', 'products', 'childServices']}
+              relations={[
+                "services",
+                "industries",
+                "products",
+                "childServices",
+              ]}
               value={{
                 relatedServices: formData.relatedServices,
                 relatedIndustries: formData.relatedIndustries,
@@ -197,7 +228,9 @@ const CreateBlog = () => {
               name="contents"
               label="Blog Contents *"
               value={formData.contents}
-              onChange={(value) => setFormData(prev => ({ ...prev, contents: value }))}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, contents: value }))
+              }
               // control={false}
             />
           </div>
