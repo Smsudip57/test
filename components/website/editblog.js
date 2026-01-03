@@ -464,7 +464,7 @@ const BlogManager = () => {
         {/* Image Upload Section */}
         <div className="lg:col-span-2 flex flex-col gap-6">
           <ImageUploader
-            aspectRatio="16:7"
+            aspectRatio="3:2"
             label="Featured Image"
             onImageChange={(file, preview) => {
               setFormData(prev => ({ ...prev, image: file }));
