@@ -81,7 +81,7 @@ const Advertiser = ({ data }: any) => {
   }, [data]); // Only depend on data
 
   return (
-    <div className="overflow-hidden relative w-full z-[50]">
+    <div className="overflow-hidden relative w-full z-[50] !min-h-[427px]">
       <motion.h2
         className="mx-auto w-max mb-4 text-primary text-2xl uppercase font-bold"
         key={currentTitle} // Key helps React identify when to animate
@@ -210,7 +210,7 @@ const Advertiser = ({ data }: any) => {
                 transition={{ duration: 0.4, delay: index * 0.2 }}
                 onClick={() => {
                   router.push(
-                    `/details/projects/${item?.slug ? item?.slug : item?.Title}`
+                    `/details/projects/${item?.slug ? item?.slug : item?._id}`
                   );
                 }}
               >
@@ -259,9 +259,9 @@ const Advertiser = ({ data }: any) => {
                       className="bg-[#0B2B20]  px-3 py-1 mb-6 text-[10px] rounded text-white"
                       style={{ marginBottom: !(index % 2 === 0) ? "0px" : "" }}
                     >
-                      <Link href={`/details/projects/${item?.Title}`}>
+                      {/* <Link href={`/details/projects/${item?.Title}`}> */}
                         Know More
-                      </Link>
+                      {/* </Link> */}
                     </button>
                     {index % 2 === 0 && (
                       <img
@@ -373,7 +373,7 @@ const HeroContent = ({ pageData }: { pageData?: any }) => {
 
       const formattedData = dataSources.reduce(
         (allItems: any, { title, data }: any) => {
-          if (Array.isArray(data)) {
+          if (Array.isArray(data) && title === "Projects") {
             const itemsWithMasterTitle = data.map((item) => ({
               masterTitle: title,
               ...item,
@@ -414,7 +414,7 @@ const HeroContent = ({ pageData }: { pageData?: any }) => {
 
         const formattedData = dataSources.reduce(
           (allItems: any, { title, data }: any) => {
-            if (Array.isArray(data)) {
+            if (Array.isArray(data) && title === "Projects") {
               const itemsWithMasterTitle = data.map((item) => ({
                 masterTitle: title,
                 ...item,

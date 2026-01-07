@@ -2,30 +2,41 @@
 import React, { useState, useEffect, useRef } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import CaseStudy from "@/components/main/CaseStudy";
+import ProjectCarousel from "@/components/main/ProjectCarousel";
+import Contact from "@/components/main/Contact";
 import BlogSection from "@/components/shaerd/Blog";
 import FaqSection from "@/components/shaerd/Faqs";
 import KnowledgeBase from "@/components/shaerd/Knowledgebase";
 import Showcase from "@/components/shaerd/industryshowcase";
 import Projects from "@/components/main/Projects";
 
-
 // Main Component (Default Export)
-export default function FacultyManagement({ industry, services: allServices, products }) {
+export default function FacultyManagement({
+  industry,
+  services: allServices,
+  products,
+}) {
   const [services, setServices] = useState();
   useEffect(() => {
-    if (industry?.relatedChikfdServices && Array.isArray(industry.relatedChikfdServices) && allServices && products) {
+    if (
+      industry?.relatedChikfdServices &&
+      Array.isArray(industry.relatedChikfdServices) &&
+      allServices &&
+      products
+    ) {
       const relatedChildList = industry.relatedChikfdServices.map((item) => {
         if (!item?.category) return item;
 
         const categoryIds = item.category;
-        const targetProductsCat = products?.find((product) =>
-          categoryIds?.toString() === product?._id?.toString()
+        const targetProductsCat = products?.find(
+          (product) => categoryIds?.toString() === product?._id?.toString()
         )?.category;
 
         if (!targetProductsCat) return item;
 
-        const targetService = allServices?.find((service) =>
-          targetProductsCat?.toString() === service?._id?.toString()
+        const targetService = allServices?.find(
+          (service) =>
+            targetProductsCat?.toString() === service?._id?.toString()
         );
 
         return {
@@ -35,8 +46,9 @@ export default function FacultyManagement({ industry, services: allServices, pro
       });
 
       // Remove duplicates based on _id
-      const uniqueServices = relatedChildList.filter((item, index, self) =>
-        index === self.findIndex((s) => s?._id === item?._id)
+      const uniqueServices = relatedChildList.filter(
+        (item, index, self) =>
+          index === self.findIndex((s) => s?._id === item?._id)
       );
 
       setServices(uniqueServices);
@@ -80,7 +92,6 @@ export default function FacultyManagement({ industry, services: allServices, pro
           </div>
         </div>
       </div>
-
       <div className="w-full">
         <div className="flex justify-center pt-[65px]">
           <div className="mx-auto text-center w-[90%] lg:w-4/5 xl:w-[1280px] z-20">
@@ -144,36 +155,43 @@ export default function FacultyManagement({ industry, services: allServices, pro
             </div>
           </div>
         </div>
-      </div>
-      <div className="w-full  min-h-screen flex justify-center items-center">
-        <div className="w-[90%]  mx-auto">
-          {industry?.relatedChikfdServices?.length > 0 &&
-            Array.isArray(industry?.relatedChikfdServices) && (
-              <Showcase service={services} />
-            )}
-        </div>
-      </div>
-      {
-        industry?.relatedProjects?.length > 0
-        &&
-        <Projects projects={industry?.relatedProjects} title={"Impactfull Projects"} />
-      }
-      {industry?.relatedSuccessStory?.length > 0
-        &&
+      </div>{" "}
+      {industry?.relatedChikfdServices?.length > 0 &&
+        Array.isArray(industry?.relatedChikfdServices) && (
+          <div className="w-full  min-h-screen flex justify-center items-center">
+            <div className="w-[90%]  mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-2xl lg:text-4xl font-bold text-green-900">
+                  Webme Originals: Products tailored for{" "}
+                  {industry?.Title || "The Industry"}
+                </h2>
+              </div>
+              <Showcase service={industry?.relatedChikfdServices} />
+            </div>
+          </div>
+        )}
+      {industry?.relatedProjects?.length > 0 && (
+        <ProjectCarousel
+          data={industry?.relatedProjects}
+          title="Webme at Work: Impactful projects that matter"
+        />
+      )}
+      {industry?.relatedSuccessStory?.length > 0 && (
         <div className="w-[90%] mx-auto lg:w-full">
           <CaseStudy data={industry?.relatedSuccessStory} />
         </div>
-      }
+      )}
       {/* Blog Section Component */}
       <div className="mx-auto min-h-screen flex justify-center items-center">
-        <BlogSection industry={industry?._id} />
+        <BlogSection data={industry?.relatedBlogs} />
       </div>
       <div className="mx-auto min-h-screen flex justify-center items-center">
-        <KnowledgeBase industry={industry?._id} />
+        <KnowledgeBase data={industry?.relatedKnowledgeBase} />
       </div>
-
+      {/* Contact Section Component */}
+      <Contact />
       {/* FAQ Section Component */}
-      <FaqSection industry={industry} />
+      <FaqSection data={industry?.relatedFaqs} />
     </div>
   );
 }

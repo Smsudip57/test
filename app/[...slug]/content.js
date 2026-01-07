@@ -680,7 +680,7 @@ export default function Firewall({
                                   {/* Price section - Always at bottom */}
                                   <div className="flex items-center justify-between pt-3 border-t border-gray-100 mt-4">
                                     {/* Price section */}
-                                    <div className="flex items-center gap-2">
+                                    {/* <div className="flex items-center gap-2">
                                       <span className="text-xl font-bold text-[#446E6D]">
                                         AED {product.price.toLocaleString()}
                                       </span>
@@ -689,7 +689,7 @@ export default function Firewall({
                                           AED {product.oldPrice.toLocaleString()}
                                         </span>
                                       )}
-                                    </div>
+                                    </div> */}
 
                                     {/* Call to action */}
                                     <div className="flex items-center gap-2">

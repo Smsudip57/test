@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { fetchMultiple } from '@/lib/ssr-fetch';
+import { fetchV1ByKey } from '@/lib/ssr-fetch';
 import Content from './content';
 const industries = [
   "Automotive",
@@ -24,19 +24,15 @@ export default async function Page({ params }) {
 
   let industry;
   let services = [];
-  let products = [];
+  let relatedChikfdServices = [];
 
   try {
-    // Use fetchMultiple to get industries, services, and products with caching
-    const data = await fetchMultiple(['industries', 'services', 'products']);
+    // Use fetchV1ByKey to get industry by slug with all related data
+    industry = await fetchV1ByKey('industries', slug);
 
-    const industries = data.industries || [];
-    services = data.services || [];
-    products = data.products || [];
-
-
-    if (industries && industries.length > 0) {
-      industry = industries.find((industry) => industry?.Title.toLowerCase() === decodeURIComponent(slug).toLowerCase());
+    if (industry && industry.data) {
+      services = industry.data.relatedServices || [];
+      relatedChikfdServices = industry.data.relatedChikfdServices || [];
     }
   } catch (error) {
     // console.error('Error fetching data:', error?.message);
@@ -50,9 +46,8 @@ export default async function Page({ params }) {
       notFound();
     }
 
-    if (slug) {
-      return <Content industry={industry} services={services} products={products} />;
-
+    if (industry) {
+      return <Content industry={industry.data || industry}  />;
     } else {
       notFound();
     }

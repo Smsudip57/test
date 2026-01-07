@@ -8,18 +8,17 @@ import { z } from "zod";
 import { MyContext } from "@/context/context";
 import { ProductForm, ProductFormData } from "./ChildAndProductForm";
 import {
-  useCreateProductMutation,
-  useGetProductQuery,
-  useEditProductMutation,
-  useDeleteProductMutation,
-} from "@/Redux/Api/productsApi";
-import { useGetParentServicesQuery } from "@/Redux/Api/parentServiceApi/parentService";
+  useOldCreateParentServiceMutation,
+  useOldEditParentServiceMutation,
+  useOldDeleteParentServiceMutation,
+  useListParentServicesQuery,
+} from "@/app/redux/api/parentServiceApi";
 import {
-  useCreateChildServiceMutation,
-  useGetChildServicesQuery,
-  useEditChildServiceMutation,
-  useDeleteChildServiceMutation,
-} from "@/Redux/Api/childServiceApi";
+  useOldCreateChildServiceMutation,
+  useOldEditChildServiceMutation,
+  useOldDeleteChildServiceMutation,
+  useListChildServicesQuery,
+} from "@/app/redux/api/childServiceApi";
 import { CheckCircle, Pencil, Trash2 } from "lucide-react";
 import { Button } from "../../ui/button";
 import Image from "next/image";
@@ -106,16 +105,16 @@ export default function ProductManager() {
   const isChildModule = moduleType !== "child-service";
 
   // API Hooks
-  const [createProduct] = useCreateProductMutation();
-  const [editProduct] = useEditProductMutation();
-  const [deleteProduct] = useDeleteProductMutation();
-  const { data: servicesData, isLoading: servicesLoading } = useGetParentServicesQuery();
-  const { data: productsData, isLoading: productsLoading } = useGetProductQuery({});
+  const [createProduct] = useOldCreateParentServiceMutation();
+  const [editProduct] = useOldEditParentServiceMutation();
+  const [deleteProduct] = useOldDeleteParentServiceMutation();
+  const { data: servicesData, isLoading: servicesLoading } = useListParentServicesQuery({});
+  const { data: productsData, isLoading: productsLoading } = useListParentServicesQuery({});
 
-  const [createChildService] = useCreateChildServiceMutation();
-  const [editChildService] = useEditChildServiceMutation();
-  const [deleteChildService] = useDeleteChildServiceMutation();
-  const { data: childServicesData, isLoading: childServicesLoading } = useGetChildServicesQuery();
+  const [createChildService] = useOldCreateChildServiceMutation();
+  const [editChildService] = useOldEditChildServiceMutation();
+  const [deleteChildService] = useOldDeleteChildServiceMutation();
+  const { data: childServicesData, isLoading: childServicesLoading } = useListChildServicesQuery({});
 
   // Module configuration
   const moduleConfig = useMemo<ModuleConfig>(() => {

@@ -33,6 +33,36 @@ export const childServiceApi = baseApi.injectEndpoints({
       transformResponse: (response: any) => response?.childServices || response,
       providesTags: ["ChildServices"],
     }),
+
+    // CREATE endpoint - Create a new child service (OLD API)
+    oldCreateChildService: builder.mutation<any, any>({
+      query: (data) => ({
+        url: "/api/child/create",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["ChildServices"],
+    }),
+
+    // EDIT endpoint - Edit an existing child service (OLD API)
+    oldEditChildService: builder.mutation<any, any>({
+      query: (data) => ({
+        url: "/api/child/edit",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["ChildServices"],
+    }),
+
+    // DELETE endpoint - Delete a child service (OLD API)
+    oldDeleteChildService: builder.mutation<any, { childId: string }>({
+      query: ({ childId }) => ({
+        url: "/api/child/delete",
+        method: "POST",
+        body: { childId },
+      }),
+      invalidatesTags: ["ChildServices"],
+    }),
   }),
 });
 
@@ -40,4 +70,7 @@ export const {
   useListChildServicesQuery,
   useGetChildServiceByIdOrSlugQuery,
   useGetChildServicesByParentQuery,
+  useOldCreateChildServiceMutation,
+  useOldEditChildServiceMutation,
+  useOldDeleteChildServiceMutation,
 } = childServiceApi;

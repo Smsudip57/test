@@ -1,6 +1,5 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import axios from "axios";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -8,87 +7,65 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import Videoplayer from "@/components/shaerd/Video";
+import VideoPlayer from "@/components/shaerd/Video";
 
-interface Testimonial {
+interface Project {
   _id: any;
-  Testimonial: string;
-  video: string;
+  Title: string;
+  slug: string;
+  detail: string;
+  media?: {
+    url: string;
+    type: "image" | "video";
+  };
   image?: string;
-  postedBy?: string;
-  role?: string;
-  relatedService?: Object | any;
-  relatedIndustries?: Object | null;
-  relatedProduct?: Object | null;
-  relatedChild?: Object | null;
+  relatedServices?: any[];
+  relatedProducts?: any[];
+  relatedChikfdServices?: any[];
+  relatedIndustries?: any[];
+  section?: any[];
 }
 
-export default function CaseStudy({
-  parent,
-  child,
-  product,
+export default function ProjectCarousel({
   data,
-  title = "Customer Success Story",
+  title = "Projects",
 }: {
-  parent?: any;
-  child?: string;
-  product?: string;
-  industry?: string;
-  data?: Testimonial[];
+  data?: Project[];
   title?: string;
 }) {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const swiperRef = useRef<any>(null);
 
   useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        const res = await axios.get("/api/testimonial/get");
-        if (parent || child || product) {
-          const filteredItems = res.data.testimonials.filter(
-            (item: Testimonial) =>
-              (parent && item.relatedService?._id === parent) ||
-              (child && item.relatedProduct === child) ||
-              (product && item.relatedChild === product)
-          );
-          setTestimonials(filteredItems);
-        } else {
-          setTestimonials(res.data.testimonials);
-        }
-      } catch (error) {
-        console.error("Failed to fetch testimonials:", error);
-      }
-    };
-    if (data) {
-      setTestimonials(data);
-    } else {
-      fetchTestimonials();
+    if (data && Array.isArray(data) && data.length > 0) {
+      setProjects(data);
     }
-  }, []);
+  }, [data]);
 
   const handleVideoPlay = () => {
-    // Pause autoplay when video starts playing
     if (swiperRef.current) {
       swiperRef.current.autoplay.stop();
     }
   };
 
   const handleVideoEnd = () => {
-    // Resume autoplay when video ends
     if (swiperRef.current) {
       swiperRef.current.autoplay.start();
     }
   };
 
+  if (!projects || projects.length === 0) {
+    return null;
+  }
+
   return (
-    <div className="z-20 w-full flex flex-col" id="case-study">
+    <div className="z-20 w-full flex flex-col" id="project-carousel">
       <div className="mx-auto text-center w-full lg:w-[1280px] my-20 lg:my-40 relative px-4 lg:px-0">
         <h1 className="font-lora text-2xl lg:text-4xl text-green-900 font-bold mb-6 uppercase">
           {title}
         </h1>
         <p className="text-[#393939] text-base lg:text-xl">
-          Discover how businesses are revolutionizing customer success with
-          WEBME.
+          Discover real-world implementations and successful project outcomes
         </p>
 
         <Swiper
@@ -110,7 +87,7 @@ export default function CaseStudy({
             swiperRef.current = swiper;
           }}
         >
-          {testimonials.map((item, index) => (
+          {projects.map((project, index) => (
             <SwiperSlide key={index}>
               <div className="w-full relative overflow-hidden rounded-2xl shadow-md">
                 <div
@@ -134,64 +111,73 @@ export default function CaseStudy({
                 <div className="w-full flex flex-col lg:flex-row items-center">
                   <div className="basis-full lg:basis-1/2 h-full w-full p-6 lg:p-16 lg:pr-6">
                     <div className="relative h-max w-full rounded-lg overflow-hidden aspect-video">
-                      {/* VideoPlayer with built-in controls */}
-                      <Videoplayer
-                        src={item.video}
-                        aspectRatio="16/9"
-                        themeColor="#446E6D"
-                        className="w-full h-full"
-                        // controls={true}
-                        muted={false}
-                        playsInline={true}
-                        onEnd={handleVideoEnd}
-                      />
+                      {project.media?.type === "video" ? (
+                        <VideoPlayer
+                          src={project.media.url}
+                          aspectRatio="16/9"
+                          themeColor="#446E6D"
+                          className="w-full h-full"
+                          muted={false}
+                          playsInline={true}
+                          onEnd={handleVideoEnd}
+                        />
+                      ) : (
+                        <img
+                          src={project.media?.url || project.image}
+                          alt={project.Title}
+                          className="w-full h-full rounded-lg object-cover"
+                        />
+                      )}
                     </div>
                   </div>
                   <div className="basis-full lg:basis-1/2">
                     <div className="px-6 pb-16 lg:py-16 lg:pr-24 text-left">
-                      <div className="h-[16px] lg:h-[32px] mb-5">
-                        <img
-                          src="https://a.sfdcstatic.com/shared/images/pbc/icons/quotation-english.svg"
-                          alt="quote"
-                          className="h-full"
-                        />
-                      </div>
-                      <span
-                        className="text-xl lg:text-2xl line-clamp-[9]"
-                        style={{ minHeight: "calc(8 * 1.5em)" }}
-                      >
-                        <span className="font-semibold">
-                          {item.Testimonial}
-                        </span>
-                      </span>
-                      <br />
-                      <br />
-                      <div className="flex gap-3 items-center">
-                        {item.image && (
-                          <img
-                            src={item.image}
-                            alt={item.postedBy || "Testimonial author"}
-                            className="h-10 w-10 rounded-full object-cover"
-                            onError={(e) =>
-                              (e.currentTarget.style.display = "none")
-                            }
-                          />
-                        )}
-                        <div>
-                          <span className="font-medium text-xl">
-                            {item.postedBy}
-                          </span>
-                          <p className="mt-1 text-lg lg:text-xl font-extralight">
-                            {item.role}
-                          </p>
+                      <h2 className="font-bold text-2xl lg:text-3xl text-[#0B2B20] font-lora mb-6">
+                        {project.Title}
+                      </h2>
+                      <p className="text-lg lg:text-xl text-[#393939] mb-8 line-clamp-[6]">
+                        {project.detail}
+                      </p>
+
+                      {project.section && project.section.length > 0 && (
+                        <div className="mb-8">
+                          <h3 className="font-semibold text-lg mb-4 text-[#0B2B20]">
+                            Key Highlights:
+                          </h3>
+                          <ul className="space-y-3">
+                            {project.section.slice(0, 3).map((section, idx) => (
+                              <li
+                                key={idx}
+                                className="flex items-start gap-3 text-base"
+                              >
+                                <span className="text-[#446E6D] font-bold mt-1">
+                                  •
+                                </span>
+                                <div>
+                                  <strong className="text-[#0B2B20]">
+                                    {section.title}
+                                  </strong>
+                                  {section.points &&
+                                    section.points.length > 0 && (
+                                      <p className="text-sm text-[#393939]">
+                                        {section.points[0].title}
+                                      </p>
+                                    )}
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                      </div>
-                      <button className="mt-10 text-[#446E6D] border-[1px] border-[#446E6D] py-2 lg:py-3 lg:px-8 px-4 flex items-center rounded font-semibold cursor-pointer gap-2 text-sm lg:text-base hover:bg-[#446E6D] hover:text-white transition-all">
+                      )}
+
+                      <button className="mt-6 text-[#446E6D] border-[1px] border-[#446E6D] py-2 lg:py-3 lg:px-8 px-4 flex items-center rounded font-semibold cursor-pointer gap-2 text-sm lg:text-base hover:bg-[#446E6D] hover:text-white transition-all">
                         <Link
-                          href={`/customer-success-stories/${item._id}`}
+                          href={`/details/projects/${
+                            project.slug || project.Title
+                          }`}
                           className="flex items-center w-full h-full"
                         >
-                          Read the story{" "}
+                          View Project{" "}
                           <OpenInNewIcon fontSize="inherit" className="ml-1" />
                         </Link>
                       </button>

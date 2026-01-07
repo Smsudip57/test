@@ -199,7 +199,7 @@ const FaqSection: React.FC<FaqSectionProps> = ({
     } else {
       setFaqs(data);
     }
-  }, [industry, child, product]);
+  }, [industry, child, product, data]);
 
   const toggleFaq = (questionId: number) => {
     setOpenFaqs((prev) => ({

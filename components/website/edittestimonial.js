@@ -4,6 +4,7 @@ import axios from "axios";
 import { Loader2, UploadCloud, X, Video, Image as ImageIcon, AlertCircle, ArrowLeft, Save, Edit } from "lucide-react";
 import { MyContext } from '@/context/context';
 import { motion } from "framer-motion";
+import RelatedItemsSelector from '@/components/website/components/RelatedItemsSelector';
 
 export default function EditTestimonial() {
   const [testimonials, setTestimonials] = useState([]);
@@ -14,10 +15,10 @@ export default function EditTestimonial() {
     role: "",
     image: null,
     video: null,
-    relatedService: "",
-    relatedIndustries: "",
-    relatedProduct: "",
-    relatedChikfdServices: "", // Added relatedChikfdServices field
+    relatedServices: [],
+    relatedIndustries: [],
+    relatedProducts: [],
+    relatedChikfdServices: [],
   });
   
   const [loading, setLoading] = useState(false);
@@ -25,10 +26,6 @@ export default function EditTestimonial() {
   const [error, setError] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
-  const [services, setServices] = useState([]);
-  const [industries, setIndustries] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [childServices, setChildServices] = useState([]); // Added childServices state
   const { customToast } = useContext(MyContext);
   
   const imageInputRef = useRef(null);
@@ -36,36 +33,7 @@ export default function EditTestimonial() {
 
   useEffect(() => {
     fetchTestimonials();
-    fetchData();
   }, []);
-
-  // Validate image dimensions (1:1 aspect ratio with 0.1% tolerance)
-  const validateImageDimensions = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const width = this.width;
-          const height = this.height;
-          const aspectRatio = width / height;
-          const targetRatio = 1/ 1;
-          const tolerance = 0.1; // 0.1% tolerance
-          
-          if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
-            resolve({ width, height, aspectRatio });
-          } else {
-            reject({ 
-              message: `Image must have a 1:1 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
-              dimensions: { width, height, aspectRatio }
-            });
-          }
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  };
 
   const fetchTestimonials = async () => {
     try {
@@ -84,38 +52,43 @@ export default function EditTestimonial() {
     }
   };
 
-  const fetchData = async () => {
-    try {
-      // Fetch services, industries, products, and child services in parallel
-      const [serviceRes, industryRes, productRes, childServiceRes] = await Promise.all([
-        axios.get("/api/service/getservice"),
-        axios.get("/api/industry/get"),
-        axios.get("/api/product/get"),
-        axios.get("/api/child/get") // Correct endpoint for child services
-      ]);
-      
-      setServices(serviceRes.data.services || []);
-      setIndustries(industryRes.data.industries || []);
-      setProducts(productRes.data.products || []);
-      setChildServices(childServiceRes.data.products || []); // API returns child services in 'products' field
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      customToast({ 
-        success: false, 
-        message: "Failed to load dropdown options" 
-      });
-    }
+  // Validate image dimensions (1:1 aspect ratio with 0.1% tolerance)
+  const validateImageDimensions = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const width = this.width;
+          const height = this.height;
+          const aspectRatio = width / height;
+          const targetRatio = 1 / 1;
+          const tolerance = 0.1; // 0.1% tolerance
+          
+          if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
+            resolve({ width, height, aspectRatio });
+          } else {
+            reject({ 
+              message: `Image must have a 1:1 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
+              dimensions: { width, height, aspectRatio }
+            });
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   const handleEdit = (testimonial) => {
     setEditing(testimonial._id);
     setForm({
       ...testimonial,
-      // Map relation IDs properly, handling possible nulls
-      relatedService: testimonial.relatedService?._id || testimonial.relatedService || "",
-      relatedIndustries: testimonial.relatedIndustries?._id || testimonial.relatedIndustries || "",
-      relatedProduct: testimonial.relatedProduct?._id || testimonial.relatedProduct || "",
-      relatedChikfdServices: testimonial.relatedChikfdServices?._id || testimonial.relatedChikfdServices || "",
+      // Convert single relation IDs to arrays if they exist
+      relatedServices: testimonial.relatedServices?.map(s => typeof s === 'string' ? s : s._id) || [],
+      relatedIndustries: testimonial.relatedIndustries?.map(i => typeof i === 'string' ? i : i._id) || [],
+      relatedProducts: testimonial.relatedProducts?.map(p => typeof p === 'string' ? p : p._id) || [],
+      relatedChikfdServices: testimonial.relatedChikfdServices?.map(c => typeof c === 'string' ? c : c._id) || [],
     });
     setImagePreview(testimonial.image);
     setVideoPreview(testimonial.video);
@@ -125,6 +98,16 @@ export default function EditTestimonial() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
+  };
+
+  const handleRelatedItemsChange = (relatedItems) => {
+    setForm((prev) => ({
+      ...prev,
+      relatedServices: relatedItems.relatedServices || [],
+      relatedIndustries: relatedItems.relatedIndustries || [],
+      relatedProducts: relatedItems.relatedProducts || [],
+      relatedChikfdServices: relatedItems.relatedChikfdServices || [],
+    }));
   };
 
   const handleFileChange = async (e) => {
@@ -227,6 +210,18 @@ export default function EditTestimonial() {
       setError("Video is required");
       return false;
     }
+
+    // Validate at least one relationship is selected
+    const totalRelations = 
+      (form.relatedServices?.length || 0) +
+      (form.relatedIndustries?.length || 0) +
+      (form.relatedProducts?.length || 0) +
+      (form.relatedChikfdServices?.length || 0);
+    
+    if (totalRelations === 0) {
+      setError("Please select at least one relationship!");
+      return false;
+    }
     
     setError(null);
     return true;
@@ -249,8 +244,11 @@ export default function EditTestimonial() {
       
       // Append all form fields
       Object.keys(form).forEach((key) => {
-        // Don't append null/undefined values except for image/video which are handled separately
-        if (form[key] !== null && form[key] !== undefined && key !== 'image' && key !== 'video') {
+        // Append relationship arrays as JSON strings
+        if (key === 'relatedServices' || key === 'relatedIndustries' || key === 'relatedProducts' || key === 'relatedChikfdServices') {
+          formData.append(key, JSON.stringify(form[key]));
+        } else if (form[key] !== null && form[key] !== undefined && key !== 'image' && key !== 'video') {
+          // Don't append null/undefined values except for image/video which are handled separately
           formData.append(key, form[key]);
         }
       });
@@ -316,10 +314,10 @@ export default function EditTestimonial() {
       role: "",
       image: null,
       video: null,
-      relatedService: "",
-      relatedIndustries: "",
-      relatedProduct: "",
-      relatedChikfdServices: "", // Reset child services field too
+      relatedServices: [],
+      relatedIndustries: [],
+      relatedProducts: [],
+      relatedChikfdServices: [],
     });
     setImagePreview(null);
     setVideoPreview(null);
@@ -488,75 +486,18 @@ export default function EditTestimonial() {
               </div>
 
               {/* Related Entities */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Related Parent Service</label>
-                <select
-                  name="relatedService"
-                  value={form.relatedService}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                >
-                  <option value="">Select a Parent Service (Optional)</option>
-                  {services.map((service) => (
-                    <option key={service._id} value={service._id}>
-                      {service.Title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Related Industry</label>
-                <select
-                  name="relatedIndustries"
-                  value={form.relatedIndustries}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                >
-                  <option value="">Select an Industry (Optional)</option>
-                  {industries.map((industry) => (
-                    <option key={industry._id} value={industry._id}>
-                      {industry.Title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Product Selection Dropdown */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Related Child Service</label>
-                <select
-                  name="relatedProduct"
-                  value={form.relatedProduct}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                >
-                  <option value="">Select a Child Service (Optional)</option>
-                  {products.map((product) => (
-                    <option key={product._id} value={product._id}>
-                      {product.Title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Child Services Selection Dropdown - Added */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Related Product</label>
-                <select
-                  name="relatedChikfdServices"
-                  value={form.relatedChikfdServices}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#446E6D] focus:border-[#446E6D]"
-                >
-                  <option value="">Select a Product (Optional)</option>
-                  {childServices.map((childService) => (
-                    <option key={childService._id} value={childService._id}>
-                      {childService.Title}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <RelatedItemsSelector
+                relations={["services", "industries", "products", "childServices"]}
+                value={{
+                  relatedServices: form.relatedServices,
+                  relatedIndustries: form.relatedIndustries,
+                  relatedProducts: form.relatedProducts,
+                  relatedChikfdServices: form.relatedChikfdServices,
+                }}
+                onChange={handleRelatedItemsChange}
+                disabled={saving}
+                isMultiple={true}
+              />
 
               {/* Submit Button */}
               <div className="pt-4">

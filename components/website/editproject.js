@@ -6,6 +6,7 @@ import { Upload, PlusCircle, X, Film, Image as ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { MyContext } from "@/context/context";
 import { toast } from "react-toastify";
+import RelatedItemsSelector from "@/components/website/components/RelatedItemsSelector";
 
 export default function EditProject() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function EditProject() {
     mediaType: "image",
     media: null,
     relatedServices: [], // Changed to array
+    relatedIndustries: [], // Added
     relatedProducts: [], // Added
     relatedChikfdServices: [], // Added
     sections: [],
@@ -38,54 +40,39 @@ export default function EditProject() {
   const [newSectionImages, setNewSectionImages] = useState([]);
   const [newSectionPreviews, setNewSectionPreviews] = useState([]);
 
-  // Fetch projects, services, products, and child services on component mount
+  const handleRelatedItemsChange = (relatedItems) => {
+    setFormValues((prev) => ({
+      ...prev,
+      relatedServices: relatedItems.relatedServices || [],
+      relatedIndustries: relatedItems.relatedIndustries || [],
+      relatedProducts: relatedItems.relatedProducts || [],
+      relatedChikfdServices: relatedItems.relatedChikfdServices || [],
+    }));
+  };
+
+  // Fetch projects on component mount
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProjects = async () => {
       try {
         setLoading(true);
-        // Fetch all data in parallel
-        const [
-          projectsResponse,
-          servicesResponse,
-          productsResponse,
-          childServicesResponse,
-        ] = await Promise.all([
-          axios.get("/api/project/get", { withCredentials: true }),
-          axios.get("/api/service/getservice", { withCredentials: true }),
-          axios.get("/api/product/get", { withCredentials: true }),
-          axios.get("/api/child/get", { withCredentials: true }),
-        ]);
+        const projectsResponse = await axios.get("/api/project/get", {
+          withCredentials: true,
+        });
 
-        // Handle projects
         if (projectsResponse.data.success) {
           setProjects(projectsResponse.data.data);
         } else {
           setError("Failed to load projects");
         }
-
-        // Handle services
-        if (servicesResponse.data.success) {
-          setServices(servicesResponse.data.services || []);
-        }
-
-        // Handle products
-        if (productsResponse.data.success) {
-          setProducts(productsResponse.data.products || []);
-        }
-
-        // Handle child services
-        if (childServicesResponse.data.success) {
-          setChildServices(childServicesResponse.data.products || []);
-        }
       } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Error fetching data");
+        console.error("Error fetching projects:", err);
+        setError("Error fetching projects");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchProjects();
   }, []);
 
   // Clean up object URLs when component unmounts
@@ -139,9 +126,12 @@ export default function EditProject() {
     setNewSectionImages(project.section?.map(() => []) || []);
     setNewSectionPreviews(project.section?.map(() => []) || []);
 
+    // Generate slug if project doesn't have one
+    const projectSlug = project.slug || generateSlug(project.Title);
+
     setFormValues({
       Title: project.Title || "",
-      slug: project.slug || "",
+      slug: projectSlug,
       detail: project.detail || "",
       mediaType: project.media?.type || "image",
       media: null, // We don't load the actual file, just the URL
@@ -149,6 +139,11 @@ export default function EditProject() {
         ? project.relatedServices
         : project.relatedServices
         ? [project.relatedServices]
+        : [],
+      relatedIndustries: Array.isArray(project.relatedIndustries)
+        ? project.relatedIndustries
+        : project.relatedIndustries
+        ? [project.relatedIndustries]
         : [],
       relatedProducts: Array.isArray(project.relatedProducts)
         ? project.relatedProducts
@@ -178,40 +173,15 @@ export default function EditProject() {
   // Handle basic input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
-
-    // Auto-generate slug when title changes
-    if (name === "Title") {
-      setFormValues((prev) => ({ ...prev, slug: generateSlug(value) }));
-    }
-  };
-
-  // Handle multi-select changes for related items
-  const handleMultiSelectChange = (type, itemId) => {
     setFormValues((prev) => {
-      const currentItems = prev[type] || [];
-      const isSelected = currentItems.includes(itemId);
+      const updated = { ...prev, [name]: value };
 
-      return {
-        ...prev,
-        [type]: isSelected
-          ? currentItems.filter((id) => id !== itemId)
-          : [...currentItems, itemId],
-      };
-    });
-  };
+      // Only auto-generate slug if it's currently empty (no existing slug)
+      if (name === "Title" && !prev.slug) {
+        updated.slug = generateSlug(value);
+      }
 
-  // Handle select all / deselect all for multi-select
-  const handleSelectAll = (type, allItems) => {
-    setFormValues((prev) => {
-      const currentItems = prev[type] || [];
-      const allIds = allItems.map((item) => item._id);
-      const allSelected = allIds.every((id) => currentItems.includes(id));
-
-      return {
-        ...prev,
-        [type]: allSelected ? [] : allIds,
-      };
+      return updated;
     });
   };
 
@@ -571,12 +541,13 @@ export default function EditProject() {
     // Validate that at least one related item is selected
     const totalRelatedItems =
       (formValues.relatedServices?.length || 0) +
+      (formValues.relatedIndustries?.length || 0) +
       (formValues.relatedProducts?.length || 0) +
       (formValues.relatedChikfdServices?.length || 0);
 
     if (totalRelatedItems === 0) {
       setError(
-        "Please select at least one related service, product, or child service"
+        "Please select at least one related service, industry, product, or child service"
       );
       return false;
     }
@@ -640,6 +611,10 @@ export default function EditProject() {
     formData.append(
       "relatedServices",
       JSON.stringify(formValues.relatedServices || [])
+    );
+    formData.append(
+      "relatedIndustries",
+      JSON.stringify(formValues.relatedIndustries || [])
     );
     formData.append(
       "relatedProducts",
@@ -714,7 +689,7 @@ export default function EditProject() {
 
         // Redirect to projects page after 2 seconds
         setTimeout(() => {
-          router.push("/admin/website/projects/edit");
+          router.refresh();
         }, 2000);
       } else {
         setError(response.data.message || "Failed to update project");
@@ -828,179 +803,24 @@ export default function EditProject() {
                 </p>
               </div>
 
-              {/* Related Services Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Related Services *
-                  <span className="text-xs text-gray-500 ml-1">
-                    ({formValues.relatedServices?.length || 0} selected)
-                  </span>
-                </label>
-                <div className="border border-gray-300 rounded-md p-3 max-h-48 overflow-y-auto">
-                  <div className="flex justify-between items-center mb-2">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleSelectAll("relatedServices", services)
-                      }
-                      className="text-xs text-blue-600 hover:text-blue-800"
-                    >
-                      {services.length > 0 &&
-                      services.every((service) =>
-                        formValues.relatedServices?.includes(service._id)
-                      )
-                        ? "Deselect All"
-                        : "Select All"}
-                    </button>
-                  </div>
-                  <div className="space-y-1">
-                    {services.map((service) => (
-                      <label key={service._id} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={
-                            formValues.relatedServices?.includes(service._id) ||
-                            false
-                          }
-                          onChange={() =>
-                            handleMultiSelectChange(
-                              "relatedServices",
-                              service._id
-                            )
-                          }
-                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        <span className="text-sm text-gray-700">
-                          {service.Title}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                {loading && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    Loading services...
-                  </p>
-                )}
-              </div>
-
-              {/* Related Products Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Related Products
-                  <span className="text-xs text-gray-500 ml-1">
-                    ({formValues.relatedProducts?.length || 0} selected)
-                  </span>
-                </label>
-                <div className="border border-gray-300 rounded-md p-3 max-h-48 overflow-y-auto">
-                  <div className="flex justify-between items-center mb-2">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleSelectAll("relatedProducts", products)
-                      }
-                      className="text-xs text-blue-600 hover:text-blue-800"
-                    >
-                      {products.length > 0 &&
-                      products.every((product) =>
-                        formValues.relatedProducts?.includes(product._id)
-                      )
-                        ? "Deselect All"
-                        : "Select All"}
-                    </button>
-                  </div>
-                  <div className="space-y-1">
-                    {products.map((product) => (
-                      <label key={product._id} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={
-                            formValues.relatedProducts?.includes(product._id) ||
-                            false
-                          }
-                          onChange={() =>
-                            handleMultiSelectChange(
-                              "relatedProducts",
-                              product._id
-                            )
-                          }
-                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        <span className="text-sm text-gray-700">
-                          {product.Title}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                {products.length === 0 && !loading && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    No products available
-                  </p>
-                )}
-              </div>
-
-              {/* Related Child Services Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Related Child Services
-                  <span className="text-xs text-gray-500 ml-1">
-                    ({formValues.relatedChikfdServices?.length || 0} selected)
-                  </span>
-                </label>
-                <div className="border border-gray-300 rounded-md p-3 max-h-48 overflow-y-auto">
-                  <div className="flex justify-between items-center mb-2">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleSelectAll("relatedChikfdServices", childServices)
-                      }
-                      className="text-xs text-blue-600 hover:text-blue-800"
-                    >
-                      {childServices.length > 0 &&
-                      childServices.every((childService) =>
-                        formValues.relatedChikfdServices?.includes(
-                          childService._id
-                        )
-                      )
-                        ? "Deselect All"
-                        : "Select All"}
-                    </button>
-                  </div>
-                  <div className="space-y-1">
-                    {childServices.map((childService) => (
-                      <label
-                        key={childService._id}
-                        className="flex items-center"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={
-                            formValues.relatedChikfdServices?.includes(
-                              childService._id
-                            ) || false
-                          }
-                          onChange={() =>
-                            handleMultiSelectChange(
-                              "relatedChikfdServices",
-                              childService._id
-                            )
-                          }
-                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        <span className="text-sm text-gray-700">
-                          {childService.Title}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                {childServices.length === 0 && !loading && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    No child services available
-                  </p>
-                )}
-              </div>
+              {/* Related Items Selector */}
+              <RelatedItemsSelector
+                relations={[
+                  "services",
+                  "industries",
+                  "products",
+                  "childServices",
+                ]}
+                value={{
+                  relatedServices: formValues.relatedServices,
+                  relatedIndustries: formValues.relatedIndustries,
+                  relatedProducts: formValues.relatedProducts,
+                  relatedChikfdServices: formValues.relatedChikfdServices,
+                }}
+                onChange={handleRelatedItemsChange}
+                disabled={false}
+                isMultiple={true}
+              />
 
               {/* Project Detail */}
               <div>
