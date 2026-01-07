@@ -260,7 +260,7 @@ const Advertiser = ({ data }: any) => {
                       style={{ marginBottom: !(index % 2 === 0) ? "0px" : "" }}
                     >
                       {/* <Link href={`/details/projects/${item?.Title}`}> */}
-                        Know More
+                      Know More
                       {/* </Link> */}
                     </button>
                     {index % 2 === 0 && (
