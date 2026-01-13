@@ -190,7 +190,7 @@ export default function ProductManager() {
 
   // Category options
   const categoryOptions = useMemo(() => {
-    const data = isChildModule ? productsData : servicesData?.services;
+    const data = isChildModule ? productsData : servicesData;
     return (Array.isArray(data) ? data : []).map((item: any) => ({
       label: item.Title,
       value: item._id,
