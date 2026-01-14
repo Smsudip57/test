@@ -14,6 +14,9 @@ import {
   useListParentServicesQuery,
 } from "@/app/redux/api/parentServiceApi";
 import {
+  useOldGetServicesQuery
+} from "@/app/redux/api/serviceApi";
+import {
   useOldCreateChildServiceMutation,
   useOldEditChildServiceMutation,
   useOldDeleteChildServiceMutation,
@@ -108,7 +111,7 @@ export default function ProductManager() {
   const [createProduct] = useOldCreateParentServiceMutation();
   const [editProduct] = useOldEditParentServiceMutation();
   const [deleteProduct] = useOldDeleteParentServiceMutation();
-  const { data: servicesData, isLoading: servicesLoading } = useListParentServicesQuery({});
+  const { data: servicesData, isLoading: servicesLoading } = useOldGetServicesQuery({});
   const { data: productsData, isLoading: productsLoading } = useListParentServicesQuery({});
 
   const [createChildService] = useOldCreateChildServiceMutation();
@@ -190,7 +193,7 @@ export default function ProductManager() {
 
   // Category options
   const categoryOptions = useMemo(() => {
-    const data = isChildModule ? productsData : servicesData;
+    const data = isChildModule ? productsData : servicesData?.services;
     return (Array.isArray(data) ? data : []).map((item: any) => ({
       label: item.Title,
       value: item._id,

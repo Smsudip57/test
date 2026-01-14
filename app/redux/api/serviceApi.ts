@@ -50,6 +50,13 @@ export const serviceApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Services"],
     }),
+
+    oldGetServices: builder.query({
+      query: () => ({
+        url: `/api/service/getservice`,
+        method: "GET",
+      }),
+    })
   }),
 });
 
@@ -59,4 +66,5 @@ export const {
   useCreateServiceMutation,
   useUpdateServiceMutation,
   useDeleteServiceMutation,
+  useOldGetServicesQuery,
 } = serviceApi;
