@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { fetchSlugPageData } from "../../lib/ssr-fetch";
+import { fetchSlugPageData, fetchV1ByKey } from "../../lib/ssr-fetch";
 import Content from "./content";
 
 // Keep dynamic for fresh data but optimize performance
@@ -14,19 +14,11 @@ export async function generateMetadata({ params }) {
   const mainSlug = slug[0] ? decodeURIComponent(slug[0]).toLowerCase() : "";
 
   try {
-    // Use the convenience function for metadata generation too
-    const { services } = await fetchSlugPageData();
-
-    // Find service by slug
-    const serviceBySlug = services.find((service) => {
-      const serviceSlug = service.slug?.toLowerCase() || "";
-      const serviceTitle = service.Title?.toLowerCase() || "";
-
-      return serviceSlug === mainSlug || serviceTitle === mainSlug;
-    });
+    // Try to fetch specific service by slug using new V1 API
+    const serviceBySlug = await fetchV1ByKey("services", mainSlug);
 
     // If service is found by slug, use its metadata
-    if (serviceBySlug) {
+    if (serviceBySlug && serviceBySlug._id) {
       return {
         title: `${serviceBySlug.Title} | Professional IT Solutions | Webmedigital`,
         description: serviceBySlug.deltail || serviceBySlug.moreDetail,
@@ -166,46 +158,44 @@ export default async function Page({ params }) {
   };
 
   try {
-    // Use the new convenience function for clean, optimized fetching
-    const { services, products, childs } = await fetchSlugPageData();
+    // Fetch service from new V1 API
+    const serviceData = await fetchV1ByKey("services", mainSlug);
 
-    // First check if the slug matches a predefined category
-    let currentMainService = Mainservice[mainSlug] || null;
-
-    // If not a category, check if it's a specific service by slug
-    if (!currentMainService) {
-      const serviceBySlug = services.find((service) => {
-        const serviceSlug = service.slug?.toLowerCase() || "";
-        const serviceTitle = service.Title?.toLowerCase() || "";
-
-        return serviceSlug === mainSlug || serviceTitle === mainSlug;
-      });
-
-      if (serviceBySlug) {
-        // Create a dynamic main service entry for the specific service
-        currentMainService = {
-          name: serviceBySlug.Title,
-          title: serviceBySlug.Title,
-          image: serviceBySlug.image || "https://webmedigital.com/og-image.jpg",
-          description: serviceBySlug.deltail || serviceBySlug.moreDetail,
-          isSpecificService: true,
-          serviceData: serviceBySlug,
-        };
-      }
+    if (!serviceData) {
+      return notFound();
     }
-    // console.log(products)
-    return currentMainService ? (
+
+    // Format data for Content component
+    // The V1 API sends: parentServices with nested children
+    // Content component expects: services (parent services), products (all children)
+
+    const parentServices = serviceData?.parentServices || [];
+
+    // Flatten all children from all parent services into products array
+    const allProducts = [];
+    parentServices.forEach((parent) => {
+      if (parent.children && Array.isArray(parent.children)) {
+        allProducts.push(...parent.children);
+      }
+    });
+    // console.log(allProducts)
+
+    return (
       <Content
-        services={services}
-        products={products}
-        childs={childs}
+        services={parentServices}
+        products={allProducts}
         slug={slug}
-        Mainservice={currentMainService}
+        Mainservice={{
+          serviceData: serviceData,
+          title: serviceData?.Title,
+          description: serviceData?.deltail || serviceData?.moreDetail,
+          image: serviceData?.image,
+        }}
+        childs={allProducts}
       />
-    ) : (
-      notFound()
     );
   } catch (error) {
+    console.error("Error fetching page data:", error);
     return notFound();
   }
 }

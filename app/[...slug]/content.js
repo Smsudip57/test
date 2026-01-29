@@ -61,58 +61,24 @@ export default function Firewall({
 
   const { setChatBoxOpen } = useContext(MyContext);
 
-  // Find the selected service based on Mainservice
-  const selectedService = useMemo(() => {
-    if (!Mainservice || !services?.length) return null;
+  // Get the main service data - already fetched by slug from page.js
+  const mainService = useMemo(() => Mainservice?.serviceData, [Mainservice]);
 
-    // If Mainservice has serviceData (specific service), use that directly
-    if (Mainservice.serviceData) {
-      return Mainservice.serviceData;
-    }
+  // Get parent services (which rotate) - these are "services" prop
+  // They already have their children nested inside from the API
+  const parentServices = useMemo(() => services || [], [services]);
 
-    // Otherwise find the service by name
-    return services.find(
-      (service) =>
-        service?.Title?.toLowerCase() === Mainservice?.name?.toLowerCase() ||
-        service?.category?.toLowerCase() === Mainservice?.name?.toLowerCase()
-    );
-  }, [Mainservice, services]);
+  // All child services flattened from all parent services
+  // These are "products" and "childs" props (same data)
+  const allChildServices = useMemo(() => products || [], [products]);
 
-  // Calculate filtered products and children once when dependencies change
-  const { servicebasedProducts, filteredChildren } = useMemo(() => {
-    if (!selectedService || !products?.length) {
-      return { servicebasedProducts: [], filteredChildren: [] };
-    }
-
-    // Find products related to this service
-    const filteredProducts = products.filter(
-      (product) => product?.category === selectedService?._id
-    );
-
-    // Find children related to these products
-    const relatedChildren = [];
-    if (childs?.length) {
-      filteredProducts.forEach((product) => {
-        const childrenForProduct = childs.filter(
-          (child) => child?.category === product?._id
-        );
-        relatedChildren.push(...childrenForProduct);
-      });
-    }
-
-    return {
-      servicebasedProducts: filteredProducts,
-      filteredChildren: relatedChildren,
-    };
-  }, [selectedService, products, childs]);
-
-  // Fetch child product data
+  // Fetch child product data by tag for each child service
   useEffect(() => {
-    if (!filteredChildren?.length) return;
+    if (!allChildServices?.length) return;
 
     const fetchChildData = async () => {
       try {
-        const promises = filteredChildren.map((child) =>
+        const promises = allChildServices.map((child) =>
           axios
             .get("https://server.webmedigital.com/api/products/getbytag", {
               params: { tag: child?.itemsTag },
@@ -125,6 +91,7 @@ export default function Firewall({
               products: res?.data || [],
             }))
             .catch((error) => {
+
               return {
                 id: child?._id,
                 title: child?.Title,
@@ -137,7 +104,6 @@ export default function Firewall({
 
         const results = await Promise.all(promises);
         const validResults = results.filter((item) => item !== null);
-        // console.log(`Successfully fetched data for ${validResults.length} child products`);
         setItemsforChilds(validResults);
       } catch (error) {
         console.error("Error in batch child data fetching:", error);
@@ -145,39 +111,37 @@ export default function Firewall({
     };
 
     fetchChildData();
-  }, [filteredChildren]);
+  }, [allChildServices]);
 
-  // Update current display when products or children change
+  // Update current display when parent services change
+  // Display the first parent service and its first child by default
   useEffect(() => {
-    if (!servicebasedProducts.length) return;
+    if (!parentServices?.length) return;
+
+    const firstParent = parentServices[0];
+    const firstChild = firstParent?.children?.[0] || null;
 
     setCurrentDisplay((prev) => ({
       ...prev,
-      productData: servicebasedProducts[prev.serviceIndex],
-      childData:
-        filteredChildren.find(
-          (child) =>
-            child?.category === servicebasedProducts[prev.serviceIndex]?._id
-        ) || null,
+      serviceIndex: 0,
+      productData: firstParent,
+      childData: firstChild,
     }));
-  }, [servicebasedProducts, filteredChildren]);
+  }, [parentServices]);
 
-  // Content rotation effect with better performance
+  // Content rotation effect - rotate through parent services
   useEffect(() => {
-    if (!servicebasedProducts.length) return;
+    if (!parentServices?.length || parentServices.length === 1) return;
 
     const rotateContent = () => {
       setCurrentDisplay((prev) => {
-        const nextIndex = (prev.serviceIndex + 1) % servicebasedProducts.length;
-        const nextProduct = servicebasedProducts[nextIndex];
-        const nextChild =
-          filteredChildren.find(
-            (child) => child?.category === nextProduct?._id
-          ) || null;
+        const nextIndex = (prev.serviceIndex + 1) % parentServices.length;
+        const nextParent = parentServices[nextIndex];
+        const nextChild = nextParent?.children?.[0] || null;
 
         return {
           serviceIndex: nextIndex,
-          productData: nextProduct,
+          productData: nextParent,
           childData: nextChild,
         };
       });
@@ -197,7 +161,7 @@ export default function Firewall({
         clearInterval(rotationIntervalRef.current);
       }
     };
-  }, [servicebasedProducts, filteredChildren]);
+  }, [parentServices]);
 
   // State for booking modal
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -214,8 +178,9 @@ export default function Firewall({
     setModalDescription(description);
   }, []);
 
-  // Current service data for easier rendering
-  const currentService = Mainservice?.serviceData || selectedService;
+  // Current service data for easier rendering - use the main service fetched by slug
+  const currentService = mainService;
+  console.log(currentService)
 
   const { productData, childData } = currentDisplay;
 
@@ -412,7 +377,7 @@ export default function Firewall({
             id="details"
           >
             {/* Product display */}
-            {servicebasedProducts.length > 0 ? (
+            {parentServices.length > 0 ? (
               <AnimatePresence mode="wait">
                 <motion.div
                   key={productData?._id || "product-placeholder"}
@@ -453,8 +418,8 @@ export default function Firewall({
                     </button>
                     <Link
                       href={`/details/services/${productData?.slug
-                          ? productData.slug
-                          : productData?.Title
+                        ? productData.slug
+                        : productData?.Title
                         }`}
                       className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     >
@@ -523,7 +488,7 @@ export default function Firewall({
               </AnimatePresence>
             ) : (
               // Only show this if there should be a child but none was found
-              servicebasedProducts.length > 0 && (
+              parentServices.length > 0 && (
                 <div className="flex justify-center items-center basis-1/3 py-10 bg-gray-50 rounded-md">
                   {/* <p className="text-lg text-gray-500">No child products available</p> */}
                 </div>
@@ -763,7 +728,7 @@ export default function Firewall({
             <h2 id="case-studies-heading" className="sr-only">
               Case Studies
             </h2>
-            <CaseStudy parent={currentService?._id} />
+            <CaseStudy data={currentService?.relatedTestimonials} />
           </section>
           <section
             aria-labelledby="related-projects-heading"
@@ -772,7 +737,7 @@ export default function Firewall({
             <h2 id="related-projects-heading" className="sr-only">
               Related Projects
             </h2>
-            <Projects service={currentService?._id} />
+            <Projects data={currentService?.relatedProjects} />
           </section>
           <section
             aria-labelledby="industries-heading"
@@ -781,10 +746,10 @@ export default function Firewall({
             <h2 id="industries-heading" className="sr-only">
               Industries We Serve
             </h2>
-            <Industies parent={currentService?._id} />
+            <Industies data={currentService?.relatedIndustries} />
           </section>
           <div className="mx-auto min-h-screen flex justify-center items-center">
-            <BlogSection parent={currentService?._id} />
+            <BlogSection data={currentService?.relatedBlogs} />
           </div>
           <section aria-labelledby="industries-heading" className="mt-16">
             <Contact />

@@ -1,56 +1,36 @@
 import { baseApi } from "@/app/redux/baseApi";
 
-// Example: Product/Service API endpoints
+// Service API endpoints with new V1 routes
 export const serviceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // GET endpoint - Fetch service by ID
-    getService: builder.query({
-      query: (serviceId) => ({
-        url: `/api/services/${serviceId}`,
+    // Get all services with their details
+    getAllServices: builder.query<any, void>({
+      query: () => ({
+        url: `/api/v1/service/get`,
         method: "GET",
       }),
-      providesTags: ["Services"],
+      transformResponse: (response: any) => {
+        if (response?.data) return response.data;
+        if (Array.isArray(response)) return response;
+        return response;
+      },
+      providesTags: ["service"],
     }),
 
-    // GET endpoint - List all services
-    listServices: builder.query({
-      query: (params) => ({
-        url: `/api/services`,
+    // Get single service by ID or SLUG with all related data
+    getSingleService: builder.query<any, string>({
+      query: (idOrSlug) => ({
+        url: `/api/v1/service/get/${idOrSlug}`,
         method: "GET",
-        params,
       }),
-      providesTags: ["Services"],
+      transformResponse: (response: any) => {
+        if (response?.data) return response.data;
+        return response;
+      },
+      providesTags: ["service-detail"],
     }),
 
-    // POST endpoint - Create service
-    createService: builder.mutation({
-      query: (serviceData) => ({
-        url: `/api/services`,
-        method: "POST",
-        body: serviceData,
-      }),
-      invalidatesTags: ["Services"],
-    }),
-
-    // PUT endpoint - Update service
-    updateService: builder.mutation({
-      query: ({ serviceId, ...serviceData }) => ({
-        url: `/api/services/${serviceId}`,
-        method: "PUT",
-        body: serviceData,
-      }),
-      invalidatesTags: ["Services"],
-    }),
-
-    // DELETE endpoint - Delete service
-    deleteService: builder.mutation({
-      query: (serviceId) => ({
-        url: `/api/services/${serviceId}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Services"],
-    }),
-
+    // Legacy endpoint - keeping for backward compatibility
     oldGetServices: builder.query({
       query: () => ({
         url: `/api/service/getservice`,
@@ -58,13 +38,13 @@ export const serviceApi = baseApi.injectEndpoints({
       }),
     })
   }),
+  overrideExisting: false,
 });
 
 export const {
-  useGetServiceQuery,
-  useListServicesQuery,
-  useCreateServiceMutation,
-  useUpdateServiceMutation,
-  useDeleteServiceMutation,
+  useGetAllServicesQuery,
+  useLazyGetAllServicesQuery,
+  useGetSingleServiceQuery,
+  useLazyGetSingleServiceQuery,
   useOldGetServicesQuery,
 } = serviceApi;
