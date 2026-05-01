@@ -180,7 +180,7 @@ export default function CoreServicesAppleMinimalSection() {
     const activeService = services[active];
 
     return (
-        <section className="relative overflow-hidden bg-[#fbfdff] px-4 py-20 text-[#07123a]">
+        <section className="relative overflow-hidden bg-[#fbfdff] px-4 py-20 text-[#07123a]  z-50">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(20,184,166,0.055),transparent_30%),radial-gradient(circle_at_88%_18%,rgba(6,71,216,0.055),transparent_32%)]" />
             <div className="absolute left-1/2 top-0 h-px w-[88%] -translate-x-1/2 bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
 

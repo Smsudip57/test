@@ -9,7 +9,7 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ pageData }) => {
   return (
-    <div className="relative flex flex-col h-full w-full pt-32 lg:pt-0 lg:mb-48" id="about-me">
+    <div className="relative flex flex-col h-full w-full pt-32 lg:pt-0 " id="about-me">
       <WebParticles />
       {/* <video
         autoPlay

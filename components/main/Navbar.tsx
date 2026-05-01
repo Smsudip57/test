@@ -141,7 +141,8 @@ const Navbar = () => {
     "/signin",
     "/signup",
     "/forgot-password",
-    "launch-your-own-business"
+    "launch-your-own-business",
+    "/"
   ];
   if (
     avoidedPaths.some((adminPath) => pathname.includes(adminPath)) ||
