@@ -30,8 +30,8 @@ const schema = z.object({
     image: z.string().min(1, "Image is required"),
 });
 
-const toSlug = (value: string) =>
-    value
+const toSlug = (value: string | null | undefined) =>
+    (value ?? "")
         .toLowerCase()
         .trim()
         .replace(/[^a-z0-9\s-]/g, "")

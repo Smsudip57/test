@@ -258,8 +258,8 @@ const BlogManager = () => {
   // Filter and search functions
   const filteredBlogs = blogs.filter((blog) => {
     const matchesSearch =
-      blog.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      blog.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      (blog.title?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+      (blog.description?.toLowerCase() || "").includes(searchTerm.toLowerCase());
     const matchesFilter = filterType ? blog.type === filterType : true;
 
     return matchesSearch && matchesFilter;

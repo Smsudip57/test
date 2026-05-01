@@ -223,7 +223,8 @@ const ImageUploader = ({
   const getPlaceholderText = useCallback(() => {
     if (placeholder) return placeholder;
     const ratio = aspectRatio ? ` (${aspectRatio})` : "";
-    return `Upload ${label.toLowerCase()}${ratio}`;
+    const safeLabel = typeof label === "string" && label.trim() ? label.toLowerCase() : "image";
+    return `Upload ${safeLabel}${ratio}`;
   }, [placeholder, label, aspectRatio]);
 
   const getAcceptedTypes = useCallback(() => {
