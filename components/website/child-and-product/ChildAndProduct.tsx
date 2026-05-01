@@ -12,16 +12,16 @@ import {
   useOldEditParentServiceMutation,
   useOldDeleteParentServiceMutation,
   useListParentServicesQuery,
-} from "@/app/redux/api/parentServiceApi";
+} from "@/redux/api/parentServiceApi";
 import {
   useOldGetServicesQuery
-} from "@/app/redux/api/serviceApi";
+} from "@/redux/api/serviceApi";
 import {
   useOldCreateChildServiceMutation,
   useOldEditChildServiceMutation,
   useOldDeleteChildServiceMutation,
   useListChildServicesQuery,
-} from "@/app/redux/api/childServiceApi";
+} from "@/redux/api/childServiceApi";
 import { CheckCircle, Pencil, Trash2 } from "lucide-react";
 import { Button } from "../../ui/button";
 import Image from "next/image";
@@ -111,7 +111,7 @@ export default function ProductManager() {
   const [createProduct] = useOldCreateParentServiceMutation();
   const [editProduct] = useOldEditParentServiceMutation();
   const [deleteProduct] = useOldDeleteParentServiceMutation();
-  const { data: servicesData, isLoading: servicesLoading } = useOldGetServicesQuery({});
+  const { data: servicesData, isLoading: servicesLoading } = useOldGetServicesQuery();
   const { data: productsData, isLoading: productsLoading } = useListParentServicesQuery({});
 
   const [createChildService] = useOldCreateChildServiceMutation();
@@ -193,7 +193,7 @@ export default function ProductManager() {
 
   // Category options
   const categoryOptions = useMemo(() => {
-    const data = isChildModule ? productsData : servicesData?.services;
+    const data = isChildModule ? productsData : servicesData;
     return (Array.isArray(data) ? data : []).map((item: any) => ({
       label: item.Title,
       value: item._id,

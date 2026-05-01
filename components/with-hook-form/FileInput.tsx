@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { useUploadFileMutation } from "../../Redux/Api/fileApi";
+import { useUploadFileMutation } from "@/redux/api/fileApi";
 import Image from "next/image";
 import { Upload, X, ImageIcon, AlertCircle, CheckCircle, Plus } from "lucide-react";
 

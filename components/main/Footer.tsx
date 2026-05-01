@@ -71,7 +71,9 @@ const Footer = () => {
     pathname.includes("/admin") ||
     pathname.includes("/signin") ||
     pathname.includes("/signup") ||
-    pathname.includes("/forgot-password")
+    pathname.includes("/forgot-password") ||
+    pathname.includes("/launch-your-own-business")
+    
   ) {
     return null;
   }

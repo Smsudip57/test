@@ -1,4 +1,4 @@
-import { baseApi } from "@/app/redux/baseApi";
+import { baseApi } from "@/redux/baseApi";
 
 // Parent Services API endpoints
 export const parentServiceApi = baseApi.injectEndpoints({

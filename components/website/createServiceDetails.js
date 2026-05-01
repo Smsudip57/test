@@ -17,6 +17,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import ImageUploader from '@/components/website/components/ImageUploader';
 
 const CreateServiceDetails = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const CreateServiceDetails = () => {
     sections: [
       {
         title: '',
-        image: null,
+        imageUrl: null,
         imagePreview: null,
         points: [{ title: '', detail: '' }]
       }
@@ -75,7 +76,7 @@ const CreateServiceDetails = () => {
       const updatedSections = [...prevData.sections];
       updatedSections[sectionIndex] = {
         ...updatedSections[sectionIndex],
-        points: updatedSections[sectionIndex].points.map((point, idx) => 
+        points: updatedSections[sectionIndex].points.map((point, idx) =>
           idx === pointIndex ? { ...point, [field]: value } : point
         )
       };
@@ -83,39 +84,38 @@ const CreateServiceDetails = () => {
     });
   }, []);
 
-  const handleImageChange = useCallback((sectionIndex, e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleImageChange = useCallback((sectionIndex, file, preview, junkUrl) => {
+    setFormData(prevData => {
+      const updatedSections = [...prevData.sections];
+      updatedSections[sectionIndex] = {
+        ...updatedSections[sectionIndex],
+        imageUrl: junkUrl,
+        imagePreview: preview
+      };
+      return { ...prevData, sections: updatedSections };
+    });
+  }, []);
 
-    if (!file.type.match(/image\/(jpeg|jpg|png|gif)/i)) {
-      toast.error('Only image files are allowed!');
-      return;
-    }
-
-    // Create preview using FileReader
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData(prevData => {
-        const updatedSections = [...prevData.sections];
-        updatedSections[sectionIndex] = {
-          ...updatedSections[sectionIndex],
-          image: file,
-          imagePreview: reader.result
-        };
-        return { ...prevData, sections: updatedSections };
-      });
-    };
-    reader.readAsDataURL(file);
+  const handleImageRemove = useCallback((sectionIndex) => {
+    setFormData(prevData => {
+      const updatedSections = [...prevData.sections];
+      updatedSections[sectionIndex] = {
+        ...updatedSections[sectionIndex],
+        imageUrl: null,
+        imagePreview: null
+      };
+      return { ...prevData, sections: updatedSections };
+    });
   }, []);
 
   const addSection = useCallback(() => {
     setFormData(prevData => ({
       ...prevData,
       sections: [
-        ...prevData.sections, 
+        ...prevData.sections,
         {
           title: '',
-          image: null,
+          imageUrl: null,
           imagePreview: null,
           points: [{ title: '', detail: '' }]
         }
@@ -129,7 +129,7 @@ const CreateServiceDetails = () => {
         toast.error('At least one section is required');
         return prevData;
       }
-      
+
       const updatedSections = prevData.sections.filter((_, i) => i !== index);
       return { ...prevData, sections: updatedSections };
     });
@@ -152,18 +152,18 @@ const CreateServiceDetails = () => {
   const removePoint = useCallback((sectionIndex, pointIndex) => {
     setFormData(prevData => {
       const section = prevData.sections[sectionIndex];
-      
+
       if (section.points.length <= 1) {
         toast.error('At least one point is required in a section');
         return prevData;
       }
-      
+
       const updatedSections = [...prevData.sections];
       updatedSections[sectionIndex] = {
         ...section,
         points: section.points.filter((_, i) => i !== pointIndex)
       };
-      
+
       return { ...prevData, sections: updatedSections };
     });
   }, []);
@@ -183,84 +183,77 @@ const CreateServiceDetails = () => {
       toast.error('Please select a related service');
       return false;
     }
-    
+
     if (!formData.description.trim()) {
       toast.error('Description is required');
       return false;
     }
-    
+
     // Validate each section
     for (const [index, section] of formData.sections.entries()) {
       if (!section.title.trim()) {
         toast.error(`Section ${index + 1} title is required`);
         return false;
       }
-      
-      if (!section.image && !section.imagePreview) {
+
+      if (!section.imageUrl || !section.imagePreview) {
         toast.error(`Section ${index + 1} image is required`);
         return false;
       }
-      
+
       // Validate each point
       for (const [pIndex, point] of section.points.entries()) {
         if (!point.title.trim()) {
           toast.error(`Title for point ${pIndex + 1} in section ${index + 1} is required`);
           return false;
         }
-        
+
         if (!point.detail.trim()) {
           toast.error(`Detail for point ${pIndex + 1} in section ${index + 1} is required`);
           return false;
         }
       }
     }
-    
+
     return true;
   }, [formData]);
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setLoading(true);
-    
+
     try {
-      // Prepare form data for submission
-      const submitFormData = new FormData();
-      submitFormData.append('relatedServices', formData.relatedServices);
-      submitFormData.append('description', formData.description);
-      
-      // Prepare sections data
+      // Prepare sections data with junk URLs
       const sectionsData = formData.sections.map(section => ({
         title: section.title,
-        image: '', // Temporary placeholder for backend
+        image: section.imageUrl, // Use junk URL instead of empty string
         points: section.points
       }));
-      
-      submitFormData.append('sections', JSON.stringify(sectionsData));
-      
-      // Append all images
-      formData.sections.forEach((section, index) => {
-        if (section.image) {
-          submitFormData.append('images', section.image);
-        }
-      });
-      
-      await axios.post('/api/servicedetails/create', submitFormData, {
+
+      // Prepare JSON payload
+      const payload = {
+        relatedServices: formData.relatedServices,
+        description: formData.description,
+        sections: sectionsData
+      };
+
+      await axios.post('/api/servicedetails/create', payload, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'application/json'
         },
-        withCredentials:true
+        withCredentials: true
       });
-      
+
       toast.success('Service details created successfully!');
-      
+
       // Redirect to view page after success
       setTimeout(() => {
         router.push('/admin/services');
       }, 2000);
-      
+
     } catch (error) {
       console.error('Error creating service details:', error);
       toast.error(error.response?.data?.error || 'Failed to create service details');
@@ -273,11 +266,11 @@ const CreateServiceDetails = () => {
     <DndProvider backend={HTML5Backend}>
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-10 px-4 sm:px-6 lg:px-8">
         <ToastContainer position="top-right" autoClose={3000} theme="colored" />
-        
+
         <div className=" mx-auto">
           <header className="flex items-center justify-between mb-10 bg-white p-6 rounded-2xl shadow-sm">
             <div className="flex items-center">
-              <button 
+              <button
                 onClick={() => router.back()}
                 className="mr-4 p-2 rounded-full bg-blue-50 hover:bg-blue-100 text-[#446E6D] transition-all"
                 aria-label="Go back"
@@ -288,16 +281,15 @@ const CreateServiceDetails = () => {
                 Create Service Details
               </h1>
             </div>
-            
+
             <motion.button
               type="button"
               onClick={handleSubmit}
               disabled={loading}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className={`flex items-center px-6 py-3 rounded-lg text-white font-medium ${
-                loading ? 'bg-blue-400' : 'bg-[#446E6D] hover:bg-[#446E6D]'
-              } transition-all duration-200 shadow-md hover:shadow-lg`}
+              className={`flex items-center px-6 py-3 rounded-lg text-white font-medium ${loading ? 'bg-blue-400' : 'bg-[#446E6D] hover:bg-[#446E6D]'
+                } transition-all duration-200 shadow-md hover:shadow-lg`}
             >
               {loading ? (
                 <>
@@ -315,7 +307,7 @@ const CreateServiceDetails = () => {
               )}
             </motion.button>
           </header>
-          
+
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-100">
             <form onSubmit={handleSubmit}>
               <div className="mb-10">
@@ -345,7 +337,7 @@ const CreateServiceDetails = () => {
                 </div>
                 <p className="mt-1 text-sm text-gray-500">Choose the service this detail belongs to</p>
               </div>
-              
+
               <div className="mb-10">
                 <label htmlFor="description" className="block text-base font-semibold text-gray-800 mb-2">
                   Description*
@@ -361,7 +353,7 @@ const CreateServiceDetails = () => {
                 />
                 <p className="mt-1 text-sm text-gray-500">Provide a comprehensive overview of this service</p>
               </div>
-              
+
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-bold text-gray-800 flex items-center">
@@ -381,7 +373,7 @@ const CreateServiceDetails = () => {
                     Add New Section
                   </motion.button>
                 </div>
-                
+
                 <div className="space-y-10">
                   <AnimatePresence>
                     {formData.sections.map((section, sectionIndex) => (
@@ -429,7 +421,7 @@ const SectionItem = React.memo(({
       isDragging: monitor.isDragging()
     })
   }));
-  
+
   const [, drop] = useDrop(() => ({
     accept: 'SECTION',
     hover: (item) => {
@@ -439,23 +431,22 @@ const SectionItem = React.memo(({
       }
     }
   }));
-  
+
   return (
     <motion.div
       ref={(node) => drag(drop(node))}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ 
-        type: "spring", 
-        stiffness: 300, 
-        damping: 25, 
-        duration: 0.3 
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 25,
+        duration: 0.3
       }}
-      className={`relative rounded-2xl ${
-        isDragging ? 'border-2 border-blue-500 shadow-lg' : 'border border-gray-200'
-      } bg-white shadow-sm overflow-hidden`}
-      style={{ 
+      className={`relative rounded-2xl ${isDragging ? 'border-2 border-blue-500 shadow-lg' : 'border border-gray-200'
+        } bg-white shadow-sm overflow-hidden`}
+      style={{
         opacity: isDragging ? 0.7 : 1,
         transform: isDragging ? 'scale(1.02)' : 'scale(1)',
       }}
@@ -482,7 +473,7 @@ const SectionItem = React.memo(({
           )}
         </div>
       </div>
-      
+
       <div className="p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
@@ -498,62 +489,28 @@ const SectionItem = React.memo(({
               placeholder="Enter section title"
             />
           </div>
-          
+
           <div>
             <label className="block text-base font-semibold text-gray-800 mb-2">
               Section Image*
             </label>
             <div className="flex items-start space-x-4">
-              {!section.imagePreview ? (
-                <div className="flex-1">
-                  <label
-                    htmlFor={`section-image-${index}`}
-                    className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-blue-300 rounded-xl cursor-pointer bg-blue-50 hover:bg-blue-100 transition-colors"
-                  >
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <CloudUploadIcon className="text-blue-500 mb-2" fontSize="large" />
-                      <p className="text-sm font-medium text-[#446E6D] mb-1">Click to upload image</p>
-                      <p className="text-xs text-gray-500">PNG, JPG, or GIF (max 10MB)</p>
-                    </div>
-                    <input
-                      id={`section-image-${index}`}
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageChange(index, e)}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
-              ) : (
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.9 }} 
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="relative w-40 h-40 rounded-xl overflow-hidden shadow-md border border-gray-200"
-                >
-                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200"></div>
-                  <img
-                    src={section.imagePreview}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                  />
-                  <motion.button
-                    type="button"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => {
-                      handleSectionChange(index, 'image', null);
-                      handleSectionChange(index, 'imagePreview', null);
-                    }}
-                    className="absolute top-2 right-2 p-1 rounded-full bg-red-500 text-white hover:bg-red-600 shadow-md transition-all duration-200"
-                  >
-                    <CloseIcon fontSize="small" />
-                  </motion.button>
-                </motion.div>
-              )}
+              <div className="flex-1">
+                <ImageUploader
+                  method="url"
+                  mediaType="image"
+                  onImageChange={(file, preview, junkUrl) => handleImageChange(index, file, preview, junkUrl)}
+                  onImageRemove={() => handleImageRemove(index)}
+                  preview={section.imagePreview}
+                  label={null}
+                  maxSize={10}
+                  aspectRatio={null}
+                />
+              </div>
             </div>
           </div>
         </div>
-        
+
         <div className="mt-8 border-t border-gray-100 pt-6">
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-base font-semibold text-gray-700 flex items-center">
@@ -573,10 +530,10 @@ const SectionItem = React.memo(({
               Add Point
             </motion.button>
           </div>
-          
+
           <div className="space-y-4">
             {section.points.map((point, pointIndex) => (
-              <motion.div 
+              <motion.div
                 key={pointIndex}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -597,7 +554,7 @@ const SectionItem = React.memo(({
                     placeholder="Enter point title"
                   />
                 </div>
-                
+
                 <div className="relative">
                   <div className="flex justify-between items-center">
                     <label htmlFor={`point-detail-${index}-${pointIndex}`} className="block text-sm font-medium text-gray-700 mb-1">
@@ -629,7 +586,7 @@ const SectionItem = React.memo(({
           </div>
         </div>
       </div>
-      
+
       <div className="bg-blue-50 p-3 text-xs text-[#446E6D] flex items-start">
         <InfoOutlinedIcon fontSize="small" className="mr-1 flex-shrink-0 mt-0.5" />
         <span>Drag this section to reposition it. Each section must have at least one point and an image.</span>

@@ -1,4 +1,4 @@
-import { baseApi } from "@/app/redux/baseApi";
+import { baseApi } from "@/redux/baseApi";
 
 // Example: User API endpoints
 export const userApi = baseApi.injectEndpoints({

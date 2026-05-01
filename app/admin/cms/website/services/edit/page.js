@@ -1,2 +1,9 @@
-import EditService from "@/components/website/editservice";
-export default function Page() { return <EditService />; }
+import React from 'react'
+import EditService from "@/components/website/service/EditService";
+export default function page() {
+  return (
+    <div>
+      <EditService/>
+    </div>
+  )
+}

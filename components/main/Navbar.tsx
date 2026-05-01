@@ -136,11 +136,15 @@ const Navbar = () => {
   };
 
   // Avoid rendering content if it's an admin path
+  const avoidedPaths = [
+    "/admin",
+    "/signin",
+    "/signup",
+    "/forgot-password",
+    "launch-your-own-business"
+  ];
   if (
-    pathname.includes("/admin") ||
-    pathname.includes("/signin") ||
-    pathname.includes("/signup") ||
-    pathname.includes("/forgot-password") ||
+    avoidedPaths.some((adminPath) => pathname.includes(adminPath)) ||
     (pathname.includes("/customer") &&
       !pathname.includes("/customer-success-stories"))
   ) {

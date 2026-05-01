@@ -13,6 +13,7 @@ import {
 import { motion } from "framer-motion";
 import { MyContext } from "@/context/context";
 import RelatedItemsSelector from "./components/RelatedItemsSelector";
+import ImageUploader from "@/components/website/components/ImageUploader";
 
 const CreateIndustry = () => {
   const [formData, setFormData] = useState({
@@ -32,8 +33,8 @@ const CreateIndustry = () => {
     relatedProjects: [],
   });
 
-  const [image, setImage] = useState(null);
-  const [logo, setLogo] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [logoUrl, setLogoUrl] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -44,12 +45,31 @@ const CreateIndustry = () => {
     customToast: (msg) => console.log(msg),
   };
 
-  const imageInputRef = useRef(null);
-  const logoInputRef = useRef(null);
-
   // Handle related items changes
   const handleRelatedItemsChange = (newRelatedItems) => {
     setRelatedItems(newRelatedItems);
+  };
+
+  const handleImageUpload = (file, preview, junkUrl) => {
+    setImageUrl(junkUrl);
+    setImagePreview(preview);
+    setError(null);
+  };
+
+  const handleLogoUpload = (file, preview, junkUrl) => {
+    setLogoUrl(junkUrl);
+    setLogoPreview(preview);
+    setError(null);
+  };
+
+  const handleImageRemove = () => {
+    setImageUrl(null);
+    setImagePreview(null);
+  };
+
+  const handleLogoRemove = () => {
+    setLogoUrl(null);
+    setLogoPreview(null);
   };
 
   const handleInputChange = (e) => {
@@ -69,73 +89,6 @@ const CreateIndustry = () => {
     }
   };
 
-  const handleServiceSelection = (e) => {
-    const selectedOptions = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setFormData((prev) => ({
-      ...prev,
-      relatedService: selectedOptions,
-    }));
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
-      setError("Please select a valid image file");
-      return;
-    }
-
-    // Revoke previous objectURL to prevent memory leaks
-    if (imagePreview && imagePreview.startsWith("blob:")) {
-      URL.revokeObjectURL(imagePreview);
-    }
-
-    setImage(file);
-    setImagePreview(URL.createObjectURL(file));
-    setError(null);
-  };
-
-  const handleLogoChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
-      setError("Please select a valid image file for the logo");
-      return;
-    }
-
-    // Revoke previous objectURL to prevent memory leaks
-    if (logoPreview && logoPreview.startsWith("blob:")) {
-      URL.revokeObjectURL(logoPreview);
-    }
-
-    setLogo(file);
-    setLogoPreview(URL.createObjectURL(file));
-    setError(null);
-  };
-
-  const clearImage = (type) => {
-    if (type === "image") {
-      if (imagePreview && imagePreview.startsWith("blob:")) {
-        URL.revokeObjectURL(imagePreview);
-      }
-      setImage(null);
-      setImagePreview(null);
-      if (imageInputRef.current) imageInputRef.current.value = "";
-    } else if (type === "logo") {
-      if (logoPreview && logoPreview.startsWith("blob:")) {
-        URL.revokeObjectURL(logoPreview);
-      }
-      setLogo(null);
-      setLogoPreview(null);
-      if (logoInputRef.current) logoInputRef.current.value = "";
-    }
-  };
-
   const validateForm = () => {
     if (!formData.Title.trim()) {
       setError("Title is required");
@@ -152,12 +105,12 @@ const CreateIndustry = () => {
       return false;
     }
 
-    if (!image) {
+    if (!imageUrl) {
       setError("Industry image is required");
       return false;
     }
 
-    if (!logo) {
+    if (!logoUrl) {
       setError("Industry logo is required");
       return false;
     }
@@ -179,27 +132,23 @@ const CreateIndustry = () => {
     setLoading(true);
     setError(null);
 
-    const data = new FormData();
+    // Prepare JSON payload with image URLs
+    const payload = {
+      ...formData,
+      image: imageUrl,
+      logo: logoUrl,
+    };
 
-    // Append all form fields
-    Object.keys(formData).forEach((key) => {
-      data.append(key, formData[key]);
-    });
-
-    // Append related items as JSON strings
+    // Add related items if any exist
     Object.keys(relatedItems).forEach((key) => {
       if (relatedItems[key] && relatedItems[key].length > 0) {
-        data.append(key, JSON.stringify(relatedItems[key]));
+        payload[key] = relatedItems[key];
       }
     });
 
-    // Append files
-    data.append("image", image);
-    data.append("logo", logo);
-
     try {
-      const response = await axios.post("/api/industry/create", data, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const response = await axios.post("/api/industry/create", payload, {
+        headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
 
@@ -228,8 +177,8 @@ const CreateIndustry = () => {
           relatedProjects: [],
         });
 
-        clearImage("image");
-        clearImage("logo");
+        handleImageRemove();
+        handleLogoRemove();
 
         // Clear success message after 3 seconds
         setTimeout(() => {
@@ -240,7 +189,7 @@ const CreateIndustry = () => {
       console.error("Error creating industry:", error);
       setError(
         error.response?.data?.message ||
-          "Failed to create industry. Please try again."
+        "Failed to create industry. Please try again."
       );
       customToast({
         success: false,
@@ -340,109 +289,29 @@ const CreateIndustry = () => {
 
         {/* Right Column - Images and Metrics */}
         <div className="space-y-6">
-          {/* Image Upload with Preview */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Industry Image *
-            </label>
-            <div className="relative border-2 border-dashed border-[#446E6D]/30 rounded-lg p-4 text-center hover:bg-[#446E6D]/5 transition-colors">
-              {imagePreview ? (
-                <div className="relative">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full h-40 object-cover rounded-lg"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
-                    <button
-                      type="button"
-                      onClick={() => imageInputRef.current?.click()}
-                      className="bg-white rounded-full p-2 m-1 shadow-md"
-                    >
-                      <Upload size={16} className="text-gray-700" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => clearImage("image")}
-                      className="bg-white rounded-full p-2 m-1 shadow-md text-red-500"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <label className="flex flex-col items-center justify-center h-40 cursor-pointer">
-                  <input
-                    ref={imageInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                    required
-                  />
-                  <ImageIcon className="h-12 w-12 text-[#446E6D]" />
-                  <p className="mt-2 text-sm font-medium text-[#446E6D]">
-                    Click to upload an image
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    PNG, JPG, GIF up to 10MB
-                  </p>
-                </label>
-              )}
-            </div>
-          </div>
+          {/* Image Upload Component */}
+          <ImageUploader
+            method="url"
+            mediaType="image"
+            onImageChange={handleImageUpload}
+            onImageRemove={handleImageRemove}
+            preview={imagePreview}
+            label="Industry Image *"
+            maxSize={10}
+            aspectRatio={null}
+          />
 
-          {/* Logo Upload with Preview */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Industry Logo *
-            </label>
-            <div className="relative border-2 border-dashed border-[#446E6D]/30 rounded-lg p-4 text-center hover:bg-[#446E6D]/5 transition-colors">
-              {logoPreview ? (
-                <div className="relative">
-                  <img
-                    src={logoPreview}
-                    alt="Logo Preview"
-                    className="w-full h-40 object-contain rounded-lg"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
-                    <button
-                      type="button"
-                      onClick={() => logoInputRef.current?.click()}
-                      className="bg-white rounded-full p-2 m-1 shadow-md"
-                    >
-                      <Upload size={16} className="text-gray-700" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => clearImage("logo")}
-                      className="bg-white rounded-full p-2 m-1 shadow-md text-red-500"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <label className="flex flex-col items-center justify-center h-40 cursor-pointer">
-                  <ImageIcon className="h-12 w-12 text-[#446E6D]" />
-                  <p className="mt-2 text-sm font-medium text-[#446E6D]">
-                    Click to upload a logo
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    PNG, JPG, GIF up to 10MB
-                  </p>{" "}
-                  <input
-                    ref={logoInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleLogoChange}
-                    className="hidden"
-                    required
-                  />
-                </label>
-              )}
-            </div>
-          </div>
+          {/* Logo Upload Component */}
+          <ImageUploader
+            method="url"
+            mediaType="image"
+            onImageChange={handleLogoUpload}
+            onImageRemove={handleLogoRemove}
+            preview={logoPreview}
+            label="Industry Logo *"
+            maxSize={10}
+            aspectRatio={null}
+          />
 
           {/* Metrics Inputs */}
           <div className="grid grid-cols-1 gap-4">
@@ -500,11 +369,10 @@ const CreateIndustry = () => {
             disabled={loading}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`w-full py-3 px-4 rounded-lg text-white font-medium ${
-              loading
+            className={`w-full py-3 px-4 rounded-lg text-white font-medium ${loading
                 ? "bg-[#446E6D]/70 cursor-not-allowed"
                 : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
-            } shadow-md flex items-center justify-center`}
+              } shadow-md flex items-center justify-center`}
           >
             {loading ? (
               <>

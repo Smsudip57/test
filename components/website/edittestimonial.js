@@ -5,6 +5,7 @@ import { Loader2, UploadCloud, X, Video, Image as ImageIcon, AlertCircle, ArrowL
 import { MyContext } from '@/context/context';
 import { motion } from "framer-motion";
 import RelatedItemsSelector from '@/components/website/components/RelatedItemsSelector';
+import ImageUploader from '@/components/website/components/ImageUploader';
 
 export default function EditTestimonial() {
   const [testimonials, setTestimonials] = useState([]);
@@ -13,23 +14,20 @@ export default function EditTestimonial() {
     Testimonial: "",
     postedBy: "",
     role: "",
-    image: null,
-    video: null,
     relatedServices: [],
     relatedIndustries: [],
     relatedProducts: [],
     relatedChikfdServices: [],
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [videoUrl, setVideoUrl] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const { customToast } = useContext(MyContext);
-  
-  const imageInputRef = useRef(null);
-  const videoInputRef = useRef(null);
 
   useEffect(() => {
     fetchTestimonials();
@@ -43,41 +41,35 @@ export default function EditTestimonial() {
     } catch (err) {
       console.error("Error fetching testimonials:", err);
       setError("Failed to fetch testimonials. Please try again.");
-      customToast({ 
-        success: false, 
-        message: "Failed to fetch testimonials" 
+      customToast({
+        success: false,
+        message: "Failed to fetch testimonials"
       });
     } finally {
       setLoading(false);
     }
   };
 
-  // Validate image dimensions (1:1 aspect ratio with 0.1% tolerance)
-  const validateImageDimensions = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const width = this.width;
-          const height = this.height;
-          const aspectRatio = width / height;
-          const targetRatio = 1 / 1;
-          const tolerance = 0.1; // 0.1% tolerance
-          
-          if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
-            resolve({ width, height, aspectRatio });
-          } else {
-            reject({ 
-              message: `Image must have a 1:1 aspect ratio. Current ratio is ${aspectRatio.toFixed(2)}:1`,
-              dimensions: { width, height, aspectRatio }
-            });
-          }
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
+  const handleImageUpload = (file, preview, junkUrl) => {
+    setImageUrl(junkUrl);
+    setImagePreview(preview);
+    setError(null);
+  };
+
+  const handleImageRemove = () => {
+    setImageUrl(null);
+    setImagePreview(null);
+  };
+
+  const handleVideoUpload = (file, preview, junkUrl) => {
+    setVideoUrl(junkUrl);
+    setVideoPreview(preview);
+    setError(null);
+  };
+
+  const handleVideoRemove = () => {
+    setVideoUrl(null);
+    setVideoPreview(null);
   };
 
   const handleEdit = (testimonial) => {
@@ -110,119 +102,44 @@ export default function EditTestimonial() {
     }));
   };
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    const { name } = e.target;
-    
-    if (!file) return;
-    
-    // File type validation
-    if (name === "image") {
-      if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
-        customToast({
-          success: false,
-          message: 'Only image files are allowed!'
-        });
-        e.target.value = '';
-        return;
-      }
-      
-      try {
-        // Validate image dimensions (1:1)
-        await validateImageDimensions(file);
-        
-        // Revoke previous objectURL to prevent memory leaks
-        if (imagePreview && imagePreview.startsWith('blob:')) {
-          URL.revokeObjectURL(imagePreview);
-        }
-        
-        setImagePreview(URL.createObjectURL(file));
-        setForm((prev) => ({ ...prev, [name]: file }));
-      } catch (err) {
-        console.error("Image validation error:", err);
-        customToast({
-          success: false,
-          message: `Image must have a 1:1 aspect ratio. Current ratio is ${err.dimensions?.aspectRatio.toFixed(2)}:1`
-        });
-        e.target.value = '';
-        return;
-      }
-    } else if (name === "video") {
-      if (!file.type.match(/video\/(mp4|webm|ogg|quicktime)/i)) {
-        customToast({
-          success: false,
-          message: 'Only video files are allowed!'
-        });
-        e.target.value = '';
-        return;
-      }
-      
-      // Revoke previous objectURL to prevent memory leaks
-      if (videoPreview && videoPreview.startsWith('blob:')) {
-        URL.revokeObjectURL(videoPreview);
-      }
-      
-      setVideoPreview(URL.createObjectURL(file));
-      setForm((prev) => ({ ...prev, [name]: file }));
-    }
-  };
-
-  const clearFilePreview = (fieldName) => {
-    if (fieldName === 'image') {
-      if (imagePreview && imagePreview.startsWith('blob:')) {
-        URL.revokeObjectURL(imagePreview);
-      }
-      setImagePreview(null);
-      setForm(prev => ({ ...prev, image: null }));
-      if (imageInputRef.current) imageInputRef.current.value = '';
-    } else if (fieldName === 'video') {
-      if (videoPreview && videoPreview.startsWith('blob:')) {
-        URL.revokeObjectURL(videoPreview);
-      }
-      setVideoPreview(null);
-      setForm(prev => ({ ...prev, video: null }));
-      if (videoInputRef.current) videoInputRef.current.value = '';
-    }
-  };
-
   const validateForm = () => {
     if (!form.Testimonial || !form.Testimonial.trim()) {
       setError("Testimonial text is required");
       return false;
     }
-    
+
     if (!form.postedBy || !form.postedBy.trim()) {
       setError("Author name is required");
       return false;
     }
-    
+
     if (!form.role || !form.role.trim()) {
       setError("Author role is required");
       return false;
     }
-    
+
     if (!imagePreview) {
       setError("Image is required");
       return false;
     }
-    
+
     if (!videoPreview) {
       setError("Video is required");
       return false;
     }
 
     // Validate at least one relationship is selected
-    const totalRelations = 
+    const totalRelations =
       (form.relatedServices?.length || 0) +
       (form.relatedIndustries?.length || 0) +
       (form.relatedProducts?.length || 0) +
       (form.relatedChikfdServices?.length || 0);
-    
+
     if (totalRelations === 0) {
       setError("Please select at least one relationship!");
       return false;
     }
-    
+
     setError(null);
     return true;
   };
@@ -235,46 +152,44 @@ export default function EditTestimonial() {
       });
       return;
     }
-    
+
     try {
       setSaving(true);
       setError(null);
-      
-      const formData = new FormData();
-      
-      // Append all form fields
-      Object.keys(form).forEach((key) => {
-        // Append relationship arrays as JSON strings
-        if (key === 'relatedServices' || key === 'relatedIndustries' || key === 'relatedProducts' || key === 'relatedChikfdServices') {
-          formData.append(key, JSON.stringify(form[key]));
-        } else if (form[key] !== null && form[key] !== undefined && key !== 'image' && key !== 'video') {
-          // Don't append null/undefined values except for image/video which are handled separately
-          formData.append(key, form[key]);
-        }
-      });
-      
-      // Only append image and video if they're File objects (have been changed)
-      if (form.image instanceof File) {
-        formData.append("image", form.image);
+
+      // Prepare JSON payload
+      const payload = {
+        testimonialId: form._id,
+        Testimonial: form.Testimonial,
+        postedBy: form.postedBy,
+        role: form.role,
+        relatedServices: form.relatedServices,
+        relatedIndustries: form.relatedIndustries,
+        relatedProducts: form.relatedProducts,
+        relatedChikfdServices: form.relatedChikfdServices,
+      };
+
+      // Include image URL if changed
+      if (imageUrl) {
+        payload.image = imageUrl;
       }
-      
-      if (form.video instanceof File) {
-        formData.append("video", form.video);
+
+      // Include video URL if changed
+      if (videoUrl) {
+        payload.video = videoUrl;
       }
-      
-      formData.append("testimonialId", form._id);
-      
-      const res = await axios.post("/api/testimonial/edit", formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+
+      const res = await axios.post("/api/testimonial/edit", payload, {
+        headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
-      
+
       if (res.data.success) {
         // Update local state to reflect changes
         await fetchTestimonials(); // Refetch to get updated data with proper relations
-        
+
         setEditing(null); // Close the edit form after saving
-        
+
         customToast({
           success: true,
           message: "Testimonial updated successfully"
@@ -306,7 +221,7 @@ export default function EditTestimonial() {
     if (videoPreview && videoPreview.startsWith('blob:')) {
       URL.revokeObjectURL(videoPreview);
     }
-    
+
     setEditing(null);
     setForm({
       Testimonial: "",
@@ -336,11 +251,11 @@ export default function EditTestimonial() {
               <ArrowLeft size={20} className="mr-1" />
               <span>Back to Testimonials</span>
             </button>
-            
+
             <h1 className="text-2xl font-bold text-center text-[#446E6D]">
               Edit Testimonial
             </h1>
-            
+
             <div className="w-24"></div> {/* Spacer for centering the title */}
           </div>
 
@@ -355,93 +270,29 @@ export default function EditTestimonial() {
           <form onSubmit={(e) => e.preventDefault()} className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Left Column - Media Uploads */}
             <div className="space-y-6">
-              {/* Image Upload with Preview */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Testimonial Image*</label>
-                <div className="relative border-2 border-dashed border-[#446E6D]/30 rounded-lg p-4 text-center hover:bg-[#446E6D]/5 transition-colors">
-                  {imagePreview ? (
-                    <div className="relative">
-                      <img src={imagePreview} alt="Preview" className="w-full h-64 object-cover rounded-lg" />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
-                        <button
-                          type="button" 
-                          onClick={() => imageInputRef.current?.click()}
-                          className="bg-white rounded-full p-2 m-1 shadow-md"
-                        >
-                          <UploadCloud size={16} className="text-gray-700" />
-                        </button>
-                        <button
-                          type="button" 
-                          onClick={() => clearFilePreview('image')}
-                          className="bg-white rounded-full p-2 m-1 shadow-md text-red-500"
-                        >
-                          <X size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <label className="flex flex-col items-center justify-center h-64 cursor-pointer">
-                      <ImageIcon className="h-12 w-12 text-[#446E6D]" />
-                      <p className="mt-2 text-sm font-medium text-[#446E6D]">Click to upload an image</p>
-                      <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB (1:1 ratio required)</p>
-                    </label>
-                  )}
-                  <input
-                    ref={imageInputRef}
-                    type="file"
-                    accept="image/*"
-                    name="image"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                </div>
-              </div>
+              {/* Image Upload Component */}
+              <ImageUploader
+                method="url"
+                mediaType="image"
+                onImageChange={handleImageUpload}
+                onImageRemove={handleImageRemove}
+                preview={imagePreview}
+                label="Testimonial Image* (1:1 ratio required)"
+                maxSize={10}
+                aspectRatio="1:1"
+              />
 
-              {/* Video Upload with Preview */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Testimonial Video*</label>
-                <div className="relative border-2 border-dashed border-[#446E6D]/30 rounded-lg p-4 text-center hover:bg-[#446E6D]/5 transition-colors">
-                  {videoPreview ? (
-                    <div className="relative">
-                      <video 
-                        src={videoPreview} 
-                        controls 
-                        className="w-full aspect-video object-cover rounded-lg"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
-                        <button
-                          type="button" 
-                          onClick={() => videoInputRef.current?.click()}
-                          className="bg-white rounded-full p-2 m-1 shadow-md"
-                        >
-                          <UploadCloud size={16} className="text-gray-700" />
-                        </button>
-                        <button
-                          type="button" 
-                          onClick={() => clearFilePreview('video')}
-                          className="bg-white rounded-full p-2 m-1 shadow-md text-red-500"
-                        >
-                          <X size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <label className="flex flex-col items-center justify-center h-64 cursor-pointer">
-                      <Video className="h-12 w-12 text-[#446E6D]" />
-                      <p className="mt-2 text-sm font-medium text-[#446E6D]">Click to upload a video</p>
-                      <p className="text-xs text-gray-500 mt-1">MP4, WebM up to 50MB</p>
-                    </label>
-                  )}
-                  <input
-                    ref={videoInputRef}
-                    type="file"
-                    accept="video/*"
-                    name="video"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                </div>
-              </div>
+              {/* Video Upload Component */}
+              <ImageUploader
+                method="url"
+                mediaType="video"
+                onImageChange={handleVideoUpload}
+                onImageRemove={handleVideoRemove}
+                preview={videoPreview}
+                label="Testimonial Video*"
+                maxSize={50}
+                aspectRatio={null}
+              />
             </div>
 
             {/* Right Column - Text Fields */}
@@ -507,11 +358,10 @@ export default function EditTestimonial() {
                   disabled={saving}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`w-full py-3 px-4 rounded-lg text-white font-medium ${
-                    saving 
-                      ? 'bg-[#446E6D]/70 cursor-not-allowed' 
+                  className={`w-full py-3 px-4 rounded-lg text-white font-medium ${saving
+                      ? 'bg-[#446E6D]/70 cursor-not-allowed'
                       : 'bg-[#446E6D] hover:bg-[#375857] transition-colors'
-                  } shadow-md flex items-center justify-center`}
+                    } shadow-md flex items-center justify-center`}
                 >
                   {saving ? (
                     <>
@@ -533,7 +383,7 @@ export default function EditTestimonial() {
         <div>
           {/* Display Testimonials List */}
           <h1 className="text-3xl font-bold mb-6 text-center text-[#446E6D]">Testimonials</h1>
-          
+
           {loading ? (
             <div className="flex justify-center items-center py-12">
               <Loader2 className="h-12 w-12 animate-spin text-[#446E6D]" />
@@ -564,48 +414,48 @@ export default function EditTestimonial() {
                       className="w-20 h-20 rounded-full object-cover border-2 border-[#446E6D]/20"
                     />
                   </div>
-                  
+
                   <div className="flex-1">
                     <p className="text-lg font-medium line-clamp-2 text-gray-800">{testimonial.Testimonial}</p>
                     <p className="text-[#446E6D] font-semibold mt-1">{testimonial.postedBy}</p>
                     <p className="text-gray-600 text-sm">{testimonial.role}</p>
-                    
+
                     <div className="flex flex-wrap gap-2 mt-2">
                       {testimonial.relatedService && (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                          {typeof testimonial.relatedService === 'object' 
-                            ? testimonial.relatedService?.Title || 'Service' 
+                          {typeof testimonial.relatedService === 'object'
+                            ? testimonial.relatedService?.Title || 'Service'
                             : 'Service'}
                         </span>
                       )}
-                      
+
                       {testimonial.relatedIndustries && (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          {typeof testimonial.relatedIndustries === 'object' 
-                            ? testimonial.relatedIndustries?.Title || 'Industry' 
+                          {typeof testimonial.relatedIndustries === 'object'
+                            ? testimonial.relatedIndustries?.Title || 'Industry'
                             : 'Industry'}
                         </span>
                       )}
-                      
+
                       {testimonial.relatedProduct && (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          {typeof testimonial.relatedProduct === 'object' 
-                            ? testimonial.relatedProduct?.Title || 'Product' 
+                          {typeof testimonial.relatedProduct === 'object'
+                            ? testimonial.relatedProduct?.Title || 'Product'
                             : 'Product'}
                         </span>
                       )}
-                      
+
                       {/* Added Child Service Label */}
                       {testimonial.relatedChikfdServices && (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                          {typeof testimonial.relatedChikfdServices === 'object' 
-                            ? testimonial.relatedChikfdServices?.Title || 'Child Service' 
+                          {typeof testimonial.relatedChikfdServices === 'object'
+                            ? testimonial.relatedChikfdServices?.Title || 'Child Service'
                             : 'Child Service'}
                         </span>
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex-shrink-0 mt-4 sm:mt-0">
                     <motion.button
                       onClick={() => handleEdit(testimonial)}

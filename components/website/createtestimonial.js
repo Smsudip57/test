@@ -11,12 +11,11 @@ import {
 } from "lucide-react";
 import { MyContext } from "@/context/context";
 import RelatedItemsSelector from "@/components/website/components/RelatedItemsSelector";
+import ImageUploader from "@/components/website/components/ImageUploader";
 
 const CreateTestimonial = () => {
   const [formData, setFormData] = useState({
     Testimonial: "",
-    video: null,
-    image: null,
     postedBy: "",
     role: "",
     relatedServices: [],
@@ -25,6 +24,8 @@ const CreateTestimonial = () => {
     relatedChikfdServices: [],
   });
 
+  const [imageUrl, setImageUrl] = useState(null);
+  const [videoUrl, setVideoUrl] = useState(null);
   const [message, setMessage] = useState("");
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -32,40 +33,6 @@ const CreateTestimonial = () => {
   const [videoPreview, setVideoPreview] = useState(null);
   const [error, setError] = useState("");
   const { customToast } = useContext(MyContext);
-
-  // Validate image dimensions (1:1 aspect ratio with 0.1% tolerance)
-  const validateImageDimensions = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const img = new Image();
-        img.onload = function () {
-          const width = this.width;
-          const height = this.height;
-          const aspectRatio = width / height;
-          const targetRatio = 1 / 1;
-          const tolerance = 0.1; // 0.1% tolerance
-
-          if (Math.abs(aspectRatio - targetRatio) <= tolerance) {
-            resolve({ width, height, aspectRatio });
-          } else {
-            reject({
-              message: `Image must have a 1:1 aspect ratio. Current ratio is ${aspectRatio.toFixed(
-                2
-              )}:1`,
-              dimensions: { width, height, aspectRatio },
-            });
-          }
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  useEffect(() => {
-    // Image dimension validation happens at upload time
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -82,71 +49,26 @@ const CreateTestimonial = () => {
     }));
   };
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    const { name } = e.target;
-
-    if (!file) return;
-
-    // Check file type
-    if (name === "image") {
-      if (!file.type.match(/image\/(jpeg|jpg|png|gif|webp)/i)) {
-        customToast({
-          success: false,
-          message: "Only image files are allowed!",
-        });
-        e.target.value = "";
-        return;
-      }
-
-      try {
-        // Validate image dimensions (1:1)
-        await validateImageDimensions(file);
-
-        // If previous preview exists, revoke its URL
-        if (imagePreview) URL.revokeObjectURL(imagePreview);
-
-        setImagePreview(URL.createObjectURL(file));
-        setFormData((prev) => ({ ...prev, [name]: file }));
-      } catch (err) {
-        console.error("Image validation error:", err);
-        customToast({
-          success: false,
-          message: `Image must have a 1:1 aspect ratio. Current ratio is ${err.dimensions?.aspectRatio.toFixed(
-            2
-          )}:1`,
-        });
-        e.target.value = "";
-        return;
-      }
-    } else if (name === "video") {
-      if (!file.type.match(/video\/(mp4|webm|ogg|quicktime)/i)) {
-        customToast({
-          success: false,
-          message: "Only video files are allowed!",
-        });
-        e.target.value = "";
-        return;
-      }
-
-      // If previous preview exists, revoke its URL
-      if (videoPreview) URL.revokeObjectURL(videoPreview);
-
-      setVideoPreview(URL.createObjectURL(file));
-      setFormData((prev) => ({ ...prev, [name]: file }));
-    }
+  const handleImageUpload = (file, preview, junkUrl) => {
+    setImageUrl(junkUrl);
+    setImagePreview(preview);
+    setError("");
   };
 
-  const clearFilePreview = (fieldName) => {
-    if (fieldName === "image") {
-      if (imagePreview) URL.revokeObjectURL(imagePreview);
-      setImagePreview(null);
-      setFormData((prev) => ({ ...prev, image: null }));
-    } else if (fieldName === "video") {
-      if (videoPreview) URL.revokeObjectURL(videoPreview);
-      setVideoPreview(null);
-      setFormData((prev) => ({ ...prev, video: null }));
-    }
+  const handleImageRemove = () => {
+    setImageUrl(null);
+    setImagePreview(null);
+  };
+
+  const handleVideoUpload = (file, preview, junkUrl) => {
+    setVideoUrl(junkUrl);
+    setVideoPreview(preview);
+    setError("");
+  };
+
+  const handleVideoRemove = () => {
+    setVideoUrl(null);
+    setVideoPreview(null);
   };
 
   const handleSubmit = async (e) => {
@@ -159,8 +81,8 @@ const CreateTestimonial = () => {
       !formData.Testimonial ||
       !formData.postedBy ||
       !formData.role ||
-      !formData.image ||
-      !formData.video
+      !imageUrl ||
+      !videoUrl
     ) {
       setError("Please fill all required fields!");
       customToast({
@@ -188,34 +110,23 @@ const CreateTestimonial = () => {
       return;
     }
 
-    const data = new FormData();
-
-    // Append all form fields
-    Object.keys(formData).forEach((key) => {
-      if (
-        key === "relatedServices" ||
-        key === "relatedIndustries" ||
-        key === "relatedProducts" ||
-        key === "relatedChikfdServices"
-      ) {
-        // Append array fields as JSON strings
-        data.append(key, JSON.stringify(formData[key]));
-      } else if (formData[key]) {
-        // Only append if value exists
-        data.append(key, formData[key]);
-      }
-    });
+    // Prepare JSON payload with image and video URLs
+    const payload = {
+      Testimonial: formData.Testimonial,
+      postedBy: formData.postedBy,
+      role: formData.role,
+      image: imageUrl,
+      video: videoUrl,
+      relatedServices: formData.relatedServices,
+      relatedIndustries: formData.relatedIndustries,
+      relatedProducts: formData.relatedProducts,
+      relatedChikfdServices: formData.relatedChikfdServices,
+    };
 
     try {
-      const response = await axios.post("/api/testimonial/create", data, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const response = await axios.post("/api/testimonial/create", payload, {
+        headers: { "Content-Type": "application/json" },
         withCredentials: true,
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setProgress(percentCompleted);
-        },
       });
 
       if (response.status === 201) {
@@ -226,8 +137,6 @@ const CreateTestimonial = () => {
         setVideoPreview(null);
         setFormData({
           Testimonial: "",
-          video: null,
-          image: null,
           postedBy: "",
           role: "",
           relatedServices: [],
@@ -235,6 +144,8 @@ const CreateTestimonial = () => {
           relatedProducts: [],
           relatedChikfdServices: [],
         });
+        setImageUrl(null);
+        setVideoUrl(null);
 
         customToast(response.data);
       }
@@ -248,7 +159,6 @@ const CreateTestimonial = () => {
         }
       );
     } finally {
-      setProgress(0);
       setLoading(false);
     }
   };
@@ -280,92 +190,29 @@ const CreateTestimonial = () => {
       <form className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Column - Media Uploads */}
         <div className="space-y-6">
-          {/* Image Upload with Preview */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Testimonial Image*{" "}
-              <span className="text-xs text-gray-500">
-                (1:1 ratio required)
-              </span>
-            </label>
-            <div className="relative border-2 border-dashed border-[#446E6D]/30 rounded-lg p-4 text-center hover:bg-[#446E6D]/5 transition-colors">
-              {imagePreview ? (
-                <div className="relative">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full h-64 object-cover rounded-lg"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => clearFilePreview("image")}
-                    className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md text-red-500 hover:bg-red-50"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-              ) : (
-                <label className="flex flex-col items-center justify-center h-64 cursor-pointer">
-                  <ImageIcon className="h-12 w-12 text-[#446E6D]" />
-                  <p className="mt-2 text-sm font-medium text-[#446E6D]">
-                    Click to upload an image
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    PNG, JPG, GIF up to 10MB (1:1 ratio required)
-                  </p>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    name="image"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                </label>
-              )}
-            </div>
-          </div>
+          {/* Image Upload Component */}
+          <ImageUploader
+            method="url"
+            mediaType="image"
+            onImageChange={handleImageUpload}
+            onImageRemove={handleImageRemove}
+            preview={imagePreview}
+            label="Testimonial Image* (1:1 ratio required)"
+            maxSize={10}
+            aspectRatio="1:1"
+          />
 
-          {/* Video Upload with Preview */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Testimonial Video*
-            </label>
-            <div className="relative border-2 border-dashed border-[#446E6D]/30 rounded-lg p-4 text-center hover:bg-[#446E6D]/5 transition-colors">
-              {videoPreview ? (
-                <div className="relative">
-                  <video
-                    src={videoPreview}
-                    controls
-                    className="w-full aspect-video object-cover rounded-lg"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => clearFilePreview("video")}
-                    className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md text-red-500 hover:bg-red-50"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-              ) : (
-                <label className="flex flex-col items-center justify-center h-64 cursor-pointer">
-                  <Video className="h-12 w-12 text-[#446E6D]" />
-                  <p className="mt-2 text-sm font-medium text-[#446E6D]">
-                    Click to upload a video
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    MP4, WebM up to 50MB
-                  </p>
-                  <input
-                    type="file"
-                    accept="video/*"
-                    name="video"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                </label>
-              )}
-            </div>
-          </div>
+          {/* Video Upload Component */}
+          <ImageUploader
+            method="url"
+            mediaType="video"
+            onImageChange={handleVideoUpload}
+            onImageRemove={handleVideoRemove}
+            preview={videoPreview}
+            label="Testimonial Video*"
+            maxSize={50}
+            aspectRatio={null}
+          />
         </div>
 
         {/* Right Column - Text Fields */}
@@ -435,11 +282,10 @@ const CreateTestimonial = () => {
               type="button"
               onClick={handleSubmit}
               disabled={loading}
-              className={`w-full py-3 px-4 rounded-lg text-white font-medium ${
-                loading
+              className={`w-full py-3 px-4 rounded-lg text-white font-medium ${loading
                   ? "bg-[#446E6D]/70 cursor-not-allowed"
                   : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
-              } shadow-md`}
+                } shadow-md`}
             >
               {loading ? (
                 <span className="flex items-center justify-center">

@@ -1,11 +1,10 @@
-// app/page.js (or any file in the 'app' directory where you want this component)
-
 import Hero from "@/components/main/Hero";
 import Industies from "@/components/main/Industies";
 import Projects from "@/components/main/Projects";
 import Skills from "@/components/main/Skills";
 import CaseStudy from "@/components/main/CaseStudy";
 import Webme from "@/components/main/Webme";
+import CoreServices from "@/components/main/CoreServices";
 import Infinite from "@/components/main/Infinite";
 import Pricing from "@/components/main/Pricing";
 import Contact from "@/components/main/Contact";
@@ -22,6 +21,7 @@ export default async function Home() {
           <Hero pageData={pageData} />
         </div>
       </div>
+      <CoreServices />
       <div className="flex flex-col gap-20 w-[95%] lg:w-[90%]   max-w-[1920px] mx-auto overflow-hidden ">
         <div className="bg-[rgba(231,247,246,1)] z-10">
           {/* Pass the service prop to the Webme component */}

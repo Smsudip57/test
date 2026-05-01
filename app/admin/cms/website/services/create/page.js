@@ -1,2 +1,7 @@
-import CreateService from "@/components/website/createService";
-export default function Page() { return <CreateService />; }
+import React from 'react'
+import CreateService from "@/components/website/service/CreateService";
+export default function page() {
+  return (
+    <CreateService/>
+  )
+}

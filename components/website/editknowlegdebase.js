@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import {
     Loader2,
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { MyContext } from "@/context/context";
 import RelatedItemsSelector from "./components/RelatedItemsSelector";
+import ImageUploader from "@/components/website/components/ImageUploader";
 import dynamic from "next/dynamic";
 
 // Dynamically import TextEditor to avoid SSR issues
@@ -46,9 +47,8 @@ export default function EditKnowledgeBase() {
     });
     const [tagInput, setTagInput] = useState("");
     const [tagError, setTagError] = useState("");
-    const [imageFile, setImageFile] = useState(null);
+    const [imageUrl, setImageUrl] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
-    const imageInputRef = useRef(null);
     const [submitting, setSubmitting] = useState(false);
 
     const { customToast } = useContext(MyContext);
@@ -73,90 +73,15 @@ export default function EditKnowledgeBase() {
     }, []);
 
     // Validate image aspect ratio (16:7)
-    const validateImageDimensions = (file) => {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            const targetAspectRatio = 16 / 7;
-            const tolerance = 0.1;
-
-            img.onload = () => {
-                const aspectRatio = img.width / img.height;
-                URL.revokeObjectURL(img.src);
-
-                if (Math.abs(aspectRatio - targetAspectRatio) > tolerance) {
-                    reject({
-                        message: `Image should have a 16:7 aspect ratio. Current ratio is ${img.width
-                            }x${img.height} (${aspectRatio.toFixed(2)}:1).`,
-                        dimensions: { width: img.width, height: img.height, aspectRatio },
-                    });
-                } else {
-                    resolve({ width: img.width, height: img.height, aspectRatio });
-                }
-            };
-
-            img.onerror = () => {
-                URL.revokeObjectURL(img.src);
-                reject({
-                    message: "Failed to load image. Please select a valid image file.",
-                });
-            };
-
-            const objectUrl = URL.createObjectURL(file);
-            img.src = objectUrl;
-        });
-    };
-
-    // Handle image upload
-    const handleImageChange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        if (!file.type.startsWith("image/")) {
-            customToast({
-                success: false,
-                message: "Please select only image files",
-            });
-            e.target.value = "";
-            return;
-        }
-
-        if (file.size > 10 * 1024 * 1024) {
-            customToast({
-                success: false,
-                message: `File ${file.name} is too large. Maximum size is 10MB.`,
-            });
-            e.target.value = "";
-            return;
-        }
-
-        try {
-            await validateImageDimensions(file);
-            setImageFile(file);
-
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        } catch (dimensionError) {
-            console.error(`Dimension validation failed:`, dimensionError);
-            customToast({
-                success: false,
-                message: `Image must have a 16:7 aspect ratio. Current ratio is ${dimensionError.dimensions?.width
-                    }x${dimensionError.dimensions?.height
-                    } (${dimensionError.dimensions?.aspectRatio.toFixed(2)}:1)`,
-            });
-            e.target.value = "";
-        }
+    const handleImageUpload = (file, preview, junkUrl) => {
+        setImageUrl(junkUrl);
+        setImagePreview(preview);
     };
 
     // Remove image
-    const removeImage = () => {
-        setImageFile(null);
+    const handleImageRemove = () => {
+        setImageUrl(null);
         setImagePreview(null);
-        if (imageInputRef.current) {
-            imageInputRef.current.value = "";
-        }
     };
 
     // Ensure data is properly formatted
@@ -275,49 +200,31 @@ export default function EditKnowledgeBase() {
         setSubmitting(true);
 
         try {
-            // Create FormData object to handle file upload
-            const formDataToSubmit = new FormData();
+            // Build JSON payload
+            const payload = {
+                articleId: formData.articleId,
+                title: formData.title,
+                introduction: formData.introduction,
+                contents: formData.contents,
+                tags: ensureArray(formData.tags),
+                relatedServices: ensureArray(formData.relatedServices),
+                relatedIndustries: ensureArray(formData.relatedIndustries),
+                relatedProducts: ensureArray(formData.relatedProducts),
+                relatedChikfdServices: ensureArray(formData.relatedChikfdServices),
+                status: formData.status,
+            };
 
-            // Append article ID
-            formDataToSubmit.append("articleId", formData.articleId);
-
-            // Append image file if a new one was selected
-            if (imageFile) {
-                formDataToSubmit.append("Image", imageFile);
+            // Include image URL if changed
+            if (imageUrl) {
+                payload.Image = imageUrl;
             }
-
-            // Append other form fields
-            formDataToSubmit.append("title", formData.title);
-            formDataToSubmit.append("introduction", formData.introduction);
-            formDataToSubmit.append("contents", formData.contents);
-            formDataToSubmit.append(
-                "tags",
-                JSON.stringify(ensureArray(formData.tags))
-            );
-            formDataToSubmit.append(
-                "relatedServices",
-                JSON.stringify(ensureArray(formData.relatedServices))
-            );
-            formDataToSubmit.append(
-                "relatedIndustries",
-                JSON.stringify(ensureArray(formData.relatedIndustries))
-            );
-            formDataToSubmit.append(
-                "relatedProducts",
-                JSON.stringify(ensureArray(formData.relatedProducts))
-            );
-            formDataToSubmit.append(
-                "relatedChikfdServices",
-                JSON.stringify(ensureArray(formData.relatedChikfdServices))
-            );
-            formDataToSubmit.append("status", formData.status);
 
             const response = await axios.post(
                 "/api/knowledgebase/edit",
-                formDataToSubmit,
+                payload,
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data",
+                        "Content-Type": "application/json",
                     },
                     withCredentials: true,
                 }
@@ -350,7 +257,7 @@ export default function EditKnowledgeBase() {
                     relatedChikfdServices: [],
                     status: "draft",
                 });
-                setImageFile(null);
+                setImageUrl(null);
                 setImagePreview(null);
             }
         } catch (error) {
@@ -475,52 +382,16 @@ export default function EditKnowledgeBase() {
                     {/* Left Column - Image & Details */}
                     <div className="space-y-6">
                         {/* Featured Image */}
-                        <div>
-                            <label className="block text-gray-700 font-medium mb-2">
-                                Featured Image <span className="text-red-500">*</span>
-                                <span className="text-sm font-normal text-gray-500 ml-2">
-                                    (16:7 aspect ratio required)
-                                </span>
-                            </label>
-
-                            <input
-                                type="file"
-                                ref={imageInputRef}
-                                onChange={handleImageChange}
-                                accept="image/*"
-                                className="hidden"
-                            />
-
-                            {!imagePreview ? (
-                                <div
-                                    onClick={() => imageInputRef.current?.click()}
-                                    className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 transition-colors"
-                                >
-                                    <Upload className="mx-auto text-gray-400 mb-2" size={32} />
-                                    <p className="text-sm text-gray-500 mb-1">
-                                        Click to upload an image
-                                    </p>
-                                    <p className="text-xs text-gray-400">
-                                        PNG, JPG, WebP up to 10MB (16:7 aspect ratio required)
-                                    </p>
-                                </div>
-                            ) : (
-                                <div className="relative rounded-lg overflow-hidden border border-gray-200">
-                                    <img
-                                        src={imagePreview}
-                                        alt="Featured image preview"
-                                        className="w-full h-auto object-cover max-h-[300px]"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={removeImage}
-                                        className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md text-red-500 hover:text-red-700"
-                                    >
-                                        <X size={18} />
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                        <ImageUploader
+                            method="url"
+                            mediaType="image"
+                            onImageChange={handleImageUpload}
+                            onImageRemove={handleImageRemove}
+                            preview={imagePreview}
+                            label="Featured Image* (16:7 aspect ratio required)"
+                            maxSize={10}
+                            aspectRatio="16:7"
+                        />
 
                         {/* Tags */}
                         <div>

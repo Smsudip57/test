@@ -1,4 +1,4 @@
-import { baseApi } from "@/app/redux/baseApi";
+import { baseApi } from "@/redux/baseApi";
 
 // Testimonials/Customer Success Stories API endpoints
 export const testimonialApi = baseApi.injectEndpoints({

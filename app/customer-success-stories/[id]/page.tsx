@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import {
   useGetTestimonialByIdQuery,
   useListTestimonialsQuery,
-} from "@/app/redux/api/testimonialApi";
+} from "@/redux/api/testimonialApi";
 import {
   ArrowLeft,
   Play,
@@ -224,7 +224,7 @@ export default function SingleTestimonialPage() {
                   <p className="text-lg md:text-xl font-semibold text-gray-900">
                     {typeof testimonial?.relatedService === "object"
                       ? testimonial?.relatedService?.Title ||
-                        testimonial?.relatedService?.Name
+                      testimonial?.relatedService?.Name
                       : "Service"}
                   </p>
                 </div>
