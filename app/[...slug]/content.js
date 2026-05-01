@@ -91,7 +91,6 @@ export default function Firewall({
               products: res?.data || [],
             }))
             .catch((error) => {
-
               return {
                 id: child?._id,
                 title: child?.Title,
@@ -99,7 +98,7 @@ export default function Firewall({
                 products: [],
                 error: true,
               };
-            })
+            }),
         );
 
         const results = await Promise.all(promises);
@@ -180,7 +179,7 @@ export default function Firewall({
 
   // Current service data for easier rendering - use the main service fetched by slug
   const currentService = mainService;
-  console.log(currentService)
+  console.log(currentService);
 
   const { productData, childData } = currentDisplay;
 
@@ -207,7 +206,7 @@ export default function Firewall({
         availability: "https://schema.org/InStock",
       },
     }),
-    [currentService, Mainservice]
+    [currentService, Mainservice],
   );
 
   // Page title and meta description
@@ -215,16 +214,17 @@ export default function Firewall({
     () =>
       Mainservice?.title ||
       `${currentService?.Title} - Professional Solutions | Webmedigital`,
-    [Mainservice, currentService]
+    [Mainservice, currentService],
   );
 
   const pageDescription = useMemo(
     () =>
       currentService?.deltail ||
       Mainservice?.description ||
-      `Learn more about our ${currentService?.Title || "professional"
+      `Learn more about our ${
+        currentService?.Title || "professional"
       } services and solutions. Professional digital transformation and IT services from Webmedigital.`,
-    [Mainservice, currentService]
+    [Mainservice, currentService],
   );
 
   return (
@@ -234,10 +234,11 @@ export default function Firewall({
         <meta name="description" content={pageDescription} />
         <meta
           name="keywords"
-          content={`${currentService?.Title || ""
-            }, IT services, digital transformation, webmedigital, ${slug.join(
-              ", "
-            )}`}
+          content={`${
+            currentService?.Title || ""
+          }, IT services, digital transformation, webmedigital, ${slug.join(
+            ", ",
+          )}`}
         />
         <meta name="robots" content="index, follow" />
         <link
@@ -316,15 +317,22 @@ export default function Firewall({
                 <div className="flex flex-wrap gap-4">
                   <button
                     className="align-start bg-[#446E6D] text-[#fff] px-4 py-2 rounded hover:opacity-80 text-sm transition-all duration-300"
-                    onClick={() => handleConsultation(currentService?.image, currentService?.Title, currentService?.deltail)}
+                    onClick={() =>
+                      handleConsultation(
+                        currentService?.image,
+                        currentService?.Title,
+                        currentService?.deltail,
+                      )
+                    }
                     aria-label="Book a free consultation"
                   >
                     Book Free Consultation
                   </button>
                   <Link
-                    href={`/service-details/${currentService?.slug ||
+                    href={`/service-details/${
+                      currentService?.slug ||
                       currentService?.Title?.toLowerCase()
-                      }`}
+                    }`}
                     className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     aria-label={`Explore ${currentService?.Title}`}
                   >
@@ -356,8 +364,8 @@ export default function Firewall({
                           src={currentService.image}
                           alt={`${currentService?.Title} service illustration`}
                           className="w-full rounded-md object-cover hover:opacity-80 transition-opacity duration-300"
-                        // width={100}
-                        // height={100}
+                          // width={100}
+                          // height={100}
                         />
                       </a>
                     </div>
@@ -412,15 +420,22 @@ export default function Firewall({
                   <div className="flex justify-center gap-6 my-16">
                     <button
                       className="text-sm hover:opacity-80 active:scale-95 bg-[#446E6D] text-white rounded py-2 px-4 transition-all duration-300"
-                      onClick={() => handleConsultation(productData?.image, productData?.Title, productData?.detail)}
+                      onClick={() =>
+                        handleConsultation(
+                          productData?.image,
+                          productData?.Title,
+                          productData?.detail,
+                        )
+                      }
                     >
                       Get it today!
                     </button>
                     <Link
-                      href={`/details/services/${productData?.slug
-                        ? productData.slug
-                        : productData?.Title
-                        }`}
+                      href={`/details/services/${
+                        productData?.slug
+                          ? productData.slug
+                          : productData?.Title
+                      }`}
                       className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     >
                       <span className="mr-1">Discover</span>
@@ -471,13 +486,20 @@ export default function Firewall({
                   <div className="flex justify-center gap-6 my-16">
                     <button
                       className="text-sm hover:opacity-80 active:scale-95 bg-[#446E6D] text-white rounded py-2 px-4 transition-all duration-300"
-                      onClick={() => handleConsultation(childData?.image, childData?.Title, childData?.detail)}
+                      onClick={() =>
+                        handleConsultation(
+                          childData?.image,
+                          childData?.Title,
+                          childData?.detail,
+                        )
+                      }
                     >
                       Get it today!
                     </button>
                     <Link
-                      href={`/details/products/${childData.slug ? childData.slug : childData.Title
-                        }`}
+                      href={`/details/products/${
+                        childData.slug ? childData.slug : childData.Title
+                      }`}
                       className="align-start hover:bg-[#00000028] text-black px-4 py-2 rounded hover:text-white text-base flex items-center transition-colors duration-300"
                     >
                       <span className="mr-1">Discover</span>
@@ -508,7 +530,7 @@ export default function Firewall({
                   {/* Find products for this child */}
                   {(() => {
                     const productsForChild = itemsforChilds.find(
-                      (item) => item?.id === childData?._id
+                      (item) => item?.id === childData?._id,
                     );
 
                     if (
@@ -584,18 +606,18 @@ export default function Firewall({
                                   {/* Rating badge */}
                                   {(product?.rating ||
                                     product?.rating === 0) && (
-                                      <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-2 py-1 rounded-full shadow-md z-10 flex items-center gap-1">
-                                        <Star className="text-yellow-500 w-3 h-3 fill-current" />
-                                        <span>{product.rating}</span>
-                                      </div>
-                                    )}
+                                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-2 py-1 rounded-full shadow-md z-10 flex items-center gap-1">
+                                      <Star className="text-yellow-500 w-3 h-3 fill-current" />
+                                      <span>{product.rating}</span>
+                                    </div>
+                                  )}
 
                                   {/* Hover overlay */}
                                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
                                 </div>
 
                                 {/* Product content - flex-1 to take available space */}
-                                <div className="p-5 flex flex-col flex-1">
+                                <div className="py-5 flex flex-col flex-1">
                                   {/* Main content area - grows to fill space */}
                                   <div className="flex-1">
                                     <h3 className="font-bold text-lg text-gray-900 line-clamp-2 mb-3 leading-tight group-hover:text-[#446E6D] transition-colors duration-200">
@@ -606,11 +628,16 @@ export default function Firewall({
                                     {product.description && (
                                       <div className="mb-4">
                                         <div className="relative">
-                                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#446E6D] to-[#37c0bd] rounded-full"></div>
-                                          <div className="pl-4 pr-2">
-                                            <p className=" text-gray-600 line-clamp-18 mt-6">
-                                              &quot;{product.description}&quot;
-                                            </p>
+                                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b 
+                                          //from-[#446E6D] //to-[#37c0bd] 
+                                          rounded-full"></div>
+                                          <div className="//pl-4 pr-2">
+                                            <p
+                                              className=" text-gray-600 line-clamp-18 mt-6"
+                                              dangerouslySetInnerHTML={{
+                                                __html: product?.description,
+                                              }}
+                                            ></p>
                                           </div>
                                         </div>
                                       </div>
