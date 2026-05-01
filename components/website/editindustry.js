@@ -163,8 +163,8 @@ const EditIndustry = () => {
   };
 
   // Handle image upload via ImageUploader
-  const handleImageUpload = (file, preview, junkUrl) => {
-    setImageUrl(junkUrl);
+  const handleImageUpload = (url, preview) => {
+    setImageUrl(url);
     setImagePreview(preview);
     setError("");
   };
@@ -175,8 +175,8 @@ const EditIndustry = () => {
   };
 
   // Handle logo upload via ImageUploader
-  const handleLogoUpload = (file, preview, junkUrl) => {
-    setLogoUrl(junkUrl);
+  const handleLogoUpload = (url, preview) => {
+    setLogoUrl(url);
     setLogoPreview(preview);
     setError("");
   };

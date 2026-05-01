@@ -43,8 +43,8 @@ export default function CreateKnowledgebase() {
   const [imagePreview, setImagePreview] = useState(null);
 
   // Handle image upload from ImageUploader
-  const handleImageUpload = (file, preview, junkUrl) => {
-    setImageUrl(junkUrl);
+  const handleImageUpload = (url, preview) => {
+    setImageUrl(url);
     setImagePreview(preview);
   };
 

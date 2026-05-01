@@ -50,14 +50,14 @@ const CreateIndustry = () => {
     setRelatedItems(newRelatedItems);
   };
 
-  const handleImageUpload = (file, preview, junkUrl) => {
-    setImageUrl(junkUrl);
+  const handleImageUpload = (url, preview) => {
+    setImageUrl(url);
     setImagePreview(preview);
     setError(null);
   };
 
-  const handleLogoUpload = (file, preview, junkUrl) => {
-    setLogoUrl(junkUrl);
+  const handleLogoUpload = (url, preview) => {
+    setLogoUrl(url);
     setLogoPreview(preview);
     setError(null);
   };
@@ -370,8 +370,8 @@ const CreateIndustry = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={`w-full py-3 px-4 rounded-lg text-white font-medium ${loading
-                ? "bg-[#446E6D]/70 cursor-not-allowed"
-                : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
+              ? "bg-[#446E6D]/70 cursor-not-allowed"
+              : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
               } shadow-md flex items-center justify-center`}
           >
             {loading ? (

@@ -49,8 +49,8 @@ const CreateTestimonial = () => {
     }));
   };
 
-  const handleImageUpload = (file, preview, junkUrl) => {
-    setImageUrl(junkUrl);
+  const handleImageUpload = (fileUrl, preview) => {
+    setImageUrl(fileUrl);
     setImagePreview(preview);
     setError("");
   };
@@ -60,8 +60,8 @@ const CreateTestimonial = () => {
     setImagePreview(null);
   };
 
-  const handleVideoUpload = (file, preview, junkUrl) => {
-    setVideoUrl(junkUrl);
+  const handleVideoUpload = (videoUrl, preview) => {
+    setVideoUrl(videoUrl);
     setVideoPreview(preview);
     setError("");
   };
@@ -283,8 +283,8 @@ const CreateTestimonial = () => {
               onClick={handleSubmit}
               disabled={loading}
               className={`w-full py-3 px-4 rounded-lg text-white font-medium ${loading
-                  ? "bg-[#446E6D]/70 cursor-not-allowed"
-                  : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
+                ? "bg-[#446E6D]/70 cursor-not-allowed"
+                : "bg-[#446E6D] hover:bg-[#375857] transition-colors"
                 } shadow-md`}
             >
               {loading ? (

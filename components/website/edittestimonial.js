@@ -50,8 +50,8 @@ export default function EditTestimonial() {
     }
   };
 
-  const handleImageUpload = (file, preview, junkUrl) => {
-    setImageUrl(junkUrl);
+  const handleImageUpload = (fileUrl, preview) => {
+    setImageUrl(fileUrl);
     setImagePreview(preview);
     setError(null);
   };
@@ -61,8 +61,8 @@ export default function EditTestimonial() {
     setImagePreview(null);
   };
 
-  const handleVideoUpload = (file, preview, junkUrl) => {
-    setVideoUrl(junkUrl);
+  const handleVideoUpload = (videoUrl, preview) => {
+    setVideoUrl(videoUrl);
     setVideoPreview(preview);
     setError(null);
   };
@@ -359,8 +359,8 @@ export default function EditTestimonial() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className={`w-full py-3 px-4 rounded-lg text-white font-medium ${saving
-                      ? 'bg-[#446E6D]/70 cursor-not-allowed'
-                      : 'bg-[#446E6D] hover:bg-[#375857] transition-colors'
+                    ? 'bg-[#446E6D]/70 cursor-not-allowed'
+                    : 'bg-[#446E6D] hover:bg-[#375857] transition-colors'
                     } shadow-md flex items-center justify-center`}
                 >
                   {saving ? (

@@ -180,9 +180,8 @@ export default function EditProject() {
   };
 
   // Handle media type change
-  const handlain media upload
-  const handleMediaUpload = (file, preview, junkUrl) => {
-    setFormValues((prev) => ({ ...prev, mediaUrl: junkUrl }));
+  const handleMediaUpload = (mediaUrl, preview) => {
+    setFormValues((prev) => ({ ...prev, mediaUrl }));
     setMediaPreview(preview);
     setError("");
   };
@@ -194,9 +193,9 @@ export default function EditProject() {
   };
 
   // Handle section image upload
-  const handleSectionImageUpload = (sectionIndex, file, preview, junkUrl) => {
+  const handleSectionImageUpload = (sectionIndex, imageUrl, preview) => {
     const updatedUrls = [...sectionImageUrls];
-    updatedUrls[sectionIndex] = junkUrl;
+    updatedUrls[sectionIndex] = imageUrl;
     setSectionImageUrls(updatedUrls);
 
     const updatedPreviews = [...sectionPreviews];
@@ -219,845 +218,847 @@ export default function EditProject() {
 
   // Handle media type change
   const handleMediaTypeChange = (type) => {
-    setFormValues((prev) => ({ ...prev, mediaType: type }));
-  }; etFormValues((prev) => ({ ...prev, media: null }));
-  if (!mediaPreview?.startsWith("http")) {
-    URL.revokeObjectURL(mediaPreview);
-  }
-  setMediaPreview(null);
-}
+    setFormValues((prev) => ({ ...prev, mediaType: type, mediaUrl: null }));
+    // If current preview is a local blob URL, revoke it
+    if (mediaPreview && !mediaPreview.startsWith("http")) {
+      try {
+        URL.revokeObjectURL(mediaPreview);
+      } catch (e) {
+        // ignore
+      }
     }
+    setMediaPreview(null);
   };
 
-// Helper function to validate image dimensions
-const validateImageDimensions = (file) => {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
+  // Helper function to validate image dimensions
+  const validateImageDimensions = (file) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
 
-    img.onload = () => {
-      const aspectRatio = img.width / img.height;
-      const targetAspectRatio = 16 / 9;
-      const tolerance = 0.1; // Allow small tolerance for aspect ratio
+      img.onload = () => {
+        const aspectRatio = img.width / img.height;
+        const targetAspectRatio = 16 / 9;
+        const tolerance = 0.1; // Allow small tolerance for aspect ratio
 
-      URL.revokeObjectURL(img.src); // Clean up object URL
+        URL.revokeObjectURL(img.src); // Clean up object URL
 
-      if (Math.abs(aspectRatio - targetAspectRatio) > tolerance) {
+        if (Math.abs(aspectRatio - targetAspectRatio) > tolerance) {
+          reject({
+            message: `Image must have a 16:9 aspect ratio. Current ratio is ${img.width
+              }x${img.height} (${aspectRatio.toFixed(
+                2
+              )}:1). Please use an image with 16:9 dimensions like 1920x1080, 1600x900, etc.`,
+            dimensions: { width: img.width, height: img.height, aspectRatio },
+          });
+        } else {
+          resolve({ width: img.width, height: img.height, aspectRatio });
+        }
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(img.src);
         reject({
-          message: `Image must have a 16:9 aspect ratio. Current ratio is ${img.width
-            }x${img.height} (${aspectRatio.toFixed(
-              2
-            )}:1). Please use an image with 16:9 dimensions like 1920x1080, 1600x900, etc.`,
-          dimensions: { width: img.width, height: img.height, aspectRatio },
+          message: "Failed to load image. Please select a valid image file.",
         });
-      } else {
-        resolve({ width: img.width, height: img.height, aspectRatio });
-      }
-    };
+      };
 
-    img.onerror = () => {
-      URL.revokeObjectURL(img.src);
-      reject({
-        message: "Failed to load image. Please select a valid image file.",
-      });
-    };
+      const objectUrl = URL.createObjectURL(file);
+      img.src = objectUrl;
+    });
+  };
 
-    const objectUrl = URL.createObjectURL(file);
-    img.src = objectUrl;
-  });
-};
+  // Handle main media file selection
+  const handleMediaChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-// Handle main media file selection
-const handleMediaChange = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  // Validate file type
-  if (formValues.mediaType === "image" && !file.type.startsWith("image/")) {
-    setError("Please select an image file");
-    toast.error("Please select an image file");
-    return;
-  } else if (
-    formValues.mediaType === "video" &&
-    !file.type.startsWith("video/")
-  ) {
-    setError("Please select a video file");
-    toast.error("Please select a video file");
-    return;
-  }
-
-  // For images, check dimensions
-  if (formValues.mediaType === "image" && file.type.startsWith("image/")) {
-    try {
-      await validateImageDimensions(file);
-    } catch (dimensionError) {
-      setError(dimensionError.message);
-      toast.error("Image must have a 16:9 aspect ratio");
-      e.target.value = "";
+    // Validate file type
+    if (formValues.mediaType === "image" && !file.type.startsWith("image/")) {
+      setError("Please select an image file");
+      toast.error("Please select an image file");
+      return;
+    } else if (
+      formValues.mediaType === "video" &&
+      !file.type.startsWith("video/")
+    ) {
+      setError("Please select a video file");
+      toast.error("Please select a video file");
       return;
     }
-  }
 
-  // If validation passes, proceed with file handling
-  setFormValues((prev) => ({ ...prev, media: file }));
-
-  // Revoke old preview URL if it exists
-  if (mediaPreview && !mediaPreview.startsWith("http")) {
-    URL.revokeObjectURL(mediaPreview);
-  }
-
-  // Create preview URL
-  const previewUrl = URL.createObjectURL(file);
-  setMediaPreview(previewUrl);
-
-  // Auto-detect media type
-  if (file.type.startsWith("video/")) {
-    setFormValues((prev) => ({ ...prev, mediaType: "video" }));
-    setVideoKey((prev) => prev + 1);
-  } else {
-    setFormValues((prev) => ({ ...prev, mediaType: "image" }));
-  }
-
-  // Clear any error
-  setError("");
-};
-
-// Handle section title changes
-const handleSectionTitleChange = (index, value) => {
-  const updatedSections = [...formValues.sections];
-  updatedSections[index].title = value;
-  setFormValues({ ...formValues, sections: updatedSections });
-};
-
-// Handle section image uploads
-const handleSectionImageChange = async (sectionIndex, e) => {
-  const files = e.target.files;
-  if (!files || files.length === 0) return;
-
-  // Create new arrays by copying the old ones to avoid reference issues
-  const newImages = [...newSectionImages];
-  const newPreviews = [...newSectionPreviews];
-
-  // Initialize arrays if they don't exist
-  if (!newImages[sectionIndex]) newImages[sectionIndex] = [];
-  if (!newPreviews[sectionIndex]) newPreviews[sectionIndex] = [];
-
-  // Convert FileList to Array for easier processing
-  const fileArray = Array.from(files);
-
-  try {
-    // Process all selected files
-    for (let i = 0; i < fileArray.length; i++) {
-      const file = fileArray[i];
-
-      // Validate file type
-      if (!file.type.startsWith("image/")) {
-        console.error(
-          `Invalid file type: ${file.type} for file: ${file.name}`
-        );
-        setError("Please select only image files");
-        toast.error("Please select only image files");
-        e.target.value = "";
-        return;
-      }
-
-      // Validate file size (10MB limit)
-      if (file.size > 10 * 1024 * 1024) {
-        console.error(
-          `File too large: ${file.size} bytes for file: ${file.name}`
-        );
-        setError(`File ${file.name} is too large. Maximum size is 10MB.`);
-        toast.error(`File ${file.name} is too large. Maximum size is 10MB.`);
-        e.target.value = "";
-        return;
-      }
-
-      // Validate image dimensions (16:9 aspect ratio)
+    // For images, check dimensions
+    if (formValues.mediaType === "image" && file.type.startsWith("image/")) {
       try {
-        const dimensions = await validateImageDimensions(file);
+        await validateImageDimensions(file);
       } catch (dimensionError) {
-        console.error(
-          `Dimension validation failed for ${file.name}:`,
-          dimensionError
-        );
-        setError(`${file.name}: ${dimensionError.message}`);
+        setError(dimensionError.message);
         toast.error("Image must have a 16:9 aspect ratio");
         e.target.value = "";
         return;
       }
-
-      // Add file to the images array
-      newImages[sectionIndex].push(file);
-
-      // Create and add preview URL
-      const previewUrl = URL.createObjectURL(file);
-      newPreviews[sectionIndex].push(previewUrl);
     }
 
-    // Update state with the new arrays
-    setNewSectionImages(newImages);
-    setNewSectionPreviews(newPreviews);
+    // If validation passes, proceed with file handling
+    setFormValues((prev) => ({ ...prev, media: file }));
 
-    // Clear any previous error
+    // Revoke old preview URL if it exists
+    if (mediaPreview && !mediaPreview.startsWith("http")) {
+      URL.revokeObjectURL(mediaPreview);
+    }
+
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    setMediaPreview(previewUrl);
+
+    // Auto-detect media type
+    if (file.type.startsWith("video/")) {
+      setFormValues((prev) => ({ ...prev, mediaType: "video" }));
+      setVideoKey((prev) => prev + 1);
+    } else {
+      setFormValues((prev) => ({ ...prev, mediaType: "image" }));
+    }
+
+    // Clear any error
     setError("");
+  };
 
-    // Clear the file input to allow re-uploading the same file
-    e.target.value = "";
-  } catch (error) {
-    console.error("Error processing images:", error);
-    setError(
-      "An error occurred while processing the images. Please try again."
-    );
-    toast.error(
-      "An error occurred while processing the images. Please try again."
-    );
-    e.target.value = "";
-  }
-};
+  // Handle section title changes
+  const handleSectionTitleChange = (index, value) => {
+    const updatedSections = [...formValues.sections];
+    updatedSections[index].title = value;
+    setFormValues({ ...formValues, sections: updatedSections });
+  };
 
-const removeExistingImage = (sectionIndex, imageIndex) => {
-  if (!existingSectionImages[sectionIndex]) return;
+  // Handle section image uploads
+  const handleSectionImageChange = async (sectionIndex, e) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-  const updatedExistingImages = [...existingSectionImages];
-  updatedExistingImages[sectionIndex] = [
-    ...updatedExistingImages[sectionIndex].slice(0, imageIndex),
-    ...updatedExistingImages[sectionIndex].slice(imageIndex + 1),
-  ];
-  setExistingSectionImages(updatedExistingImages);
-};
+    // Create new arrays by copying the old ones to avoid reference issues
+    const newImages = [...newSectionImages];
+    const newPreviews = [...newSectionPreviews];
 
-// Remove a new image from a section
-const removeNewImage = (sectionIndex, imageIndex) => {
-  if (!newSectionImages[sectionIndex] || !newSectionPreviews[sectionIndex])
-    return;
+    // Initialize arrays if they don't exist
+    if (!newImages[sectionIndex]) newImages[sectionIndex] = [];
+    if (!newPreviews[sectionIndex]) newPreviews[sectionIndex] = [];
 
-  // Create copies of the arrays
-  const updatedImages = [...newSectionImages];
-  const updatedPreviews = [...newSectionPreviews];
+    // Convert FileList to Array for easier processing
+    const fileArray = Array.from(files);
 
-  // Revoke the object URL to prevent memory leaks
-  const previewUrl = updatedPreviews[sectionIndex][imageIndex];
-  if (
-    previewUrl &&
-    typeof previewUrl === "string" &&
-    !previewUrl.startsWith("http")
-  ) {
     try {
-      URL.revokeObjectURL(previewUrl);
-    } catch (err) {
-      console.error("Error revoking URL:", err);
-    }
-  }
+      // Process all selected files
+      for (let i = 0; i < fileArray.length; i++) {
+        const file = fileArray[i];
 
-  // Remove the items from the arrays
-  updatedImages[sectionIndex] = [
-    ...updatedImages[sectionIndex].slice(0, imageIndex),
-    ...updatedImages[sectionIndex].slice(imageIndex + 1),
-  ];
+        // Validate file type
+        if (!file.type.startsWith("image/")) {
+          console.error(
+            `Invalid file type: ${file.type} for file: ${file.name}`
+          );
+          setError("Please select only image files");
+          toast.error("Please select only image files");
+          e.target.value = "";
+          return;
+        }
 
-  updatedPreviews[sectionIndex] = [
-    ...updatedPreviews[sectionIndex].slice(0, imageIndex),
-    ...updatedPreviews[sectionIndex].slice(imageIndex + 1),
-  ];
+        // Validate file size (10MB limit)
+        if (file.size > 10 * 1024 * 1024) {
+          console.error(
+            `File too large: ${file.size} bytes for file: ${file.name}`
+          );
+          setError(`File ${file.name} is too large. Maximum size is 10MB.`);
+          toast.error(`File ${file.name} is too large. Maximum size is 10MB.`);
+          e.target.value = "";
+          return;
+        }
 
-  // Update state
-  setNewSectionImages(updatedImages);
-  setNewSectionPreviews(updatedPreviews);
-};
+        // Validate image dimensions (16:9 aspect ratio)
+        try {
+          const dimensions = await validateImageDimensions(file);
+        } catch (dimensionError) {
+          console.error(
+            `Dimension validation failed for ${file.name}:`,
+            dimensionError
+          );
+          setError(`${file.name}: ${dimensionError.message}`);
+          toast.error("Image must have a 16:9 aspect ratio");
+          e.target.value = "";
+          return;
+        }
 
-// Add a new section
-const addSection = () => {
-  setFormValues((prev) => ({
-    ...prev,
-    sections: [
-      ...prev.sections,
-      {
-        title: "",
-        points: [{ title: "", detail: "" }],
-      },
-    ],
-  }));
+        // Add file to the images array
+        newImages[sectionIndex].push(file);
 
-  // Add empty arrays for the new section's images
-  setExistingSectionImages([...existingSectionImages, []]);
-  setNewSectionImages([...newSectionImages, []]);
-  setNewSectionPreviews([...newSectionPreviews, []]);
-};
-
-// Remove a section
-const removeSection = (index) => {
-  // Clean up image preview URLs for this section
-  if (newSectionPreviews[index]) {
-    newSectionPreviews[index].forEach((preview) => {
-      if (preview && !preview.startsWith("http")) {
-        URL.revokeObjectURL(preview);
+        // Create and add preview URL
+        const previewUrl = URL.createObjectURL(file);
+        newPreviews[sectionIndex].push(previewUrl);
       }
-    });
-  }
 
-  // Remove section from all state
-  setFormValues({
-    ...formValues,
-    sections: formValues.sections.filter((_, i) => i !== index),
-  });
+      // Update state with the new arrays
+      setNewSectionImages(newImages);
+      setNewSectionPreviews(newPreviews);
 
-  setExistingSectionImages([
-    ...existingSectionImages.slice(0, index),
-    ...existingSectionImages.slice(index + 1),
-  ]);
+      // Clear any previous error
+      setError("");
 
-  setNewSectionImages([
-    ...newSectionImages.slice(0, index),
-    ...newSectionImages.slice(index + 1),
-  ]);
-
-  setNewSectionPreviews([
-    ...newSectionPreviews.slice(0, index),
-    ...newSectionPreviews.slice(index + 1),
-  ]);
-};
-
-// Add a new point to a section
-const addPoint = (sectionIndex) => {
-  const updatedSections = [...formValues.sections];
-  updatedSections[sectionIndex].points.push({ title: "", detail: "" });
-  setFormValues({ ...formValues, sections: updatedSections });
-};
-
-// Remove a point from a section
-const removePoint = (sectionIndex, pointIndex) => {
-  const updatedSections = [...formValues.sections];
-  updatedSections[sectionIndex].points = updatedSections[
-    sectionIndex
-  ].points.filter((_, i) => i !== pointIndex);
-  setFormValues({ ...formValues, sections: updatedSections });
-};
-
-// Handle point changes
-const handlePointChange = (sectionIndex, pointIndex, field, value) => {
-  const updatedSections = [...formValues.sections];
-  updatedSections[sectionIndex].points[pointIndex][field] = value;
-  setFormValues({ ...formValues, sections: updatedSections });
-};
-
-// Get readable file size
-const getFileSize = (file) => {
-  if (!file) return "";
-  const sizeMB = file.size / (1024 * 1024);
-  return sizeMB < 1
-    ? `${(sizeMB * 1024).toFixed(2)} KB`
-    : `${sizeMB.toFixed(2)} MB`;
-};
-
-// Get accepted file types based on media type
-const getAcceptedFileTypes = () => {
-  return formValues.mediaType === "image" ? "image/*" : "video/*";
-};
-
-// Form validation
-const validateForm = () => {
-  if (!formValues.Title || !formValues.detail || !formValues.slug) {
-    setError("Please fill all required fields");
-    return false;
-  }
-
-  // Validate that at least one related item is selected
-  const totalRelatedItems =
-    (formValues.relatedServices?.length || 0) +
-    (formValues.relatedIndustries?.length || 0) +
-    (formValues.relatedProducts?.length || 0) +
-    (formValues.relatedChikfdServices?.length || 0);
-
-  if (totalRelatedItems === 0) {
-    setError(
-      "Please select at least one related service, industry, product, or child service"
-    );
-    return false;
-  }
-
-  // Validate slug format
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(formValues.slug)) {
-    setError(
-      "Slug must be lowercase, containing only letters, numbers, and hyphens"
-    );
-    return false;
-  }
-
-  // Validate sections
-  for (const [sectionIndex, section] of formValues.sections.entries()) {
-    // Check if section has an image (either new or existing)
-    const hasImage = sectionImageUrls[sectionIndex];
-
-    if (!section.title || !hasImage || section.points.length === 0) {
+      // Clear the file input to allow re-uploading the same file
+      e.target.value = "";
+    } catch (error) {
+      console.error("Error processing images:", error);
       setError(
-        "Each section must have a title, at least one image, and at least one point"
+        "An error occurred while processing the images. Please try again."
+      );
+      toast.error(
+        "An error occurred while processing the images. Please try again."
+      );
+      e.target.value = "";
+    }
+  };
+
+  const removeExistingImage = (sectionIndex, imageIndex) => {
+    if (!existingSectionImages[sectionIndex]) return;
+
+    const updatedExistingImages = [...existingSectionImages];
+    updatedExistingImages[sectionIndex] = [
+      ...updatedExistingImages[sectionIndex].slice(0, imageIndex),
+      ...updatedExistingImages[sectionIndex].slice(imageIndex + 1),
+    ];
+    setExistingSectionImages(updatedExistingImages);
+  };
+
+  // Remove a new image from a section
+  const removeNewImage = (sectionIndex, imageIndex) => {
+    if (!newSectionImages[sectionIndex] || !newSectionPreviews[sectionIndex])
+      return;
+
+    // Create copies of the arrays
+    const updatedImages = [...newSectionImages];
+    const updatedPreviews = [...newSectionPreviews];
+
+    // Revoke the object URL to prevent memory leaks
+    const previewUrl = updatedPreviews[sectionIndex][imageIndex];
+    if (
+      previewUrl &&
+      typeof previewUrl === "string" &&
+      !previewUrl.startsWith("http")
+    ) {
+      try {
+        URL.revokeObjectURL(previewUrl);
+      } catch (err) {
+        console.error("Error revoking URL:", err);
+      }
+    }
+
+    // Remove the items from the arrays
+    updatedImages[sectionIndex] = [
+      ...updatedImages[sectionIndex].slice(0, imageIndex),
+      ...updatedImages[sectionIndex].slice(imageIndex + 1),
+    ];
+
+    updatedPreviews[sectionIndex] = [
+      ...updatedPreviews[sectionIndex].slice(0, imageIndex),
+      ...updatedPreviews[sectionIndex].slice(imageIndex + 1),
+    ];
+
+    // Update state
+    setNewSectionImages(updatedImages);
+    setNewSectionPreviews(updatedPreviews);
+  };
+
+  // Add a new section
+  const addSection = () => {
+    setFormValues((prev) => ({
+      ...prev,
+      sections: [
+        ...prev.sections,
+        {
+          title: "",
+          points: [{ title: "", detail: "" }],
+        },
+      ],
+    }));
+
+    // Add empty arrays for the new section's images
+    setExistingSectionImages([...existingSectionImages, []]);
+    setNewSectionImages([...newSectionImages, []]);
+    setNewSectionPreviews([...newSectionPreviews, []]);
+  };
+
+  // Remove a section
+  const removeSection = (index) => {
+    // Clean up image preview URLs for this section
+    if (newSectionPreviews[index]) {
+      newSectionPreviews[index].forEach((preview) => {
+        if (preview && !preview.startsWith("http")) {
+          URL.revokeObjectURL(preview);
+        }
+      });
+    }
+
+    // Remove section from all state
+    setFormValues({
+      ...formValues,
+      sections: formValues.sections.filter((_, i) => i !== index),
+    });
+
+    setExistingSectionImages([
+      ...existingSectionImages.slice(0, index),
+      ...existingSectionImages.slice(index + 1),
+    ]);
+
+    setNewSectionImages([
+      ...newSectionImages.slice(0, index),
+      ...newSectionImages.slice(index + 1),
+    ]);
+
+    setNewSectionPreviews([
+      ...newSectionPreviews.slice(0, index),
+      ...newSectionPreviews.slice(index + 1),
+    ]);
+  };
+
+  // Add a new point to a section
+  const addPoint = (sectionIndex) => {
+    const updatedSections = [...formValues.sections];
+    updatedSections[sectionIndex].points.push({ title: "", detail: "" });
+    setFormValues({ ...formValues, sections: updatedSections });
+  };
+
+  // Remove a point from a section
+  const removePoint = (sectionIndex, pointIndex) => {
+    const updatedSections = [...formValues.sections];
+    updatedSections[sectionIndex].points = updatedSections[
+      sectionIndex
+    ].points.filter((_, i) => i !== pointIndex);
+    setFormValues({ ...formValues, sections: updatedSections });
+  };
+
+  // Handle point changes
+  const handlePointChange = (sectionIndex, pointIndex, field, value) => {
+    const updatedSections = [...formValues.sections];
+    updatedSections[sectionIndex].points[pointIndex][field] = value;
+    setFormValues({ ...formValues, sections: updatedSections });
+  };
+
+  // Get readable file size
+  const getFileSize = (file) => {
+    if (!file) return "";
+    const sizeMB = file.size / (1024 * 1024);
+    return sizeMB < 1
+      ? `${(sizeMB * 1024).toFixed(2)} KB`
+      : `${sizeMB.toFixed(2)} MB`;
+  };
+
+  // Get accepted file types based on media type
+  const getAcceptedFileTypes = () => {
+    return formValues.mediaType === "image" ? "image/*" : "video/*";
+  };
+
+  // Form validation
+  const validateForm = () => {
+    if (!formValues.Title || !formValues.detail || !formValues.slug) {
+      setError("Please fill all required fields");
+      return false;
+    }
+
+    // Validate that at least one related item is selected
+    const totalRelatedItems =
+      (formValues.relatedServices?.length || 0) +
+      (formValues.relatedIndustries?.length || 0) +
+      (formValues.relatedProducts?.length || 0) +
+      (formValues.relatedChikfdServices?.length || 0);
+
+    if (totalRelatedItems === 0) {
+      setError(
+        "Please select at least one related service, industry, product, or child service"
       );
       return false;
     }
 
-    for (const point of section.points) {
-      if (!point.title || !point.detail) {
-        setError("All points must have a title and detail");
+    // Validate slug format
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(formValues.slug)) {
+      setError(
+        "Slug must be lowercase, containing only letters, numbers, and hyphens"
+      );
+      return false;
+    }
+
+    // Validate sections
+    for (const [sectionIndex, section] of formValues.sections.entries()) {
+      // Check if section has an image (either new or existing)
+      const hasImage = sectionImageUrls[sectionIndex];
+
+      if (!section.title || !hasImage || section.points.length === 0) {
+        setError(
+          "Each section must have a title, at least one image, and at least one point"
+        );
         return false;
       }
-    }
-  }
 
-  return true;
-};
-
-// Handle form submission - UPDATED to match the server endpoint format
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
-  setSuccess("");
-
-  if (!validateForm()) return;
-
-  setSaving(true);
-
-  try {
-    // Prepare sections with image URLs
-    const sections = formValues.sections.map((section, index) => ({
-      title: section.title,
-      image: sectionImageUrls[index] || section.imageUrl, // Use new URL if changed, else keep existing
-      points: section.points,
-    }));
-
-    // Prepare payload with junk URLs (if changed) or existing URLs
-    const payload = {
-      _id: selectedProject._id,
-      Title: formValues.Title,
-      detail: formValues.detail,
-      slug: formValues.slug,
-      mediaType: formValues.mediaType,
-      relatedServices: formValues.relatedServices,
-      relatedIndustries: formValues.relatedIndustries,
-      relatedProducts: formValues.relatedProducts,
-      relatedChikfdServices: formValues.relatedChikfdServices,
-      sections: sections,
-    };
-
-    // Only include mediaUrl if it was changed (new junk URL)
-    if (formValues.mediaUrl) {
-      payload.mediaUrl = formValues.mediaUrl;
-    }
-
-    const response = await axios.post("/api/project/edit", payload, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-      timeout: 60000,
-    });
-
-    if (response.data.success) {
-      setSuccess("Project updated successfully!");
-      toast.success("Project updated successfully!");
-
-      // Reset and redirect after 2 seconds
-      setTimeout(() => {
-        router.refresh();
-      }, 2000);
-    } else {
-      setError(response.data.message || "Failed to update project");
-      toast.error(response.data.message || "Failed to update project");
-    }
-  } catch (err) {
-    console.error("Error updating project:", err);
-    const errorMessage =
-      err.response?.data?.message || "Error updating project";
-    setError(errorMessage);
-    toast.error(errorMessage);
-  } finally {
-    setSaving(false);
-  }
-};
-
-return (
-  <div className="max-w-6xl mx-auto bg-white shadow-md rounded-lg overflow-hidden p-6">
-    <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
-      Edit Project
-    </h1>
-
-    {error && (
-      <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-        <div className="flex items-center">
-          <div className="flex-shrink-0">
-            <X className="h-5 w-5 text-red-500" />
-          </div>
-          <div className="ml-3">
-            <p className="text-sm text-red-700">{error}</p>
-          </div>
-        </div>
-      </div>
-    )}
-
-    {success && (
-      <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
-        <div className="flex items-center">
-          <div className="flex-shrink-0">
-            <PlusCircle className="h-5 w-5 text-green-500" />
-          </div>
-          <div className="ml-3">
-            <p className="text-sm text-green-700">{success}</p>
-          </div>
-        </div>
-      </div>
-    )}
-
-    {/* Project Selection */}
-    <div className="mb-8">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        Select Project to Edit
-      </label>
-      <select
-        onChange={(e) =>
-          handleSelectProject(projects.find((p) => p._id === e.target.value))
+      for (const point of section.points) {
+        if (!point.title || !point.detail) {
+          setError("All points must have a title and detail");
+          return false;
         }
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option value="">Select a Project</option>
-        {projects.map((project) => (
-          <option key={project._id} value={project._id}>
-            {project.Title}
-          </option>
-        ))}
-      </select>
-    </div>
+      }
+    }
 
-    {selectedProject && (
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Left column */}
-          <div className="space-y-6">
-            {/* Project Title */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Project Title *
-              </label>
-              <input
-                type="text"
-                name="Title"
-                value={formValues.Title}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
+    return true;
+  };
+
+  // Handle form submission - UPDATED to match the server endpoint format
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!validateForm()) return;
+
+    setSaving(true);
+
+    try {
+      // Prepare sections with image URLs
+      const sections = formValues.sections.map((section, index) => ({
+        title: section.title,
+        image: sectionImageUrls[index] || section.imageUrl, // Use new URL if changed, else keep existing
+        points: section.points,
+      }));
+
+      // Prepare payload with junk URLs (if changed) or existing URLs
+      const payload = {
+        _id: selectedProject._id,
+        Title: formValues.Title,
+        detail: formValues.detail,
+        slug: formValues.slug,
+        mediaType: formValues.mediaType,
+        relatedServices: formValues.relatedServices,
+        relatedIndustries: formValues.relatedIndustries,
+        relatedProducts: formValues.relatedProducts,
+        relatedChikfdServices: formValues.relatedChikfdServices,
+        sections: sections,
+      };
+
+      // Only include mediaUrl if it was changed (new junk URL)
+      if (formValues.mediaUrl) {
+        payload.mediaUrl = formValues.mediaUrl;
+      }
+
+      const response = await axios.post("/api/project/edit", payload, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+        timeout: 60000,
+      });
+
+      if (response.data.success) {
+        setSuccess("Project updated successfully!");
+        toast.success("Project updated successfully!");
+
+        // Reset and redirect after 2 seconds
+        setTimeout(() => {
+          router.refresh();
+        }, 2000);
+      } else {
+        setError(response.data.message || "Failed to update project");
+        toast.error(response.data.message || "Failed to update project");
+      }
+    } catch (err) {
+      console.error("Error updating project:", err);
+      const errorMessage =
+        err.response?.data?.message || "Error updating project";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto bg-white shadow-md rounded-lg overflow-hidden p-6">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
+        Edit Project
+      </h1>
+
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <X className="h-5 w-5 text-red-500" />
             </div>
-
-            {/* Project Slug */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Project Slug *
-                <span className="text-xs text-gray-500 ml-1">
-                  (URL-friendly identifier)
-                </span>
-              </label>
-              <input
-                type="text"
-                name="slug"
-                value={formValues.slug}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Use lowercase letters, numbers, and hyphens only (e.g.,
-                &quot;my-project-name&quot;)
-              </p>
-            </div>
-
-            {/* Related Items Selector */}
-            <RelatedItemsSelector
-              relations={[
-                "services",
-                "industries",
-                "products",
-                "childServices",
-              ]}
-              value={{
-                relatedServices: formValues.relatedServices,
-                relatedIndustries: formValues.relatedIndustries,
-                relatedProducts: formValues.relatedProducts,
-                relatedChikfdServices: formValues.relatedChikfdServices,
-              }}
-              onChange={handleRelatedItemsChange}
-              disabled={false}
-              isMultiple={true}
-            />
-
-            {/* Project Detail */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Project Detail *
-              </label>
-              <textarea
-                name="detail"
-                value={formValues.detail}
-                onChange={handleInputChange}
-                rows="4"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Right column */}
-          <div>
-            {/* Media Type Selection */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Media Type *
-              </label>
-              <div className="flex space-x-4">
-                <label
-                  className={`flex items-center p-3 border rounded-md cursor-pointer transition-colors ${formValues.mediaType === "image"
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-300 hover:bg-gray-50"
-                    }`}
-                >
-                  <input
-                    type="radio"
-                    name="mediaType"
-                    checked={formValues.mediaType === "image"}
-                    onChange={() => handleMediaTypeChange("image")}
-                    className="sr-only"
-                  />
-                  <ImageIcon className="h-5 w-5 text-gray-700 mr-2" />
-                  <span>Image</span>
-                </label>
-                <label
-                  className={`flex items-center p-3 border rounded-md cursor-pointer transition-colors ${formValues.mediaType === "video"
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-300 hover:bg-gray-50"
-                    }`}
-                >
-                  <input
-                    type="radio"
-                    name="mediaType"
-                    checked={formValues.mediaType === "video"}
-                    onChange={() => handleMediaTypeChange("video")}
-                    className="sr-only"
-                  />
-                  <Film className="h-5 w-5 text-gray-700 mr-2" />
-                  <span>Video</span>
-                </label>
-              </div>
-            </div>
-
-            {/* Project Media Upload */}
-            <div>
-              <ImageUploader
-                method="url"
-                mediaType={formValues.mediaType === "image" ? "image" : "video"}
-                aspectRatio={formValues.mediaType === "image" ? "16:9" : null}
-                label={`Project ${formValues.mediaType === "image" ? "Image" : "Video"}`}
-                preview={mediaPreview}
-                onImageChange={handleMediaUpload}
-                onImageRemove={handleMediaRemove}
-                maxSize={formValues.mediaType === "image" ? 10 : 50}
-                disabled={saving}
-              />
+            <div className="ml-3">
+              <p className="text-sm text-red-700">{error}</p>
             </div>
           </div>
         </div>
+      )}
 
-        {/* Sections */}
-        <div className="mt-10">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Project Sections
-          </h2>
-
-          {formValues.sections.map((section, sectionIndex) => (
-            <div
-              key={sectionIndex}
-              className="mb-8 p-6 border rounded-lg bg-gray-50"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-gray-800">
-                  Section {sectionIndex + 1}
-                </h3>
-                {formValues.sections.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeSection(sectionIndex)}
-                    className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors"
-                  >
-                    <X className="h-4 w-4 mr-1" /> Remove
-                  </button>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  {/* Section Title */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Section Title *
-                    </label>
-                    <input
-                      type="text"
-                      value={section.title}
-                      onChange={(e) =>
-                        handleSectionTitleChange(sectionIndex, e.target.value)
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
-
-                  {/* Section Images */}
-                  <div>
-                    <ImageUploader
-                      method="url"
-                      mediaType="image"
-                      aspectRatio="16:9"
-                      label="Section Image"
-                      preview={sectionPreviews[sectionIndex]}
-                      onImageChange={(file, preview, junkUrl) =>
-                        handleSectionImageUpload(sectionIndex, file, preview, junkUrl)
-                      }
-                      onImageRemove={() => handleSectionImageRemove(sectionIndex)}
-                      maxSize={10}
-                      disabled={saving}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  {/* Points */}
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Points *
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => addPoint(sectionIndex)}
-                        className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors"
-                      >
-                        <PlusCircle className="h-3 w-3 mr-1" /> Add Point
-                      </button>
-                    </div>
-
-                    <div className="space-y-4 max-h-80 overflow-y-auto p-2">
-                      {section.points.map((point, pointIndex) => (
-                        <div
-                          key={pointIndex}
-                          className="p-3 border rounded-md bg-white"
-                        >
-                          <div className="flex justify-between items-center mb-2">
-                            <h4 className="text-sm font-medium">
-                              Point {pointIndex + 1}
-                            </h4>
-                            {section.points.length > 1 && (
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  removePoint(sectionIndex, pointIndex)
-                                }
-                                className="text-red-500 hover:text-red-700 transition-colors"
-                              >
-                                <X className="h-4 w-4" />
-                              </button>
-                            )}
-                          </div>
-
-                          <div className="space-y-3">
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">
-                                Title
-                              </label>
-                              <input
-                                type="text"
-                                value={point.title}
-                                onChange={(e) =>
-                                  handlePointChange(
-                                    sectionIndex,
-                                    pointIndex,
-                                    "title",
-                                    e.target.value
-                                  )
-                                }
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">
-                                Detail
-                              </label>
-                              <textarea
-                                value={point.detail}
-                                onChange={(e) =>
-                                  handlePointChange(
-                                    sectionIndex,
-                                    pointIndex,
-                                    "detail",
-                                    e.target.value
-                                  )
-                                }
-                                rows="2"
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+      {success && (
+        <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <PlusCircle className="h-5 w-5 text-green-500" />
             </div>
+            <div className="ml-3">
+              <p className="text-sm text-green-700">{success}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Project Selection */}
+      <div className="mb-8">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Select Project to Edit
+        </label>
+        <select
+          onChange={(e) =>
+            handleSelectProject(projects.find((p) => p._id === e.target.value))
+          }
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Select a Project</option>
+          {projects.map((project) => (
+            <option key={project._id} value={project._id}>
+              {project.Title}
+            </option>
           ))}
+        </select>
+      </div>
 
-          <button
-            type="button"
-            onClick={addSection}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors"
-          >
-            <PlusCircle className="h-5 w-5 mr-2" /> Add Section
-          </button>
-        </div>
+      {selectedProject && (
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left column */}
+            <div className="space-y-6">
+              {/* Project Title */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Project Title *
+                </label>
+                <input
+                  type="text"
+                  name="Title"
+                  value={formValues.Title}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-end pt-6 border-t">
-          <button
-            type="submit"
-            disabled={saving}
-            className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${saving ? "opacity-75 cursor-not-allowed" : ""
-              }`}
-          >
-            {saving ? (
-              <>
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Saving...
-              </>
-            ) : (
-              "Save Changes"
-            )}
-          </button>
-        </div>
-      </form>
-    )}
-  </div>
-);
+              {/* Project Slug */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Project Slug *
+                  <span className="text-xs text-gray-500 ml-1">
+                    (URL-friendly identifier)
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  name="slug"
+                  value={formValues.slug}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Use lowercase letters, numbers, and hyphens only (e.g.,
+                  &quot;my-project-name&quot;)
+                </p>
+              </div>
+
+              {/* Related Items Selector */}
+              <RelatedItemsSelector
+                relations={[
+                  "services",
+                  "industries",
+                  "products",
+                  "childServices",
+                ]}
+                value={{
+                  relatedServices: formValues.relatedServices,
+                  relatedIndustries: formValues.relatedIndustries,
+                  relatedProducts: formValues.relatedProducts,
+                  relatedChikfdServices: formValues.relatedChikfdServices,
+                }}
+                onChange={handleRelatedItemsChange}
+                disabled={false}
+                isMultiple={true}
+              />
+
+              {/* Project Detail */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Project Detail *
+                </label>
+                <textarea
+                  name="detail"
+                  value={formValues.detail}
+                  onChange={handleInputChange}
+                  rows="4"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Right column */}
+            <div>
+              {/* Media Type Selection */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Media Type *
+                </label>
+                <div className="flex space-x-4">
+                  <label
+                    className={`flex items-center p-3 border rounded-md cursor-pointer transition-colors ${formValues.mediaType === "image"
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-300 hover:bg-gray-50"
+                      }`}
+                  >
+                    <input
+                      type="radio"
+                      name="mediaType"
+                      checked={formValues.mediaType === "image"}
+                      onChange={() => handleMediaTypeChange("image")}
+                      className="sr-only"
+                    />
+                    <ImageIcon className="h-5 w-5 text-gray-700 mr-2" />
+                    <span>Image</span>
+                  </label>
+                  <label
+                    className={`flex items-center p-3 border rounded-md cursor-pointer transition-colors ${formValues.mediaType === "video"
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-300 hover:bg-gray-50"
+                      }`}
+                  >
+                    <input
+                      type="radio"
+                      name="mediaType"
+                      checked={formValues.mediaType === "video"}
+                      onChange={() => handleMediaTypeChange("video")}
+                      className="sr-only"
+                    />
+                    <Film className="h-5 w-5 text-gray-700 mr-2" />
+                    <span>Video</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Project Media Upload */}
+              <div>
+                <ImageUploader
+                  method="url"
+                  mediaType={formValues.mediaType === "image" ? "image" : "video"}
+                  aspectRatio={formValues.mediaType === "image" ? "16:9" : null}
+                  label={`Project ${formValues.mediaType === "image" ? "Image" : "Video"}`}
+                  preview={mediaPreview}
+                  onImageChange={handleMediaUpload}
+                  onImageRemove={handleMediaRemove}
+                  maxSize={formValues.mediaType === "image" ? 10 : 50}
+                  disabled={saving}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Sections */}
+          <div className="mt-10">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Project Sections
+            </h2>
+
+            {formValues.sections.map((section, sectionIndex) => (
+              <div
+                key={sectionIndex}
+                className="mb-8 p-6 border rounded-lg bg-gray-50"
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-medium text-gray-800">
+                    Section {sectionIndex + 1}
+                  </h3>
+                  {formValues.sections.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeSection(sectionIndex)}
+                      className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors"
+                    >
+                      <X className="h-4 w-4 mr-1" /> Remove
+                    </button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    {/* Section Title */}
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Section Title *
+                      </label>
+                      <input
+                        type="text"
+                        value={section.title}
+                        onChange={(e) =>
+                          handleSectionTitleChange(sectionIndex, e.target.value)
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+
+                    {/* Section Images */}
+                    <div>
+                      <ImageUploader
+                        method="url"
+                        mediaType="image"
+                        aspectRatio="16:9"
+                        label="Section Image"
+                        preview={sectionPreviews[sectionIndex]}
+                        onImageChange={(imageUrl, preview) =>
+                          handleSectionImageUpload(sectionIndex, imageUrl, preview)
+                        }
+                        onImageRemove={() => handleSectionImageRemove(sectionIndex)}
+                        maxSize={10}
+                        disabled={saving}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    {/* Points */}
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Points *
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => addPoint(sectionIndex)}
+                          className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors"
+                        >
+                          <PlusCircle className="h-3 w-3 mr-1" /> Add Point
+                        </button>
+                      </div>
+
+                      <div className="space-y-4 max-h-80 overflow-y-auto p-2">
+                        {section.points.map((point, pointIndex) => (
+                          <div
+                            key={pointIndex}
+                            className="p-3 border rounded-md bg-white"
+                          >
+                            <div className="flex justify-between items-center mb-2">
+                              <h4 className="text-sm font-medium">
+                                Point {pointIndex + 1}
+                              </h4>
+                              {section.points.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    removePoint(sectionIndex, pointIndex)
+                                  }
+                                  className="text-red-500 hover:text-red-700 transition-colors"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              )}
+                            </div>
+
+                            <div className="space-y-3">
+                              <div>
+                                <label className="block text-xs font-medium text-gray-700 mb-1">
+                                  Title
+                                </label>
+                                <input
+                                  type="text"
+                                  value={point.title}
+                                  onChange={(e) =>
+                                    handlePointChange(
+                                      sectionIndex,
+                                      pointIndex,
+                                      "title",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  required
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-gray-700 mb-1">
+                                  Detail
+                                </label>
+                                <textarea
+                                  value={point.detail}
+                                  onChange={(e) =>
+                                    handlePointChange(
+                                      sectionIndex,
+                                      pointIndex,
+                                      "detail",
+                                      e.target.value
+                                    )
+                                  }
+                                  rows="2"
+                                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  required
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={addSection}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors"
+            >
+              <PlusCircle className="h-5 w-5 mr-2" /> Add Section
+            </button>
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-end pt-6 border-t">
+            <button
+              type="submit"
+              disabled={saving}
+              className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${saving ? "opacity-75 cursor-not-allowed" : ""
+                }`}
+            >
+              {saving ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Saving...
+                </>
+              ) : (
+                "Save Changes"
+              )}
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
+  );
 }

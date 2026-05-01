@@ -73,8 +73,8 @@ export default function EditKnowledgeBase() {
     }, []);
 
     // Validate image aspect ratio (16:7)
-    const handleImageUpload = (file, preview, junkUrl) => {
-        setImageUrl(junkUrl);
+    const handleImageUpload = (url, preview) => {
+        setImageUrl(url);
         setImagePreview(preview);
     };
 
