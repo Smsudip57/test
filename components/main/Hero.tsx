@@ -1,6 +1,7 @@
 import React from "react";
 import HeroContent from "../sub/HeroContent";
 import WebParticles from "./webParticles";
+import HeroContentv2 from "../sub/HeroContentv2";
 
 interface HeroProps {
   pageData?: any;
@@ -18,7 +19,8 @@ const Hero: React.FC<HeroProps> = ({ pageData }) => {
       >
         <source src="/blackhole.webm" type="video/webm" />
       </video> */}
-      <HeroContent pageData={pageData} />
+      {/* <HeroContent pageData={pageData} /> */}
+      <HeroContentv2  />
     </div>
   );
 };
