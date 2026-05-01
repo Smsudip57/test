@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useCallback } from "react";
+import NextImage from "next/image";
 import { motion } from "framer-motion";
 import { Upload, X, Loader } from "lucide-react";
 import { useUploadFileMutation, useGetPresignedUrlMutation } from "@/redux/api/fileApi";
@@ -287,7 +288,13 @@ const ImageUploader = ({
             {fileType === "video" ? (
               <video src={imagePreview} className="w-full h-full object-cover" controls />
             ) : (
-              <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+              <NextImage
+                src={imagePreview}
+                alt="Preview"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+              />
             )}
             {!disabled && !uploading && (
               <motion.button

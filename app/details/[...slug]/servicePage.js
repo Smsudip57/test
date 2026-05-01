@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useEffect, useState, useRef } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Head from "next/head";
@@ -90,8 +91,14 @@ export default function Page({ details: Service, type }) {
           </div>
         </section>
         <section className="basis-1/2 min-h-full pt-16 flex flex-col">
-          <div className="pt-[10%]">
-            <img src={Service?.image} alt="Service overview" />
+          <div className="pt-[10%] relative w-full aspect-video">
+            <Image
+              src={Service?.image || "/default-image.jpg"}
+              alt="Service overview"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+              className="object-cover"
+            />
           </div>
         </section>
       </header>
@@ -107,7 +114,15 @@ export default function Page({ details: Service, type }) {
                 index % 2 === 0 ? "order-1" : "order-2"
               }`}
             >
-              <img src={item?.image} alt={item?.title} className="w-full" />
+              <div className="relative w-full aspect-video">
+                <Image
+                  src={item?.image || "/default-image.jpg"}
+                  alt={item?.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                  className="object-cover"
+                />
+              </div>
             </div>
             <div
               className={`basis-1/2 h-full pt-16 items-start text-start ${

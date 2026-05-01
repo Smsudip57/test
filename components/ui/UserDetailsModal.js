@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import Image from "next/image";
 import {
   X,
   User,
@@ -170,9 +171,11 @@ const UserDetailsModal = ({ user, isOpen, onClose, onUpdate }) => {
               {user.profile?.avatarUrl &&
               user.profile.avatarUrl !== "https://default-avatar-url.com" &&
               user.profile.avatarUrl !== "/default-avatar.png" ? (
-                <img
+                <Image
                   src={user.profile.avatarUrl}
-                  alt={user.profile?.name}
+                  alt={user.profile?.name || "User avatar"}
+                  width={64}
+                  height={64}
                   className="w-16 h-16 rounded-full object-cover"
                 />
               ) : (

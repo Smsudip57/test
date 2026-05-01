@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -122,10 +123,12 @@ export default function ProjectCarousel({
                           onEnd={handleVideoEnd}
                         />
                       ) : (
-                        <img
-                          src={project.media?.url || project.image}
+                        <Image
+                          src={project.media?.url || project.image || "/placeholder.png"}
                           alt={project.Title}
-                          className="w-full h-full rounded-lg object-cover"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                          className="rounded-lg object-cover"
                         />
                       )}
                     </div>

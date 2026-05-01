@@ -7,6 +7,7 @@ import React, {
   useContext,
 } from "react";
 import axios from "axios";
+import Image from "next/image";
 import ReusableTable from "@/components/ui/ReusableTable";
 import PageHeader from "@/components/ui/PageHeader";
 import UserDetailsModal from "@/components/ui/UserDetailsModal";
@@ -175,12 +176,16 @@ const UserManagement = () => {
           return (
             <div className="flex items-center">
               {hasValidAvatar ? (
-                <img
-                  src={avatarUrl}
-                  alt={user?.profile?.name}
-                  className="w-8 h-8 rounded-full mr-3 object-cover"
-                  onError={handleImageError}
-                />
+                <div className="w-8 h-8 rounded-full mr-3 relative">
+                  <Image
+                    src={avatarUrl}
+                    alt={user?.profile?.name}
+                    fill
+                    sizes="32px"
+                    className="rounded-full object-cover"
+                    onError={handleImageError}
+                  />
+                </div>
               ) : (
                 <div className="w-8 h-8 rounded-full mr-3 bg-gray-100 flex items-center justify-center">
                   <User className="w-5 h-5 text-gray-400" />

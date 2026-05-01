@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Loader2, Play } from "lucide-react";
@@ -254,11 +255,13 @@ export default function CustomerSuccessStories() {
               <div className="flex items-center gap-4">
                 {/* Company Logo */}
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#446E6D] bg-white p-1">
-                    <img
-                      src={allTestimonials[random].image}
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#446E6D] bg-white p-1 relative">
+                    <Image
+                      src={allTestimonials[random].image || "/placeholder-logo.png"}
                       alt={`${allTestimonials[random].postedBy} company logo`}
-                      className="w-full h-full object-contain rounded-full"
+                      fill
+                      sizes="64px"
+                      className="object-contain rounded-full"
                       onError={(e) => {
                         // Fallback if image fails to load
                         e.currentTarget.src = "/placeholder-logo.png";
@@ -329,11 +332,15 @@ export default function CustomerSuccessStories() {
                         />
                       ) : (
                         <>
-                          <img
-                            src={testimonial.image}
-                            className="w-full h-full object-cover brightness-90"
-                            alt={`${testimonial.postedBy} video thumbnail`}
-                          />
+                          <div className="relative w-full h-full">
+                            <Image
+                              src={testimonial.image || "/placeholder.png"}
+                              alt={`${testimonial.postedBy} video thumbnail`}
+                              fill
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              className="object-cover brightness-90"
+                            />
+                          </div>
                           <div
                             className="absolute inset-0 flex items-center justify-center cursor-pointer"
                             onClick={() => toggleVideo(testimonial._id)}
@@ -353,11 +360,13 @@ export default function CustomerSuccessStories() {
                     <div className="p-6 flex-1 relative">
                       {/* Customer Info with Round Avatar */}
                       <div className="flex items-center mb-4">
-                        <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-[#446E6D] flex-shrink-0 mr-3">
-                          <img
-                            src={testimonial.image}
-                            className="w-full h-full object-cover"
+                        <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-[#446E6D] flex-shrink-0 mr-3 relative">
+                          <Image
+                            src={testimonial.image || "/placeholder.png"}
+                            className="object-cover"
                             alt={testimonial.postedBy || "Customer"}
+                            fill
+                            sizes="48px"
                           />
                         </div>
                         <div>

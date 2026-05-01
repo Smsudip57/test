@@ -1,5 +1,6 @@
 "use client";
 import React, { useContext } from "react";
+import Image from "next/image";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import CircleUser from "@mui/icons-material/Circle";
 import { MyContext } from "@/context/context";
@@ -16,19 +17,23 @@ export default function Page() {
           <div className="lg:basis-1/2 z-10 relative">
             <div className="top-0 bg-white p-2 absolute right-0 mr-[60px] z-20">
               <div className="w-full h-[366px] relative">
-                <img
+                <Image
                   src="/logo.svg"
-                  className="h-[366px] aspect-[12/9] pt-14"
                   alt="WEBME Logo"
+                  width={488}
+                  height={366}
+                  className="h-[366px] w-auto aspect-[12/9] pt-14"
                 />
               </div>
             </div>
             <div className="absolute h-[366px] w-1/2 left-0 top-0 z-10 bg-opacity-80"></div>
-            <img src="" className="h-[366px] invisible xl:visible" alt="" />
-            <img
+            <div className="h-[366px] invisible xl:visible" aria-hidden="true" />
+            <Image
               src="/07.webp"
-              className="absolute right-0 top-0 pr-[20px]"
               alt="Background decoration"
+              width={600}
+              height={366}
+              className="absolute right-0 top-0 pr-[20px]"
             />
           </div>
 

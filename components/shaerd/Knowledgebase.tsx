@@ -1,4 +1,5 @@
 "use client"
+import Image from "next/image";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -135,13 +136,13 @@ const KnowledgeBaseSection: React.FC<KnowledgeBaseSectionProps> = ({ industry, c
                     {article.image ? (
                       <>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10"></div>
-                        <img 
-                          src={article.image} 
-                          className='w-full h-full object-cover absolute top-0 left-0 transition-transform duration-500 group-hover:scale-105' 
-                          alt={article.title || 'Knowledge Base article'} 
-                          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                            e.currentTarget.src = 'https://placehold.co/600x262/446E6D/ffffff?text=WEBME+Knowledge+Base';
-                          }}
+                        <Image
+                          src={article.image}
+                          className='object-cover absolute top-0 left-0 transition-transform duration-500 group-hover:scale-105'
+                          alt={article.title || 'Knowledge Base article'}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 25vw"
+                          unoptimized
                         />
                       </>
                     ) : (

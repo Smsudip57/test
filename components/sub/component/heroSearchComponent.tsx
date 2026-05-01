@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { SearchIcon, Loader2, XCircle } from "lucide-react";
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
@@ -257,16 +258,12 @@ export default function HeroSearchComponent() {
       <form onSubmit={handleSearchSubmit} className="w-full">
         <div className="rounded-[70px] w-full mx-auto border-4 gap-2 xs:gap-4 flex md:gap-5 border-[#0B2B20] p-1 justify-between bg-white border-box">
           <div className="flex gap-2.5 items-center flex-1">
-            <img
+            <Image
               alt="search"
-              loading="lazy"
-              width="25"
-              height="25"
-              decoding="async"
-              data-nimg="1"
-              className="sm:ml-2 xs:w-6 xs:h-6 w-5 invisible sm:visible"
-              style={{ color: "transparent" }}
               src="/search.svg"
+              width={25}
+              height={25}
+              className="sm:ml-2 xs:w-6 xs:h-6 w-5 invisible sm:visible"
             />
             <input
               ref={inputRef}
@@ -472,17 +469,23 @@ function ResultSection({ title, items, type, formatItem, onItemClick }: ResultSe
                       </div>
                     </div>
                     {/* Video poster (first frame) or fallback to a static image */}
-                    <img
+                    <Image
                       src={item.media?.thumbnail || item.media?.url || item.image || '/video-placeholder.jpg'}
                       alt={formattedItem.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="48px"
+                      className="object-cover"
+                      unoptimized
                     />
                   </>
                 ) : formattedItem.image ? (
-                  <img
+                  <Image
                     src={formattedItem.image}
                     alt={formattedItem.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    fill
+                    sizes="48px"
+                    className="object-cover group-hover:scale-105 transition-transform"
+                    unoptimized
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gray-200">

@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MyContext } from "@/context/context";
 import {
@@ -95,12 +96,14 @@ export default function Adminnav({ user, login }) {
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors"
               >
-                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center relative">
                   {currentUser?.profile?.avatarUrl ? (
-                    <img
+                    <Image
                       src={currentUser.profile.avatarUrl}
                       alt={currentUser?.profile?.name}
-                      className="w-8 h-8 rounded-full object-cover"
+                      fill
+                      sizes="32px"
+                      className="rounded-full object-cover"
                     />
                   ) : (
                     <User className="w-4 h-4 text-gray-500" />

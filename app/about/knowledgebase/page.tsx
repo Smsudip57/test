@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect, Suspense } from 'react'
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -162,10 +163,12 @@ function KnowledgebaseContent({
                       <div className="flex flex-col md:flex-row">
                         <div className="md:w-2/5 relative">
                           <div className="aspect-video w-full overflow-hidden">
-                            <img
+                            <Image
                               src={article.Image || '/placeholder-image.jpg'}
                               alt={article.title}
-                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                              fill
+                              sizes="(max-width: 768px) 100vw, 40vw"
+                              className="object-cover hover:scale-105 transition-transform duration-500"
                             />
                           </div>
                           {article.tags && article.tags.length > 0 && (
@@ -235,10 +238,12 @@ function KnowledgebaseContent({
                   >
                     <div className="relative">
                       <div className="aspect-video w-full overflow-hidden">
-                        <img
+                        <Image
                           src={article.Image || '/placeholder-image.jpg'}
                           alt={article.title}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover hover:scale-105 transition-transform duration-500"
                         />
                       </div>
                       {article.tags && article.tags.length > 0 && (
@@ -349,10 +354,12 @@ function KnowledgebaseContent({
                         <div className="flex flex-col md:flex-row">
                           <div className="md:w-2/5 relative">
                             <div className="aspect-video w-full overflow-hidden">
-                              <img
+                              <Image
                                 src={article.Image || '/placeholder-image.jpg'}
                                 alt={article.title}
-                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                fill
+                                sizes="(max-width: 768px) 100vw, 40vw"
+                                className="object-cover hover:scale-105 transition-transform duration-500"
                               />
                             </div>
                             {article.tags && article.tags.length > 0 && (

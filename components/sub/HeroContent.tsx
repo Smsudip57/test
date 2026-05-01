@@ -147,10 +147,13 @@ const Advertiser = ({ data }: any) => {
                   </div>
                   <div className="relative z-10">
                     <div className="h-[10px] mb-2">
-                      <img
+                      <Image
                         src="https://a.sfdcstatic.com/shared/images/pbc/icons/quotation-english.svg"
                         alt="quote"
-                        className="h-full"
+                        width={16}
+                        height={10}
+                        className="h-full w-auto"
+                        unoptimized
                       />
                     </div>
                     <span
@@ -165,13 +168,13 @@ const Advertiser = ({ data }: any) => {
                     {/* <br /> */}
                     <div className="flex gap-3 mt-3 items-center">
                       {item.image && (
-                        <img
+                        <Image
                           src={item.image}
                           alt={item.postedBy || "Testimonial author"}
+                          width={24}
+                          height={24}
                           className="h-6 w-6 rounded-full object-cover"
-                          onError={(e) =>
-                            (e.currentTarget.style.display = "none")
-                          }
+                          unoptimized
                         />
                       )}
                       <div>
@@ -234,16 +237,12 @@ const Advertiser = ({ data }: any) => {
                     key={index}
                   >
                     {!(index % 2 === 0) && (
-                      <img
+                      <Image
                         alt="project-image"
-                        loading="lazy"
-                        width="0"
-                        // height="239"
-                        decoding="async"
-                        data-nimg="1"
+                        src={item?.image || "/placeholder.jpg"}
+                        width={400}
+                        height={225}
                         className="w-full rounded-lg aspect-[16/9] object-cover"
-                        style={{ color: "transparent" }}
-                        src={item?.image}
                       />
                     )}
                     <h1
@@ -264,16 +263,12 @@ const Advertiser = ({ data }: any) => {
                       {/* </Link> */}
                     </button>
                     {index % 2 === 0 && (
-                      <img
+                      <Image
                         alt="project-image"
-                        loading="lazy"
-                        width="0"
-                        // height="239"
-                        decoding="async"
-                        data-nimg="1"
+                        src={item?.image || "/placeholder.jpg"}
+                        width={400}
+                        height={225}
                         className="w-full rounded-lg aspect-[16/9] object-cover"
-                        style={{ color: "transparent" }}
-                        src={item?.image}
                       />
                     )}
                   </div>

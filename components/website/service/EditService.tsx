@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -183,9 +184,11 @@ export default function EditService() {
                             {filteredServices.map((service) => (
                                 <li key={service._id} className="bg-white p-4 rounded-md shadow-sm flex items-center gap-4">
                                     {service.image ? (
-                                        <img
+                                        <Image
                                             src={service.image}
                                             alt={service.Title}
+                                            width={64}
+                                            height={64}
                                             className="w-16 h-16 object-cover rounded"
                                         />
                                     ) : null}

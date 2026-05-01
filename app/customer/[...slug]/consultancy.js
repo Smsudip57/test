@@ -6,6 +6,7 @@ const inter = Nunito({
   weight: ['400', '700'],
 });
 import React,{useState,useEffect,useContext, } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Search, CheckCheck , SendHorizontal , X, Headset  } from 'lucide-react'
 import axios from 'axios'
@@ -326,11 +327,15 @@ export default function Page() {
               }`}
             >
               <td className="px-4 py-2 flex items-center gap-5">
-                <img
-                  src={item?.image}
-                  alt=""
-                  className="h-10 object-cover"
-                />
+                <div className="relative w-10 h-10">
+                  <Image
+                    src={item?.image}
+                    alt=""
+                    fill
+                    sizes="40px"
+                    className="object-cover"
+                  />
+                </div>
                 <p className="font-semibold text-gray-700">{item?.Title}</p>
               </td>
               <td className="px-4 py-2 text-sm">
@@ -424,7 +429,9 @@ export default function Page() {
                 <div className={` flex  items-center justify-center gap-5 ${platform === "Skype" && " border-primary"} border-2 rounded cursor-pointer text-xl`}
                   onClick={()=>setplatform('Skype')}
                 >
-                  <img src='https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2hvdy10by11c2Utc2t5cGUtMS5qcGciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjI5MH19fQ==' className=' h-[50px]'/>
+                  <div className="relative w-[50px] h-[50px]">
+                    <Image src='https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2hvdy10by11c2Utc2t5cGUtMS5qcGciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjI5MH19fQ==' alt="Skype" fill sizes="50px" className='object-contain'/>
+                  </div>
                   {/* <span>
                     Skype
                   </span> */}
@@ -432,12 +439,16 @@ export default function Page() {
                 <div className={` flex px-5  items-center justify-center ${platform === "Google Meet" && " border-primary"} border-2 rounded cursor-pointer text-xl`}
                   onClick={()=>setplatform('Google Meet')}
                 >
-                  <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Google_Meet_text_logo_%282020%29.svg/2560px-Google_Meet_text_logo_%282020%29.svg.png' className=' h-[30px]'/>
+                  <div className="relative w-[30px] h-[30px]">
+                    <Image src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Google_Meet_text_logo_%282020%29.svg/2560px-Google_Meet_text_logo_%282020%29.svg.png' alt="Google Meet" fill sizes="30px" className='object-contain'/>
+                  </div>
                 </div>
                 <div className={` flex px-5 max-h-[70px] overflow-hidden items-center justify-center ${platform === "Microsoft Team" && "border-primary"} rounded border-2 cursor-pointer text-xl`}
                   onClick={()=>setplatform('Microsoft Team')}
                 >
-                  <img src='https://varvid.com/wp-content/uploads/2021/03/teamsLogo.png' className=' h-[70px]'/>
+                  <div className="relative w-[70px] h-[70px]">
+                    <Image src='https://varvid.com/wp-content/uploads/2021/03/teamsLogo.png' alt="Microsoft Teams" fill sizes="70px" className='object-contain'/>
+                  </div>
                 </div>
 
                 <div className='flex gap-5 items-center w-full justify-center text-white'>
@@ -466,10 +477,12 @@ export default function Page() {
                 <span className='flex items-center gap-2 text-gray-700'>
                  <span className='bg-green-500 w-2 h-2 rounded-full'></span>
                  <Headset /><span className='font-semibold'>Live Chat</span>
-                {/* <div className='flex items-center gap-3'>
-                <img src={sessionProduct?.image} alt='' className='h-[40px] rounded-md overflow-hidden border border-gray-300'/>
+                {sessionProduct && <div className='flex items-center gap-3'>
+                <div className='relative w-10 h-10 rounded-md overflow-hidden border border-gray-300'>
+                  <Image src={sessionProduct?.image} alt='' fill sizes='40px' className='object-cover'/>
+                </div>
                 <p className='text-gray-700 text-ellipsis pb- overflow-hidden text-wrap leading line-clamp-2 text-xs'>{sessionProduct?.Title}</p>
-                </div> */}
+                </div>}
                 </span>
               </div>
               <div className='h-[calc(100%-(2*3.5rem))] w-full overflow-y-auto border border-gray-300 bg-[#F3F4F6]'>

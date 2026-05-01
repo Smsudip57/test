@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect,useRef, useContext } from 'react';
-import {  AlertCircle, SendHorizontal,Image,User, User2,CircleX,Eye,Bookmark,X  } from 'lucide-react';
+import Image from 'next/image';
+import {  AlertCircle, SendHorizontal,Image as ImageIcon,User, User2,CircleX,Eye,Bookmark,X  } from 'lucide-react';
 // import { data } from 'react-router-dom';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -300,7 +301,7 @@ const handleDelete = async () => {
                     onClick={() => SelectACtiveSession(session?._id)}
                     >    
                     <span className='py-2 px-3 text-wrap bg-[#] text-black rounded-lg w-full flex items-center gap-2 relative'>
-                       {session?.user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User/> :session?.user?.profile?.avatarUrl?<img style={{width:'2em', height:'2em'}} className='border-2 border-gray-500 rounded-full' src={session?.user?.profile?.avatarUrl}/>: <User/>} 
+                       {session?.user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User/> :session?.user?.profile?.avatarUrl?<div className='relative border-2 border-gray-500 rounded-full' style={{width:'2em', height:'2em'}}><Image fill sizes='2em' className='rounded-full object-cover' src={session?.user?.profile?.avatarUrl} alt='avatar'/>  </div>: <User/>} 
                        <span className='grid'>
                        {session?.user?.profile?.name ? session?.user?.profile?.name : session?.uid?.name}
                        <span className='text-xs'>
@@ -331,7 +332,7 @@ const handleDelete = async () => {
             </span> */}
             <div className='flex items-center  text-gray-700 gap-3'>
             <span className='flex gap-3 items-center min-w-max px-2 text-gray-700'>
-                    {Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User2 className='border-[3px] text-gray-700 border-gray-500 rounded-full' style={{width:'2em', height:'2em'}}/>: <img style={{width:'3em', height:'3em'}} className={`${Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl ? 'border-2 cursor-pointer border-gray-500 rounded-full':'text-nowrap'}`} src={Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl} alt='Not Available'/>}</span>
+                    {Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl === 'https://default-avatar-url.com' ? <User2 className='border-[3px] text-gray-700 border-gray-500 rounded-full' style={{width:'2em', height:'2em'}}/>: <div className='relative border-2 border-gray-500 rounded-full' style={{width:'3em', height:'3em'}}><Image fill sizes='3em' className={`rounded-full object-cover`} src={Sessions?.find((s)=> s._id === sessionActive)?.user?.profile?.avatarUrl} alt='avatar'/>  </div>}</span>
             {sessionActive && <div className='flex flex-col items-start gap-1'>
                 <p className='text-gray-700 text-ellipsis overflow-hidden text-wrap leading line-clamp-2 text-base'> {Sessions?.find((session) => session?._id === sessionActive)?.user?.profile?.name ?? 'No name available'}</p>
                 <p className='text-gray-700 text-ellipsis overflow-hidden text-wrap leading line-clamp-2 text-sm'> {Sessions?.find((session) => session?._id === sessionActive)?.user?.email ?? 'No email available'}</p>
@@ -371,11 +372,15 @@ const handleDelete = async () => {
                             className={`cursor-pointer`}
                           >
                             <td className="px-4 py-2 flex items-center gap-5">
-                              <img
-                                src={item?.image}
-                                alt=""
-                                className="h-10 object-cover"
-                              />
+                              <div className='relative w-10 h-10'>
+                                <Image
+                                  src={item?.image}
+                                  alt=""
+                                  fill
+                                  sizes="40px"
+                                  className="object-cover"
+                                />
+                              </div>
                               <p className="font-semibold">{item?.Title}</p>
                             </td>
                             <td className="px-4 py-2 text-sm">

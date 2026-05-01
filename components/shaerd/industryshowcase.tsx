@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -122,14 +123,20 @@ const Webme: React.FC<WebmeProps> = ({ service: apiservice }) => {
                     href={`/details/products/${item?.slug ? item.slug : item.Title
                       }`}
                   >
-                    <img
-                      src={item?.image}
-                      alt={item.Title}
-                      className={`w-full p-1 rounded-md overflow-hidden aspect-[16/9] border-[1px] shadow-md shadow-slate-500 transition-all duration-300 ${active === item.key
+                    <div
+                      className={`relative w-full aspect-[16/9] p-1 rounded-md overflow-hidden border-[1px] shadow-md shadow-slate-500 transition-all duration-300 ${active === item.key
                           ? "bg-gradient-to-r from-[#00FFF3] to-[#FFE500] p-1"
                           : "border-[#76b4b1d0]"
                         }`}
-                    />
+                    >
+                      <Image
+                        src={item?.image || "/placeholder.jpg"}
+                        alt={item.Title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 25vw"
+                        className="rounded-md object-cover"
+                      />
+                    </div>
                   </a>
                 )}
               </motion.div>

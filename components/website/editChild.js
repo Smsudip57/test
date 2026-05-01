@@ -7,6 +7,7 @@ import React, {
   useContext,
   useCallback,
 } from "react";
+import Image from "next/image";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -718,9 +719,11 @@ export default function EditProductList() {
                   >
                     <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0 border border-gray-200">
                       {childService.image ? (
-                        <img
+                        <Image
                           src={childService.image}
                           alt={childService.Title}
+                          width={80}
+                          height={80}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -897,10 +900,12 @@ export default function EditProductList() {
 
                         {mainImagePreview ? (
                           <div className="relative rounded-lg overflow-hidden border border-gray-200">
-                            <img
+                            <Image
                               src={mainImagePreview}
                               alt="Product preview"
-                              className="w-full h-64 object-cover"
+                              fill
+                              sizes="(max-width: 768px) 100vw, 50vw"
+                              className="object-cover"
                             />
                             <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
                               <button
@@ -1246,10 +1251,12 @@ const SectionItem = React.memo(
                   </div>
                 ) : (
                   <div className="relative rounded-lg overflow-hidden border border-gray-200">
-                    <img
+                    <Image
                       src={section.imagePreview || section.image}
                       alt={`Section ${index + 1} preview`}
-                      className="w-full h-40 object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover"
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
                       <button

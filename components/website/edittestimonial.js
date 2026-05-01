@@ -1,4 +1,5 @@
 'use client';
+import Image from "next/image";
 import { useEffect, useState, useContext, useRef } from "react";
 import axios from "axios";
 import { Loader2, UploadCloud, X, Video, Image as ImageIcon, AlertCircle, ArrowLeft, Save, Edit } from "lucide-react";
@@ -408,9 +409,11 @@ export default function EditTestimonial() {
                   className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-6 border rounded-lg shadow-sm bg-white hover:shadow-md transition-shadow"
                 >
                   <div className="flex-shrink-0">
-                    <img
+                    <Image
                       src={testimonial.image}
                       alt={testimonial.postedBy}
+                      width={80}
+                      height={80}
                       className="w-20 h-20 rounded-full object-cover border-2 border-[#446E6D]/20"
                     />
                   </div>

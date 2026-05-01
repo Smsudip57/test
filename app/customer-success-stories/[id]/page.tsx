@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
@@ -162,12 +163,14 @@ export default function SingleTestimonialPage() {
             {/* Author Info Card */}
             <div className="bg-white rounded-xl p-6 md:p-8 shadow-md border border-gray-100 mb-8">
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 pb-6 border-b border-gray-200">
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-[#446E6D] to-[#375857] flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 overflow-hidden">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-[#446E6D] to-[#375857] flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 overflow-hidden relative">
                   {testimonial?.image ? (
-                    <img
+                    <Image
                       src={testimonial.image}
-                      alt={testimonial?.postedBy}
-                      className="w-full h-full object-cover"
+                      alt={testimonial?.postedBy || "Author"}
+                      fill
+                      sizes="80px"
+                      className="object-cover"
                     />
                   ) : (
                     testimonial?.postedBy?.charAt(0)?.toUpperCase() || "U"
@@ -297,10 +300,12 @@ export default function SingleTestimonialPage() {
                 >
                   {/* Image Container */}
                   <div className="relative aspect-video overflow-hidden bg-gray-200">
-                    <img
-                      src={relatedTestimonial.image}
-                      alt={relatedTestimonial.postedBy}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    <Image
+                      src={relatedTestimonial.image || "/placeholder.png"}
+                      alt={relatedTestimonial.postedBy || "Testimonial"}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">

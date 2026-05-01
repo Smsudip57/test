@@ -93,13 +93,15 @@ export default function Settings() {
               <input type="file" className="hidden" onChange={handleUpload} />
               <span className="text-xs mt-2 text-white">Click to upload</span>
             </label>
-            <img
-              src={imageSrc}
-              alt="unavailable"
-              width={145}
-              height={145}
-              className="rounded-full aspect-square border shadow"
-            />
+            <div className="relative rounded-full aspect-square border shadow overflow-hidden w-[145px] h-[145px]">
+              <Image
+                src={imageSrc}
+                alt="unavailable"
+                fill
+                sizes="145px"
+                className="object-cover"
+              />
+            </div>
           </div>
           <div className="mt-6 flex justify-center gap-3 hidden">
             <button className="text-sm text-red-500 hover:text-red-700 flex items-center gap-2">

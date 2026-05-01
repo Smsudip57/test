@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useContext, useEffect } from "react";
+import Image from "next/image";
 // import img from "next/img";
 import { Camera, Edit, Facebook, Twitter, Instagram, Linkedin, User, Phone, Building2 ,UserPen , MapPinHouse, Upload, Trash, Save, Lock  } from "lucide-react";
 import { MyContext } from "@/context/context";
@@ -53,21 +54,25 @@ export default function ProfilePage() {
       {/* Cover Photo */}
       <div className="overflow-hidden rounded-[10px] mx-auto shadow-1 dark:bg-gray-dark dark:shadow-card  max-w-[970px]">
         <div className="relative h-[350px] w-[350px] mt-10 mx-auto ">
-          <img
-            src={user?.profile?.companyImageUrl}
-            alt="profile cover"
-            width={970}
-            height={260}
-            className="h-full w-full rounded-full object-cover object-center"
-          />
+          <div className="relative h-full w-full">
+            <Image
+              src={user?.profile?.companyImageUrl || "/imgs/cover/cover-01.png"}
+              alt="profile cover"
+              fill
+              sizes="350px"
+              className="rounded-full object-cover object-center"
+            />
+          </div>
           <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-[1] rounded-full bg-white/20 p-2">
-          <img
-                src={user?.profile?.avatarUrl}
-                alt="profile"
-                width={160}
-                height={160}
-                className="overflow-hidden rounded-full mx-auto"
-              />
+          <div className="relative w-[160px] h-[160px] overflow-hidden rounded-full mx-auto">
+            <Image
+              src={user?.profile?.avatarUrl || "/imgs/user/user-03.png"}
+              alt="profile"
+              fill
+              sizes="160px"
+              className="object-cover"
+            />
+          </div>
           </div>
         </div>
 

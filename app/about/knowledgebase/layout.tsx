@@ -5,6 +5,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import axios from 'axios';
 
@@ -351,9 +352,11 @@ export default function KnowledgebaseLayout({
                                             onClick={() => router.push(`/about/knowledgebase/${article.slug}`)}
                                         >
                                             <div className="w-24 h-16 rounded-md overflow-hidden flex-shrink-0">
-                                                <img
+                                                <Image
                                                     src={article.Image || '/placeholder-image.jpg'}
                                                     alt={article.title}
+                                                    width={96}
+                                                    height={64}
                                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                                 />
                                             </div>

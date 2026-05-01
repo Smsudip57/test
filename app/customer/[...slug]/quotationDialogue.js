@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import {
   Dialog,
   DialogTrigger,
@@ -90,11 +91,15 @@ export default function QuotationDialogue({
             <ul className="divide-y divide-gray-200">
               {products.map((item, idx) => (
                 <li key={idx} className="flex items-center gap-4 py-3">
-                  <img
-                    src={item.image || "/placeholder.png"}
-                    alt={item.title}
-                    className="w-14 h-14 object-cover rounded border"
-                  />
+                  <div className="relative w-14 h-14 rounded border overflow-hidden flex-shrink-0">
+                    <Image
+                      src={item.image || "/placeholder.png"}
+                      alt={item.title}
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                    />
+                  </div>
                   <div className="flex-1">
                     <div className="font-semibold text-[#446E6D]">
                       {item.title}

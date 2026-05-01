@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import {
@@ -649,11 +650,13 @@ export default function EditKnowledgeBase() {
                             {/* Article Image */}
                             {article.Image && (
                                 <div className="aspect-[16/7] w-full">
-                                    <img
-                                        src={article.Image}
-                                        alt={article.title}
-                                        className="w-full h-full object-cover rounded-t-lg"
-                                    />
+                                        <Image
+                                            src={article.Image}
+                                            alt={article.title}
+                                            width={1600}
+                                            height={700}
+                                            className="w-full h-full object-cover rounded-t-lg"
+                                        />
                                 </div>
                             )}
 

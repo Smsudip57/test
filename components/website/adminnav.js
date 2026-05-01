@@ -1,5 +1,6 @@
 'use client'
 import React,{useState} from 'react'
+import Image from 'next/image';
 import LogoutIcon from '@mui/icons-material/Logout';
 import axios from 'axios';
 import Link from 'next/link';
@@ -57,7 +58,7 @@ export default function Adminnav({user, login}) {
         <div className='container mx-auto flex justify-between items-center'>
         <div className='flex items-center space-x-4 justify-center'>
         <Link href={`/`}>
-        <img alt="logo" width="17" height="17"  className="cursor-pointer hover:animate-slowspin"  src="/logo.svg"/>
+        <Image alt="logo" width={17} height={17} className="cursor-pointer hover:animate-slowspin" src="/logo.svg"/>
         </Link>
         <h1 className='text-[#446E6D] text-xl font-bold'>Webmedigital Admin pannel</h1>
         </div>

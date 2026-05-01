@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
+import Image from "next/image";
 import axios from "axios";
 import {
   Loader2,
@@ -376,10 +377,12 @@ const BlogManager = () => {
               >
                 <div className="relative h-48 overflow-hidden bg-gray-100">
                   {blog.image ? (
-                    <img
+                    <Image
                       src={blog.image}
                       alt={blog.title}
-                      className="w-full h-full object-cover transition-transform hover:scale-105"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover transition-transform hover:scale-105"
                     />
                   ) : (
                     <div className="flex items-center justify-center h-full bg-gray-200">

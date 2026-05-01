@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import Image from 'next/image';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PersonIcon from '@mui/icons-material/Person';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -109,9 +110,11 @@ export default function KnowledgebaseArticlePage() {
             {article.Image && (
                 <div className="relative">
                     <div className="aspect-video w-full overflow-hidden">
-                        <img
+                        <Image
                             src={article.Image}
                             alt={article.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
                             className="w-full h-full object-cover"
                         />
                     </div>

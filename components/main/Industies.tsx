@@ -1,4 +1,5 @@
 'use client';
+import Image from "next/image";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
@@ -66,7 +67,13 @@ const Projects = ({ parent, child, product, industries: industriesProp }: {
             {industries.map((item: any, index) => (
               <a href={`/industries/${item?.Title?.toLowerCase().split(" ").join(' ')}`} className="basis-[45%] lg:basis-[14.28%] flex justify-center items-center  shadow-lg border rounded-lg p-4" key={index}>
                 <div className="">
-                  <img src={item?.logo ? item?.logo : item?.image} alt={`Company logo ${index + 1}`} />
+                  <Image
+                    src={item?.logo ? item?.logo : item?.image}
+                    alt={`Company logo ${index + 1}`}
+                    width={120}
+                    height={60}
+                    className="h-12 w-auto object-contain"
+                  />
                 </div>
               </a>
             ))}

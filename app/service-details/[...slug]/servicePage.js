@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Head from "next/head";
@@ -79,8 +80,14 @@ export default function Page({
           </div>
         </section>
         <section className="basis-1/2 min-h-full pt-16 flex flex-col">
-          <div className="pt-[10%]">
-            <img src={Service?.image} alt="Service overview" />
+          <div className="pt-[10%] relative h-96 w-full">
+            <Image
+              src={Service?.image || "/placeholder.jpg"}
+              alt="Service overview"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-contain"
+            />
           </div>
         </section>
       </header>
@@ -93,7 +100,13 @@ export default function Page({
                 index % 2 === 0 ? "order-1" : "order-2"
               }`}
             >
-              <img src={item?.image} alt={item?.title} className="w-full" />
+              <Image
+                src={item?.image || "/placeholder.jpg"}
+                alt={item?.title || "Section image"}
+                width={800}
+                height={500}
+                className="w-full h-auto"
+              />
             </div>
             <div
               className={`basis-1/2 h-full pt-16 items-start text-start ${

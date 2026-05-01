@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import QuotationDialogue from "./quotationDialogue";
 import LogoutIcon from "@mui/icons-material/Logout";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -99,13 +100,15 @@ export default function Adminnav({ user, login }) {
       <div className=" w-full mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4 justify-center">
           <Link href={`/`}>
-            <img
-              alt="logo"
-              width="17"
-              height="17"
-              className="cursor-pointer hover:animate-slowspin"
-              src="/logo.svg"
-            />
+            <div className="relative w-[17px] h-[17px]">
+              <Image
+                alt="logo"
+                fill
+                sizes="17px"
+                className="cursor-pointer hover:animate-slowspin"
+                src="/logo.svg"
+              />
+            </div>
           </Link>
           <h1 className="text-[#446E6D] text-lg font-semibold">Webmedigital</h1>
         </div>
@@ -284,14 +287,18 @@ export default function Adminnav({ user, login }) {
                           style={{ width: "1.8em", height: "1.8em" }}
                         />
                       ) : (
-                        <img
-                          style={{ width: "1.8em", height: "1.8em" }}
-                          className="border-2 border-gray-500 rounded-full"
-                          src={
-                            context?.user?.profile?.avatarUrl ||
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s"
-                          }
-                        />
+                        <div className="relative border-2 border-gray-500 rounded-full" style={{ width: "1.8em", height: "1.8em" }}>
+                          <Image
+                            style={{ width: "1.8em", height: "1.8em" }}
+                            className="rounded-full"
+                            fill
+                            sizes="1.8em"
+                            src={
+                              context?.user?.profile?.avatarUrl ||
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s"
+                            }
+                          />
+                        </div>
                       )}
                       <span className="">{`${context?.user?.profile?.name}`}</span>
 
@@ -309,14 +316,18 @@ export default function Adminnav({ user, login }) {
                                 style={{ width: "2em", height: "2em" }}
                               />
                             ) : (
-                              <img
-                                style={{ width: "2em", height: "2em" }}
-                                className="border-2 border-gray-500 rounded-full"
-                                src={
-                                  context?.user?.profile?.avatarUrl ||
-                                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s"
-                                }
-                              />
+                              <div className="relative border-2 border-gray-500 rounded-full" style={{ width: "2em", height: "2em" }}>
+                                <Image
+                                  style={{ width: "2em", height: "2em" }}
+                                  className="rounded-full"
+                                  fill
+                                  sizes="2em"
+                                  src={
+                                    context?.user?.profile?.avatarUrl ||
+                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s"
+                                  }
+                                />
+                              </div>
                             )}
                             <span className="flex flex-col min-w-max">
                               <span>{`${context?.user?.profile?.name}`}</span>

@@ -7,6 +7,7 @@ import React, {
   useContext,
   useCallback,
 } from "react";
+import Image from "next/image";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { MyContext } from "@/context/context";
@@ -584,10 +585,12 @@ export default function CreateProduct() {
                       </div>
                     ) : (
                       <div className="relative w-full h-72 rounded-xl overflow-hidden shadow-sm border border-gray-200">
-                        <img
+                        <Image
                           src={mainImagePreview}
                           alt="Product preview"
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover"
                         />
                         <button
                           type="button"
@@ -927,9 +930,11 @@ const SectionItem = React.memo(
                   </div>
                 ) : (
                   <div className="relative rounded-lg overflow-hidden">
-                    <img
+                    <Image
                       src={section.imagePreview}
                       alt={`Section ${index + 1} preview`}
+                      width={800}
+                      height={320}
                       className="w-full h-40 object-cover rounded-lg"
                     />
                     <button

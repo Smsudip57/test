@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useContext } from 'react';
+import Image from 'next/image';
 import axios from 'axios';
 import { Trash2 } from 'lucide-react';
 import { MyContext } from '@/context/context';
@@ -124,10 +125,12 @@ export default function ServiceList() {
             >
               {/* Display Service Image */}
               {service.image && (
-                <img
-                src={service.image}
-                alt={'Couldn\'t load'}
-                className="w-16 h-16 rounded-md text-gray-400 text-xs object-cover overflow-hidden"
+                <Image
+                  src={service.image}
+                  alt={service.Title || "Service image"}
+                  width={64}
+                  height={64}
+                  className="w-16 h-16 rounded-md text-gray-400 text-xs object-cover overflow-hidden"
                 />
               )}
               <div className="flex-1">

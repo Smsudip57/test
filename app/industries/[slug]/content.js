@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import CaseStudy from "@/components/main/CaseStudy";
@@ -83,11 +84,13 @@ export default function FacultyManagement({
               </button>
             </div>
           </div>
-          <div className="basis-1/2 px-10 lg:p-28 order-1 lg:order-2">
-            <img
-              className="w-full rounded overflow-hidden"
+          <div className="basis-1/2 px-10 lg:p-28 order-1 lg:order-2 relative w-full h-96">
+            <Image
               src={industry?.image || "/f-m-t.jpg"}
               alt="Industry"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover rounded overflow-hidden"
             />
           </div>
         </div>

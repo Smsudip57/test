@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -533,17 +534,23 @@ const EditIndustry = () => {
                   className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
                 >
                   <div className="relative h-40">
-                    <img
+                    <Image
                       src={industry.image || "/placeholder.jpg"}
                       alt={industry.Title}
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
                     />
                     <div className="absolute top-2 right-2">
-                      <img
-                        src={industry.logo || "/placeholder-logo.png"}
-                        alt={`${industry.Title} logo`}
-                        className="w-12 h-12 object-contain bg-white rounded-md shadow-md"
-                      />
+                      <div className="relative w-12 h-12">
+                        <Image
+                          src={industry.logo || "/placeholder-logo.png"}
+                          alt={`${industry.Title} logo`}
+                          fill
+                          sizes="48px"
+                          className="object-contain bg-white rounded-md shadow-md"
+                        />
+                      </div>
                     </div>
                   </div>
 

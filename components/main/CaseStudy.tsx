@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
+import Image from "next/image";
 import axios from "axios";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -149,11 +150,13 @@ export default function CaseStudy({
                   </div>
                   <div className="basis-full lg:basis-1/2">
                     <div className="px-6 pb-16 lg:py-16 lg:pr-24 text-left">
-                      <div className="h-[16px] lg:h-[32px] mb-5">
-                        <img
+                      <div className="h-[16px] lg:h-[32px] mb-5 relative">
+                        <Image
                           src="https://a.sfdcstatic.com/shared/images/pbc/icons/quotation-english.svg"
                           alt="quote"
-                          className="h-full"
+                          fill
+                          sizes="32px"
+                          className="object-contain"
                         />
                       </div>
                       <span
@@ -168,14 +171,16 @@ export default function CaseStudy({
                       <br />
                       <div className="flex gap-3 items-center">
                         {item.image && (
-                          <img
-                            src={item.image}
-                            alt={item.postedBy || "Testimonial author"}
-                            className="h-10 w-10 rounded-full object-cover"
-                            onError={(e) =>
-                              (e.currentTarget.style.display = "none")
-                            }
-                          />
+                          <div className="relative h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
+                            <Image
+                              src={item.image}
+                              alt={item.postedBy || "Testimonial author"}
+                              fill
+                              sizes="40px"
+                              className="object-cover"
+                              onError={(e) => (e.currentTarget.style.display = "none")}
+                            />
+                          </div>
                         )}
                         <div>
                           <span className="font-medium text-xl">

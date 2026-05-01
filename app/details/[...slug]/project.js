@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Head from "next/head";
@@ -87,11 +88,15 @@ export default function Page({ project }) {
                 aspectRatio="16/9"
               />
             ) : (
-              <img
-                src={project?.media?.url}
-                alt={project?.Title}
-                className="w-full"
-              />
+              <div className="relative w-full aspect-video overflow-hidden rounded-lg">
+                <Image
+                  src={project?.media?.url}
+                  alt={project?.Title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
             )}
           </div>
         </section>

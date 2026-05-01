@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
@@ -46,11 +47,15 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     if (onImageChange) onImageChange(index);
   };
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     if (!images || !Array.isArray(images) || images.length <= 1) return;
-    const newIndex = (activeIndex + 1) % images.length;
-    goToSlide(newIndex, 'left');
-  };
+    setDirection('left');
+    setActiveIndex((prev) => {
+      const newIndex = (prev + 1) % images.length;
+      if (onImageChange) onImageChange(newIndex);
+      return newIndex;
+    });
+  }, [images, onImageChange]);
 
   const prevSlide = () => {
     if (!images || !Array.isArray(images) || images.length <= 1) return;
@@ -90,7 +95,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         clearInterval(intervalRef.current);
       }
     };
-  }, [images, activeIndex, paused, autoSlideInterval]);
+  }, [images, activeIndex, paused, autoSlideInterval, nextSlide]);
 
   // Clean up timeouts and intervals on unmount
   useEffect(() => {
@@ -113,10 +118,13 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   if (images.length === 1) {
     return (
       <div className={`relative rounded-md shadow-md overflow-hidden ${className}`} style={{ height, aspectRatio }}>
-        <img 
-          src={images[0]} 
+        <Image
+          src={images[0]}
           alt={`${title}`}
-          className={`w-full h-full object-${objectFit}`}
+          fill
+          sizes="100vw"
+          className="w-full h-full"
+          style={{ objectFit }}
         />
       </div>
     );
@@ -148,10 +156,13 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                     : 'translateX(100%)'
             }}
           >
-            <img 
+            <Image
               src={src}
               alt={`${title} - image ${index + 1}`}
-              className={`w-full h-full object-${objectFit}`}
+              fill
+              sizes="100vw"
+              className="w-full h-full"
+              style={{ objectFit }}
             />
           </div>
         ))}

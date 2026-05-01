@@ -1,5 +1,6 @@
 'use client';
 import { useState, useContext, useEffect } from 'react';
+import Image from "next/image";
 import axios from 'axios';
 import Link from 'next/link';
 import { MyContext } from '@/context/context';  // Import UserContext
@@ -84,11 +85,15 @@ export default function Example() {
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 relative">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            alt="Your Company"
-            src="/logo.svg"
-            className="mx-auto h-16 w-auto"
-          />
+          <div className="relative mx-auto w-16 h-16">
+            <Image
+              alt="Your Company"
+              src="/logo.svg"
+              fill
+              sizes="64px"
+              className="object-contain"
+            />
+          </div>
           <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
             Sign in to your account
           </h2>

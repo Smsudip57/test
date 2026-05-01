@@ -360,12 +360,12 @@ export default function Firewall({
                         className="w-full cursor-pointer block relative aspect-[4/3]"
                         aria-label={`View details of ${currentService?.Title}`}
                       >
-                        <img
+                        <Image
                           src={currentService.image}
                           alt={`${currentService?.Title} service illustration`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 640px"
                           className="w-full rounded-md object-cover hover:opacity-80 transition-opacity duration-300"
-                          // width={100}
-                          // height={100}
                         />
                       </a>
                     </div>
@@ -557,7 +557,7 @@ export default function Firewall({
                               <Link
                                 href={`https://store.webmedigital.com/product/${product._id}`}
                                 target="_blank"
-                                className="block flex-1 flex flex-col"
+                                className="flex-1 flex flex-col"
                               >
                                 {/* Image container with badges */}
                                 <div className="relative w-full aspect-[4/3] overflow-hidden">

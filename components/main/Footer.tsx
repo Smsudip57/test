@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import path from "path";
@@ -83,16 +84,15 @@ const Footer = () => {
       <div className="w-[90%] lg:w-[80%] max-w-[1536px] mx-auto">
         <div className="flex flex-col sm:flex-row justify-between gap-10 md:gap-5 xl:gap-20 pb-4 sm:pb-12 pr-6 sm:pr-0">
           <div className="gap-5 flex flex-col lg:w-[25%]">
-            <img
-              alt="WebMe"
-              loading="lazy"
-              width="100"
-              height="36"
-              decoding="async"
-              data-nimg="1"
-              className="ms-1 text-white mix-blend-screen"
-              src="/logo_1.svg"
-            />
+            <div className="relative w-[100px] h-[36px]">
+              <Image
+                alt="WebMe"
+                fill
+                sizes="100px"
+                className="ms-1 text-white mix-blend-screen object-contain"
+                src="/logo_1.svg"
+              />
+            </div>
             <p className="font-graphik font-normal leading-5 text-[14px]">
               WEBME Information Technology, Your trusted IT Consultancy
               Provider. With a passion for technology and a commitment to

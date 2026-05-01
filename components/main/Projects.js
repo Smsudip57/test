@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
@@ -66,58 +67,42 @@ const Projects = ({
     const signal = controller.signal;
 
     const getProjects = async () => {
-      setLoading(true); // Ensure loading is set to true at the beginning
-
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const response = await axios.get("/api/projects", { signal });
+        
+        if (product || service || child) {
+          const filteredProjects = response.data.data.filter((project) => {
+            // Check if any of the project's related items match the provided filters
+            const matchesService =
+              service &&
+              Array.isArray(project.relatedServices) &&
+              project.relatedServices.includes(service);
 
-        const response = await axios.get("/api/project/get", {
-          withCredentials: true,
-          signal,
-        });
+            const matchesProduct =
+              product &&
+              Array.isArray(project.relatedProducts) &&
+              project.relatedProducts.includes(product);
 
-        if (response.data.success) {
-          if (product || service || child) {
-            const filteredProjects = response.data.data.filter((project) => {
-              // Check if any of the project's related items match the provided filters
-              const matchesService =
-                service &&
-                Array.isArray(project.relatedServices) &&
-                project.relatedServices.includes(service);
+            const matchesChild =
+              child &&
+              Array.isArray(project.relatedChikfdServices) &&
+              project.relatedChikfdServices.includes(child);
 
-              const matchesProduct =
-                product &&
-                Array.isArray(project.relatedProducts) &&
-                project.relatedProducts.includes(product);
+            // Return true if any of the filters match
+            return matchesService || matchesProduct || matchesChild;
+          });
 
-              const matchesChild =
-                child &&
-                Array.isArray(project.relatedChikfdServices) &&
-                project.relatedChikfdServices.includes(child);
-
-              // Return true if any of the filters match
-              return matchesService || matchesProduct || matchesChild;
-            });
-
-            setProjects(filteredProjects);
-            if (filteredProjects.length === 0) {
-              setTimeout(() => {
-                setEmpty(true);
-              }, 1000);
-            } else {
-              setEmpty(false);
-            }
+          setProjects(filteredProjects);
+          if (filteredProjects.length === 0) {
+            setTimeout(() => {
+              setEmpty(true);
+            }, 1000);
           } else {
-            setProjects(response.data.data);
-            if (response.data.data.length === 0) {
-              setTimeout(() => {
-                setEmpty(true);
-              }, 1000);
-            } else {
-              setEmpty(false);
-            }
+            setEmpty(false);
           }
         } else {
+          setProjects(response.data.data);
+          setEmpty(response.data.data.length === 0);
         }
       } catch (error) {
         if (axios.isCancel(error)) {
@@ -265,15 +250,15 @@ const Projects = ({
                         />
                       </div>
                     ) : (
-                      <img
-                        alt={`${project?.Title || "Project"} image`}
-                        loading="lazy"
-                        decoding="async"
-                        data-nimg="1"
-                        className="w-full rounded-lg aspect-video object-cover"
-                        style={{ color: "transparent" }}
-                        src={project?.media?.url || project?.image}
-                      />
+                      <div className="relative w-full rounded-lg aspect-video overflow-hidden">
+                        <Image
+                          alt={`${project?.Title || "Project"} image`}
+                          src={project?.media?.url || project?.image || "/placeholder.png"}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                          className="object-cover"
+                        />
+                      </div>
                     ))}
                   <h1
                     className="font-bold text-2xl lg:text-4xl text-[#0B2B20] font-lora mb-[22px]"
@@ -303,15 +288,15 @@ const Projects = ({
                         />
                       </div>
                     ) : (
-                      <img
-                        alt={`${project?.Title || "Project"} image`}
-                        loading="lazy"
-                        decoding="async"
-                        data-nimg="1"
-                        className="w-full rounded-lg aspect-video object-cover"
-                        style={{ color: "transparent" }}
-                        src={project?.media?.url || project?.image}
-                      />
+                      <div className="relative w-full rounded-lg aspect-video overflow-hidden">
+                        <Image
+                          alt={`${project?.Title || "Project"} image`}
+                          src={project?.media?.url || project?.image || "/placeholder.png"}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                          className="object-cover"
+                        />
+                      </div>
                     ))}
                 </div>
               ))}

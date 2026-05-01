@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect, Suspense } from 'react'
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -100,10 +101,12 @@ function BlogPageContent() {
                       <div className="flex flex-col md:flex-row">
                         <div className="md:w-2/5 relative">
                           <div className="aspect-video w-full overflow-hidden">
-                            <img
+                            <Image
                               src={post.image}
                               alt={post.title}
-                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                              fill
+                              sizes="(max-width: 768px) 100vw, 40vw"
+                              className="object-cover hover:scale-105 transition-transform duration-500"
                             />
                           </div>
                           <div className="absolute top-3 right-3 bg-[#446E6D] text-white py-1 px-3 rounded-full text-xs font-semibold">
@@ -171,10 +174,12 @@ function BlogPageContent() {
                   >
                     <div className="relative">
                       <div className="aspect-video w-full overflow-hidden">
-                        <img
+                        <Image
                           src={post.image}
                           alt={post.title}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover hover:scale-105 transition-transform duration-500"
                         />
                       </div>
                       <div className="absolute top-3 right-3 bg-[#446E6D] text-white py-1 px-3 rounded-full text-xs font-semibold">
@@ -241,10 +246,12 @@ function BlogPageContent() {
                         <div className="flex flex-col md:flex-row">
                           <div className="md:w-2/5 relative">
                             <div className="aspect-video w-full overflow-hidden">
-                              <img
+                              <Image
                                 src={post.image}
                                 alt={post.title}
-                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                fill
+                                sizes="(max-width: 768px) 100vw, 40vw"
+                                className="object-cover hover:scale-105 transition-transform duration-500"
                               />
                             </div>
                             <div className="absolute top-3 right-3 bg-[#446E6D] text-white py-1 px-3 rounded-full text-xs font-semibold">
